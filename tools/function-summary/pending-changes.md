@@ -30,12 +30,17 @@ missing imports & methods:
 - [ ] notcurses_accountname
 - [ ] notcurses_enter_alternate_screen
 - [ ] notcurses_leave_alternate_screen
-- [ ] notcurses_get
-- [ ] ncdirect_get
 - [ ] ncvisual_subtitle_plane
 - [ ] ncvisual_from_palidx
 - [ ] ncplane_scrollup
 - [ ] ncplane_scrollup_child
 - [ ] ncplane_cursor_move_rel
-- [ ] ncplane_boundlist /// Gets the head of the list of planes bound to 'n'.
+- [ ] ncplane_boundlist // Gets the head of the list of planes bound to 'n'.
 
+## from changes-20210826-20210913.txt
+- [ ] ncstrwidth_valid
+- [ ] ncstrwidth
+
+## from changes…
+- [ ] NCOPTION_DRAIN_INPUT
+- [ ] notcurses_getvec

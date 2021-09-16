@@ -1,0 +1,47 @@
+0d0
+
+Differences between files:
+==========================
+out-20210826/bindgen/_NON_FILTERED out-20210913/bindgen/_NON_FILTERED
+out-20210826/static/channel out-20210913/static/channel
+out-20210826/static/ncvisual out-20210913/static/ncvisual
+out-20210826/static/_NON_FILTERED out-20210913/static/_NON_FILTERED
+out-20210826/static/palette out-20210913/static/palette
+
+broken down:
+============
+
+diff out-20210826/bindgen/_NON_FILTERED out-20210913/bindgen/_NON_FILTERED:
+13a14
+> ncstrwidth_valid
+
+diff out-20210826/static/channel out-20210913/static/channel:
+2d1
+< channel_b
+4d2
+< channel_g
+7d4
+< channel_r
+
+diff out-20210826/static/ncvisual out-20210913/static/ncvisual:
+1d0
+< ncvisual_default_blitter
+
+diff out-20210826/static/_NON_FILTERED out-20210913/static/_NON_FILTERED:
+1a2
+> API int ncstrwidth
+5a7
+> // FIXME becomes a static inline in ABI3.
+
+diff out-20210826/static/palette out-20210913/static/palette:
+1,3d0
+< palette256_get_rgb8
+< palette256_set
+< palette256_set_rgb8
+
+Only in one path:
+=================
+
+
+display contents:
+=================
