@@ -32,7 +32,7 @@
 // fmt notcurses_debug
 //~f   notcurses_detected_terminal
 // fmt notcurses_drop_planes
-// fm  notcurses_getc
+// fm  notcurses_get
 // fmt notcurses_init
 // fm  notcurses_inputready_fd
 // fm  notcurses_lex_blitter

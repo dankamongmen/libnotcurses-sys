@@ -50,7 +50,7 @@
 // fm  ncdirect_fg_palindex
 // fm  ncdirect_fg_rgb
 // fm  ncdirect_flush
-// fm  ncdirect_getc
+// fm  ncdirect_get
 //~r   ncdirect_heavy_box,
 // fm  ncdirect_hline_interp
 // fm  ncdirect_init

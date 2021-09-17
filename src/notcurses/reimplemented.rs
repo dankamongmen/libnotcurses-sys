@@ -36,7 +36,9 @@ pub fn notcurses_align(availcols: NcDim, align: NcAlign, cols: NcDim) -> NcOffse
 ///
 /// *Method: Nc.[getc_nblock()][Nc#method.getc_nblock].*
 //
-// TODO: use from_u32 & return Option.
+// TODO:
+// - use from_u32 & return Option.
+// - or use an error type
 #[inline]
 pub fn notcurses_getc_nblock(nc: &mut Nc, input: &mut NcInput) -> char {
     unsafe {
@@ -50,7 +52,7 @@ pub fn notcurses_getc_nblock(nc: &mut Nc, input: &mut NcInput) -> char {
 
 /// Blocks until an event is processed or a signal is received.
 ///
-/// Optionally writes the event details in `input`.
+/// Will optionally write the event details in `input`.
 ///
 /// In case of an invalid read (including on EOF) *-1 as char* is returned.
 ///

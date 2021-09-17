@@ -3,7 +3,6 @@
 //! blocking input doesn't work
 
 use libnotcurses_sys::*;
-use std::ptr::null;
 
 fn main() -> NcResult<()> {
     let nc = Nc::without_altscreen()?;
@@ -15,7 +14,7 @@ fn main() -> NcResult<()> {
     println!("press a key:");
     let mut input1 = NcInput::new_empty();
     let key = unsafe {
-        notcurses_get(nc, null(), &mut input1)
+        notcurses_get(nc, std::ptr::null(), &mut input1)
     };
     println!("{} → {}", key, unsafe {core::char::from_u32_unchecked(key)} );
 

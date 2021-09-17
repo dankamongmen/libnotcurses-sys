@@ -316,7 +316,7 @@ impl Nc {
     /// Provide a None `time` to block at length, a `time` of 0 for non-blocking
     /// operation, and otherwise a timespec to bound blocking.
     ///
-    /// *C style function: [notcurses_getc()][crate::notcurses_getc].*
+    /// *C style function: [notcurses_get()][crate::notcurses_get].*
     pub fn getc(&mut self, time: Option<NcTime>, input: Option<&mut NcInput>) -> NcResult<char> {
         let ntime;
         if let Some(time) = time {
