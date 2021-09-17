@@ -1,0 +1,6 @@
+tools/function-summary/out-*
+target
+Cargo.lock
+*.swp
+*.swo
+_*
