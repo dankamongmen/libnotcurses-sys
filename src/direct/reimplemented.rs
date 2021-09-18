@@ -80,7 +80,7 @@ pub fn ncdirect_getc_blocking(ncd: &mut NcDirect, input: &mut NcInput) -> char {
 #[inline]
 pub fn ncdirect_getc_nblock(ncd: &mut NcDirect, input: &mut NcInput) -> char {
     unsafe {
-        let ts = NcTime::new();
+        let ts = NcTime::new(0, 0);
         core::char::from_u32_unchecked(crate::ncdirect_get(ncd, &ts, input))
     }
 }

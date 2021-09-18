@@ -6,10 +6,11 @@
 pub type NcTime = crate::bindings::ffi::timespec;
 
 impl NcTime {
-    pub fn new() -> Self {
+    /// New NcTime with the specified seconds and nanoseconds.
+    pub fn new(seconds: i64, nanoseconds: i64) -> Self {
         Self {
-            tv_sec: 0,
-            tv_nsec: 0,
+            tv_sec: seconds,
+            tv_nsec: nanoseconds,
         }
     }
 }

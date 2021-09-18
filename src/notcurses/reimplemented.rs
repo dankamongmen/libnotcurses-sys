@@ -42,10 +42,7 @@ pub fn notcurses_align(availcols: NcDim, align: NcAlign, cols: NcDim) -> NcOffse
 #[inline]
 pub fn notcurses_getc_nblock(nc: &mut Nc, input: &mut NcInput) -> char {
     unsafe {
-        let ts = NcTime {
-            tv_sec: 0,
-            tv_nsec: 0,
-        };
+        let ts = NcTime::new(0, 0);
         core::char::from_u32_unchecked(crate::notcurses_get(nc, &ts, input))
     }
 }
