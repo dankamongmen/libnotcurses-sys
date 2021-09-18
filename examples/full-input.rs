@@ -1,4 +1,4 @@
-//! Input
+//! Input example
 //!
 //! https://github.com/dankamongmen/notcurses/blob/master/USAGE.md#input
 //!
@@ -6,7 +6,7 @@
 use libnotcurses_sys::*;
 
 fn main() -> NcResult<()> {
-    let mut nc = Nc::with_flags(
+    let nc = Nc::with_flags(
         NCOPTION_SUPPRESS_BANNERS | NCOPTION_NO_WINCH_SIGHANDLER | NCOPTION_NO_QUIT_SIGHANDLERS,
     )?;
 
@@ -15,23 +15,19 @@ fn main() -> NcResult<()> {
     let mut input = NcInput::new_empty();
 
     loop {
-        let key = notcurses_getc_nblock(&mut nc, &mut input);
-
-        if key as i32 != -1 {
-            println!("'{0}' ({1:x})\n{2:?}", key, key as u32, input);
-        }
-
-        nrs![&mut nc, 0, 10];
-
-        match key {
-            NCKEY_F01 => break,
-            _ => (),
+        match nc.getc_nblock(Some(&mut input)) {
+            Ok(key) => match key {
+                NCKEY_F01 => break,
+                NCKEY_ESC..=NCKEY_RELEASE => {
+                    println!("'{0}' ({1:x})\n{2:?}", key, key as u32, input);
+                }
+                _ => (),
+            },
+            Err(err) => return Err(err),
         }
     }
 
     println!("\nExiting...");
-
-    nrs![&mut nc, 1];
     nc.stop()?;
     Ok(())
 }

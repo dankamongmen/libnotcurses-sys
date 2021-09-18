@@ -1,6 +1,6 @@
 //! `ncdirect_*` reimplemented functions.
 
-use core::ptr::null;
+use core::ptr::{null, null_mut};
 
 use crate::{
     cstring, NcCapabilities, NcChannels, NcComponent, NcDim, NcDirect, NcInput, NcIntResult, NcRgb,
@@ -61,27 +61,44 @@ pub fn ncdirect_capabilities(ncd: &NcDirect) -> NcCapabilities {
     unsafe { *crate::bindings::ffi::ncdirect_capabilities(ncd) }
 }
 
-/// 'input' may be NULL if the caller is uninterested in event details.
-/// Blocks until an event is processed or a signal is received.
+/// Reads input blocking until an event is processed or a signal is received.
+///
+/// Will optionally write the event details in `input`.
+///
+/// In case of an invalid read (including on EOF) *-1* is returned.
 ///
 /// *Method: NcDirect.[getc_blocking()][NcDirect#method.getc_blocking].*
-// TODO: use from_u32 & return Option.
 #[inline]
-pub fn ncdirect_getc_blocking(ncd: &mut NcDirect, input: &mut NcInput) -> char {
-    unsafe { core::char::from_u32_unchecked(crate::ncdirect_get(ncd, null(), input)) }
+pub fn ncdirect_getc_blocking(ncd: &mut NcDirect, input: Option<&mut NcInput>) -> NcIntResult {
+    let input_ptr;
+    if let Some(i) = input {
+        input_ptr = i as *mut _;
+    } else {
+        input_ptr = null_mut();
+    }
+    unsafe { crate::ncdirect_get(ncd, null(), input_ptr) as NcIntResult }
 }
 
+/// Reads input without blocking.
+///
+/// Will optionally write the event details in `input`.
 ///
 /// If no event is ready, returns 0.
 ///
+/// In case of an invalid read (including on EOF) *-1* is returned.
+///
 /// *Method: NcDirect.[getc_nblock()][NcDirect#method.getc_nblock].*
-//
-// `input` may be NULL if the caller is uninterested in event details.
 #[inline]
-pub fn ncdirect_getc_nblock(ncd: &mut NcDirect, input: &mut NcInput) -> char {
+pub fn ncdirect_getc_nblock(ncd: &mut NcDirect, input: Option<&mut NcInput>) -> NcIntResult {
+    let input_ptr;
+    if let Some(i) = input {
+        input_ptr = i as *mut _;
+    } else {
+        input_ptr = null_mut();
+    }
     unsafe {
         let ts = NcTime::new(0, 0);
-        core::char::from_u32_unchecked(crate::ncdirect_get(ncd, &ts, input))
+        crate::ncdirect_get(ncd, &ts, input_ptr) as NcIntResult
     }
 }
 

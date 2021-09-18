@@ -339,37 +339,42 @@ impl Nc {
         Ok(c)
     }
 
-    /// If no event is ready, returns 0.
+    /// Reads input blocking until an event is processed or a signal is received.
     ///
-    /// *C style function: [notcurses_getc_nblock()][crate::notcurses_getc_nblock].*
-    pub fn getc_nblock(&mut self, input: &mut NcInput) -> char {
-        crate::notcurses_getc_nblock(self, input)
-    }
-
-    /// Blocks until a codepoint or special key is read,
-    /// or until interrupted by a signal.
+    /// Will optionally write the event details in `input`.
     ///
-    /// In the case of a valid read, a 32-bit Unicode codepoint is returned.
-    ///
-    /// Optionally writes the event details in `input`.
+    /// In the case of a valid read, a [`char`] is returned.
     ///
     /// *C style function: [notcurses_getc_blocking()][crate::notcurses_getc_blocking].*
     pub fn getc_blocking(&mut self, input: Option<&mut NcInput>) -> NcResult<char> {
-        let input_txt;
+        let input_txt: String;
         if cfg!(debug_assertions) {
             input_txt = format!("{:?}", input);
         } else {
-            input_txt = String::from("");
+            input_txt = "".into();
         }
-
         let res = crate::notcurses_getc_blocking(self, input);
+        core::char::from_u32(res as u32)
+            .ok_or_else(|| NcError::with_msg(res, &format!["Nc.getc_blocking({:?})", input_txt]))
+    }
 
-        // An invalid read is indicated with -1
-        if res as u32 as i32 != -1 {
-            Ok(res)
+    /// Reads input without blocking.
+    ///
+    /// In the case of a valid read, a [`char`] is returned.
+    ///
+    /// If no event is ready, returns 0.
+    ///
+    /// *C style function: [notcurses_getc_nblock()][crate::notcurses_getc_nblock].*
+    pub fn getc_nblock(&mut self, input: Option<&mut NcInput>) -> NcResult<char> {
+        let input_txt: String;
+        if cfg!(debug_assertions) {
+            input_txt = format!("{:?}", input);
         } else {
-            error![-1, &format!("Nc.getc_blocking({:?})", input_txt), res]
+            input_txt = "".into();
         }
+        let res = crate::notcurses_getc_nblock(self, input);
+        core::char::from_u32(res as u32)
+            .ok_or_else(|| NcError::with_msg(res, &format!["Nc.getc_nblock({:?})", input_txt]))
     }
 
     /// Gets a file descriptor suitable for input event poll()ing.

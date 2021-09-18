@@ -555,7 +555,7 @@ impl NcDirect {
     /// Provide a None `time` to block at length, a `time` of 0 for non-blocking
     /// operation, and otherwise a timespec to bound blocking.
     ///
-    /// *C style function: [ncdirect_getc()][crate::ncdirect_getc].*
+    /// *C style function: [ncdirect_get()][crate::ncdirect_get].*
     //
     // CHECK returns 0 on a timeout.
     pub fn getc(&mut self, time: Option<NcTime>, input: Option<&mut NcInput>) -> NcResult<char> {
@@ -578,16 +578,44 @@ impl NcDirect {
         Ok(c)
     }
 
+    /// Reads input blocking until an event is processed or a signal is received.
     ///
-    /// *C style function: [ncdirect_getc_nblock()][crate::ncdirect_getc_nblock].*
-    pub fn getc_nblock(&mut self, input: &mut NcInput) -> char {
-        crate::ncdirect_getc_nblock(self, input)
-    }
-
+    /// Will optionally write the event details in `input`.
+    ///
+    /// In the case of a valid read, a [`char`] is returned.
     ///
     /// *C style function: [ncdirect_getc_blocking()][crate::ncdirect_getc_blocking].*
-    pub fn getc_blocking(&mut self, input: &mut NcInput) -> char {
-        crate::ncdirect_getc_blocking(self, input)
+    pub fn getc_blocking(&mut self, input: Option<&mut NcInput>) -> NcResult<char> {
+        let input_txt: String;
+        if cfg!(debug_assertions) {
+            input_txt = format!("{:?}", input);
+        } else {
+            input_txt = "".into();
+        }
+        let res = crate::ncdirect_getc_blocking(self, input);
+        core::char::from_u32(res as u32).ok_or_else(|| {
+            NcError::with_msg(res, &format!["NcDirect.getc_blocking({:?})", input_txt])
+        })
+    }
+
+    /// Reads input without blocking.
+    ///
+    /// In the case of a valid read, a [`char`] is returned.
+    ///
+    /// If no event is ready, returns 0.
+    ///
+    /// *C style function: [ncdirect_getc_nblock()][crate::ncdirect_getc_nblock].*
+    pub fn getc_nblock(&mut self, input: Option<&mut NcInput>) -> NcResult<char> {
+        let input_txt: String;
+        if cfg!(debug_assertions) {
+            input_txt = format!("{:?}", input);
+        } else {
+            input_txt = "".into();
+        }
+        let res = crate::ncdirect_getc_nblock(self, input);
+        core::char::from_u32(res as u32).ok_or_else(|| {
+            NcError::with_msg(res, &format!["NcDirect.getc_nblock({:?})", input_txt])
+        })
     }
 
     /// Get a file descriptor suitable for input event poll()ing.

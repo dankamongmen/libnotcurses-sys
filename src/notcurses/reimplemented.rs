@@ -3,8 +3,8 @@
 use core::ptr::{null, null_mut};
 
 use crate::{
-    Nc, NcAlign, NcDim, NcError, NcInput, NcOffset, NcPlane, NcResult, NcTime, NCALIGN_CENTER,
-    NCALIGN_LEFT, NCALIGN_RIGHT, NCRESULT_MAX,
+    Nc, NcAlign, NcDim, NcError, NcInput, NcIntResult, NcOffset, NcPlane, NcResult, NcTime,
+    NCALIGN_CENTER, NCALIGN_LEFT, NCALIGN_RIGHT, NCRESULT_MAX,
 };
 
 /// Returns the offset into `availcols` at which `cols` ought be output given
@@ -31,38 +31,45 @@ pub fn notcurses_align(availcols: NcDim, align: NcAlign, cols: NcDim) -> NcOffse
     -NCRESULT_MAX // NCALIGN_UNALIGNED
 }
 
-///
-/// If no event is ready, returns 0.
-///
-/// *Method: Nc.[getc_nblock()][Nc#method.getc_nblock].*
-//
-// TODO:
-// - use from_u32 & return Option.
-// - or use an error type
-#[inline]
-pub fn notcurses_getc_nblock(nc: &mut Nc, input: &mut NcInput) -> char {
-    unsafe {
-        let ts = NcTime::new(0, 0);
-        core::char::from_u32_unchecked(crate::notcurses_get(nc, &ts, input))
-    }
-}
-
-/// Blocks until an event is processed or a signal is received.
+/// Reads input blocking until an event is processed or a signal is received.
 ///
 /// Will optionally write the event details in `input`.
 ///
-/// In case of an invalid read (including on EOF) *-1 as char* is returned.
+/// In case of an invalid read (including on EOF) *-1* is returned.
 ///
 /// *Method: Nc.[getc_blocking()][Nc#method.getc_blocking].*
 #[inline]
-pub fn notcurses_getc_blocking(nc: &mut Nc, input: Option<&mut NcInput>) -> char {
+pub fn notcurses_getc_blocking(nc: &mut Nc, input: Option<&mut NcInput>) -> NcIntResult {
     let input_ptr;
     if let Some(i) = input {
         input_ptr = i as *mut _;
     } else {
         input_ptr = null_mut();
     }
-    unsafe { core::char::from_u32_unchecked(crate::notcurses_get(nc, null(), input_ptr)) }
+    unsafe { crate::notcurses_get(nc, null(), input_ptr) as NcIntResult }
+}
+
+/// Reads input without blocking.
+///
+/// Will optionally write the event details in `input`.
+///
+/// If no event is ready, returns 0.
+///
+/// In case of an invalid read (including on EOF) *-1* is returned.
+///
+/// *Method: Nc.[getc_nblock()][Nc#method.getc_nblock].*
+#[inline]
+pub fn notcurses_getc_nblock(nc: &mut Nc, input: Option<&mut NcInput>) -> NcIntResult {
+    let input_ptr;
+    if let Some(i) = input {
+        input_ptr = i as *mut _;
+    } else {
+        input_ptr = null_mut();
+    }
+    unsafe {
+        let ts = NcTime::new(0, 0);
+        crate::notcurses_get(nc, &ts, input_ptr) as NcIntResult
+    }
 }
 
 /// [notcurses_stdplane()][crate::notcurses_stdplane], plus free bonus
