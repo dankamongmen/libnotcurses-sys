@@ -6,8 +6,8 @@ use crate::{
     cstring, error, error_ref_mut, notcurses_init, rstring, Nc, NcAlign, NcBlitter, NcChannels,
     NcDim, NcError, NcFile, NcInput, NcLogLevel, NcOptions, NcPixelImpl, NcPlane, NcResult,
     NcScale, NcStats, NcStyle, NcStyleMethods, NcTime, NCOPTION_NO_ALTERNATE_SCREEN,
-    NCOPTION_SUPPRESS_BANNERS, NCRESULT_ERR, NCSTYLE_BOLD, NCSTYLE_ITALIC, NCSTYLE_NONE,
-    NCSTYLE_STRUCK, NCSTYLE_UNDERCURL, NCSTYLE_UNDERLINE,
+    NCOPTION_SUPPRESS_BANNERS, NCSTYLE_BOLD, NCSTYLE_ITALIC, NCSTYLE_NONE, NCSTYLE_STRUCK,
+    NCSTYLE_UNDERCURL, NCSTYLE_UNDERLINE,
 };
 
 /// # `NcOptions` Constructors
@@ -308,6 +308,12 @@ impl Nc {
         }
     }
 
+    #[doc(hidden)]
+    #[deprecated = "use `get` method instead"]
+    pub fn getc(&mut self, time: Option<NcTime>, input: Option<&mut NcInput>) -> NcResult<char> {
+        self.get(time, input)
+    }
+
     /// Returns a [char] representing a single unicode point.
     ///
     /// If an event is processed, the return value is the `id` field from that
@@ -317,7 +323,7 @@ impl Nc {
     /// operation, and otherwise a timespec to bound blocking.
     ///
     /// *C style function: [notcurses_get()][crate::notcurses_get].*
-    pub fn getc(&mut self, time: Option<NcTime>, input: Option<&mut NcInput>) -> NcResult<char> {
+    pub fn get(&mut self, time: Option<NcTime>, input: Option<&mut NcInput>) -> NcResult<char> {
         let ntime;
         if let Some(time) = time {
             ntime = &time as *const _;
@@ -331,12 +337,10 @@ impl Nc {
         } else {
             ninput = null_mut();
         }
-        let c =
-            unsafe { core::char::from_u32_unchecked(crate::notcurses_get(self, ntime, ninput)) };
-        if c as u32 as i32 == NCRESULT_ERR {
-            return Err(NcError::new());
-        }
-        Ok(c)
+
+        let res = unsafe { crate::notcurses_get(self, ntime, ninput) };
+        core::char::from_u32(res)
+            .ok_or_else(|| NcError::with_msg(res as i32, &format!["Nc.get(time: {:?})", time]))
     }
 
     /// Reads input blocking until an event is processed or a signal is received.
@@ -347,15 +351,8 @@ impl Nc {
     ///
     /// *C style function: [notcurses_getc_blocking()][crate::notcurses_getc_blocking].*
     pub fn getc_blocking(&mut self, input: Option<&mut NcInput>) -> NcResult<char> {
-        let input_txt: String;
-        if cfg!(debug_assertions) {
-            input_txt = format!("{:?}", input);
-        } else {
-            input_txt = "".into();
-        }
         let res = crate::notcurses_getc_blocking(self, input);
-        core::char::from_u32(res as u32)
-            .ok_or_else(|| NcError::with_msg(res, &format!["Nc.getc_blocking({:?})", input_txt]))
+        core::char::from_u32(res as u32).ok_or_else(|| NcError::with_msg(res, "Nc.getc_blocking()"))
     }
 
     /// Reads input without blocking.
@@ -366,15 +363,8 @@ impl Nc {
     ///
     /// *C style function: [notcurses_getc_nblock()][crate::notcurses_getc_nblock].*
     pub fn getc_nblock(&mut self, input: Option<&mut NcInput>) -> NcResult<char> {
-        let input_txt: String;
-        if cfg!(debug_assertions) {
-            input_txt = format!("{:?}", input);
-        } else {
-            input_txt = "".into();
-        }
         let res = crate::notcurses_getc_nblock(self, input);
-        core::char::from_u32(res as u32)
-            .ok_or_else(|| NcError::with_msg(res, &format!["Nc.getc_nblock({:?})", input_txt]))
+        core::char::from_u32(res as u32).ok_or_else(|| NcError::with_msg(res, "Nc.getc_nblock()"))
     }
 
     /// Gets a file descriptor suitable for input event poll()ing.

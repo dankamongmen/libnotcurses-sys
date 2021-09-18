@@ -547,6 +547,12 @@ impl NcDirect {
 
 /// ## NcDirect methods: I/O
 impl NcDirect {
+    #[doc(hidden)]
+    #[deprecated = "use `get` method instead"]
+    pub fn getc(&mut self, time: Option<NcTime>, input: Option<&mut NcInput>) -> NcResult<char> {
+        self.get(time, input)
+    }
+
     /// Returns a [char] representing a single unicode point.
     ///
     /// If an event is processed, the return value is the `id` field from that
@@ -556,9 +562,8 @@ impl NcDirect {
     /// operation, and otherwise a timespec to bound blocking.
     ///
     /// *C style function: [ncdirect_get()][crate::ncdirect_get].*
-    //
     // CHECK returns 0 on a timeout.
-    pub fn getc(&mut self, time: Option<NcTime>, input: Option<&mut NcInput>) -> NcResult<char> {
+    pub fn get(&mut self, time: Option<NcTime>, input: Option<&mut NcInput>) -> NcResult<char> {
         let ntime;
         if let Some(time) = time {
             ntime = &time as *const _;
@@ -571,11 +576,10 @@ impl NcDirect {
         } else {
             ninput = null_mut();
         }
-        let c = unsafe { core::char::from_u32_unchecked(crate::ncdirect_get(self, ntime, ninput)) };
-        if c as u32 as i32 == NCRESULT_ERR {
-            return Err(NcError::new());
-        }
-        Ok(c)
+
+        let res = unsafe { crate::ncdirect_get(self, ntime, ninput) };
+        core::char::from_u32(res)
+            .ok_or_else(|| NcError::with_msg(res as i32, &format!["Nc.get(time: {:?})", time]))
     }
 
     /// Reads input blocking until an event is processed or a signal is received.
@@ -586,16 +590,9 @@ impl NcDirect {
     ///
     /// *C style function: [ncdirect_getc_blocking()][crate::ncdirect_getc_blocking].*
     pub fn getc_blocking(&mut self, input: Option<&mut NcInput>) -> NcResult<char> {
-        let input_txt: String;
-        if cfg!(debug_assertions) {
-            input_txt = format!("{:?}", input);
-        } else {
-            input_txt = "".into();
-        }
         let res = crate::ncdirect_getc_blocking(self, input);
-        core::char::from_u32(res as u32).ok_or_else(|| {
-            NcError::with_msg(res, &format!["NcDirect.getc_blocking({:?})", input_txt])
-        })
+        core::char::from_u32(res as u32)
+            .ok_or_else(|| NcError::with_msg(res, "NcDirect.getc_blocking()"))
     }
 
     /// Reads input without blocking.
@@ -606,16 +603,9 @@ impl NcDirect {
     ///
     /// *C style function: [ncdirect_getc_nblock()][crate::ncdirect_getc_nblock].*
     pub fn getc_nblock(&mut self, input: Option<&mut NcInput>) -> NcResult<char> {
-        let input_txt: String;
-        if cfg!(debug_assertions) {
-            input_txt = format!("{:?}", input);
-        } else {
-            input_txt = "".into();
-        }
         let res = crate::ncdirect_getc_nblock(self, input);
-        core::char::from_u32(res as u32).ok_or_else(|| {
-            NcError::with_msg(res, &format!["NcDirect.getc_nblock({:?})", input_txt])
-        })
+        core::char::from_u32(res as u32)
+            .ok_or_else(|| NcError::with_msg(res, "NcDirect.getc_nblock()"))
     }
 
     /// Get a file descriptor suitable for input event poll()ing.
