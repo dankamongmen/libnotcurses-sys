@@ -44,7 +44,7 @@ impl NcInput {
             alt: false,
             shift: false,
             ctrl: false,
-            seqnum: 0,
+            evtype: NCEVTYPE_UNKNOWN,
         }
     }
 
@@ -76,7 +76,7 @@ impl NcInput {
         alt: bool,
         shift: bool,
         ctrl: bool,
-        seqnum: u64,
+        evtype: NcEvType,
     ) -> NcInput {
         let (ix, iy);
         if let Some(x) = x {
@@ -97,13 +97,33 @@ impl NcInput {
             alt,
             shift,
             ctrl,
-            seqnum,
+            evtype,
         }
     }
 }
 
-/// Compares two ncinput structs for data equality by doing a field-by-field
-/// comparison for equality (excepting seqnum).
+/// The type of the event, part of [`NcInput`].
+///
+/// ## Defined constants
+/// - [`NCEVTYPE_UNKNOWN`]
+/// - [`NCEVTYPE_PRESS`]
+/// - [`NCEVTYPE_REPEAT`]
+/// - [`NCEVTYPE_RELEASE`]
+pub type NcEvType = u32;
+
+/// *Unknown* type event ([`NcEvType`]).
+pub const NCEVTYPE_UNKNOWN: NcEvType = crate::bindings::ffi::ncinput_NCTYPE_UNKNOWN;
+
+/// *Press* type event ([`NcEvType`]).
+pub const NCEVTYPE_PRESS: NcEvType = crate::bindings::ffi::ncinput_NCTYPE_PRESS;
+
+/// *Repeat* type event ([`NcEvType`]).
+pub const NCEVTYPE_REPEAT: NcEvType = crate::bindings::ffi::ncinput_NCTYPE_REPEAT;
+
+/// *Release* type event ([`NcEvType`]).
+pub const NCEVTYPE_RELEASE: NcEvType = crate::bindings::ffi::ncinput_NCTYPE_RELEASE;
+
+/// Compares two NcInput structs for data equality.
 ///
 /// Returns true if the two are data-equivalent.
 pub const fn ncinput_equal_p(n1: NcInput, n2: NcInput) -> bool {
@@ -113,7 +133,12 @@ pub const fn ncinput_equal_p(n1: NcInput, n2: NcInput) -> bool {
     if n1.y != n2.y || n1.x != n2.x {
         return false;
     }
-    // do not check seqnum
+    if n1.alt != n2.alt || n1.shift != n2.shift || n1.ctrl != n2.ctrl {
+        return false;
+    }
+    if n1.evtype != n2.evtype {
+        return false
+    }
     true
 }
 
@@ -135,5 +160,5 @@ pub const fn nckey_supppuab_p(w: char) -> bool {
 /// Is the event a synthesized mouse event?
 #[inline]
 pub const fn nckey_mouse_p(r: char) -> bool {
-    r >= NCKEY_BUTTON1 && r <= NCKEY_RELEASE
+    r >= NCKEY_BUTTON1 && r <= NCKEY_BUTTON11
 }

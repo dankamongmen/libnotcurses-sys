@@ -125,7 +125,11 @@ pub const NCKEY_BUTTON8: char = unsafe { transmute(suppuabize(208)) };
 pub const NCKEY_BUTTON9: char = unsafe { transmute(suppuabize(209)) };
 pub const NCKEY_BUTTON10: char = unsafe { transmute(suppuabize(210)) };
 pub const NCKEY_BUTTON11: char = unsafe { transmute(suppuabize(211)) };
-pub const NCKEY_RELEASE: char = unsafe { transmute(suppuabize(212)) };
+/// Upon reaching the end of input, `NCKEY_EOF` will be returned.
+///
+/// At this point, any further calls will immediately return `NCKEY_EOF`.
+/// Note that this does not necessarily result from pressing e.g. Ctrl+D.
+pub const NCKEY_EOF: char = unsafe { transmute(suppuabize(300)) };
 
 // Synonyms (so far as we're concerned)
 pub const NCKEY_SCROLL_UP: char = NCKEY_BUTTON4;
