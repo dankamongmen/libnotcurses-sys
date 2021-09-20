@@ -260,7 +260,7 @@ pub fn ncplane_putnstr(plane: &mut NcPlane, size: u32, gclustarr: &[u8]) -> NcIn
 pub fn ncplane_moverel(plane: &mut NcPlane, rows: NcOffset, cols: NcOffset) -> NcIntResult {
     let (mut orig_y, mut orig_x) = (0, 0);
     unsafe {
-        crate::ncplane_dim_yx(plane, &mut orig_y, &mut orig_x);
+        crate::ncplane_yx(plane, &mut orig_y, &mut orig_x);
         crate::ncplane_move_yx(plane, orig_y + rows, orig_x + cols)
     }
 }

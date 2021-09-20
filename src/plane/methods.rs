@@ -1485,7 +1485,7 @@ impl NcPlane {
     ///
     /// Only glyphs from the specified blitset may be present.
     ///
-    /// *C style function: [ncplane_rgba()][crate::ncplane_as_rgba].*
+    /// *C style function: [ncplane_as_rgba()][crate::ncplane_as_rgba].*
     pub fn as_rgba(
         &mut self,
         blitter: NcBlitter,
