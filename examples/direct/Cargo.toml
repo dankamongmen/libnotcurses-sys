@@ -1,0 +1,9 @@
+[package]
+name = "libnotcurses-sys_direct-examples"
+description = "libnotcurses-sys direct-mode examples"
+version = "0.1.0"
+edition = "2018"
+
+[dev-dependencies]
+libnotcurses-sys = { path = "../.." }
+rand = "^0.8"

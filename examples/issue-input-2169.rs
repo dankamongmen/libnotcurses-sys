@@ -29,12 +29,13 @@ fn main() -> NcResult<()> {
 
     // TEST_3: manual BUG
     let mut input3 = NcInput::new_empty();
-    let ts = ffi::timespec { tv_sec: 0, tv_nsec: 0 };
+    let ts = ffi::timespec {
+        tv_sec: 0,
+        tv_nsec: 0,
+    };
     loop {
         println!("before nblock");
-        let key = unsafe {
-            notcurses_get(nc, &ts, &mut input3)
-        };
+        let key = unsafe { notcurses_get(nc, &ts, &mut input3) };
         println!("after nblock. key = `{}` ({})", key, key as i32);
 
         match key {

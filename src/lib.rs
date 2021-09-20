@@ -160,3 +160,6 @@ pub use resizecb::*;
 pub use stats::*;
 pub use time::*;
 pub use visual::*;
+
+// re-export
+pub use libc;

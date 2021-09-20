@@ -1,0 +1,8 @@
+[package]
+name = "libnotcurses-sys_poc"
+description = "libnotcurses-sys proof-of-concept examples"
+version = "0.1.0"
+edition = "2018"
+
+[dev-dependencies]
+libnotcurses-sys = { path = "../.." }
