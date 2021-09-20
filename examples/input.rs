@@ -18,7 +18,7 @@ fn main() -> NcResult<()> {
         match nc.getc_nblock(Some(&mut input)) {
             Ok(key) => match key {
                 NCKEY_F01 => break,
-                NCKEY_ESC..=NCKEY_RELEASE => {
+                NCKEY_ESC..=NCKEY_BUTTON11 => {
                     println!("'{0}' ({1:x})\n{2:?}", key, key as u32, input);
                 }
                 _ => (),
