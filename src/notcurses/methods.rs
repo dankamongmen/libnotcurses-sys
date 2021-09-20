@@ -106,7 +106,7 @@ impl Nc {
     /// New notcurses context, expects [NcOptions].
     pub fn with_options<'a>(options: NcOptions) -> NcResult<&'a mut Nc> {
         let res = unsafe { notcurses_init(&options, null_mut()) };
-        error_ref_mut![res, "Notcurses.with_options()"]
+        error_ref_mut![res, "Nc.with_options()"]
     }
 
     /// New notcurses context, expects [NcLogLevel] and flags.
@@ -612,7 +612,7 @@ impl Nc {
     //     crate::notcurses_stddim_yx(self, y, x)
     // }
 
-    // /// [stdplane_const()][Notcurses#method.stdplane_const], plus free
+    // /// [stdplane_const()][Nc#method.stdplane_const], plus free
     // /// bonus dimensions written to non-NULL y/x!
     // ///
     // /// *C style function: [notcurses_stddim_yx()][crate::notcurses_stddim_yx].*

@@ -248,7 +248,7 @@ pub use reimplemented::*;
 /// the various *output calls* only draw to the virtual `NcPlane`s. Most of the
 /// notcurses `statistics` are updated as a result of a render, and screen
 /// geometry is refreshed (similarly to
-/// [`Notcurses.refresh`][crate::Notcurses#method.refresh]) following the render.
+/// [`Nc.refresh`][crate::Nc#method.refresh]) following the render.
 ///
 /// # Methods & Associated Functions
 ///
@@ -261,7 +261,7 @@ pub use reimplemented::*;
 /// - [`NcStyle` & `NcPaletteIndex`](#ncplane-methods-ncstylemask--paletteindex)
 /// - [`NcCell` & strings](#ncplane-methods-nccell--strings)
 /// - [cursor](#ncplane-methods-cursor)
-/// - [`NcPlane` & `Notcurses`](#ncplane-methods-ncplane--notcurses)
+/// - [`NcPlane` & `Nc`](#ncplane-methods-ncplane--nc)
 /// - [boxes & perimeters](#ncplane-methods-boxes--perimeters)
 /// - [Size, position & alignment](#ncplane-methods-size-position--alignment)
 /// - [fading, gradients & greyscale](#ncplane-methods-fading-gradients--greyscale)

@@ -88,7 +88,7 @@ pub type Nc = crate::bindings::ffi::notcurses;
 #[doc(hidden)]
 pub type Notcurses = Nc;
 
-/// Options struct for [`Notcurses`]
+/// Options struct for [`Nc`]
 pub type NcOptions = crate::bindings::ffi::notcurses_options;
 
 #[deprecated]
@@ -202,11 +202,10 @@ pub const NCLOGLEVEL_WARNING: NcLogLevel = crate::bindings::ffi::ncloglevel_e_NC
 /// Left/right-justified, or centered.
 ///
 /// ## Defined constants
-///
-/// - [NCALIGN_UNALIGNED]
-/// - [NCALIGN_LEFT]
-/// - [NCALIGN_CENTER]
-/// - [NCALIGN_RIGHT]
+/// - [`NCALIGN_UNALIGNED`]
+/// - [`NCALIGN_LEFT`]
+/// - [`NCALIGN_CENTER`]
+/// - [`NCALIGN_RIGHT`]
 pub type NcAlign = crate::bindings::ffi::ncalign_e;
 
 /// Left alignment within an [`NcPlane`][crate::NcPlane] or terminal.
@@ -225,23 +224,32 @@ pub const NCALIGN_UNALIGNED: NcAlign = crate::bindings::ffi::ncalign_e_NCALIGN_U
 
 /// Pixel blitting implementations. (Informative only).
 ///
-/// Returned by [`check_pixel_support`][Notcurses#method.check_pixel_support].
+/// Returned by [`check_pixel_support`][Nc#method.check_pixel_support].
+///
+/// ## Defined constants
+/// - [`NCPIXEL_NONE`]
+/// - [`NCPIXEL_SIXEL`]
+/// - [`NCPIXEL_LINUXFB`]
+/// - [`NCPIXEL_ITERM2`]
+/// - [`NCPIXEL_KITTY_STATIC`]
+/// - [`NCPIXEL_KITTY_ANIMATED`]
+/// - [`NCPIXEL_KITTY_SELFREF`]
 pub type NcPixelImpl = crate::bindings::ffi::ncpixelimpl_e;
 
-/// No pixel support.
+/// No pixel support (for [`NcPixelImpl`]).
 pub const NCPIXEL_NONE: NcPixelImpl = crate::bindings::ffi::ncpixelimpl_e_NCPIXEL_NONE;
-/// Sixel
+/// Sixel (for [`NcPixelImpl`]).
 pub const NCPIXEL_SIXEL: NcPixelImpl = crate::bindings::ffi::ncpixelimpl_e_NCPIXEL_SIXEL;
-/// Linux framebuffer.
+/// Linux framebuffer (for [`NcPixelImpl`]).
 pub const NCPIXEL_LINUXFB: NcPixelImpl = crate::bindings::ffi::ncpixelimpl_e_NCPIXEL_LINUXFB;
-/// iTerm2
+/// iTerm2 (for [`NcPixelImpl`]).
 pub const NCPIXEL_ITERM2: NcPixelImpl = crate::bindings::ffi::ncpixelimpl_e_NCPIXEL_ITERM2;
-/// Kitty prior to C=1 and animation.
+/// Kitty prior to C=1 and animation (for [`NcPixelImpl`]).
 pub const NCPIXEL_KITTY_STATIC: NcPixelImpl =
     crate::bindings::ffi::ncpixelimpl_e_NCPIXEL_KITTY_STATIC;
-/// Kitty with animation but not reflexive composition.
+/// Kitty with animation but not reflexive composition (for [`NcPixelImpl`]).
 pub const NCPIXEL_KITTY_ANIMATED: NcPixelImpl =
     crate::bindings::ffi::ncpixelimpl_e_NCPIXEL_KITTY_ANIMATED;
-/// Kitty with reflexive composition.
+/// Kitty with reflexive composition (for [`NcPixelImpl`]).
 pub const NCPIXEL_KITTY_SELFREF: NcPixelImpl =
     crate::bindings::ffi::ncpixelimpl_e_NCPIXEL_KITTY_SELFREF;

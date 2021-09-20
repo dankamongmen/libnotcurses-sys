@@ -1,4 +1,4 @@
-//! `Notcurses` tests.
+//! `Nc` tests.
 
 #[cfg(test)]
 mod methods;

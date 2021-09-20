@@ -13,7 +13,7 @@ use crate::widgets::{NcMenuItem, NcMenuSection};
 impl NcMenu {
     /// Creates an [`NcMenu`] with the specified options.
     ///
-    /// Menus are currently bound to an overall [`Notcurses`][crate::Notcurses]
+    /// Menus are currently bound to an overall [`Nc`][crate::Nc]
     /// object (as opposed to a particular plane), and are implemented as
     /// [`NcPlane`]s kept atop other NcPlanes.
     ///
