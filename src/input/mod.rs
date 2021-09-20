@@ -12,8 +12,8 @@
 
 use crate::NcDim;
 
-mod keycodes;
-pub use keycodes::*;
+mod keys;
+pub use keys::*;
 
 /// Reads and decodes input events.
 ///
@@ -137,7 +137,7 @@ pub const fn ncinput_equal_p(n1: NcInput, n2: NcInput) -> bool {
         return false;
     }
     if n1.evtype != n2.evtype {
-        return false
+        return false;
     }
     true
 }

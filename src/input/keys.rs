@@ -3,7 +3,7 @@
 
 use std::mem::transmute;
 
-// NOTE: Waiting for: https://github.com/rust-lang/rust/issues/53605
+// NOTE: Waiting for: https://github.com/rust-lang/rust/pull/85769 (1.56)
 // const fn suppuabize(w: u32) -> char {
 const fn suppuabize(w: u32) -> u32 {
     // unsafe { transmute(w + 0x100000) }
@@ -125,10 +125,7 @@ pub const NCKEY_BUTTON8: char = unsafe { transmute(suppuabize(208)) };
 pub const NCKEY_BUTTON9: char = unsafe { transmute(suppuabize(209)) };
 pub const NCKEY_BUTTON10: char = unsafe { transmute(suppuabize(210)) };
 pub const NCKEY_BUTTON11: char = unsafe { transmute(suppuabize(211)) };
-/// Upon reaching the end of input, `NCKEY_EOF` will be returned.
-///
-/// At this point, any further calls will immediately return `NCKEY_EOF`.
-/// Note that this does not necessarily result from pressing e.g. Ctrl+D.
+/// Will be returned upon reaching the end of input.
 pub const NCKEY_EOF: char = unsafe { transmute(suppuabize(300)) };
 
 // Synonyms (so far as we're concerned)
