@@ -92,6 +92,14 @@ pub type NcDirect = crate::bindings::ffi::ncdirect;
 /// Flags (options) for [`NcDirect`]
 pub type NcDirectFlags = u64;
 
+/// Input may be freely dropped.
+///
+/// This ought be provided when the program does not intend to handle input.
+/// Otherwise, input can accumulate in internal buffers, eventually preventing
+/// Notcurses from processing terminal messages.
+pub const NCDIRECT_OPTION_DRAIN_INPUT: u64 =
+    crate::bindings::ffi::NCDIRECT_OPTION_DRAIN_INPUT as u64;
+
 /// Flag that avoids placing the terminal into cbreak mode
 /// (disabling echo and line buffering)
 ///

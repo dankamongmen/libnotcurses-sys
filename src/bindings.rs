@@ -158,6 +158,7 @@ pub use ffi::{
 // ncdirect_vline_interp,
 //
 // // constants
+// NCDIRECT_OPTION_DRAIN_INPUT,
 // NCDIRECT_OPTION_INHIBIT_CBREAK,
 // NCDIRECT_OPTION_INHIBIT_SETLOCALE,
 // NCDIRECT_OPTION_NO_QUIT_SIGHANDLERS,
@@ -195,8 +196,8 @@ pub use ffi::{
     ncdirect_off_styles,
     ncdirect_on_styles,
     ncdirect_palette_size,
-    ncdirect_putstr,
     ncdirect_putegc,
+    ncdirect_putstr,
     ncdirect_raster_frame,
     ncdirect_readline,
     ncdirect_render_frame,
@@ -762,6 +763,7 @@ pub use ffi::{
 // notcurses_options,
 //
 // // constants
+// NCOPTION_DRAIN_INPUT,
 // NCOPTION_INHIBIT_SETLOCALE,
 // NCOPTION_NO_ALTERNATE_SCREEN,
 // NCOPTION_NO_CLEAR_BITMAPS

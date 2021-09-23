@@ -95,6 +95,13 @@ pub type NcOptions = crate::bindings::ffi::notcurses_options;
 #[doc(hidden)]
 pub type NotcursesOptions = NcOptions;
 
+/// Input may be freely dropped.
+///
+/// This ought be provided when the program does not intend to handle input.
+/// Otherwise, input can accumulate in internal buffers, eventually preventing
+/// Notcurses from processing terminal messages.
+pub const NCOPTION_DRAIN_INPUT: u64 = crate::bindings::ffi::NCOPTION_DRAIN_INPUT as u64;
+
 /// Do not call setlocale()
 ///
 /// notcurses_init() will call setlocale() to inspect the current locale. If
