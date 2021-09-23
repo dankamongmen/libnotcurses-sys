@@ -697,7 +697,7 @@ impl Nc {
     ///
     /// *C style function: [notcurses_supported_styles()][crate::notcurses_supported_styles].*
     pub fn supported_styles(&self) -> NcStyle {
-        unsafe { crate::notcurses_supported_styles(self) as NcStyle }
+        unsafe { crate::notcurses_supported_styles(self) }
     }
 
     /// Returns our current idea of the terminal dimensions in rows and cols.

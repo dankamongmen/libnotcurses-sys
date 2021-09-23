@@ -232,6 +232,13 @@ impl NcDirect {
         ]
     }
 
+    /// Returns the current styling.
+    ///
+    /// *C style function: [ncdirect_styles()][crate::ncdirect_styles].*
+    pub fn styles(&self) -> NcStyle {
+        unsafe { crate::ncdirect_styles(self) }
+    }
+
     /// Removes the specified styles.
     ///
     /// *C style function: [ncdirect_off_styles()][crate::ncdirect_off_styles].*
@@ -260,6 +267,18 @@ impl NcDirect {
             unsafe { crate::ncdirect_set_styles(self, stylebits.into()) },
             &format!("NcDirect.styles_set({:0X})", stylebits)
         ]
+    }
+
+    /// Returns an [`NcStyle`] with the supported curses-style attributes.
+    ///
+    /// The attribute is only indicated as supported if the terminal can support
+    /// it together with color.
+    ///
+    /// For more information, see the "ncv" capability in terminfo(5).
+    ///
+    /// *C style function: [ncdirect_supported_styles()][crate::ncdirect_supported_styles].*
+    pub fn supported_styles(&self) -> NcStyle {
+        unsafe { crate::ncdirect_supported_styles(self) }
     }
 
     /// Indicates to use the "default color" for the foreground.
