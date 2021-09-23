@@ -16,15 +16,13 @@ fn main() -> NcResult<()> {
     println!("Press more keys to see their input. You can exit with F1.\n");
     let mut input = NcInput::new_empty();
     loop {
-        match nc.getc_nblock(Some(&mut input)) {
-            Ok(key) => match key {
-                NCKEY_F01 => break,
-                NCKEY_ESC..=NCKEY_BUTTON11 => {
-                    println!("'{0}' ({1:x})\n{2:#?}\n", key, key as u32, input);
-                }
-                _ => (),
-            },
-            Err(err) => return Err(err),
+        let key = nc.getc_nblock(Some(&mut input))?;
+        match key {
+            NCKEY_F01 => break,
+            NCKEY_ESC..=NCKEY_BUTTON11 => {
+                println!("'{0}' ({1:x})\n{2:#?}\n", key, key as u32, input);
+            }
+            _ => (),
         }
     }
 
