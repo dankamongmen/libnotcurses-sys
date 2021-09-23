@@ -1,0 +1,93 @@
+---
+kind: pipeline
+type: docker
+name: debian-unstable
+
+steps:
+- name: debian-build
+  image: dankamongmen/unstable_builder:2021-08-19a
+  commands:
+    - export LANG=en_US.UTF-8
+    - export TERM=xterm
+    - mkdir build
+    - cd build
+    - cmake .. -DCMAKE_BUILD_TYPE=Release -DUSE_QRCODEGEN=on
+    - make -j2
+    - ./notcurses-info
+    - ctest --output-on-failure
+    - make install
+    - ldconfig
+    - cd ../cffi
+    - LDFLAGS=-L/usr/local/lib CFLAGS=-I/usr/local/include python3 setup.py sdist build install
+    - env LD_LIBRARY_PATH=/usr/local/lib ./notcurses-pydemo > /dev/null
+    - env LD_LIBRARY_PATH=/usr/local/lib ./ncdirect-pydemo > /dev/null
+    - cd ../rust
+    - rustc --version
+    - cargo build
+    - cargo t_all
+---
+kind: pipeline
+type: docker
+name: fedora-rawhide
+
+steps:
+- name: fedora-rawhide
+  image: dankamongmen/rawhide:2021-07-15a
+  commands:
+    - export LANG=en_US.UTF-8
+    - export TERM=xterm
+    - mkdir build
+    - cd build
+    - cmake -DCMAKE_BUILD_TYPE=Release -DUSE_MULTIMEDIA=oiio -DUSE_QRCODEGEN=on ..
+    - make -j2
+    - ctest --output-on-failure
+    - make install
+    - ldconfig
+    - cd ../rust
+    - rustc --version
+    - cargo build
+    - cargo t_all
+    - cd ../cffi
+    - LDFLAGS=-L/usr/local/lib CFLAGS=-I/usr/local/include python3 setup.py sdist build install
+    - cd ../python
+    - LDFLAGS=-L/usr/local/lib CFLAGS=-I/usr/local/include python3 setup.py sdist build install
+    - env LD_LIBRARY_PATH=/usr/local/lib ./notcurses-pydemo > /dev/null
+    - env LD_LIBRARY_PATH=/usr/local/lib ./ncdirect-pydemo > /dev/null
+---
+kind: pipeline
+type: docker
+name: ubuntu-impish
+
+steps:
+- name: ubuntu-build
+  image: dankamongmen/impish:2021-08-19a
+  commands:
+    - export LANG=es_ES.UTF-8
+    - export TERM=xterm
+    - mkdir build
+    - cd build
+    - cmake -DCMAKE_BUILD_TYPE=Debug -DUSE_QRCODEGEN=on -DUSE_MULTIMEDIA=none ..
+    - make -j2
+    - ctest --output-on-failure
+    - make install
+    - ldconfig
+    - cd ../cffi
+    - python3 setup.py sdist build
+    - cd ../python
+    - LDFLAGS=-L/usr/local/lib CFLAGS=-I/usr/local/include python3 setup.py sdist build install
+---
+kind: pipeline
+type: docker
+name: alpine-edge
+
+steps:
+- name: alpine-edge
+  image: dankamongmen/edge_builder:2021-08-05
+  commands:
+    - export LANG=en_US.UTF-8
+    - export TERM=vt100
+    - mkdir build
+    - cd build
+    - cmake -DCMAKE_BUILD_TYPE=Release -DUSE_PANDOC=off ..
+    - make -j2
+    - ctest --output-on-failure
