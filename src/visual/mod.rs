@@ -1,6 +1,6 @@
-// functions already exported by bindgen : 26
+// functions already exported by bindgen : 25
 // -----------------------------------------
-// (W) wrap: 22
+// (W) wrap: 21
 // (#) test: 0
 // -----------------------------------------
 //W  ncdirectf_free
@@ -17,7 +17,6 @@
 //W  ncvisual_from_rgba
 //W  ncvisual_from_rgb_packed
 //W  ncvisual_from_rgb_loose
-//W  ncvisual_inflate
 //W  ncvisual_blitter_geom
 //W  ncvisual_media_defblitter
 //W  ncvisual_polyfill_yx

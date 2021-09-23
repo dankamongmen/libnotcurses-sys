@@ -404,6 +404,7 @@ pub use ffi::{
     ncplane_at_yx_cell,
     ncplane_base,
     ncplane_below,
+    ncplane_boundlist,
     ncplane_box,
     ncplane_center_abs,
     ncplane_contents,
