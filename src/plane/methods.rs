@@ -1323,7 +1323,7 @@ impl NcPlane {
     ///
     /// It will error if the target row or column exceeds the plane dimensions.
     ///
-    /// *(No equivalent C style function)*
+    /// *C style function: [ncplane_cursor_move_rel()][crate::ncplane_cursor_move_rel].*
     pub fn cursor_move_rel(&mut self, rows: NcOffset, cols: NcOffset) -> NcResult<()> {
         self.cursor_move_rows(rows)?;
         self.cursor_move_cols(cols)?;

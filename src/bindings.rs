@@ -409,6 +409,7 @@ pub use ffi::{
     ncplane_center_abs,
     ncplane_contents,
     ncplane_create,
+    ncplane_cursor_move_rel,
     ncplane_cursor_move_yx,
     ncplane_cursor_yx,
     ncplane_destroy,

@@ -1,9 +1,8 @@
 //! `NcPlane`
 
-// functions already exported by bindgen : 117
+// functions already exported by bindgen : 114
 // -------------------------------------------
 // (X) wont: 10
-// (D) depr:  4
 // (#) test: 13
 // (W) wrap: 83
 // -------------------------------------------
@@ -16,17 +15,20 @@
 //W  ncplane_abs_x
 //W  ncplane_abs_y
 //W  ncplane_abs_yx
+//   ncplane_as_rgba
 //W  ncplane_at_cursor
 //W  ncplane_at_cursor_cell
 //W  ncplane_at_yx
 //W  ncplane_at_yx_cell
 //W  ncplane_base
 //W  ncplane_below
+//W  ncplane_boundlist
 //W  ncplane_box
 //W  ncplane_center_abs
 //W# ncplane_channels
 //W  ncplane_contents
 //W  ncplane_create
+//W  ncplane_cursor_move_rel
 //W# ncplane_cursor_move_yx
 //W# ncplane_cursor_yx
 //W  ncplane_destroy
@@ -134,6 +136,7 @@
 //W+ ncplane_bg_rgb
 //W+ ncplane_bg_rgb8
 //W+ ncplane_box_sized
+//W+ ncplane_channels
 //W# ncplane_dim_x
 //W# ncplane_dim_y
 //W+ ncplane_double_box
@@ -143,6 +146,7 @@
 //W# ncplane_fg_default_p
 //W+ ncplane_fg_rgb
 //W+ ncplane_fg_rgb8
+//W+ ncplane_gradient
 //W+ ncplane_gradient_sized
 //W+ ncplane_halign
 // + ncplane_hline
