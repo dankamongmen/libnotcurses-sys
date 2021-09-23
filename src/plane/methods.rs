@@ -721,6 +721,59 @@ impl NcPlane {
         }
     }
 
+    /// Erases every cell in the region starting at {`ystart`, `xstart`} and
+    /// having size {|`ylen`|x|`xlen`|} for non-zero lengths.
+    ///
+    /// If `ystart` and/or `xstart` are `None`, the current cursor position
+    /// along that axis is used.
+    ///
+    /// A negative `ylen` means to move up from the origin, and a negative
+    /// `xlen` means to move left from the origin. A positive `ylen` moves down,
+    /// and a positive `xlen` moves right.
+    ///
+    /// A value of 0 for the length erases everything along that dimension.
+    ///
+    /// It is an error if the starting coordinate is not in the plane,
+    /// but the ending coordinate may be outside the plane.
+    ///
+    /// ```ignore
+    /// // For example, on a plane of 20 rows and 10 columns, with the cursor at
+    /// // row 10 and column 5, the following would hold:
+    ///
+    /// (None, None, 0, 1) // clears the column to the right of the cursor (col 6)
+    /// (None, None, 0, -1) // clears the column to the left of the cursor (col 4)
+    /// (None, None, i32::MAX, 0) // clears all rows with or below the cursor (rows 10..19)
+    /// (None, None, i32::MIN, 0) // clears all rows with or above the cursor (rows 0..10)
+    /// (None, 4, 3, 3) // clears from [row 10, col 4] through [row 12, col 6]
+    /// (None, 4, 3, 3) // clears from [row 10, col 4] through [row 8, col 2]
+    /// (4, None, 0, 3) // clears columns 5, 6, and 7
+    /// (None, None, 0, 0) // clears the plane *if the cursor is in a legal position*
+    /// (0, 0, 0, 0) // clears the plane in all cases
+    /// ```
+    pub fn erase_region(
+        &mut self,
+        ystart: Option<NcDim>,
+        xstart: Option<NcDim>,
+        ylen: NcOffset,
+        xlen: NcOffset,
+    ) -> NcResult<()> {
+        error![
+            unsafe {
+                crate::ncplane_erase_region(
+                    self,
+                    ystart.unwrap_or(u32::MAX) as i32, // unwrap_or(-1)
+                    ystart.unwrap_or(u32::MAX) as i32, // unwrap_or(-1)
+                    ylen,
+                    xlen,
+                )
+            },
+            &format!(
+                "NcPlane.erase_region({:?}, {:?}, {}, {})",
+                ystart, xstart, ylen, xlen
+            )
+        ]
+    }
+
     /// Replaces the `NcCell` at the **specified** coordinates with the provided
     /// `NcCell`, advancing the cursor by its width (but not past the end of
     /// the plane).

@@ -35,7 +35,7 @@
 //W# ncplane_dim_yx
 //W  ncplane_dup
 //W# ncplane_erase
-//   ncplane_erase_region
+//W  ncplane_erase_region
 //W  ncplane_fadein
 //W  ncplane_fadein_iteration
 //W  ncplane_fadeout
@@ -80,10 +80,10 @@
 //W  ncplane_reparent
 //W  ncplane_reparent_family
 //W# ncplane_resize
-//W  ncplane_resizecb
 //W  ncplane_resize_marginalize
 //W  ncplane_resize_maximize
 //W  ncplane_resize_realign
+//W  ncplane_resizecb
 //W  ncplane_rgba
 //W  ncplane_rotate_ccw
 //W  ncplane_rotate_cw
