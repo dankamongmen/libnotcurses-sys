@@ -466,6 +466,8 @@ pub use ffi::{
     ncplane_rotate_ccw,
     ncplane_rotate_cw,
     ncplane_scrolling_p,
+    ncplane_scrollup,
+    ncplane_scrollup_child,
     ncplane_set_base,
     ncplane_set_base_cell,
     ncplane_set_bg_alpha,

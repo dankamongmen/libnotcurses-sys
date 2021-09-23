@@ -1784,6 +1784,26 @@ impl NcPlane {
     pub fn set_scrolling(&mut self, scroll: bool) -> bool {
         unsafe { crate::ncplane_set_scrolling(self, scroll) }
     }
+
+    /// Scrolls down the current plane `r` times.
+    ///
+    /// Returns an error if current plane is not a scrolling plane,
+    /// and otherwise returns the number of lines scrolled.
+    pub fn scrollup(&mut self, r: NcDim) -> NcResult<NcDim> {
+        let res = unsafe { crate::ncplane_scrollup(self, r as i32) };
+        error![res, "", res as NcDim]
+    }
+
+    /// Scrolls down the current plane until `child` is no longer hidden beneath it.
+    ///
+    /// Returns an error if `child` is not a child of this plane, or if this
+    /// plane is not scrolling, or `child` is fixed.
+    ///
+    /// Returns the number of scrolling events otherwise (might be 0).
+    pub fn scrollup_child(&mut self, child: &NcPlane) -> NcResult<NcDim> {
+        let res = unsafe { crate::ncplane_scrollup_child(self, child) };
+        error![res, "", res as NcDim]
+    }
 }
 
 // -----------------------------------------------------------------------------
