@@ -236,7 +236,7 @@ impl NcDirect {
     ///
     /// *C style function: [ncdirect_styles()][crate::ncdirect_styles].*
     pub fn styles(&self) -> NcStyle {
-        unsafe { crate::ncdirect_styles(self) }
+        unsafe { crate::ncdirect_styles(self) as NcStyle }
     }
 
     /// Removes the specified styles.
@@ -278,7 +278,7 @@ impl NcDirect {
     ///
     /// *C style function: [ncdirect_supported_styles()][crate::ncdirect_supported_styles].*
     pub fn supported_styles(&self) -> NcStyle {
-        unsafe { crate::ncdirect_supported_styles(self) }
+        unsafe { crate::ncdirect_supported_styles(self) as NcStyle }
     }
 
     /// Indicates to use the "default color" for the foreground.
