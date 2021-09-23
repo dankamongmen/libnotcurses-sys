@@ -292,6 +292,20 @@ impl Nc {
         }
     }
 
+    /// Returns the name of the user under which we are running.
+    ///
+    /// *C style function: [notcurses_accountname()][crate::notcurses_accountname].*
+    pub fn accountname() -> String {
+        rstring![crate::notcurses_accountname()].to_string()
+    }
+
+    /// Returns the name of the local hostname.
+    ///
+    /// *C style function: [notcurses_hostname()][crate::notcurses_hostname].*
+    pub fn hostname() -> String {
+        rstring![crate::notcurses_hostname()].to_string()
+    }
+
     /// Returns the name of the detected terminal.
     ///
     /// *C style function: [notcurses_detected_terminal()][crate::notcurses_detected_terminal].*

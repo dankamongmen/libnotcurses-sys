@@ -26,6 +26,7 @@ pub mod ffi {
 pub use ffi::{
     // functions
     ncstrwidth,
+    ncstrwidth_valid,
 };
 
 // blitset ---------------------------------------------------------------------
@@ -780,6 +781,7 @@ pub use ffi::{
 #[doc(inline)]
 pub use ffi::{
     // functions
+    notcurses_accountname,
     notcurses_at_yx,
     notcurses_bottom,
     notcurses_canbraille,
@@ -801,6 +803,7 @@ pub use ffi::{
     notcurses_detected_terminal,
     notcurses_drop_planes,
     notcurses_get,
+    notcurses_hostname,
     notcurses_init,
     notcurses_inputready_fd,
     notcurses_lex_blitter,

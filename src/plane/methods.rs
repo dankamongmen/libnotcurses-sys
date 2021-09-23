@@ -1789,6 +1789,8 @@ impl NcPlane {
     ///
     /// Returns an error if current plane is not a scrolling plane,
     /// and otherwise returns the number of lines scrolled.
+    ///
+    /// *C style function: [ncplane_scrollup()][crate::ncplane_scrollup].*
     pub fn scrollup(&mut self, r: NcDim) -> NcResult<NcDim> {
         let res = unsafe { crate::ncplane_scrollup(self, r as i32) };
         error![res, "", res as NcDim]
@@ -1800,6 +1802,8 @@ impl NcPlane {
     /// plane is not scrolling, or `child` is fixed.
     ///
     /// Returns the number of scrolling events otherwise (might be 0).
+    ///
+    /// *C style function: [ncplane_scrollup_child()][crate::ncplane_scrollup_child].*
     pub fn scrollup_child(&mut self, child: &NcPlane) -> NcResult<NcDim> {
         let res = unsafe { crate::ncplane_scrollup_child(self, child) };
         error![res, "", res as NcDim]
