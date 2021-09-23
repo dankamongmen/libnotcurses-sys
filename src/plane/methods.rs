@@ -1612,7 +1612,7 @@ impl NcPlane {
         unsafe { crate::ncplane_set_resizecb(self, crate::ncresizecb_to_c(resizecb)) }
     }
 
-    /// Rotate the plane π/2 radians clockwise.
+    /// Rotate the plane π/2 radians (90°) clockwise.
     ///
     /// This cannot be performed on arbitrary planes, because glyphs cannot be
     /// arbitrarily rotated.
@@ -1629,7 +1629,7 @@ impl NcPlane {
         error![unsafe { crate::ncplane_rotate_cw(self) }]
     }
 
-    /// Rotate the plane π/2 radians counter-clockwise.
+    /// Rotate the plane π/2 radians (90°) counter-clockwise.
     ///
     /// See [`rotate_cw`][NcPlane#method.rotate_cw]
     /// for more information.

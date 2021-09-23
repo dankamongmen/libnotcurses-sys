@@ -195,8 +195,8 @@ pub use ffi::{
     ncdirect_off_styles,
     ncdirect_on_styles,
     ncdirect_palette_size,
-    //W ncdirect_printf_aligned,
     ncdirect_putstr,
+    ncdirect_putegc,
     ncdirect_raster_frame,
     ncdirect_readline,
     ncdirect_render_frame,
@@ -830,6 +830,9 @@ pub use ffi::{
 //
 // // structs
 // ncpalette,
+//
+// // constants
+// NCPALETTESIZE,
 
 #[doc(inline)]
 pub use ffi::{
@@ -837,9 +840,6 @@ pub use ffi::{
     ncpalette_free,
     ncpalette_new,
     ncpalette_use,
-
-    // constants
-    NCPALETTESIZE,
 };
 
 // fade callback ---------------------------------------------------------------

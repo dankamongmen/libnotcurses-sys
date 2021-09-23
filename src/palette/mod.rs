@@ -47,3 +47,6 @@ pub type NcPalette = crate::bindings::ffi::ncpalette;
 /// 8-bit value used for indexing into a [`NcPalette`]
 ///
 pub type NcPaletteIndex = u8;
+
+/// The supported palette-indexed colors number is up to 8 bits.
+pub const NCPALETTE_SIZE: u32 = crate::bindings::ffi::NCPALETTESIZE;

@@ -1,11 +1,11 @@
 //! `NcDirect`
 
-// total: 62
+// total: 63
 // ---------------------------------------------------
 // (X)  1 : wont do
 // (~)  3 : TODO / WIP
 //
-// (f) 46 : unsafe ffi function exported by bindgen
+// (f) 47 : unsafe ffi function exported by bindgen
 // (w)  1 : safely wrapped ffi function
 // (r) 11 : static function manually reimplemented
 //
@@ -60,13 +60,14 @@
 // fm  ncplane_off_styles
 // fm  ncdirect_palette_size
 //X    ncdirect_printf_aligned
+// f   ncdirect_putegc
 // fm  ncdirect_putstr
 // fm  ncdirect_raster_frame
 // fm  ncdirect_readline
 // fm  ncdirect_render_frame
 // fm  ncdirect_render_image
 // fm  ncdirect_rounded_box
-// fm  ncplane_set_styles
+// fm  ncdirect_set_styles
 // fm  ncdirect_stop
 // f   ncdirect_stream
 // f   ncdirect_styles
