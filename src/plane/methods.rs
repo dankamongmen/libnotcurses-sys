@@ -991,15 +991,26 @@ impl NcPlane {
     /// Returns the `NcPlane` above this one, or None if already at the top.
     ///
     /// *C style function: [ncplane_above()][crate::ncplane_above].*
-    pub fn above(&mut self) -> NcResult<&mut NcPlane> {
-        error_ref_mut![unsafe { crate::ncplane_above(self) }, "NcPlane.above()"]
+    pub fn above(&mut self) -> Option<&mut NcPlane> {
+        // error_ref_mut![unsafe { crate::ncplane_above(self) }, "NcPlane.above()"].ok();
+        let ptr = unsafe { crate::ncplane_above(self) };
+        if ptr.is_null() {
+            None
+        } else {
+            Some(unsafe { &mut *ptr })
+        }
     }
 
     /// Returns the `NcPlane` below this one, or None if already at the bottom.
     ///
     /// *C style function: [ncplane_below()][crate::ncplane_below].*
-    pub fn below(&mut self) -> NcResult<&mut NcPlane> {
-        error_ref_mut![unsafe { crate::ncplane_below(self) }, "NcPlane.below()"]
+    pub fn below(&mut self) -> Option<&mut NcPlane> {
+        let ptr = unsafe { crate::ncplane_below(self) };
+        if ptr.is_null() {
+            None
+        } else {
+            Some(unsafe { &mut *ptr })
+        }
     }
 
     /// Relocates this `NcPlane` above the `above` NcPlane, in the z-buffer.
