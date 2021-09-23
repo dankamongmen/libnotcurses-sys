@@ -280,6 +280,30 @@ impl Nc {
         error![unsafe { crate::notcurses_cursor_enable(self, y as i32, x as i32) }]
     }
 
+    /// Shifts to the alternate screen, if available.
+    ///
+    /// If already using the alternate screen, this returns Ok(()) immediately.
+    ///
+    /// If the alternate screen is not available, returns an Error immediately.
+    ///
+    /// Entering the alternate screen turns off scrolling for the standard plane.
+    ///
+    /// *C style function:
+    /// [notcurses_enter_alternate_screen()][crate::notcurses_enter_alternate_screen].*
+    pub fn notcurses_enter_alternate_screen(&mut self) -> NcResult<()> {
+        error![unsafe { crate::notcurses_enter_alternate_screen(self) }]
+    }
+
+    /// Exits the alternate screen.
+    ///
+    /// Immediately returns Ok(()) if not currently using the alternate screen.
+    ///
+    /// *C style function:
+    /// [notcurses_leave_alternate_screen()][crate::notcurses_leave_alternate_screen].*
+    pub fn notcurses_leave_alterante_screen(&mut self) -> NcResult<()> {
+        error![unsafe { crate::notcurses_leave_alternate_screen(self) }]
+    }
+
     /// Dumps notcurses state to the supplied `debugfp`.
     ///
     /// Output is freeform, and subject to change. It includes geometry of all
