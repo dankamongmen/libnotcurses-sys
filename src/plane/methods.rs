@@ -952,7 +952,7 @@ impl NcPlane {
     ) -> NcResult<NcDim> {
         let width = string.chars().count() as u32;
         let xpos = self.halign(align, width)?;
-        self.cursor_move_x(xpos)?;
+        self.cursor_move_yx(y, xpos)?;
         let res = unsafe { crate::ncplane_putstr_stained(self, cstring![string]) };
         error![
             res,
