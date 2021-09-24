@@ -721,8 +721,8 @@ impl NcPlane {
         }
     }
 
-    /// Erases every cell in the region starting at {`ystart`, `xstart`} and
-    /// having size {`ylen`×`xlen`} for non-zero lengths.
+    /// Erases every cell in the region starting at (`ystart`, `xstart`) and
+    /// having a size (`ylen` × `xlen`) for non-zero lengths.
     ///
     /// If `ystart` and/or `xstart` are `None`, the current cursor position
     /// along that axis is used.
@@ -744,12 +744,17 @@ impl NcPlane {
     /// (None, None, 0, -1) // clears the column to the left of the cursor (col 4)
     /// (None, None, i32::MAX, 0) // clears all rows with or below the cursor (rows 10..19)
     /// (None, None, i32::MIN, 0) // clears all rows with or above the cursor (rows 0..10)
-    /// (None, 4, 3, 3) // clears from [row 10, col 4] through [row 12, col 6]
-    /// (None, 4, 3, 3) // clears from [row 10, col 4] through [row 8, col 2]
+    /// (None, 4, 3, 3) // clears from [row 5, col 4] through [row 7, col 6]
+    /// (None, 4, -3, -3) // clears from [row 5, col 4] through [row 3, col 2]
     /// (4, None, 0, 3) // clears columns 5, 6, and 7
     /// (None, None, 0, 0) // clears the plane *if the cursor is in a legal position*
     /// (0, 0, 0, 0) // clears the plane in all cases
     /// ```
+    /// See also the [`erase_region` example][0].
+    ///
+    /// [0]: https://github.com/dankamongmen/libnotcurses-sys/blob/main/examples/erase_region.rs
+    ///
+    /// *C style function: [ncplane_erase_region()][crate::ncplane_erase_region].*
     pub fn erase_region(
         &mut self,
         ystart: Option<NcDim>,
@@ -762,7 +767,7 @@ impl NcPlane {
                 crate::ncplane_erase_region(
                     self,
                     ystart.unwrap_or(u32::MAX) as i32, // unwrap_or(-1)
-                    ystart.unwrap_or(u32::MAX) as i32, // unwrap_or(-1)
+                    xstart.unwrap_or(u32::MAX) as i32, // unwrap_or(-1)
                     ylen,
                     xlen,
                 )
