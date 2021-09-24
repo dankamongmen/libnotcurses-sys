@@ -915,6 +915,35 @@ impl NcPlane {
         ]
     }
 
+    /// Same as [`putstr_aligned`][NcPlane#method.putstr_aligned],
+    /// but retains the styling.
+    ///
+    /// The current styling of the plane will not be changed.
+    ///
+    /// Advances the cursor by some positive number of columns (though not
+    /// beyond the end of the plane); this number is returned on success.
+    ///
+    /// *(No equivalent C style function)*
+    pub fn putstr_aligned_stained(
+        &mut self,
+        y: NcDim,
+        align: NcAlign,
+        string: &str,
+    ) -> NcResult<NcDim> {
+        let width = string.chars().count() as u32;
+        let xpos = self.halign(align, width)?;
+        self.cursor_move_x(xpos)?;
+        let res = unsafe { crate::ncplane_putstr_stained(self, cstring![string]) };
+        error![
+            res,
+            &format!(
+                "NcPlane.putstr_aligned_stained({}, {}, {:?})",
+                y, align, string
+            ),
+            res as NcDim
+        ]
+    }
+
     /// Writes a string to the provided location, using the current style.
     ///
     /// They will be interpreted as a series of columns.
@@ -931,6 +960,24 @@ impl NcPlane {
         error![
             res,
             &format!("NcPlane.putstr_yx({}, {}, {:?})", y, x, string),
+            res as NcDim
+        ]
+    }
+
+    /// Same as [`putstr_yx`][NcPlane#method.putstr_yx], but retains the styling.
+    ///
+    /// The current styling of the plane will not be changed.
+    ///
+    /// Advances the cursor by some positive number of columns (though not
+    /// beyond the end of the plane); this number is returned on success.
+    ///
+    /// *(No equivalent C style function)*
+    pub fn putstr_yx_stained(&mut self, y: NcDim, x: NcDim, string: &str) -> NcResult<NcDim> {
+        self.cursor_move_yx(y, x)?;
+        let res = unsafe { crate::ncplane_putstr_stained(self, cstring![string]) };
+        error![
+            res,
+            &format!("NcPlane.putstr_yx_stained({}, {}, {:?})", y, x, string),
             res as NcDim
         ]
     }
