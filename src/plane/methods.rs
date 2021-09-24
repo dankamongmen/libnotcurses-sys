@@ -882,19 +882,6 @@ impl NcPlane {
         Ok(())
     }
 
-    /// Same as [`putstr_yx`][NcPlane#method.putstr_yx]
-    /// but [`NcAlign`]ed on x.
-    ///
-    /// *C style function: [ncplane_putstr_aligned()][crate::ncplane_putstr_aligned].*
-    pub fn putstr_aligned(&mut self, y: NcDim, align: NcAlign, string: &str) -> NcResult<NcDim> {
-        let res = unsafe { crate::ncplane_putstr_aligned(self, y as i32, align, cstring![string]) };
-        error![
-            res,
-            &format!("NcPlane.putstr_aligned({}, {}, {:?})", y, align, string),
-            res as NcDim
-        ]
-    }
-
     /// Writes a string to the current location, but retains the styling.
     ///
     /// The current styling of the plane will not be changed.
@@ -911,6 +898,39 @@ impl NcPlane {
         error![
             res,
             &format!("NcPlane.putstr_stained({:?})", string),
+            res as NcDim
+        ]
+    }
+
+    /// Same as [`putstr_yx`][NcPlane#method.putstr_yx]
+    /// but [`NcAlign`]ed on x.
+    ///
+    /// *C style function: [ncplane_putstr_aligned()][crate::ncplane_putstr_aligned].*
+    pub fn putstr_aligned(&mut self, y: NcDim, align: NcAlign, string: &str) -> NcResult<NcDim> {
+        let res = unsafe { crate::ncplane_putstr_aligned(self, y as i32, align, cstring![string]) };
+        error![
+            res,
+            &format!("NcPlane.putstr_aligned({}, {}, {:?})", y, align, string),
+            res as NcDim
+        ]
+    }
+
+    /// Writes a string to the provided location, using the current style.
+    ///
+    /// They will be interpreted as a series of columns.
+    ///
+    /// Advances the cursor by some positive number of columns (though not
+    /// beyond the end of the plane); this number is returned on success.
+    ///
+    /// On error, a non-positive number is returned, indicating the number of
+    /// columns which were written before the error.
+    ///
+    /// *C style function: [ncplane_putstr_yx()][crate::ncplane_putstr_yx].*
+    pub fn putstr_yx(&mut self, y: NcDim, x: NcDim, string: &str) -> NcResult<NcDim> {
+        let res = unsafe { crate::ncplane_putstr_yx(self, y as i32, x as i32, cstring![string]) };
+        error![
+            res,
+            &format!("NcPlane.putstr_yx({}, {}, {:?})", y, x, string),
             res as NcDim
         ]
     }
@@ -940,26 +960,6 @@ impl NcPlane {
                 "NcPlane.putstr_aligned_stained({}, {}, {:?})",
                 y, align, string
             ),
-            res as NcDim
-        ]
-    }
-
-    /// Writes a string to the provided location, using the current style.
-    ///
-    /// They will be interpreted as a series of columns.
-    ///
-    /// Advances the cursor by some positive number of columns (though not
-    /// beyond the end of the plane); this number is returned on success.
-    ///
-    /// On error, a non-positive number is returned, indicating the number of
-    /// columns which were written before the error.
-    ///
-    /// *C style function: [ncplane_putstr_yx()][crate::ncplane_putstr_yx].*
-    pub fn putstr_yx(&mut self, y: NcDim, x: NcDim, string: &str) -> NcResult<NcDim> {
-        let res = unsafe { crate::ncplane_putstr_yx(self, y as i32, x as i32, cstring![string]) };
-        error![
-            res,
-            &format!("NcPlane.putstr_yx({}, {}, {:?})", y, x, string),
             res as NcDim
         ]
     }
