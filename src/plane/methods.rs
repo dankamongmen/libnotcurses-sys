@@ -1387,33 +1387,35 @@ impl NcPlane {
 // -----------------------------------------------------------------------------
 /// ## NcPlane methods: size, position & alignment
 impl NcPlane {
-    /// Returns the column at which `cols` columns ought start in order to be
-    /// aligned according to `align` within this `NcPlane`.
+    /// Returns the column at which `numcols` columns ought start in order to be
+    /// aligned according to `align` within this plane.
     ///
     /// Returns `-`[NCRESULT_MAX][crate::NCRESULT_MAX] if
     /// [NCALIGN_UNALIGNED][crate::NCALIGN_UNALIGNED] or invalid [NcAlign].
     ///
     /// *C style function: [ncplane_halign()][crate::ncplane_halign].*
     #[inline]
-    pub fn halign(&mut self, align: NcAlign, cols: NcDim) -> NcResult<()> {
+    pub fn halign(&mut self, align: NcAlign, numcols: NcDim) -> NcResult<NcDim> {
+        let res = crate::ncplane_halign(self, align, numcols);
         error![
-            crate::ncplane_halign(self, align, cols),
-            &format!("NcPlane.halign({:?}, {})", align, cols)
+            res,
+            &format!("NcPlane.halign({:?}, {})", align, numcols),
+            res as NcDim
         ]
     }
 
     /// Returns the row at which `rows` rows ought start in order to be
-    /// aligned according to `align` within this `NcPlane`.
+    /// aligned according to `align` within this plane.
     ///
     /// Returns `-`[NCRESULT_MAX][crate::NCRESULT_MAX] if
     /// [NCALIGN_UNALIGNED][crate::NCALIGN_UNALIGNED] or invalid [NcAlign].
     ///
     /// *C style function: [ncplane_valign()][crate::ncplane_valign].*
     #[inline]
-    pub fn valign(&mut self, align: NcAlign, cols: NcDim) -> NcResult<()> {
+    pub fn valign(&mut self, align: NcAlign, numrows: NcDim) -> NcResult<()> {
         error![
-            crate::ncplane_valign(self, align, cols),
-            &format!("NcPlane.valign({:?}, {})", align, cols)
+            crate::ncplane_valign(self, align, numrows),
+            &format!("NcPlane.valign({:?}, {})", align, numrows)
         ]
     }
 

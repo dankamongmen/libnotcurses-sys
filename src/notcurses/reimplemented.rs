@@ -3,11 +3,11 @@
 use core::ptr::{null, null_mut};
 
 use crate::{
-    Nc, NcAlign, NcDim, NcError, NcInput, NcIntResult, NcOffset, NcPlane, NcResult, NcTime,
-    NCALIGN_CENTER, NCALIGN_LEFT, NCALIGN_RIGHT, NCRESULT_MAX,
+    Nc, NcAlign, NcDim, NcError, NcInput, NcIntResult, NcPlane, NcResult, NcTime, NCALIGN_BOTTOM,
+    NCALIGN_CENTER, NCALIGN_LEFT, NCALIGN_RIGHT, NCALIGN_TOP, NCRESULT_MAX,
 };
 
-/// Returns the offset into `availcols` at which `cols` ought be output given
+/// Returns the offset into `avail_u` at which `u` ought be output given
 /// the requirements of `align`.
 ///
 /// Returns `-`[`NCRESULT_MAX`] if [NCALIGN_UNALIGNED][crate::NCALIGN_UNALIGNED]
@@ -15,20 +15,17 @@ use crate::{
 ///
 /// *Method: Nc.[align()][Nc#method.align].*
 #[inline]
-pub fn notcurses_align(availcols: NcDim, align: NcAlign, cols: NcDim) -> NcOffset {
-    if align == NCALIGN_LEFT {
-        return 0;
-    }
-    if cols > availcols {
+pub fn notcurses_align(avail_u: NcDim, align: NcAlign, u: NcDim) -> NcIntResult {
+    if align == NCALIGN_LEFT || align == NCALIGN_TOP {
         return 0;
     }
     if align == NCALIGN_CENTER {
-        return ((availcols - cols) / 2) as NcOffset;
+        return ((avail_u - u) / 2) as NcIntResult;
     }
-    if align == NCALIGN_RIGHT {
-        return (availcols - cols) as NcOffset;
+    if align == NCALIGN_RIGHT || align == NCALIGN_BOTTOM {
+        return (avail_u - u) as NcIntResult;
     }
-    -NCRESULT_MAX // NCALIGN_UNALIGNED
+    -NCRESULT_MAX
 }
 
 /// Reads input blocking until an event is processed or a signal is received.

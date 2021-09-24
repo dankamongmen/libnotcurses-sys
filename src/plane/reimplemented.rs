@@ -329,19 +329,19 @@ pub fn ncplane_resize_simple(plane: &mut NcPlane, y_len: NcDim, x_len: NcDim) ->
     }
 }
 
-/// Returns the column at which `cols` columns ought start in order to be aligned
-/// according to `align` within this NcPlane.
+/// Returns the column at which `numcols` columns ought start in order to be
+/// aligned according to `align` within the `plane`.
 ///
 /// Returns `-`[`NCRESULT_MAX`][crate::NCRESULT_MAX] if
 /// [NCALIGN_UNALIGNED][crate::NCALIGN_UNALIGNED] or invalid [NcAlign].
 ///
 /// *Method: NcPlane.[halign()][NcPlane#method.halign].*
 #[inline]
-pub fn ncplane_halign(plane: &NcPlane, align: NcAlign, cols: NcDim) -> NcIntResult {
-    crate::notcurses_align(ncplane_dim_x(plane), align, cols)
+pub fn ncplane_halign(plane: &NcPlane, align: NcAlign, numcols: NcDim) -> NcIntResult {
+    crate::notcurses_align(ncplane_dim_x(plane), align, numcols)
 }
 
-/// Returns the row at which `rows` rows ought start in order to be aligned
+/// Returns the row at which `numrows` rows ought start in order to be aligned
 /// according to `align` within this NcPlane.
 ///
 /// Returns `-`[`NCRESULT_MAX`][crate::NCRESULT_MAX] if
@@ -349,8 +349,8 @@ pub fn ncplane_halign(plane: &NcPlane, align: NcAlign, cols: NcDim) -> NcIntResu
 ///
 /// *Method: NcPlane.[valign()][NcPlane#method.valign].*
 #[inline]
-pub fn ncplane_valign(plane: &NcPlane, align: NcAlign, rows: NcDim) -> NcIntResult {
-    crate::notcurses_align(ncplane_dim_y(plane), align, rows)
+pub fn ncplane_valign(plane: &NcPlane, align: NcAlign, numrows: NcDim) -> NcIntResult {
+    crate::notcurses_align(ncplane_dim_y(plane), align, numrows)
 }
 
 // line ------------------------------------------------------------------------
