@@ -722,7 +722,7 @@ impl NcPlane {
     }
 
     /// Erases every cell in the region starting at {`ystart`, `xstart`} and
-    /// having size {|`ylen`|x|`xlen`|} for non-zero lengths.
+    /// having size {`ylen`×`xlen`} for non-zero lengths.
     ///
     /// If `ystart` and/or `xstart` are `None`, the current cursor position
     /// along that axis is used.
@@ -731,7 +731,7 @@ impl NcPlane {
     /// `xlen` means to move left from the origin. A positive `ylen` moves down,
     /// and a positive `xlen` moves right.
     ///
-    /// A value of 0 for the length erases everything along that dimension.
+    /// A value of `0` for the length erases everything along that dimension.
     ///
     /// It is an error if the starting coordinate is not in the plane,
     /// but the ending coordinate may be outside the plane.
@@ -882,7 +882,7 @@ impl NcPlane {
         Ok(())
     }
 
-    /// Same as [`putstr_yx()`][NcPlane#method.putstr_yx]
+    /// Same as [`putstr_yx`][NcPlane#method.putstr_yx]
     /// but [`NcAlign`]ed on x.
     ///
     /// *C style function: [ncplane_putstr_aligned()][crate::ncplane_putstr_aligned].*
@@ -1419,15 +1419,20 @@ impl NcPlane {
         ]
     }
 
+    /// Finds the center coordinate of a plane.
     ///
+    /// In the case of an even number of rows/columns the top/left is preferred
+    /// (in such a case, there will be one more cell to the bottom/right
+    /// of the center than the top/left).
+    /// The center is then modified relative to the plane's origin.
     ///
     /// *C style function: [ncplane_center_abs()][crate::ncplane_center_abs].*
-    //
-    // TODO: doc.
-    pub fn center_abs(&self, y: &mut NcDim, x: &mut NcDim) {
+    pub fn center_abs(&self) -> (NcDim, NcDim) {
+        let (mut y, mut x) = (0, 0);
         unsafe {
-            crate::ncplane_center_abs(self, &mut (*y as i32), &mut (*x as i32));
+            crate::ncplane_center_abs(self, &mut y, &mut x);
         }
+        (y as NcDim, x as NcDim)
     }
 
     /// Returns the dimensions of this `NcPlane`.
