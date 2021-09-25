@@ -365,6 +365,8 @@ pub use ffi::{
     ncpile_create,
     ncpile_rasterize,
     ncpile_render,
+    ncpile_render_to_buffer,
+    ncpile_render_to_file,
     ncpile_top,
 };
 

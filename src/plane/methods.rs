@@ -6,9 +6,9 @@ use core::{
 
 use crate::{
     cstring, error, error_ref, error_ref_mut, rstring, Nc, NcAlign, NcAlphaBits, NcBlitter,
-    NcBoxMask, NcCell, NcChannel, NcChannels, NcComponent, NcDim, NcError, NcFadeCb, NcOffset,
-    NcPaletteIndex, NcPixelGeometry, NcPlane, NcPlaneOptions, NcResizeCb, NcResult, NcRgb, NcStyle,
-    NcTime, NCRESULT_ERR,
+    NcBoxMask, NcCell, NcChannel, NcChannels, NcComponent, NcDim, NcError, NcFadeCb, NcFile,
+    NcOffset, NcPaletteIndex, NcPixelGeometry, NcPlane, NcPlaneOptions, NcResizeCb, NcResult,
+    NcRgb, NcStyle, NcTime, NCRESULT_ERR,
 };
 
 /// # NcPlaneOptions Constructors
@@ -1301,6 +1301,39 @@ impl NcPlane {
         error![unsafe { crate::ncpile_render(self) }, "NcPlane.render()"]
     }
 
+    /// Performs the rendering and rasterization portion of
+    /// [`render`][NcPlane#method.render] and [`rasterize`][NcPlane#method.rasterize]
+    /// but doe not write the resulting buffer out to the terminal.
+    ///
+    /// Using this function, the user can control the writeout process.
+    /// The returned buffer must be freed by the caller.
+    ///
+    /// *C style function: [ncpile_render_to_buffer()][crate::ncpile_render_to_buffer].*
+    // CHECK this works
+    pub fn render_to_buffer(&mut self, buffer: &mut Vec<u8>) -> NcResult<()> {
+        let len = buffer.len() as u32;
+
+        // https://github.com/dankamongmen/notcurses/issues/1339
+        #[cfg(any(target_arch = "x86_64", target_arch = "i686", target_arch = "x86"))]
+        let mut buf = buffer.as_mut_ptr() as *mut i8;
+        #[cfg(not(any(target_arch = "x86_64", target_arch = "i686", target_arch = "x86")))]
+        let mut buf = buffer.as_mut_ptr() as *mut u8;
+
+        error![
+            unsafe { crate::ncpile_render_to_buffer(self, &mut buf, &mut len.into()) },
+            &format!["NcPlane.render_to_buffer(buffer, {})", len]
+        ]
+    }
+
+    /// Writes the last rendered frame, in its entirety, to `fp`.
+    ///
+    /// If [`Nc.render()`][Nc#method.render] has not yet been called,
+    /// nothing will be written.
+    ///
+    /// *C style function: [ncpile_render_to_file()][crate::ncpile_render_to_file].*
+    pub fn render_to_file(&mut self, fp: &mut NcFile) -> NcResult<()> {
+        error![unsafe { crate::ncpile_render_to_file(self, fp.as_nc_ptr()) }]
+    }
     /// Gets a mutable reference to the [`Nc`] context of this `NcPlane`.
     ///
     /// *C style function: [ncplane_notcurses()][crate::ncplane_notcurses].*
