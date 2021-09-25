@@ -4,9 +4,9 @@ use core::ptr::null_mut;
 use libc::c_void;
 
 use crate::{
-    cstring, error, error_ref_mut, rstring, Nc, NcBlitter, NcComponent, NcDim, NcDirect, NcDirectF,
-    NcError, NcIntResult, NcPixel, NcPlane, NcResult, NcRgba, NcScale, NcTime, NcVGeom, NcVisual,
-    NcVisualOptions, NCBLIT_PIXEL, NCRESULT_ERR,
+    cstring, error, error_ref_mut, rstring, Nc, NcBlitter, NcChannel, NcComponent, NcDim, NcDirect,
+    NcDirectF, NcError, NcIntResult, NcPixel, NcPlane, NcResult, NcRgba, NcScale, NcTime, NcVGeom,
+    NcVisual, NcVisualOptions, NCBLIT_PIXEL, NCRESULT_ERR,
 };
 
 /// # NcVisualOptions Constructors
@@ -263,6 +263,54 @@ impl NcVisual {
             &format!(
                 "NcVisual::from_rgba(rgba, {}, {}, {})",
                 rows, rowstride, cols
+            )
+        ]
+    }
+
+    /// Like [`from_rgba`][NcVisual#method.from_rgba], but `data` is
+    /// `pstride`-byte palette-indexed pixels, arranged in `rows` lines of
+    /// `rowstride` bytes each, composed of `cols` pixels.
+    ///
+    /// `palette` is an array of at least `palsize` [`NcChannel`]s.
+    ///
+    /// *C style function: [ncvisual_from_palidx()][crate::ncvisual_from_palidx].*
+    //
+    // API ALLOC struct ncvisual* ncvisual_from_palidx(const void* data, int rows,
+    // int rowstride, int cols, int palsize, int pstride, const uint32_t* palette)
+    // pub fn ncvisual_from_palidx(
+    //     data: *const cty::c_void,
+    //     rows: cty::c_int,
+    //     rowstride: cty::c_int,
+    //     cols: cty::c_int,
+    //     palsize: cty::c_int,
+    //     pstride: cty::c_int,
+    //     palette: *const u32,
+    // ) -> *mut ncvisual;
+    pub fn from_palidx<'a>(
+        data: &[u8],
+        rows: NcDim,
+        rowstride: NcDim,
+        cols: NcDim,
+        palsize: u8,
+        pstride: NcDim,
+        palette: &[NcChannel],
+    ) -> NcResult<&'a mut NcVisual> {
+        // assert![];
+        error_ref_mut![
+            unsafe {
+                crate::ncvisual_from_palidx(
+                    data.as_ptr() as *const c_void,
+                    rows as i32,
+                    rowstride as i32,
+                    cols as i32,
+                    palsize as i32,
+                    pstride as i32,
+                    palette.as_ptr() as *const NcChannel,
+                )
+            },
+            &format!(
+                "NcVisual::from_palidx(data, {}, {}, {}, {}, {}, palette)",
+                rows, rowstride, cols, palsize, pstride
             )
         ]
     }
@@ -527,6 +575,16 @@ impl NcVisual {
         } else {
             Err(NcError::with_msg(NCRESULT_ERR, "NcVisual.subtitle()"))
         }
+    }
+
+    /// If a subtitle ought be displayed at this time, return a new plane
+    ///
+    /// The returned plane is bound to `parent` and contains the subtitle,
+    /// which might be text or graphics (depending on the input format).
+    ///
+    /// *C style function: [ncvisual_subtitle_plane()][crate::ncvisual_subtitle_plane].*
+    pub fn subtitle_plane(&self, parent: &mut NcPlane) -> NcResult<&mut NcPlane> {
+        error_ref_mut![unsafe { crate::ncvisual_subtitle_plane(parent, self) }]
     }
 }
 

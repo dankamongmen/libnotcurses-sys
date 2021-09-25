@@ -743,6 +743,7 @@ pub use ffi::{
     ncvisual_destroy,
     ncvisual_from_bgra,
     ncvisual_from_file,
+    ncvisual_from_palidx,
     ncvisual_from_plane,
     ncvisual_from_rgb_loose,
     ncvisual_from_rgb_packed,
@@ -757,6 +758,7 @@ pub use ffi::{
     ncvisual_simple_streamer,
     ncvisual_stream,
     ncvisual_subtitle,
+    ncvisual_subtitle_plane,
 };
 
 // notcurses -------------------------------------------------------------------

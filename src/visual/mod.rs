@@ -1,6 +1,6 @@
-// functions already exported by bindgen : 25
+// functions already exported by bindgen : 27
 // -----------------------------------------
-// (W) wrap: 21
+// (W) wrap: 23
 // (#) test: 0
 // -----------------------------------------
 //W  ncdirectf_free
@@ -13,6 +13,7 @@
 //W  ncvisual_destroy
 //W  ncvisual_from_bgra
 //W  ncvisual_from_file
+//W  ncvisual_from_palidx
 //W  ncvisual_from_plane
 //W  ncvisual_from_rgba
 //W  ncvisual_from_rgb_packed
@@ -28,6 +29,7 @@
 //W  ncvisual_simple_streamer
 //~  ncvisual_stream
 //W  ncvisual_subtitle
+//W  ncvisual_subtitle_plane
 
 #[allow(unused_imports)] // for the doc comments
 use crate::{NcChannel, NcDim, NcRgb};
