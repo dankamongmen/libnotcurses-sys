@@ -804,6 +804,7 @@ pub use ffi::{
     notcurses_drop_planes,
     notcurses_enter_alternate_screen,
     notcurses_get,
+    notcurses_getvec,
     notcurses_hostname,
     notcurses_init,
     notcurses_inputready_fd,

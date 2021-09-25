@@ -33,6 +33,7 @@
 //~f   notcurses_detected_terminal
 // fmt notcurses_drop_planes
 // fm  notcurses_get
+// fm  notcurses_getvec
 // fmt notcurses_init
 // fm  notcurses_inputready_fd
 // fm  notcurses_lex_blitter
