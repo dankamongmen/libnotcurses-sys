@@ -1,5 +1,7 @@
 //! `cell*_*` reimplemented functions.
 
+#![allow(dead_code)]
+
 use libc::strcmp;
 
 use crate::{
@@ -8,6 +10,13 @@ use crate::{
     NCALPHA_BG_PALETTE, NCALPHA_FGDEFAULT_MASK, NCALPHA_FG_PALETTE, NCALPHA_OPAQUE, NCRESULT_ERR,
     NCRESULT_OK, NCSTYLE_MASK,
 };
+
+const NCBOXLIGHT: &str = "┌┐└┘─│";
+const NCBOXHEAVY: &str = "┏┓┗┛━┃";
+const NCBOXROUND: &str = "╭╮╰╯─│";
+const NCBOXDOUBLE: &str = "╔╗╚╝═║";
+const NCBOXASCII: &str = "/\\\\/-|";
+const NCBOXOUTER: &str = "🭽🭾🭼🭿▁🭵🭶🭰";
 
 // Alpha -----------------------------------------------------------------------
 
@@ -444,6 +453,7 @@ pub fn nccell_init(cell: &mut NcCell) {
 /// - Blasts the styling with `style` and `channels`.
 ///
 /// *Method: NcCell.[prime()][NcCell#method.prime].*
+#[inline]
 pub fn nccell_prime(
     plane: &mut NcPlane,
     cell: &mut NcCell,
@@ -464,6 +474,7 @@ pub fn nccell_prime(
 /// are [nccell_release]d. There must be at least six `EGC`s in `gcluster`.
 ///
 /// *Method: NcCell.[load_box()][NcCell#method.load_box].*
+#[inline]
 pub fn nccells_load_box(
     plane: &mut NcPlane,
     style: NcStyle,
@@ -529,4 +540,58 @@ pub fn nccells_load_box(
         }
     }
     NCRESULT_ERR
+}
+
+/// [nccells_load_box] with ASCII characters.
+///
+/// *Method: NcCell.[ascii_box()][NcCell#method.ascii_box].*
+#[inline]
+pub fn nccells_ascii_box(
+    plane: &mut NcPlane,
+    style: NcStyle,
+    channels: NcChannels,
+    ul: &mut NcCell,
+    ur: &mut NcCell,
+    ll: &mut NcCell,
+    lr: &mut NcCell,
+    hl: &mut NcCell,
+    vl: &mut NcCell,
+) -> NcIntResult {
+    nccells_load_box(plane, style, channels, ul, ur, ll, lr, hl, vl, NCBOXASCII)
+}
+
+/// [nccells_load_box] with heavy line box-drawing characters.
+///
+/// *Method: NcCell.[heavy_box()][NcCell#method.heavy_box].*
+#[inline]
+pub fn nccells_heavy_box(
+    plane: &mut NcPlane,
+    style: NcStyle,
+    channels: NcChannels,
+    ul: &mut NcCell,
+    ur: &mut NcCell,
+    ll: &mut NcCell,
+    lr: &mut NcCell,
+    hl: &mut NcCell,
+    vl: &mut NcCell,
+) -> NcIntResult {
+    nccells_load_box(plane, style, channels, ul, ur, ll, lr, hl, vl, NCBOXHEAVY)
+}
+
+/// [nccells_load_box] with light line box-drawing characters.
+///
+/// *Method: NcCell.[light_box()][NcCell#method.light_box].*
+#[inline]
+pub fn nccells_light_box(
+    plane: &mut NcPlane,
+    style: NcStyle,
+    channels: NcChannels,
+    ul: &mut NcCell,
+    ur: &mut NcCell,
+    ll: &mut NcCell,
+    lr: &mut NcCell,
+    hl: &mut NcCell,
+    vl: &mut NcCell,
+) -> NcIntResult {
+    nccells_load_box(plane, style, channels, ul, ur, ll, lr, hl, vl, NCBOXLIGHT)
 }

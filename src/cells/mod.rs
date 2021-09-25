@@ -61,9 +61,9 @@
 //W+ nccell_wide_left_p
 //W+ nccell_wide_right_p
 //W+ nccellcmp
-//   nccells_ascii_box
-//   nccells_heavy_box
-//   nccells_light_box
+//W+ nccells_ascii_box
+//W+ nccells_heavy_box
+//W+ nccells_light_box
 //W+ nccells_load_box
 
 #[cfg(test)]

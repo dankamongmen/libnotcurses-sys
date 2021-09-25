@@ -824,7 +824,7 @@ pub use ffi::{
     notcurses_refresh,
     notcurses_render,
     notcurses_render_to_buffer, // deprecated
-    notcurses_render_to_file, // deprecated
+    notcurses_render_to_file,   // deprecated
     notcurses_stats,
     notcurses_stats_alloc,
     notcurses_stats_reset,

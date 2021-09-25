@@ -468,4 +468,62 @@ impl NcCell {
             crate::nccells_rounded_box(plane, style as u32, channels, ul, ur, ll, lr, hl, vl)
         }]
     }
+
+    /// NcCell.[load_box()][NcCell#method.box] with ASCII characters.
+    ///
+    /// *C style function: [nccells_ascii_box()][crate::nccells_ascii_box].*
+    pub fn ascii_box(
+        plane: &mut NcPlane,
+        style: NcStyle,
+        channels: NcChannels,
+        ul: &mut NcCell,
+        ur: &mut NcCell,
+        ll: &mut NcCell,
+        lr: &mut NcCell,
+        hl: &mut NcCell,
+        vl: &mut NcCell,
+    ) -> NcResult<()> {
+        error![crate::nccells_ascii_box(
+            plane, style, channels, ul, ur, ll, lr, hl, vl
+        )]
+    }
+    /// NcCell.[load_box()][NcCell#method.box] with the heavy line
+    /// box-drawing characters.
+    ///
+    /// *C style function: [nccells_heavy_box()][crate::nccells_heavy_box].*
+    pub fn heavy_box(
+        plane: &mut NcPlane,
+        style: NcStyle,
+        channels: NcChannels,
+        ul: &mut NcCell,
+        ur: &mut NcCell,
+        ll: &mut NcCell,
+        lr: &mut NcCell,
+        hl: &mut NcCell,
+        vl: &mut NcCell,
+    ) -> NcResult<()> {
+        error![crate::nccells_heavy_box(
+            plane, style, channels, ul, ur, ll, lr, hl, vl
+        )]
+    }
+
+    /// NcCell.[load_box()][NcCell#method.box] with the light line
+    /// box-drawing characters.
+    ///
+    /// *C style function: [nccells_light_box()][crate::nccells_light_box].*
+    pub fn light_box(
+        plane: &mut NcPlane,
+        style: NcStyle,
+        channels: NcChannels,
+        ul: &mut NcCell,
+        ur: &mut NcCell,
+        ll: &mut NcCell,
+        lr: &mut NcCell,
+        hl: &mut NcCell,
+        vl: &mut NcCell,
+    ) -> NcResult<()> {
+        error![crate::nccells_light_box(
+            plane, style, channels, ul, ur, ll, lr, hl, vl
+        )]
+    }
 }
