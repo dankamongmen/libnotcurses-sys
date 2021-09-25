@@ -759,7 +759,7 @@ pub use ffi::{
     ncvisual_set_yx,
     ncvisual_simple_streamer,
     ncvisual_stream,
-    ncvisual_subtitle,
+    ncvisual_subtitle, // deprecated
     ncvisual_subtitle_plane,
 };
 
@@ -823,8 +823,8 @@ pub use ffi::{
     notcurses_palette_size,
     notcurses_refresh,
     notcurses_render,
-    notcurses_render_to_buffer,
-    notcurses_render_to_file,
+    notcurses_render_to_buffer, // deprecated
+    notcurses_render_to_file, // deprecated
     notcurses_stats,
     notcurses_stats_alloc,
     notcurses_stats_reset,

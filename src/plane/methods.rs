@@ -1367,12 +1367,6 @@ impl NcPlane {
         }
     }
 
-    #[doc(hidden)]
-    #[deprecated]
-    pub fn home(&mut self) {
-        self.cursor_home()
-    }
-
     /// Returns the current position of the cursor within this `NcPlane`.
     ///
     /// *C style function: [ncplane_cursor_yx()][crate::ncplane_cursor_yx].*

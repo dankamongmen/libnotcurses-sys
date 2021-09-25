@@ -568,6 +568,7 @@ impl NcVisual {
     /// copy of the UTF8 text.
     ///
     /// *C style function: [ncvisual_subtitle()][crate::ncvisual_subtitle].*
+    #[deprecated]
     pub fn subtitle(&self) -> NcResult<&str> {
         let res = unsafe { crate::ncvisual_subtitle(self) };
         if !res.is_null() {

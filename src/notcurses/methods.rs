@@ -607,9 +607,9 @@ impl Nc {
     /// *C style function: [notcurses_render_to_buffer()][crate::notcurses_render_to_buffer].*
     //
     // CHECK that this works.
+    #[deprecated]
     pub fn render_to_buffer(&mut self, buffer: &mut Vec<u8>) -> NcResult<()> {
-        #[allow(unused_mut)] // CHECK whether it actually works without the mut
-        let mut len = buffer.len() as u32;
+        let len = buffer.len() as u32;
 
         // https://github.com/dankamongmen/notcurses/issues/1339
         #[cfg(any(target_arch = "x86_64", target_arch = "i686", target_arch = "x86"))]
@@ -626,6 +626,7 @@ impl Nc {
     /// nothing will be written.
     ///
     /// *C style function: [notcurses_render_to_file()][crate::notcurses_render_to_file].*
+    #[deprecated]
     pub fn render_to_file(&mut self, fp: &mut NcFile) -> NcResult<()> {
         error![unsafe { crate::notcurses_render_to_file(self, fp.as_nc_ptr()) }]
     }
