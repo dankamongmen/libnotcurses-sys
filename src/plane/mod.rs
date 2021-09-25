@@ -290,13 +290,3 @@ pub const NCPLANE_OPTION_VERALIGNED: u64 = crate::bindings::ffi::NCPLANE_OPTION_
 /// used. This flag is exclusive with both of the alignment flags.
 pub const NCPLANE_OPTION_MARGINALIZED: u64 =
     crate::bindings::ffi::NCPLANE_OPTION_MARGINALIZED as u64;
-
-/// I/O wrapper to dump file descriptor to [`NcPlane`]
-///
-/// `type in C: ncfdplane (struct)`
-pub type NcFdPlane = crate::bindings::ffi::ncfdplane;
-
-/// Options struct for [`NcFdPlane`]
-///
-/// `type in C: ncplane_options (struct)`
-pub type NcFdPlaneOptions = crate::bindings::ffi::ncfdplane_options;

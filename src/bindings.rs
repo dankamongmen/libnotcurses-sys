@@ -663,6 +663,24 @@ pub use ffi::{
 // // structs
 // ncstats,
 
+// ncssubproc ------------------------------------------------------------------
+//
+// already wrapped:
+//
+// // structs
+// ncsubproc
+// ncsubproc_options
+
+#[doc(inline)]
+pub use ffi::{
+    // functions
+    ncsubproc_createv,
+    ncsubproc_createvp,
+    ncsubproc_createvpe,
+    ncsubproc_destroy,
+    ncsubproc_plane,
+};
+
 // ncstyle ---------------------------------------------------------------------
 //
 // already wrapped:
