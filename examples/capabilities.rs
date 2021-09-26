@@ -1,8 +1,7 @@
 use libnotcurses_sys::*;
 
 fn main() -> NcResult<()> {
-    let nc = Nc::without_altscreen()?;
-
+    let nc = Nc::new_cli()?;
     let (t_rows, t_cols) = nc.term_dim_yx();
     println!("Terminal rows={0}, cols={1}", t_rows, t_cols);
 
@@ -36,6 +35,8 @@ Palette size: {11:?}
 
     let pixelgeom = nc.stdplane().pixelgeom();
     println!("{:#?}", pixelgeom);
+
+    println!("terminal name: {}", nc.detected_terminal());
 
     nc.render()?;
     nc.stop()?;

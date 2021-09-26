@@ -6,8 +6,8 @@ use crate::{
     cstring, error, error_ref_mut, notcurses_init, rstring, Nc, NcAlign, NcBlitter, NcChannels,
     NcDim, NcError, NcFile, NcInput, NcLogLevel, NcOptions, NcPixelImpl, NcPlane, NcResult,
     NcScale, NcStats, NcStyle, NcStyleMethods, NcTime, NCOPTION_NO_ALTERNATE_SCREEN,
-    NCOPTION_SUPPRESS_BANNERS, NCSTYLE_BOLD, NCSTYLE_ITALIC, NCSTYLE_NONE, NCSTYLE_STRUCK,
-    NCSTYLE_UNDERCURL, NCSTYLE_UNDERLINE,
+    NCOPTION_NO_CLEAR_BITMAPS, NCOPTION_PRESERVE_CURSOR, NCOPTION_SUPPRESS_BANNERS, NCSTYLE_BOLD,
+    NCSTYLE_ITALIC, NCSTYLE_NONE, NCSTYLE_STRUCK, NCSTYLE_UNDERCURL, NCSTYLE_UNDERLINE,
 };
 
 /// # `NcOptions` Constructors
@@ -80,10 +80,28 @@ impl NcOptions {
 }
 
 /// # `Nc` Constructors
+//
+// TODO: rethink constructors
 impl Nc {
     /// New notcurses context (without banners).
     pub fn new<'a>() -> NcResult<&'a mut Nc> {
         Self::with_flags(NCOPTION_SUPPRESS_BANNERS)
+    }
+
+    /// New notcurses context in CLI mode.
+    ///
+    /// It has the following flags:
+    /// - [`NCOPTION_SUPPRESS_BANNERS`]
+    /// - [`NCOPTION_NO_ALTERNATE_SCREEN`]
+    /// - [`NCOPTION_NO_CLEAR_BITMAPS`]
+    /// - [`NCOPTION_PRESERVE_CURSOR`]
+    pub fn new_cli<'a>() -> NcResult<&'a mut Nc> {
+        Self::with_flags(
+            NCOPTION_SUPPRESS_BANNERS
+                | NCOPTION_NO_ALTERNATE_SCREEN
+                | NCOPTION_NO_CLEAR_BITMAPS
+                | NCOPTION_PRESERVE_CURSOR,
+        )
     }
 
     /// New notcurses context, with banners.
@@ -94,6 +112,8 @@ impl Nc {
     }
 
     /// New notcurses context, without an alternate screen (nor banners).
+    #[deprecated]
+    #[doc(hidden)]
     pub fn without_altscreen<'a>() -> NcResult<&'a mut Nc> {
         Self::with_flags(NCOPTION_NO_ALTERNATE_SCREEN | NCOPTION_SUPPRESS_BANNERS)
     }

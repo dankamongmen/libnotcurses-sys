@@ -3,7 +3,7 @@
 use libnotcurses_sys::*;
 
 fn main() -> NcResult<()> {
-    let nc = Nc::without_altscreen()?;
+    let nc = Nc::new_cli()?;
 
     nc.refresh()?;
 
