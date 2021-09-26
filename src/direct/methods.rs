@@ -3,7 +3,7 @@
 use core::ptr::{null, null_mut};
 
 use crate::{
-    cstring, error, error_ref_mut, rstring, NcAlign, NcBlitter, NcCapabilities, NcChannels,
+    cstring, error, error_ref_mut, rstring_free, NcAlign, NcBlitter, NcCapabilities, NcChannels,
     NcComponent, NcDim, NcDirect, NcDirectFlags, NcError, NcInput, NcOffset, NcPaletteIndex,
     NcPlane, NcResult, NcRgb, NcScale, NcStyle, NcTime, NCRESULT_ERR,
 };
@@ -560,7 +560,7 @@ impl NcDirect {
     ///
     /// *C style function: [ncdirect_detected_terminal()][crate::ncdirect_detected_terminal].*
     pub fn detected_terminal(&self) -> String {
-        rstring![crate::ncdirect_detected_terminal(self)].to_string()
+        rstring_free![crate::ncdirect_detected_terminal(self)]
     }
 }
 
@@ -666,10 +666,12 @@ impl NcDirect {
     /// be provided to the constructor.
     ///
     /// *C style function: [ncdirect_readline()][crate::ncdirect_readline].*
-    pub fn readline(&mut self, prompt: &str) -> NcResult<&str> {
+    //
+    // FIXME: memory leak still reported by valgrind
+    pub fn readline(&mut self, prompt: &str) -> NcResult<String> {
         let res = unsafe { crate::ncdirect_readline(self, cstring![prompt]) };
         if !res.is_null() {
-            return Ok(rstring![res]);
+            return Ok(rstring_free![res]);
         } else {
             Err(NcError::with_msg(
                 NCRESULT_ERR,

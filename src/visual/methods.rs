@@ -4,7 +4,7 @@ use core::ptr::null_mut;
 use libc::c_void;
 
 use crate::{
-    cstring, error, error_ref_mut, rstring, Nc, NcBlitter, NcChannel, NcComponent, NcDim, NcDirect,
+    cstring, error, error_ref_mut, rstring_free, Nc, NcBlitter, NcChannel, NcComponent, NcDim, NcDirect,
     NcDirectF, NcError, NcIntResult, NcPixel, NcPlane, NcResult, NcRgba, NcScale, NcTime, NcVGeom,
     NcVisual, NcVisualOptions, NCBLIT_PIXEL, NCRESULT_ERR,
 };
@@ -569,10 +569,10 @@ impl NcVisual {
     ///
     /// *C style function: [ncvisual_subtitle()][crate::ncvisual_subtitle].*
     #[deprecated]
-    pub fn subtitle(&self) -> NcResult<&str> {
+    pub fn subtitle(&self) -> NcResult<String> {
         let res = unsafe { crate::ncvisual_subtitle(self) };
         if !res.is_null() {
-            Ok(rstring![res])
+            Ok(rstring_free![res])
         } else {
             Err(NcError::with_msg(NCRESULT_ERR, "NcVisual.subtitle()"))
         }

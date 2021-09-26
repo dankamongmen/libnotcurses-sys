@@ -149,6 +149,19 @@ macro_rules! rstring {
     };
 }
 
+/// Converts a `*const c_char` into a `String`, freeing the original alloc.
+#[macro_export]
+#[doc(hidden)]
+macro_rules! rstring_free {
+    ($s:expr) => {{
+        #[allow(unused_unsafe)]
+        let nc_string = unsafe { $s };
+        let string = crate::rstring![nc_string].to_string();
+        unsafe { libc::free(nc_string as *mut core::ffi::c_void) };
+        string
+    }};
+}
+
 /// Wrapper around [libc::printf].
 #[macro_export]
 #[doc(hidden)]

@@ -7,20 +7,21 @@
 use libnotcurses_sys::*;
 
 fn main() -> NcResult<()> {
-    let mut dm = NcDirect::new()?;
+    let mut ncd = NcDirect::new()?;
 
-    render_image(&mut dm, NCBLIT_1x1)?;
-    render_image(&mut dm, NCBLIT_2x1)?;
-    render_image(&mut dm, NCBLIT_BRAILLE)?;
+    render_image(&mut ncd, NCBLIT_1x1)?;
+    render_image(&mut ncd, NCBLIT_2x1)?;
+    render_image(&mut ncd, NCBLIT_BRAILLE)?;
 
+    ncd.stop()?;
     Ok(())
 }
 
-fn render_image(dm: &mut NcDirect, blit: NcBlitter) -> NcResult<()> {
-    if let Err(nc_error) = dm.render_image("image-16x16.png", NCALIGN_CENTER, blit, NCSCALE_NONE) {
+fn render_image(ncd: &mut NcDirect, blit: NcBlitter) -> NcResult<()> {
+    if let Err(nc_error) = ncd.render_image("image-16x16.png", NCALIGN_CENTER, blit, NCSCALE_NONE) {
         return Err(NcError::with_msg(
             nc_error.int,
-            "ERROR: dmirect_render_image(). Make sure you \
+            "ERROR: ncdirect_render_image(). Make sure you \
             are running this example from the examples folder",
         ));
     }

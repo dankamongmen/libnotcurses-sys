@@ -3,9 +3,9 @@
 use core::ptr::{null, null_mut};
 
 use crate::{
-    cstring, error, error_ref_mut, notcurses_init, rstring, Nc, NcAlign, NcBlitter, NcChannels,
-    NcDim, NcError, NcFile, NcInput, NcLogLevel, NcOptions, NcPixelImpl, NcPlane, NcResult,
-    NcScale, NcStats, NcStyle, NcStyleMethods, NcTime, NCOPTION_NO_ALTERNATE_SCREEN,
+    cstring, error, error_ref_mut, notcurses_init, rstring, rstring_free, Nc, NcAlign, NcBlitter,
+    NcChannels, NcDim, NcError, NcFile, NcInput, NcLogLevel, NcOptions, NcPixelImpl, NcPlane,
+    NcResult, NcScale, NcStats, NcStyle, NcStyleMethods, NcTime, NCOPTION_NO_ALTERNATE_SCREEN,
     NCOPTION_NO_CLEAR_BITMAPS, NCOPTION_PRESERVE_CURSOR, NCOPTION_SUPPRESS_BANNERS, NCSTYLE_BOLD,
     NCSTYLE_ITALIC, NCSTYLE_NONE, NCSTYLE_STRUCK, NCSTYLE_UNDERCURL, NCSTYLE_UNDERLINE,
 };
@@ -154,9 +154,6 @@ impl Nc {
     /// as last rendered, returning the `EGC` (or None on error) and writing
     /// out the [`NcStyle`] and the [`NcChannels`].
     ///
-    // possible BUG? CHECK:
-    /// This `EGC` must be freed by the caller.
-    ///
     /// *C style function: [notcurses_at_yx()][crate::notcurses_at_yx].*
     pub fn at_yx(
         &mut self,
@@ -169,7 +166,7 @@ impl Nc {
         if egc.is_null() {
             return None;
         }
-        Some(rstring![egc].into())
+        Some(rstring_free![egc].into())
     }
 
     /// Returns the bottommost [`NcPlane`] on the standard pile,
@@ -340,21 +337,21 @@ impl Nc {
     ///
     /// *C style function: [notcurses_accountname()][crate::notcurses_accountname].*
     pub fn accountname() -> String {
-        rstring![crate::notcurses_accountname()].to_string()
+        rstring_free![crate::notcurses_accountname()].to_string()
     }
 
     /// Returns the name of the local hostname.
     ///
     /// *C style function: [notcurses_hostname()][crate::notcurses_hostname].*
     pub fn hostname() -> String {
-        rstring![crate::notcurses_hostname()].to_string()
+        rstring_free![crate::notcurses_hostname()].to_string()
     }
 
     /// Returns the name of the detected terminal.
     ///
     /// *C style function: [notcurses_detected_terminal()][crate::notcurses_detected_terminal].*
     pub fn detected_terminal(&self) -> String {
-        rstring![crate::notcurses_detected_terminal(self)].to_string()
+        rstring_free![crate::notcurses_detected_terminal(self)]
     }
 
     /// Destroys all [`NcPlane`]s other than the stdplane.

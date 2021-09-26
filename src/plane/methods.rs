@@ -5,7 +5,7 @@ use core::{
 };
 
 use crate::{
-    cstring, error, error_ref, error_ref_mut, rstring, Nc, NcAlign, NcAlphaBits, NcBlitter,
+    cstring, error, error_ref, error_ref_mut, rstring_free, Nc, NcAlign, NcAlphaBits, NcBlitter,
     NcBoxMask, NcCell, NcChannel, NcChannels, NcComponent, NcDim, NcError, NcFadeCb, NcFile,
     NcOffset, NcPaletteIndex, NcPixelGeometry, NcPlane, NcPlaneOptions, NcResizeCb, NcResult,
     NcRgb, NcStyle, NcTime, NCRESULT_ERR,
@@ -535,8 +535,6 @@ impl NcPlane {
     /// Retrieves the current contents of the [`NcCell`] under the cursor,
     /// returning the `EGC` and writing out the [`NcStyle`] and the [`NcChannels`].
     ///
-    /// This `EGC` must be freed by the caller.
-    ///
     /// *C style function: [ncplane_at_cursor()][crate::ncplane_at_cursor].*
     pub fn at_cursor(
         &mut self,
@@ -550,7 +548,7 @@ impl NcPlane {
                 &format!("NcPlane.at_cursor({:0X}, {:0X})", stylemask, channels),
             ));
         }
-        Ok(rstring![egc].into())
+        Ok(rstring_free![egc].into())
     }
 
     /// Retrieves the current contents of the [`NcCell`] under the cursor
@@ -572,8 +570,6 @@ impl NcPlane {
     /// Retrieves the current contents of the specified [`NcCell`], returning the
     /// `EGC` and writing out the [`NcStyle`] and the [`NcChannels`].
     ///
-    /// This `EGC` must be freed by the caller.
-    ///
     /// *C style function: [ncplane_at_yx()][crate::ncplane_at_yx].*
     pub fn at_yx(
         &mut self,
@@ -592,7 +588,7 @@ impl NcPlane {
                 ),
             ));
         }
-        Ok(rstring![egc].into())
+        Ok(rstring_free![egc].into())
     }
 
     /// Retrieves the current contents of the specified [`NcCell`] into `cell`.
@@ -678,34 +674,25 @@ impl NcPlane {
     /// Starts at the plane's `beg_y` * `beg_x` coordinates (which must lie on
     /// the plane), continuing for `len_y` x `len_x` cells.
     ///
-    /// If either `through_y` or `through_x` are true, then `len_y` or `len_x`,
-    /// will be respectively ignored, and will go through the boundary of the plane.
+    /// A value of None for either `len_y` or `len_x` means to go through
+    /// the boundary of the plane.
     ///
     /// *C style function: [ncplane_contents()][crate::ncplane_contents].*
+    // TODO: make len_* optional, remove through_*
     pub fn contents(
         &mut self,
         beg_y: NcDim,
         beg_x: NcDim,
-        len_y: NcDim,
-        len_x: NcDim,
-        through_y: bool,
-        through_x: bool,
+        len_y: Option<NcDim>,
+        len_x: Option<NcDim>,
     ) -> String {
-        let (mut len_y, mut len_x) = (len_y as i32, len_x as i32);
-        if through_y {
-            len_y = -1;
-        }
-        if through_x {
-            len_x = -1;
-        }
-        rstring![crate::ncplane_contents(
+        rstring_free![crate::ncplane_contents(
             self,
             beg_y as i32,
             beg_x as i32,
-            len_y,
-            len_x
+            len_y.map_or(-1, |y| y as i32),
+            len_x.map_or(-1, |x| x as i32)
         )]
-        .to_string()
     }
 
     /// Erases every [`NcCell`] in this `NcPlane`, resetting all attributes to

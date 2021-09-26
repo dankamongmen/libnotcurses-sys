@@ -57,5 +57,6 @@ fn main() -> NcResult<()> {
     ncd.flush()?;
     sleep![0, 600];
     ncd.clear()?;
+    ncd.stop()?;
     Ok(())
 }
