@@ -17,15 +17,19 @@ use crate::{cstring_mut, rstring};
 ///
 /// 2^64-1 is 18446744073709551615, 18.45E(xa). KMGTPEZY thus suffice to handle
 /// an 89-bit uintmax_t. Beyond Z(etta) and Y(otta) lie lands unspecified by SI.
-/// 2^-63 is 0.000000000000000000108, 1.08a(tto). val: value to print decimal:
-/// scaling. '1' if none has taken place. buf: buffer in which string will be
-/// generated omitdec: inhibit printing of all-0 decimal portions mult: base of
-/// suffix system (almost always 1000 or 1024) uprefix: character to print
-/// following suffix ('i' for kibibytes basically). only printed if suffix is
-/// actually printed (input >= mult).
+/// 2^-63 is 0.000000000000000000108, 1.08a(tto).
+///
+/// val: value to print
+/// decimal: scaling. '1' if none has taken place.
+/// buf: buffer in which string will be generated
+/// omitdec: inhibit printing of all-0 decimal portions
+/// mult: base of suffix system (almost always 1000 or 1024)
+/// uprefix: character to print following suffix ('i' for kibibytes basically).
+/// only printed if suffix is actually printed (input >= mult).
 ///
 /// You are encouraged to consult notcurses_metric(3).
 ///
+// FIXME, remove buf, return String, check mem leaks.
 pub fn ncmetric(val: u64, decimal: u64, buf: &str, omitdec: i32, mult: u64, uprefix: i32) -> &str {
     let buf = cstring_mut![buf];
     rstring![crate::ffi::ncmetric(

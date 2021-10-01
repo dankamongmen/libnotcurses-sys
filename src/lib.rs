@@ -18,7 +18,7 @@
 //!
 //! ### Example
 //!
-//! ```rust
+//! ```ignore
 //! use libnotcurses_sys::*;
 //!
 //! # #[cfg(not(miri))]
@@ -63,7 +63,7 @@
 //!
 //! ### Example
 //!
-//! ```rust
+//! ```ignore
 //! use core::ptr::{null, null_mut};
 //! use std::process::exit;
 //!

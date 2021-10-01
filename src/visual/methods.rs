@@ -9,6 +9,9 @@ use crate::{
     NcVisual, NcVisualOptions, NCBLIT_PIXEL, NCRESULT_ERR,
 };
 
+#[allow(unused_imports)]
+use crate::{NCBLIT_1x1, NCBLIT_2x1, NCSCALE_STRETCH, NCBLIT_3x2, NCBLIT_2x2};
+
 /// # NcVisualOptions Constructors
 impl NcVisualOptions {
     // /// New NcVisualOptions
@@ -413,11 +416,12 @@ impl NcVisual {
     /// the specified scaling method.
     ///
     /// Currently, this means:
-    /// - if lacking UTF-8, NCBLIT_1x1.
-    /// - otherwise, if not NCSCALE_STRETCH, NCBLIT_2x1.
-    /// - otherwise, if sextants are not known to be good, NCBLIT_2x2.
-    /// - otherwise NCBLIT_3x2 NCBLIT_2x2 and NCBLIT_3x2 both distort the original
-    ///   aspect ratio, thus NCBLIT_2x1 is used outside of NCSCALE_STRETCH.
+    /// - if lacking UTF-8, [`NCBLIT_1x1`].
+    /// - otherwise, if not [`NCSCALE_STRETCH`], [`NCBLIT_2x1`].
+    /// - otherwise, if sextants are not known to be good, [`NCBLIT_2x2`].
+    /// - otherwise [`NCBLIT_3x2`], [`NCBLIT_2x2`] and [`NCBLIT_3x2`] both
+    ///   distort the original aspect ratio, thus [`NCBLIT_2x1`] is used
+    ///   outside of [`NCSCALE_STRETCH`].
     ///
     /// *C style function: [ncvisual_media_defblitter()][crate::ncvisual_media_defblitter].*
     pub fn media_defblitter(nc: &Nc, scale: NcScale) -> NcBlitter {
@@ -434,7 +438,10 @@ impl NcVisual {
         ]
     }
 
-    /// Renders the decoded frame to the specified [`NcPlane`].
+    /// Renders the decoded frame to the [`NcPlane`] specified in `options`.
+    ///
+    /// If a plane is not provided, it will be created, having the exact size
+    /// necessary to display the visual.
     ///
     /// See [`NcVisualOptions`].
     ///

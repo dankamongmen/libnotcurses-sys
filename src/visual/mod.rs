@@ -108,7 +108,7 @@ pub type NcVGeom = crate::bindings::ffi::ncvgeom;
 ///
 /// If a plane is not provided, one will be created, having the exact size
 /// necessary to display the visual (this might be smaller or larger than
-/// the rendering area). if NCVISUAL_OPTION_CHILDPLANE is provided, this
+/// the rendering area). if [`NCVISUAL_OPTION_CHILDPLANE`] is provided, this
 /// will be interpreted as the parent.
 ///
 /// A subregion of the visual can be rendered using `begx`, `begy`, `lenx`, and `leny`.
@@ -242,11 +242,16 @@ pub const NCBLIT_PIXEL: NcBlitter = crate::bindings::ffi::ncblitter_e_NCBLIT_PIX
 /// If bitmaps are not supported, the fields `max_bitmap_*` will be 0.
 #[derive(Clone, Debug)]
 pub struct NcPixelGeometry {
-    /// Geometry of the display region
+    /// The height in pixels of the display region.
     pub term_y: NcDim,
+    /// The width in pixels of the display region.
     pub term_x: NcDim,
+    /// The height in pixels of a single cell.
     pub cell_y: NcDim,
+    /// The width in pixels of a single cell.
     pub cell_x: NcDim,
+    /// The height in pixels of the maximum displayable bitmap (0 if not supported).
     pub max_bitmap_y: NcDim,
+    /// The width in pixels of the maximum displayable bitmap (0 if not supported).
     pub max_bitmap_x: NcDim,
 }
