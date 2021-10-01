@@ -1,3 +1,5 @@
+//!
+
 use libnotcurses_sys::*;
 
 fn main() -> NcResult<()> {
@@ -28,7 +30,7 @@ fn main() -> NcResult<()> {
     plane_red.putstr("222 PLANE 222")?;
     nrs![&mut nc, 0, 500];
 
-    // TODO: write with styles
+    // TODO: put strings with styles (set style)
 
     // exit(1, &mut nc, vec![plane_green, plane_red])?;
 
@@ -89,7 +91,7 @@ fn main() -> NcResult<()> {
 }
 
 /// quit the example, cleanly & safely
-fn exit(ecode: i32, nc: &mut Nc, planes: Vec<&mut NcPlane>) -> NcResult<()>{
+fn exit(ecode: i32, nc: &mut Nc, planes: Vec<&mut NcPlane>) -> NcResult<()> {
     for p in planes {
         p.destroy()?;
     }

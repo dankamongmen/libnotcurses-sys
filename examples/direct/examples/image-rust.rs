@@ -6,6 +6,8 @@
 
 use libnotcurses_sys::*;
 
+mod shared;
+
 fn main() -> NcResult<()> {
     let mut ncd = NcDirect::new()?;
 
@@ -18,7 +20,9 @@ fn main() -> NcResult<()> {
 }
 
 fn render_image(ncd: &mut NcDirect, blit: NcBlitter) -> NcResult<()> {
-    if let Err(nc_error) = ncd.render_image("image-16x16.png", NCALIGN_CENTER, blit, NCSCALE_NONE) {
+    let image_path = shared::project_root_path_string("examples/res/image-16x16.png");
+
+    if let Err(nc_error) = ncd.render_image(&image_path, NCALIGN_CENTER, blit, NCSCALE_NONE) {
         return Err(NcError::with_msg(
             nc_error.int,
             "ERROR: ncdirect_render_image(). Make sure you \

@@ -31,4 +31,3 @@ fn main() -> NcResult<()> {
     nc.stop()?;
     Ok(())
 }
-

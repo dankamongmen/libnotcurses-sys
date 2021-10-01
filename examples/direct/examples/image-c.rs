@@ -7,6 +7,8 @@
 use core::ptr::{null, null_mut};
 use libnotcurses_sys::*;
 
+mod shared;
+
 fn main() {
     unsafe {
         let ncd = ncdirect_init(null(), null_mut(), 0);
@@ -20,19 +22,17 @@ fn main() {
 }
 
 fn render_image(ncd: &mut NcDirect, blit: NcBlitter) {
+    let image_path = shared::project_root_path_string("examples/res/image-16x16.png");
+
     unsafe {
         if ncdirect_render_image(
             ncd,
-            cstring!["image-16x16.png"],
+            cstring![image_path],
             NCALIGN_CENTER,
             blit,
             NCSCALE_NONE,
-        ) != 0
-        {
-            panic!(
-                "ERROR: ncdirect_render_image(). Make sure you \
-                are running this example from the examples folder"
-            );
+        ) != 0 {
+            panic!("ERROR: ncdirect_render_image().");
         }
     }
 }
