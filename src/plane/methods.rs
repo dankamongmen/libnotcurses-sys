@@ -548,7 +548,7 @@ impl NcPlane {
                 &format!("NcPlane.at_cursor({:0X}, {:0X})", stylemask, channels),
             ));
         }
-        Ok(rstring_free![egc].into())
+        Ok(rstring_free![egc])
     }
 
     /// Retrieves the current contents of the [`NcCell`] under the cursor
@@ -588,7 +588,7 @@ impl NcPlane {
                 ),
             ));
         }
-        Ok(rstring_free![egc].into())
+        Ok(rstring_free![egc])
     }
 
     /// Retrieves the current contents of the specified [`NcCell`] into `cell`.

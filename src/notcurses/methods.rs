@@ -166,7 +166,7 @@ impl Nc {
         if egc.is_null() {
             return None;
         }
-        Some(rstring_free![egc].into())
+        Some(rstring_free![egc])
     }
 
     /// Returns the bottommost [`NcPlane`] on the standard pile,
@@ -337,14 +337,14 @@ impl Nc {
     ///
     /// *C style function: [notcurses_accountname()][crate::notcurses_accountname].*
     pub fn accountname() -> String {
-        rstring_free![crate::notcurses_accountname()].to_string()
+        rstring_free![crate::notcurses_accountname()]
     }
 
     /// Returns the name of the local hostname.
     ///
     /// *C style function: [notcurses_hostname()][crate::notcurses_hostname].*
     pub fn hostname() -> String {
-        rstring_free![crate::notcurses_hostname()].to_string()
+        rstring_free![crate::notcurses_hostname()]
     }
 
     /// Returns the name of the detected terminal.

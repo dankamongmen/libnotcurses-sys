@@ -233,7 +233,7 @@ pub const NCALIGN_BOTTOM: NcAlign = NCALIGN_RIGHT;
 /// Center alignment within an [`NcPlane`][crate::NcPlane] or terminal.
 pub const NCALIGN_CENTER: NcAlign = crate::bindings::ffi::ncalign_e_NCALIGN_CENTER;
 
-/// Do not align an [`NcPlane`][crate::NcPlane] or terminal.
+/// Nothing unaligned should appear.
 pub const NCALIGN_UNALIGNED: NcAlign = crate::bindings::ffi::ncalign_e_NCALIGN_UNALIGNED;
 
 // NcPixelImpl -----------------------------------------------------------------
