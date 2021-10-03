@@ -307,7 +307,7 @@ impl Nc {
     ///
     /// *C style function:
     /// [notcurses_enter_alternate_screen()][crate::notcurses_enter_alternate_screen].*
-    pub fn notcurses_enter_alternate_screen(&mut self) -> NcResult<()> {
+    pub fn enter_alternate_screen(&mut self) -> NcResult<()> {
         error![unsafe { crate::notcurses_enter_alternate_screen(self) }]
     }
 
@@ -317,7 +317,7 @@ impl Nc {
     ///
     /// *C style function:
     /// [notcurses_leave_alternate_screen()][crate::notcurses_leave_alternate_screen].*
-    pub fn notcurses_leave_alterante_screen(&mut self) -> NcResult<()> {
+    pub fn leave_alternate_screen(&mut self) -> NcResult<()> {
         error![unsafe { crate::notcurses_leave_alternate_screen(self) }]
     }
 
