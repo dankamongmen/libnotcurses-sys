@@ -1,10 +1,10 @@
 //! `NcPlane`
 
-// functions already exported by bindgen : 114
+// functions already exported by bindgen : 116
 // -------------------------------------------
-// (X) wont: 10
+// (X) wont: 9
 // (#) test: 13
-// (W) wrap: 83
+// (W) wrap: 94
 // -------------------------------------------
 //W  ncpile_bottom
 //W# ncpile_create
@@ -65,7 +65,7 @@
 //   ncplane_polyfill_yx
 //W  ncplane_pulse
 //   ncplane_putchar_stained
-//   ncplane_putc_yx
+//W  ncplane_putc_yx
 // X ncplane_putegc_stained            // unneeded
 // X ncplane_putegc_yx                 // unneeded
 //   ncplane_putnstr_aligned
@@ -73,7 +73,7 @@
 //W  ncplane_putstr_aligned
 //W  ncplane_putstr_stained
 //W  ncplane_putstr_yx
-//   ncplane_puttext
+//W  ncplane_puttext
 // X ncplane_putwegc_stained           // unneeded
 // X ncplane_putwstr_stained           // unneeded
 //   ncplane_qrcode

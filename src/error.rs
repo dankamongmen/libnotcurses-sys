@@ -43,7 +43,7 @@ impl error::Error for NcError {
 }
 
 impl NcError {
-    /// New NcError with default [NCRESULT_ERR] error number, and without message.
+    /// New NcError with default [`NCRESULT_ERR`] error number, and no message.
     pub fn new() -> Self {
         Self {
             int: NCRESULT_ERR,
@@ -59,7 +59,7 @@ impl NcError {
         }
     }
 
-    /// New NcError with default [NCRESULT_ERR] error number and a custom message.
+    /// New NcError with default [`NCRESULT_ERR`] error number and a custom message.
     pub fn new_msg(msg: &str) -> Self {
         Self {
             int: NCRESULT_ERR,

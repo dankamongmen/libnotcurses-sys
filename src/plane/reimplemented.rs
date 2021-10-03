@@ -208,11 +208,14 @@ pub fn ncplane_putc(plane: &mut NcPlane, cell: &NcCell) -> NcIntResult {
 pub fn ncplane_putchar(plane: &mut NcPlane, ch: char) -> NcIntResult {
     unsafe {
         let cell = NcCell::from_char(ch, plane);
-        crate::ncplane_putc_yx(plane, -1, -1, &cell)
+        if cell.is_err() {
+            return NCRESULT_ERR;
+        }
+        crate::ncplane_putc_yx(plane, -1, -1, &cell.unwrap())
     }
 }
 
-/// Replaces the [NcCell] at the specified coordinates with the provided char.
+/// Replaces the [`NcCell`] at the specified coordinates with the provided char.
 /// Advances the cursor by 1.
 ///
 /// *Method: NcPlane.[putchar_yx()][NcPlane#method.putchar_yx].*
@@ -220,7 +223,10 @@ pub fn ncplane_putchar(plane: &mut NcPlane, ch: char) -> NcIntResult {
 pub fn ncplane_putchar_yx(plane: &mut NcPlane, y: NcDim, x: NcDim, ch: char) -> NcIntResult {
     unsafe {
         let cell = NcCell::from_char(ch, plane);
-        crate::ncplane_putc_yx(plane, y as i32, x as i32, &cell)
+        if cell.is_err() {
+            return NCRESULT_ERR;
+        }
+        crate::ncplane_putc_yx(plane, y as i32, x as i32, &cell.unwrap())
     }
 }
 

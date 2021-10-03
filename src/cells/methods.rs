@@ -2,7 +2,7 @@
 
 use crate::{
     cstring, error, nccell_load, NcAlphaBits, NcCell, NcChannels, NcComponent, NcEgcBackstop,
-    NcPaletteIndex, NcPlane, NcResult, NcRgb, NcStyle, NCRESULT_ERR,
+    NcError, NcPaletteIndex, NcPlane, NcResult, NcRgb, NcStyle, NCRESULT_ERR,
 };
 
 #[allow(unused_imports)] // for the doc comments
@@ -13,41 +13,49 @@ impl NcCell {
     /// New `NcCell`, expects a 7-bit [`char`].
     #[inline]
     #[allow(clippy::unnecessary_cast)]
-    pub const fn from_char7b(ch: char) -> Self {
-        NcCell {
+    pub fn from_char7b(ch: char) -> NcResult<Self> {
+        if !ch.is_ascii() {
+            return Err(NcError::new());
+        }
+        Ok(NcCell {
             gcluster: (ch as u32).to_le(),
             gcluster_backstop: 0 as NcEgcBackstop,
             width: 0_u8,
             stylemask: 0 as NcStyle,
             channels: 0 as NcChannels,
+        })
+    }
+
+    /// New `NcCell`, from a [`char`].
+    ///
+    /// Expects a plane where to save the extra data if it's greater than 4 bytes.
+    #[inline]
+    pub fn from_char(ch: char, plane: &mut NcPlane) -> NcResult<Self> {
+        let mut cell = Self::new();
+        let res = unsafe { nccell_load(plane, &mut cell, cstring![ch.to_string()]) };
+        if res == NCRESULT_ERR {
+            return Err(NcError::new());
         }
+        Ok(cell)
     }
 
-    /// New `NcCell`, expects an [`NcPlane`] and a [`char`].
+    /// New `NcCell`, from a &[`str`].
+    ///
+    /// Expects a plane where to save the extra data if it's greater than 4 bytes.
     #[inline]
-    pub fn from_char(ch: char, plane: &mut NcPlane) -> Self {
+    pub fn from_str(plane: &mut NcPlane, string: &str) -> NcResult<Self> {
         let mut cell = Self::new();
-        let result = unsafe { nccell_load(plane, &mut cell, cstring![ch.to_string()]) };
-        // TEMP solution for:
-        // https://github.com/dankamongmen/notcurses/pull/1937/checks?check_run_id=3093152924#step:11:339
-        #[cfg(not(target_os = "macos"))]
-        debug_assert_ne![NCRESULT_ERR, result];
-        cell
-    }
-
-    /// New `NcCell`, expects an [`NcPlane`] and a &[`str`].
-    #[inline]
-    pub fn from_str(plane: &mut NcPlane, string: &str) -> Self {
-        let mut cell = Self::new();
-        let result = unsafe { nccell_load(plane, &mut cell, cstring![string]) };
-        debug_assert_ne![NCRESULT_ERR, result];
-        cell
+        let res = unsafe { nccell_load(plane, &mut cell, cstring![string]) };
+        if res == NCRESULT_ERR {
+            return Err(NcError::new());
+        }
+        Ok(cell)
     }
 
     /// New empty `NcCell`.
     #[inline]
-    pub const fn new() -> Self {
-        Self::from_char7b(0 as char)
+    pub fn new() -> Self {
+        Self::from_char7b(0 as char).unwrap()
     }
 
     /// Breaks the UTF-8 string in `egc` down, setting up this `NcCell`,
