@@ -3,8 +3,9 @@
 use core::ptr::null_mut;
 
 use crate::{
-    cstring, nccell_release, NcAlign, NcAlphaBits, NcBoxMask, NcCell, NcChannel, NcChannels,
-    NcComponent, NcDim, NcIntResult, NcOffset, NcPlane, NcRgb, NcStyle, NCRESULT_ERR, NCRESULT_OK,
+    cstring, ffi::size_t, nccell_release, NcAlign, NcAlphaBits, NcBoxMask, NcCell, NcChannel,
+    NcChannels, NcComponent, NcDim, NcIntResult, NcOffset, NcPlane, NcRgb, NcStyle, NCRESULT_ERR,
+    NCRESULT_OK,
 };
 
 // Alpha -----------------------------------------------------------------------
@@ -193,7 +194,15 @@ pub fn ncplane_set_bg_not_default(plane: &NcPlane) -> NcChannels {
 
 // put & print -----------------------------------------------------------------
 
-/// Calls [ncplane_putc_yx()][crate::ncplane_putc_yx] for the current cursor location.
+/// Replaces the [`NcCell`] at the current location with the provided `cell`,
+/// advancing the cursor by its width (but not past the end of the plane).
+///
+/// The new `cell` must already be associated with this `NcPlane`.
+///
+/// On success, returns the number of columns the cursor was advanced.
+///
+/// If the glyph can not fit in the current line, it is an error, unless
+/// scrolling is enabled.
 ///
 /// *Method: NcPlane.[putc()][NcPlane#method.putc].*
 #[inline]
@@ -201,7 +210,13 @@ pub fn ncplane_putc(plane: &mut NcPlane, cell: &NcCell) -> NcIntResult {
     unsafe { crate::ncplane_putc_yx(plane, -1, -1, cell) }
 }
 
-/// Calls ncplane_putchar_yx() at the current cursor location.
+/// Replaces the [`NcCell`] at the current location with the provided [`char`],
+/// using the current style.
+///
+/// On success, returns the number of columns the cursor was advanced.
+///
+/// If the glyph can not fit in the current line, it is an error, unless
+/// scrolling is enabled.
 ///
 /// *Method: NcPlane.[putchar()][NcPlane#method.putchar].*
 #[inline]
@@ -215,8 +230,13 @@ pub fn ncplane_putchar(plane: &mut NcPlane, ch: char) -> NcIntResult {
     }
 }
 
-/// Replaces the [`NcCell`] at the specified coordinates with the provided char.
-/// Advances the cursor by 1.
+/// Replaces the [`NcCell`] at the specified coordinates with the provided
+/// [`char`], using the current style.
+///
+/// On success, returns the number of columns the cursor was advanced.
+///
+/// If the glyph can not fit in the current line, it is an error, unless
+/// scrolling is enabled.
 ///
 /// *Method: NcPlane.[putchar_yx()][NcPlane#method.putchar_yx].*
 #[inline]
@@ -230,14 +250,121 @@ pub fn ncplane_putchar_yx(plane: &mut NcPlane, y: NcDim, x: NcDim, ch: char) -> 
     }
 }
 
-/// Writes a series of `EGC`s to the current location, using the current style.
+/// Replaces the [`NcCell`] at the current location with the provided
+/// [`char`], while retaining the previous style.
 ///
-/// Advances the cursor by some positive number of columns
-/// (though not beyond the end of the plane),
-/// and this number is returned on success.
+/// On success, returns the number of columns the cursor was advanced.
 ///
-/// On error, a non-positive number is returned, indicating
-/// the number of columns which were written before the error.
+/// If the glyph can not fit in the current line, it is an error, unless
+/// scrolling is enabled.
+///
+/// *Method: NcPlane.[putchar_stained()][NcPlane#method.putchar_stained].*
+#[inline]
+pub fn ncplane_putchar_stained(plane: &mut NcPlane, ch: char) -> NcIntResult {
+    unsafe { crate::ncplane_putstr_stained(plane, cstring![ch.to_string()]) }
+}
+
+/// Replaces the [`NcCell`] at the current location with the provided `egc`,
+/// using the current style.
+///
+/// Advances the cursor by the width of the cluster (but not past the end of
+/// the the plane), and this number is returned on success.
+///
+/// The number of bytes converted from the `egc` can be optionally written to
+/// `sbytes`.
+///
+/// If the glyph can not fit in the current line, it is an error, unless
+/// scrolling is enabled.
+///
+/// *Method: NcPlane.[putegc()][NcPlane#method.putegc].*
+//
+// MAYBE accept sbytes as Option<&mut usize>
+#[inline]
+pub fn ncplane_putegc(plane: &mut NcPlane, egc: &str, sbytes: Option<&mut i32>) -> NcIntResult {
+    let sbytes_ptr;
+    if let Some(sb) = sbytes {
+        sbytes_ptr = sb as *mut _;
+    } else {
+        sbytes_ptr = null_mut();
+    }
+
+    unsafe { crate::ffi::ncplane_putegc_yx(plane, -1, -1, cstring![egc], sbytes_ptr) }
+}
+
+/// Replaces the [`NcCell`] at the specified coordinates with the provided `egc`,
+/// using the current style.
+///
+/// Advances the cursor by the width of the cluster (but not past the end of
+/// the the plane), and this number is returned on success.
+///
+/// The number of bytes converted from the `egc` can be optionally written to
+/// `sbytes`.
+///
+/// If the glyph can not fit in the current line, it is an error, unless
+/// scrolling is enabled.
+///
+/// *Method: NcPlane.[putegc_yx()][NcPlane#method.putegc_yx].*
+//
+// MAYBE accept sbytes as Option<&mut usize>
+#[inline]
+pub fn ncplane_putegc_yx(
+    plane: &mut NcPlane,
+    y: NcDim,
+    x: NcDim,
+    egc: &str,
+    sbytes: Option<&mut i32>,
+) -> NcIntResult {
+    let sbytes_ptr;
+    if let Some(sb) = sbytes {
+        sbytes_ptr = sb as *mut _;
+    } else {
+        sbytes_ptr = null_mut();
+    }
+
+    unsafe { crate::ffi::ncplane_putegc_yx(plane, y as i32, x as i32, cstring![egc], sbytes_ptr) }
+}
+
+/// Replaces the [`NcCell`] at the current location with the provided `egc`,
+/// while retaining the previous style.
+///
+/// Advances the cursor by the width of the cluster (but not past the end of
+/// the the plane), and this number is returned on success.
+///
+/// The number of bytes converted from the `egc` can be optionally written to
+/// `sbytes`.
+///
+/// If the glyph can not fit in the current line, it is an error, unless
+/// scrolling is enabled.
+///
+/// *Method: NcPlane.[putegc_stained()][NcPlane#method.putegc_stained].*
+//
+// MAYBE accept sbytes as Option<&mut usize>
+#[inline]
+pub fn ncplane_putegc_stained(
+    plane: &mut NcPlane,
+    egc: &str,
+    sbytes: Option<&mut i32>,
+) -> NcIntResult {
+    let sbytes_ptr;
+    if let Some(sb) = sbytes {
+        sbytes_ptr = sb as *mut _;
+    } else {
+        sbytes_ptr = null_mut();
+    }
+
+    unsafe { crate::ffi::ncplane_putegc_stained(plane, cstring![egc], sbytes_ptr) }
+}
+
+/// Writes a string to the current location, using the current style.
+///
+/// Advances the cursor by some positive number of columns (though not beyond
+/// the end of the plane), and this number is returned on success.
+///
+/// On error, a non-positive number is returned, indicating the number of
+/// columns which were written before the error.
+///
+/// If a glyph can not fit in the current line, it is an error, unless
+/// scrolling is enabled.
 ///
 /// *Method: NcPlane.[putstr()][NcPlane#method.putstr].*
 #[inline]
@@ -245,12 +372,22 @@ pub fn ncplane_putstr(plane: &mut NcPlane, string: &str) -> NcIntResult {
     unsafe { crate::ncplane_putstr_yx(plane, -1, -1, cstring![string]) }
 }
 
+/// Writes a string to the current location, using the current style,
+/// and no more than `num_bytes` bytes will be written.
 ///
+/// Advances the cursor by some positive number of columns (though not beyond
+/// the end of the plane); this number is returned on success.
+///
+/// On error, a non-positive number is returned, indicating the number of
+/// columns which were written before the error.
+///
+/// If a glyph can not fit in the current line, it is an error, unless
+/// scrolling is enabled.
 ///
 /// *Method: NcPlane.[putnstr()][NcPlane#method.putnstr].*
 #[inline]
-pub fn ncplane_putnstr(plane: &mut NcPlane, size: u32, gclustarr: &[u8]) -> NcIntResult {
-    unsafe { crate::ncplane_putnstr_yx(plane, -1, -1, size.into(), cstring![gclustarr]) }
+pub fn ncplane_putnstr(plane: &mut NcPlane, num_bytes: usize, string: &str) -> NcIntResult {
+    unsafe { crate::ncplane_putnstr_yx(plane, -1, -1, num_bytes as size_t, cstring![string]) }
 }
 
 // movement, size & alignment --------------------------------------------------
@@ -398,7 +535,7 @@ pub fn ncplane_valign(plane: &NcPlane, align: NcAlign, numrows: NcDim) -> NcIntR
 /// cursor position.
 ///
 /// The cursor will end at the cell following the last cell output,
-/// just as if ncplane_putc() was called at that spot.
+/// just as if [`ncplane_putc`] was called at that spot.
 ///
 /// Returns the number of cells drawn on success. On error, returns the negative
 /// number of cells drawn.
@@ -413,7 +550,7 @@ pub fn ncplane_hline(plane: &mut NcPlane, cell: &NcCell, len: NcDim) -> NcIntRes
 /// cursor position.
 ///
 /// The cursor will end at the cell following the last cell output,
-/// just as if ncplane_putc() was called at that spot.
+/// just as if [`ncplane_putc`] was called at that spot.
 ///
 /// Returns the number of cells drawn on success. On error, returns the negative
 /// number of cells drawn.

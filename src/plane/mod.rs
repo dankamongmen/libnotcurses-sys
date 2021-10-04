@@ -1,31 +1,30 @@
 //! `NcPlane`
 
-// functions already exported by bindgen : 118
+// functions already exported by bindgen : 103
 // -------------------------------------------
-// (X) wont: 9
-// (#) test: 13
-// (W) wrap: 96
+// (#) test: 9
+// (W) wrap: 95
 // -------------------------------------------
 //W  ncpile_bottom
 //W# ncpile_create
 //W  ncpile_rasterize
 //W  ncpile_render
+//W  ncpile_render_to_buffer,
+//W  ncpile_render_to_file,
 //W  ncpile_top
 //W  ncplane_above
 //W  ncplane_abs_x
 //W  ncplane_abs_y
 //W  ncplane_abs_yx
-//   ncplane_as_rgba
+//W  ncplane_as_rgba
 //W  ncplane_at_cursor
 //W  ncplane_at_cursor_cell
 //W  ncplane_at_yx
 //W  ncplane_at_yx_cell
 //W  ncplane_base
 //W  ncplane_below
-//W  ncplane_boundlist
 //W  ncplane_box
 //W  ncplane_center_abs
-//W# ncplane_channels
 //W  ncplane_contents
 //W  ncplane_create
 //W  ncplane_cursor_move_rel
@@ -41,9 +40,7 @@
 //W  ncplane_fadeout
 //W  ncplane_fadeout_iteration
 //W  ncplane_format
-//W  ncplane_gradient
 //W  ncplane_greyscale
-//   ncplane_halign
 //W  ncplane_highgradient
 //W  ncplane_highgradient_sized
 //   ncplane_hline_interp
@@ -66,47 +63,38 @@
 //W  ncplane_pixelgeom
 //   ncplane_polyfill_yx
 //W  ncplane_pulse
-//W  ncplane_putchar_stained
 //W  ncplane_putc_yx
-// X ncplane_putegc_stained            // unneeded
-// X ncplane_putegc_yx                 // unneeded
-//   ncplane_putnstr_aligned
-//   ncplane_putnstr_yx
+//W  ncplane_putnstr_aligned
+//W  ncplane_putnstr_yx
 //W  ncplane_putstr_aligned
 //W  ncplane_putstr_stained
 //W  ncplane_putstr_yx
 //W  ncplane_puttext
-// X ncplane_putwegc_stained           // unneeded
-// X ncplane_putwstr_stained           // unneeded
 //   ncplane_qrcode
 //W  ncplane_reparent
 //W  ncplane_reparent_family
 //W# ncplane_resize
-//W  ncplane_resize_marginalize
+//W  ncplane_resize_marginalized
 //W  ncplane_resize_maximize
 //W  ncplane_resize_realign
 //W  ncplane_resizecb
-//W  ncplane_rgba
 //W  ncplane_rotate_ccw
 //W  ncplane_rotate_cw
 //W  ncplane_scrolling_p
+//W  ncplane_scrollup,
+//W  ncplane_scrollup_child,
 //W  ncplane_set_base
 //W  ncplane_set_base_cell
-//W# ncplane_set_bchannel
 //W  ncplane_set_bg_alpha
 //W  ncplane_set_bg_default
 //W  ncplane_set_bg_palindex
 //W  ncplane_set_bg_rgb
 //W  ncplane_set_bg_rgb8
-// X ncplane_set_bg_rgb8_clipped       // unneeded
-//W# ncplane_set_channels
-//W# ncplane_set_fchannel
 //W  ncplane_set_fg_alpha
 //W  ncplane_set_fg_default
 //W  ncplane_set_fg_palindex
 //W  ncplane_set_fg_rgb
 //W  ncplane_set_fg_rgb8
-// X ncplane_set_fg_rgb8_clipped       // unneeded
 //W  ncplane_set_resizecb
 //W  ncplane_set_scrolling
 //W  ncplane_set_styles
@@ -116,21 +104,16 @@
 //W  ncplane_translate
 //W  ncplane_translate_abs
 //   ncplane_userptr
-//   ncplane_valign
 //   ncplane_vline_interp
-// X ncplane_vprintf_aligned
-// X ncplane_vprintf_stained
-// X ncplane_vprintf_yx
 //W  ncplane_x
 //W  ncplane_y
 //W  ncplane_yx
-//
-// functions manually reimplemented: 42
+
+// functions manually reimplemented: 43
 // ------------------------------------------
-// (X) wont:  9
-// (+) done: 33 / 2
-// (W) wrap: 27
-// (#) test:  5
+// (+) done: 43
+// (W) wrap: 39
+// (#) test:  9
 // ------------------------------------------
 //W+ ncplane_bchannel
 //W+ ncplane_bg_alpha
@@ -138,7 +121,7 @@
 //W+ ncplane_bg_rgb
 //W+ ncplane_bg_rgb8
 //W+ ncplane_box_sized
-//W+ ncplane_channels
+//W# ncplane_channels
 //W# ncplane_dim_x
 //W# ncplane_dim_y
 //W+ ncplane_double_box
@@ -158,26 +141,46 @@
 //W+ ncplane_perimeter
 //W+ ncplane_perimeter_double
 //W+ ncplane_perimeter_rounded
-// + ncplane_putc
-// + ncplane_putchar
-// + ncplane_putchar_yx
-// X ncplane_putegc                    // unneeded
-// + ncplane_putnstr
+//W+ ncplane_putc
+//W+ ncplane_putchar
+//W+ ncplane_putchar_stained
+//W+ ncplane_putchar_yx
+//W+ ncplane_putegc
+//W+ ncplane_putegc_stained
+//W+ ncplane_putegc_yx
+//W+ ncplane_putnstr
 //W+ ncplane_putstr
-// X ncplane_putwc                     // unneeded
-// X ncplane_putwc_stained             // unneeded
-// X ncplane_putwc_yx                  // unneeded
-// X ncplane_putwegc                   // unneeded
-// X ncplane_putwegc_yx                // unneeded
-// X ncplane_putwstr                   // unneeded
-// X ncplane_putwstr_aligned           // unneeded
-// X ncplane_putwstr_yx                // unneeded
 //W# ncplane_resize_simple
 // + ncplane_rounded_box
 // + ncplane_rounded_box_sized
-//W+ ncplane_halign
+//W# ncplane_set_bchannel
+//W# ncplane_set_channels
+//W# ncplane_set_fchannel
+//W+ ncplane_valign
 // + ncplane_vline
-// X ncplane_vprintf
+
+// wont implement:
+// ----------------
+//   ncplane_putegc_stained
+//   ncplane_putegc_yx
+//   ncplane_putwegc_stained
+//   ncplane_putwstr_stained
+//   ncplane_set_bg_rgb8_clipped
+//   ncplane_set_fg_rgb8_clipped
+//   ncplane_vprintf_aligned
+//   ncplane_vprintf_stained
+//   ncplane_vprintf_yx
+//
+//   ncplane_putegc
+//   ncplane_putwc
+//   ncplane_putwc_stained
+//   ncplane_putwc_yx
+//   ncplane_putwegc
+//   ncplane_putwegc_yx
+//   ncplane_putwstr
+//   ncplane_putwstr_aligned
+//   ncplane_putwstr_yx
+//   ncplane_vprintf
 
 #[cfg(test)]
 mod test;

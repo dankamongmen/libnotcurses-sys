@@ -234,7 +234,7 @@ pub fn ncchannels_bg_rgb8(
 /// Sets the three foreground RGB [`NcComponent`]s of an [`NcChannels`], and
 /// marks it as NOT using the "default color", retaining the other bits unchanged.
 ///
-/// Unlike the original C API, it also returns the new NcChannels.
+/// NOTE: Unlike the original C function, this one returns the new `NcChannels`.
 ///
 /// *Method: NcChannels.[set_fg_rgb8()][NcChannels#method.set_fg_rgb8]*
 #[inline]
@@ -253,7 +253,7 @@ pub fn ncchannels_set_fg_rgb8(
 /// Sets the three background RGB [`NcComponent`]s of an [`NcChannels`], and
 /// marks it as NOT using the "default color", retaining the other bits unchanged.
 ///
-/// Unlike the original C API, it also returns the new NcChannels.
+/// NOTE: Unlike the original C function, this one returns the new `NcChannels`.
 ///
 /// *Method: NcChannels.[set_bg_rgb8()][NcChannels#method.set_bg_rgb8]*
 #[inline]

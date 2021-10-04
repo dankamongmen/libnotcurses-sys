@@ -230,9 +230,9 @@ pub const fn nccell_bg_palindex(cell: &NcCell) -> NcPaletteIndex {
 /// Also sets [NCALPHA_FG_PALETTE] and [NCALPHA_OPAQUE],
 /// and clears out [NCALPHA_FGDEFAULT_MASK].
 ///
+/// NOTE: Unlike the original C function, this one can't fail.
+///
 /// *Method: NcCell.[set_fg_palindex()][NcCell#method.set_fg_palindex].*
-//
-// NOTE: unlike the original C function, this one can't fail
 #[inline]
 #[allow(clippy::unnecessary_cast)]
 pub fn nccell_set_fg_palindex(cell: &mut NcCell, index: NcPaletteIndex) {
@@ -248,9 +248,9 @@ pub fn nccell_set_fg_palindex(cell: &mut NcCell, index: NcPaletteIndex) {
 /// Also sets [`NCALPHA_BG_PALETTE`] and [`NCALPHA_OPAQUE`],
 /// and clears out [`NCALPHA_BGDEFAULT_MASK`].
 ///
+/// NOTE: Unlike the original C function, this one can't fail.
+///
 /// *Method: NcCell.[set_bg_palindex()][NcCell#method.set_bg_palindex].*
-//
-// NOTE: unlike the original C function, this one can't fail
 #[inline]
 pub fn nccell_set_bg_palindex(cell: &mut NcCell, index: NcPaletteIndex) {
     cell.channels |= NCALPHA_BGDEFAULT_MASK as NcChannels;
