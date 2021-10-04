@@ -20,7 +20,7 @@ fn main() -> NcResult<()> {
     }
 
     let mut stdplane = nc.stdplane();
-    let pg = stdplane.pixelgeom();
+    let pg = stdplane.pixel_geom();
 
     // print visual delimiters around our pixelized cell
     println!("0▗│▖\n│─ ─\n2▝│▘");

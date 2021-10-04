@@ -20,7 +20,7 @@ fn main() -> NcResult<()> {
     sleep![1];
 
     // secondly we move a visual plane and compare
-    let geo = nc.stdplane().pixelgeom();
+    let geo = nc.stdplane().pixel_geom();
     let width = W_CELLS * geo.cell_x;
     let height = H_CELLS * geo.cell_y;
     let buffer: Vec<u8> = vec![0xBB; (height * width) as usize * 3];

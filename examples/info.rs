@@ -40,8 +40,8 @@ Palette size: {11:?}
         nc.palette_size(),
     );
 
-    let pixelgeom = nc.stdplane().pixelgeom();
-    println!("{:#?}", pixelgeom);
+    let pgeom = nc.stdplane().pixel_geom();
+    println!("{:#?}", pgeom);
 
     nc.render()?;
     nc.stop()?;
