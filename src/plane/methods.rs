@@ -1757,6 +1757,12 @@ impl NcPlane {
         ]
     }
 
+    #[deprecated]
+    #[doc(hidden)]
+    pub fn pixelgeom(&self) -> NcPixelGeometry {
+        self.pixel_geom()
+    }
+
     /// Returns an [NcPixelGeometry] structure filled with pixel geometry for
     /// the display region, each cell, and the maximum displayable bitmap.
     ///
@@ -1765,7 +1771,7 @@ impl NcPlane {
     /// possibly leading to an interrogation of the terminal.
     ///
     /// *C style function: [ncplane_pixelgeom()][crate::ncplane_pixelgeom].*
-    pub fn pixelgeom(&self) -> NcPixelGeometry {
+    pub fn pixel_geom(&self) -> NcPixelGeometry {
         let mut pxy = 0;
         let mut pxx = 0;
         let mut celldimy = 0;
