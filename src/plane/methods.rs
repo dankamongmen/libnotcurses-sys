@@ -1031,18 +1031,6 @@ impl NcPlane {
         unsafe { crate::ncplane_abs_x(self) as NcDim }
     }
 
-    /// Gets the head of the list of planes bound to this plane.
-    ///
-    /// *C style function: [ncplane_boundlist()][crate::ncplane_boundlist].*
-    pub fn ncplane_boundlist(&mut self) -> Option<&mut NcPlane> {
-        let ptr = unsafe { crate::ncplane_boundlist(self) };
-        if ptr.is_null() {
-            None
-        } else {
-            Some(unsafe { &mut *ptr })
-        }
-    }
-
     /// Duplicates this `NcPlane`.
     ///
     /// The new NcPlane will have the same geometry, the same rendering state,
