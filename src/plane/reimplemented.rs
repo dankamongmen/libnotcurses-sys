@@ -262,12 +262,45 @@ pub fn ncplane_putnstr(plane: &mut NcPlane, size: u32, gclustarr: &[u8]) -> NcIn
 ///
 /// It is an error to attempt to move the standard plane.
 ///
-/// *C style function: [ncplane_moverel()][crate::ncplane_moverel].*
+/// *Method: NcPlane.[move_rel()][NcPlane#method.move_rel].*
+#[inline]
 pub fn ncplane_moverel(plane: &mut NcPlane, rows: NcOffset, cols: NcOffset) -> NcIntResult {
     let (mut orig_y, mut orig_x) = (0, 0);
     unsafe {
         crate::ncplane_yx(plane, &mut orig_y, &mut orig_x);
         crate::ncplane_move_yx(plane, orig_y + rows, orig_x + cols)
+    }
+}
+
+/// Splices this plane and its bound planes out of the z-buffer,
+/// and reinserts them at the top.
+///
+/// Relative order will be maintained between the reinserted planes.
+///
+/// For a plane E bound to C, with z-ordering A B C D E, moving the C family
+/// to the top results in C E A B D.
+///
+/// *Method: NcPlane.[move_family_top()][NcPlane#method.move_family_top].*
+#[inline]
+pub fn ncplane_move_family_top(plane: &mut NcPlane) {
+    unsafe {
+        crate::ncplane_move_family_below(plane, null_mut());
+    }
+}
+
+/// Splices this plane and its bound planes out of the z-buffer,
+/// and reinserts them at the bottom.
+///
+/// Relative order will be maintained between the reinserted planes.
+///
+/// For a plane E bound to C, with z-ordering A B C D E, moving the C family
+/// to the bottom results in A B D C E.
+///
+/// *Method: NcPlane.[move_family_bottom()][NcPlane#method.move_family_bottom].*
+#[inline]
+pub fn ncplane_move_family_bottom(plane: &mut NcPlane) {
+    unsafe {
+        crate::ncplane_move_family_above(plane, null_mut());
     }
 }
 

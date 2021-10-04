@@ -1140,7 +1140,7 @@ impl NcPlane {
     pub fn move_above(&mut self, above: &mut NcPlane) -> NcResult<()> {
         error![
             unsafe { crate::ncplane_move_above(self, above) },
-            "NcPlane.move_above(NcPlane)"
+            "NcPlane.move_above()"
         ]
     }
 
@@ -1153,9 +1153,66 @@ impl NcPlane {
     pub fn move_below(&mut self, below: &mut NcPlane) -> NcResult<()> {
         error![
             unsafe { crate::ncplane_move_below(self, below) },
-            "NcPlane.move_below(NcPlane)"
+            "NcPlane.move_below()"
         ]
     }
+
+    /// Splices this plane and its bound planes out of the z-buffer,
+    /// and reinserts them at the bottom.
+    ///
+    /// Relative order will be maintained between the reinserted planes.
+    ///
+    /// For a plane E bound to C, with z-ordering A B C D E, moving the C family
+    /// to the bottom results in A B D C E.
+    ///
+    /// *C style function: [ncplane_move_family_bottom()][crate::ncplane_move_family_bottom].*
+    pub fn move_family_bottom(&mut self) {
+        crate::ncplane_move_family_bottom(self)
+    }
+
+    /// Splices this plane and its bound planes out of the z-buffer,
+    /// and reinserts them at the top.
+    ///
+    /// Relative order will be maintained between the reinserted planes.
+    ///
+    /// For a plane E bound to C, with z-ordering A B C D E, moving the C family
+    /// to the top results in C E A B D.
+    ///
+    /// *C style function: [ncplane_move_family_top()][crate::ncplane_move_family_top].*
+    pub fn move_family_top(&mut self) {
+        crate::ncplane_move_family_top(self)
+    }
+
+    /// Splices this plane and its bound planes out of the z-buffer,
+    /// and reinserts them above the `above` plane.
+    ///
+    /// Relative order will be maintained between the reinserted planes.
+    ///
+    /// For a plane E bound to C, with z-ordering A B C D E, moving the C family
+    /// to the top results in C E A B D.
+    ///
+    /// *C style function: [ncplane_move_family_below()][crate::ncplane_move_family_below].*
+    pub fn move_family_above(&mut self, above: &mut NcPlane) {
+        unsafe {
+            crate::ncplane_move_family_above(self, above);
+        }
+    }
+
+    /// Splices this plane and its bound planes out of the z-buffer,
+    /// and reinserts them below the `below` plane.
+    ///
+    /// Relative order will be maintained between the reinserted planes.
+    ///
+    /// For a plane E bound to C, with z-ordering A B C D E, moving the C family
+    /// to the bottom results in A B D C E.
+    ///
+    /// *C style function: [ncplane_move_family_below()][crate::ncplane_move_family_below].*
+    pub fn move_family_below(&mut self, below: &mut NcPlane) {
+        unsafe {
+            crate::ncplane_move_family_below(self, below);
+        }
+    }
+
     /// Merge the `NcPlane` `source` down onto the current `NcPlane` (`self`).
     ///
     /// This is most rigorously defined as "write to `self` the frame that would

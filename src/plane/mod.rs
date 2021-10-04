@@ -1,10 +1,10 @@
 //! `NcPlane`
 
-// functions already exported by bindgen : 116
+// functions already exported by bindgen : 118
 // -------------------------------------------
 // (X) wont: 9
 // (#) test: 13
-// (W) wrap: 94
+// (W) wrap: 96
 // -------------------------------------------
 //W  ncpile_bottom
 //W# ncpile_create
@@ -53,6 +53,8 @@
 //W  ncplane_move_above
 //W  ncplane_move_below
 //W  ncplane_move_bottom
+//W  ncplane_move_family_above
+//W  ncplane_move_family_below
 //W  ncplane_move_top
 //W  ncplane_move_yx
 //W# ncplane_notcurses
@@ -64,7 +66,7 @@
 //W  ncplane_pixelgeom
 //   ncplane_polyfill_yx
 //W  ncplane_pulse
-//   ncplane_putchar_stained
+//W  ncplane_putchar_stained
 //W  ncplane_putc_yx
 // X ncplane_putegc_stained            // unneeded
 // X ncplane_putegc_yx                 // unneeded
@@ -123,11 +125,11 @@
 //W  ncplane_y
 //W  ncplane_yx
 //
-// functions manually reimplemented: 40
+// functions manually reimplemented: 42
 // ------------------------------------------
 // (X) wont:  9
-// (+) done: 33 / 0
-// (W) wrap: 25
+// (+) done: 33 / 2
+// (W) wrap: 27
 // (#) test:  5
 // ------------------------------------------
 //W+ ncplane_bchannel
@@ -150,7 +152,9 @@
 //W+ ncplane_gradient_sized
 //W+ ncplane_halign
 // + ncplane_hline
-//W  ncplane_moverel
+//W+ ncplane_moverel
+//W+ ncplane_move_family_bottom
+//W+ ncplane_move_family_top
 //W+ ncplane_perimeter
 //W+ ncplane_perimeter_double
 //W+ ncplane_perimeter_rounded
