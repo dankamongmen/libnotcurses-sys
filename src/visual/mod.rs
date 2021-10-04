@@ -159,7 +159,7 @@ pub const NCVISUAL_OPTION_BLEND: u32 = crate::bindings::ffi::NCVISUAL_OPTION_BLE
 /// a sprixel relative to the standard plane can be done in one step.
 pub const NCVISUAL_OPTION_CHILDPLANE: u32 = crate::bindings::ffi::NCVISUAL_OPTION_CHILDPLANE;
 
-/// Fails rather than gracefully degrade. See [NcBlitter].
+/// Fails rather than gracefully degrade. See [`NcBlitter`].
 pub const NCVISUAL_OPTION_NODEGRADE: u32 = crate::bindings::ffi::NCVISUAL_OPTION_NODEGRADE;
 
 /// Y is an alignment, not absolute.
@@ -254,4 +254,25 @@ pub struct NcPixelGeometry {
     pub max_bitmap_y: NcDim,
     /// The width in pixels of the maximum displayable bitmap (0 if not supported).
     pub max_bitmap_x: NcDim,
+}
+
+/// Contains the blitter geometry information as returned by the
+/// NcPlane.[blitter_geom()][crate::NcPlane#method.blitter_geom] method.
+///
+/// - `y`, `x`: the input size in pixels.
+/// - `scale_y`, `scale_x`: the scaling
+/// - `blitter` The blitter that will be used
+///
+#[derive(Clone, Debug)]
+pub struct NcBlitterGeometry {
+    ///
+    y: NcDim,
+    ///
+    x: NcDim,
+    ///
+    scale_y: NcDim,
+    ///
+    scale_x: NcDim,
+    /// The blitter that will be used.
+    blitter: NcBlitter,
 }

@@ -4,13 +4,13 @@ use core::ptr::null_mut;
 use libc::c_void;
 
 use crate::{
-    cstring, error, error_ref_mut, rstring_free, Nc, NcBlitter, NcChannel, NcComponent, NcDim, NcDirect,
-    NcDirectF, NcError, NcIntResult, NcPixel, NcPlane, NcResult, NcRgba, NcScale, NcTime, NcVGeom,
-    NcVisual, NcVisualOptions, NCBLIT_PIXEL, NCRESULT_ERR,
+    cstring, error, error_ref_mut, rstring_free, Nc, NcBlitter, NcBlitterGeometry, NcChannel,
+    NcComponent, NcDim, NcDirect, NcDirectF, NcError, NcIntResult, NcPixel, NcPlane, NcResult,
+    NcRgba, NcScale, NcTime, NcVGeom, NcVisual, NcVisualOptions, NCBLIT_PIXEL, NCRESULT_ERR,
 };
 
 #[allow(unused_imports)]
-use crate::{NCBLIT_1x1, NCBLIT_2x1, NCSCALE_STRETCH, NCBLIT_3x2, NCBLIT_2x2};
+use crate::{NCBLIT_1x1, NCBLIT_2x1, NCBLIT_2x2, NCBLIT_3x2, NCSCALE_STRETCH};
 
 /// # NcVisualOptions Constructors
 impl NcVisualOptions {
@@ -373,9 +373,9 @@ impl NcVisual {
     }
 
     /// Gets the size and ratio of NcVisual pixels to output cells along the
-    /// `y→to_y` and `x→to_x` axes.
+    /// vertical and horizontal axes.
     ///
-    /// Returns a tuple with (y, x, to_y, to_x)
+    /// Returns [`NcBlitterGeometry`].
     ///
     /// An NcVisual of `y` by `x` pixels will require
     /// (`y` * `to_y`) by (`x` * `to_x`) cells for full output.
@@ -383,15 +383,12 @@ impl NcVisual {
     /// Errors on invalid blitter in `options`. Scaling is taken into consideration.
     ///
     /// *C style function: [ncvisual_blitter_geom()][crate::ncvisual_blitter_geom].*
-    pub fn geom(
-        &self,
-        nc: &Nc,
-        options: &NcVisualOptions,
-    ) -> NcResult<(NcDim, NcDim, NcDim, NcDim)> {
+    pub fn blitter_geom(&self, nc: &Nc, options: &NcVisualOptions) -> NcResult<NcBlitterGeometry> {
         let mut y = 0;
         let mut x = 0;
-        let mut to_y = 0;
-        let mut to_x = 0;
+        let mut scale_y = 0;
+        let mut scale_x = 0;
+        let mut blitter = 0;
 
         let res = unsafe {
             crate::ncvisual_blitter_geom(
@@ -400,16 +397,19 @@ impl NcVisual {
                 options,
                 &mut y,
                 &mut x,
-                &mut to_y,
-                &mut to_x,
-                null_mut(),
+                &mut scale_y,
+                &mut scale_x,
+                &mut blitter,
             )
         };
-        error![
-            res,
-            "NcVisual.geom()",
-            (y as NcDim, x as NcDim, to_y as NcDim, to_x as NcDim)
-        ];
+        let geom = NcBlitterGeometry {
+            x: x as NcDim,
+            y: y as NcDim,
+            scale_y: scale_y as NcDim,
+            scale_x: scale_x as NcDim,
+            blitter,
+        };
+        error![res, "NcVisual.geom()", geom];
     }
 
     /// Gets the default media (not plot) blitter for this environment when using
