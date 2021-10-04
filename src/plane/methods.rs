@@ -1192,10 +1192,11 @@ impl NcPlane {
     /// to the top results in C E A B D.
     ///
     /// *C style function: [ncplane_move_family_below()][crate::ncplane_move_family_below].*
-    pub fn move_family_above(&mut self, above: &mut NcPlane) {
-        unsafe {
-            crate::ncplane_move_family_above(self, above);
-        }
+    pub fn move_family_above(&mut self, above: &mut NcPlane) -> NcResult<()> {
+        error![
+            unsafe { crate::ncplane_move_family_above(self, above) },
+            "NcPlane.move_family_above()"
+        ]
     }
 
     /// Splices this plane and its bound planes out of the z-buffer,
@@ -1207,10 +1208,11 @@ impl NcPlane {
     /// to the bottom results in A B D C E.
     ///
     /// *C style function: [ncplane_move_family_below()][crate::ncplane_move_family_below].*
-    pub fn move_family_below(&mut self, below: &mut NcPlane) {
-        unsafe {
-            crate::ncplane_move_family_below(self, below);
-        }
+    pub fn move_family_below(&mut self, below: &mut NcPlane) -> NcResult<()> {
+        error![
+            unsafe { crate::ncplane_move_family_below(self, below) },
+            "NcPlane.move_family_below()"
+        ]
     }
 
     /// Merge the `NcPlane` `source` down onto the current `NcPlane` (`self`).
