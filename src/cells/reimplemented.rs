@@ -298,8 +298,9 @@ pub fn nccell_set_styles(cell: &mut NcCell, stylebits: NcStyle) {
 
 // Chars -----------------------------------------------------------------------
 
-/// Returns the number of columns occupied by 'c'. see ncstrwidth() for an
-/// equivalent for multiple EGCs.
+/// Returns the number of columns occupied by `cell`.
+///
+/// See [`ncstrwidth`][crate::ncstrwidth] for an equivalent for multiple EGCs.
 #[inline]
 pub const fn nccell_cols(cell: &NcCell) -> u8 {
     if cell.width != 0 {
@@ -338,47 +339,6 @@ pub const fn nccell_wide_left_p(cell: &NcCell) -> bool {
     nccell_double_wide_p(cell) && cell.gcluster != 0
 }
 
-// /// Loads a 7-bit `EGC` character into the [`NcCell`].
-// ///
-// /// *Method: NcCell.[load_char()][NcCell#method.load_char].*
-// //
-// // TODO:CHECK is this necessary at all?
-// #[inline]
-// pub fn nccell_load_char(plane: &mut NcPlane, cell: &mut NcCell, ch: char) /* -> i32 */
-// {
-//     let _ = unsafe { crate::nccell_load(plane, cell, ch) };
-// }
-// nccell_load_char(struct ncplane* n, nccell* c, char ch){
-//   char gcluster[2];
-//   gcluster[0] = ch;
-//   gcluster[1] = '\0';
-//   let _ = nccell_load(n, c, gcluster);
-// }
-
-// /// Loads a UTF-8 grapheme cluster of up to 4 bytes into the cell `c`.
-// ///
-// /// *Method: NcCell.[load_egc32()][NcCell#method.load_egc32].*
-// //
-// // TODO
-// #[inline]
-// pub fn nccell_load_egc32(plane: &mut NcPlane, cell: &mut NcCell, egc: &str) -> NcIntResult {
-//     char gcluster[sizeof(egc) + 1];
-//     egc = egc.to_le();
-//     memcpy(gcluster, &egc, sizeof(egc));
-//     gcluster[4] = '\0';
-//     return nccell_load(n, c, gcluster);
-// }
-// // Load a UTF-8 encoded EGC of up to 4 bytes into the nccell 'c'. Returns the
-// // number of bytes used, or -1 on error.
-// static inline int
-// nccell_load_egc32(struct ncplane* n, nccell* c, uint32_t egc){
-//   char gcluster[sizeof(egc) + 1];
-//   egc = htole(egc);
-//   memcpy(gcluster, &egc, sizeof(egc));
-//   gcluster[4] = '\0';
-//   return nccell_load(n, c, gcluster);
-// }
-
 /// Copies the UTF8-encoded `EGC` out of the [`NcCell`], whether simple or complex.
 ///
 /// The result is not tied to the [NcPlane],
@@ -403,12 +363,8 @@ pub fn nccell_extract(
     stylemask: &mut NcStyle,
     channels: &mut NcChannels,
 ) -> String {
-    if *stylemask != 0 {
-        *stylemask = cell.stylemask;
-    }
-    if *channels != 0 {
-        *channels = cell.channels;
-    }
+    *stylemask = cell.stylemask;
+    *channels = cell.channels;
     nccell_strdup(plane, cell)
 }
 

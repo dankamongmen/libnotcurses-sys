@@ -1,23 +1,23 @@
 //! `NcCell`
 
-// functions already exported by bindgen : 7
+// functions already exported by bindgen : 6
 // -----------------------------------------
-// (W) wrap: 4
-// (#) test: 0
+// (W) wrap: 6
+// (#) test: 3
 // ------------------------------------------
-//…  nccell_extended_gcluster
-//…  nccell_load
+//W  nccell_extended_gcluster
+//W# nccell_load
+//W# nccell_duplicate
+//W# nccell_release
 //W  nccells_double_box
 //W  nccells_rounded_box
-//W  nccell_duplicate
-//W  nccell_release
 //
-// functions manually reimplemented: 46
+// functions manually reimplemented: 45
 // ------------------------------------------
 // (X) wont:  2
-// (+) done: 38
-// (W) wrap: 40
-// (#) test: 26
+// (+) done: 43
+// (W) wrap: 43
+// (#) test: 30
 // ------------------------------------------
 //W# nccell_bg_alpha
 //W# nccell_bg_default_p
@@ -25,9 +25,9 @@
 //W# nccell_bg_palindex_p
 //W# nccell_bg_rgb
 //W# nccell_bg_rgb8
-// + nccell_cols
+//W+ nccell_cols
 //W+ nccell_double_wide_p
-//W+ nccell_extract
+//W# nccell_extract
 //W# nccell_fchannel
 //W# nccell_fg_alpha
 //W# nccell_fg_default_p
@@ -35,12 +35,11 @@
 //W# nccell_fg_palindex_p
 //W# nccell_fg_rgb
 //W# nccell_fg_rgb8
-//W+ nccell_init
-//…… nccell_load_char
-//   nccell_load_egc32
+//W# nccell_init
+//W# nccell_load_char
 //W+ nccell_off_styles
 //W+ nccell_on_styles
-//W+ nccell_prime
+//W# nccell_prime
 //W# nccell_set_bchannel
 //W# nccell_set_bg_alpha
 //W# nccell_set_bg_default
@@ -57,7 +56,7 @@
 // X nccell_set_fg_rgb8_clipped   // unneeded
 //W+ nccell_set_styles
 //W+ nccell_strdup
-//W+ nccell_styles
+//W# nccell_styles
 //W+ nccell_wide_left_p
 //W+ nccell_wide_right_p
 //W+ nccellcmp
@@ -195,7 +194,9 @@ use crate::{NcChannel, NcPlane};
 ///
 /// ## Column width *(WIP)*
 ///
-/// See [USAGE.md](https://github.com/dankamongmen/notcurses/blob/master/USAGE.md)
+/// See [USAGE.md][0]
+///
+/// [0]: https://github.com/dankamongmen/notcurses/blob/master/USAGE.md#cells
 ///
 /// We store the column width in this field. for a multicolumn EGC of N
 /// columns, there will be N nccells, and each has a width of N...for now.

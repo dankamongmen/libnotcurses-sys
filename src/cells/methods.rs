@@ -1,8 +1,8 @@
 //! `NcCell` methods and associated functions.
 
 use crate::{
-    cstring, error, nccell_load, NcAlphaBits, NcCell, NcChannels, NcComponent, NcEgcBackstop,
-    NcError, NcPaletteIndex, NcPlane, NcResult, NcRgb, NcStyle, NCRESULT_ERR,
+    cstring, error, nccell_load, rstring, NcAlphaBits, NcCell, NcChannels, NcComponent,
+    NcEgcBackstop, NcError, NcPaletteIndex, NcPlane, NcResult, NcRgb, NcStyle, NCRESULT_ERR,
 };
 
 #[allow(unused_imports)] // for the doc comments
@@ -30,7 +30,7 @@ impl NcCell {
     ///
     /// Expects a plane where to save the extra data if it's greater than 4 bytes.
     #[inline]
-    pub fn from_char(ch: char, plane: &mut NcPlane) -> NcResult<Self> {
+    pub fn from_char(plane: &mut NcPlane, ch: char) -> NcResult<Self> {
         let mut cell = Self::new();
         let res = unsafe { nccell_load(plane, &mut cell, cstring![ch.to_string()]) };
         if res == NCRESULT_ERR {
@@ -39,7 +39,7 @@ impl NcCell {
         Ok(cell)
     }
 
-    /// New `NcCell`, from a &[`str`].
+    /// New `NcCell`, from a [`&str`].
     ///
     /// Expects a plane where to save the extra data if it's greater than 4 bytes.
     #[inline]
@@ -97,8 +97,10 @@ impl NcCell {
     /// Both must be or will be bound to `common_plane`.
     ///
     /// *C style function: [nccell_duplicate()][crate::nccell_duplicate].*
-    pub fn duplicate(&self, target: &mut NcCell, common_plane: &mut NcPlane) -> NcResult<()> {
-        error![unsafe { crate::nccell_duplicate(common_plane, target, self) }]
+    pub fn duplicate(&self, common_plane: &mut NcPlane) -> NcResult<NcCell> {
+        let mut target = NcCell::new();
+        let res = unsafe { crate::nccell_duplicate(common_plane, &mut target, self) };
+        error![res, "NcCell.duplicate()", target]
     }
 
     /// Initializes (zeroes out) this `NcCell`.
@@ -127,7 +129,7 @@ impl NcCell {
     /// *(No equivalent C style function)*
     pub fn channels(&mut self, plane: &mut NcPlane) -> NcChannels {
         let (mut _styles, mut channels) = (0, 0);
-        let _char = crate::nccell_extract(plane, self, &mut _styles, &mut channels);
+        let _egc = crate::nccell_extract(plane, self, &mut _styles, &mut channels);
         channels
     }
 
@@ -369,16 +371,25 @@ impl NcCell {
 
 /// # `NcCell` methods: text
 impl NcCell {
-    // /// Returns a pointer to the `EGC` of this NcCell in the [NcPlane] `plane`.
-    // ///
-    // /// This pointer can be invalidated by any further operation on the referred
-    // /// plane, so… watch out!
-    // ///
-    // /// *C style function: [nccell_extended_gcluster()][crate::nccell_wide_left_p].*
-    // pub fn extended_gcluster(&self, plane: &NcPlane) -> u32 {
-    //     let egcpointer = unsafe { crate::nccell_extended_gcluster(plane, self) };
-    //     egcpointer
-    // }
+    /// Returns the number of columns occupied by the cell.
+    ///
+    /// See [`ncstrwidth`][crate::ncstrwidth] for an equivalent for multiple EGCs.
+    ///
+    /// *C style function: [nccell_cols()][crate::nccell_cols].*
+    pub const fn cols(&self) -> u8 {
+        crate::nccell_cols(self)
+    }
+
+    /// Returns a pointer to the `EGC` of this NcCell in the `plane`.
+    ///
+    /// This pointer can be invalidated by any further operation on the referred
+    /// plane, so… watch out!
+    ///
+    /// *C style function: [nccell_extended_gcluster()][crate::nccell_wide_left_p].*
+    pub fn extended_gcluster(&self, plane: &NcPlane) -> &str {
+        let egcpointer = unsafe { crate::nccell_extended_gcluster(plane, self) };
+        rstring![egcpointer]
+    }
 
     /// Copies the UTF8-encoded `EGC` out of this NcCell,
     /// whether simple or complex.
