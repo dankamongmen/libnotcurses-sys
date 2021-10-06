@@ -111,7 +111,7 @@ pub type NcVGeom = crate::bindings::ffi::ncvgeom;
 /// the rendering area). if [`NCVISUAL_OPTION_CHILDPLANE`] is provided, this
 /// will be interpreted as the parent.
 ///
-/// A subregion of the visual can be rendered using `begx`, `begy`, `lenx`, and `leny`.
+/// A subregion of the visual can be rendered using `beg_x`, `beg_y`, `len_x`, and `len_y`.
 pub type NcVisualOptions = crate::bindings::ffi::ncvisual_options;
 
 // NcRgba

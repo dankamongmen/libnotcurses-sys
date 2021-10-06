@@ -471,21 +471,21 @@ pub fn ncplane_dim_y(plane: &NcPlane) -> NcDim {
 ///
 /// *Method: NcPlane.[resize_simple()][NcPlane#method.resize_simple].*
 #[inline]
-pub fn ncplane_resize_simple(plane: &mut NcPlane, y_len: NcDim, x_len: NcDim) -> NcIntResult {
+pub fn ncplane_resize_simple(plane: &mut NcPlane, len_y: NcDim, len_x: NcDim) -> NcIntResult {
     let (mut old_y, mut old_x) = (0, 0);
     unsafe {
         crate::ncplane_dim_yx(plane, &mut old_y, &mut old_x);
     }
     let keep_len_y = {
-        if old_y > y_len as i32 {
-            y_len as i32
+        if old_y > len_y as i32 {
+            len_y as i32
         } else {
             old_y
         }
     };
     let keep_len_x = {
-        if old_x > x_len as i32 {
-            x_len as i32
+        if old_x > len_x as i32 {
+            len_x as i32
         } else {
             old_x
         }
@@ -499,8 +499,8 @@ pub fn ncplane_resize_simple(plane: &mut NcPlane, y_len: NcDim, x_len: NcDim) ->
             keep_len_x,
             0,
             0,
-            y_len as i32,
-            x_len as i32,
+            len_y as i32,
+            len_x as i32,
         )
     }
 }
@@ -723,7 +723,7 @@ pub fn ncplane_perimeter_rounded(
 // box -------------------------------------------------------------------------
 
 /// Draws a box with its upper-left corner at the current cursor position,
-/// having dimensions `y_len` * `x_len`.
+/// having dimensions `len_y` * `len_x`.
 ///
 /// The minimum box size is 2x2, and it cannot be drawn off-screen.
 ///
@@ -739,8 +739,8 @@ pub fn ncplane_box_sized(
     lr: &NcCell,
     hline: &NcCell,
     vline: &NcCell,
-    y_len: NcDim,
-    x_len: NcDim,
+    len_y: NcDim,
+    len_x: NcDim,
     boxmask: NcBoxMask,
 ) -> NcIntResult {
     let (mut y, mut x) = (0, 0);
@@ -754,8 +754,8 @@ pub fn ncplane_box_sized(
             lr,
             hline,
             vline,
-            y + y_len as i32 - 1,
-            x + x_len as i32 - 1,
+            y + len_y as i32 - 1,
+            x + len_x as i32 - 1,
             boxmask,
         )
     }
@@ -769,8 +769,8 @@ pub fn ncplane_double_box(
     plane: &mut NcPlane,
     stylemask: NcStyle,
     channels: NcChannels,
-    y_stop: NcDim,
-    x_stop: NcDim,
+    end_y: NcDim,
+    end_x: NcDim,
     boxmask: NcBoxMask,
 ) -> NcIntResult {
     #[allow(unused_assignments)]
@@ -804,8 +804,8 @@ pub fn ncplane_double_box(
                 &lr,
                 &hl,
                 &vl,
-                y_stop as i32,
-                x_stop as i32,
+                end_y as i32,
+                end_x as i32,
                 boxmask,
             );
         }
@@ -828,8 +828,8 @@ pub fn ncplane_double_box_sized(
     plane: &mut NcPlane,
     stylemask: NcStyle,
     channels: NcChannels,
-    y_len: NcDim,
-    x_len: NcDim,
+    len_y: NcDim,
+    len_x: NcDim,
     boxmask: NcBoxMask,
 ) -> NcIntResult {
     let (mut y, mut x) = (0, 0);
@@ -840,8 +840,8 @@ pub fn ncplane_double_box_sized(
         plane,
         stylemask,
         channels,
-        y as NcDim + y_len - 1,
-        x as NcDim + x_len - 1,
+        y as NcDim + len_y - 1,
+        x as NcDim + len_x - 1,
         boxmask,
     )
 }
@@ -854,8 +854,8 @@ pub fn ncplane_rounded_box(
     plane: &mut NcPlane,
     stylemask: NcStyle,
     channels: NcChannels,
-    y_stop: NcDim,
-    x_stop: NcDim,
+    end_y: NcDim,
+    end_x: NcDim,
     boxmask: NcBoxMask,
 ) -> NcIntResult {
     #[allow(unused_assignments)]
@@ -889,8 +889,8 @@ pub fn ncplane_rounded_box(
                 &lr,
                 &hl,
                 &vl,
-                y_stop as i32,
-                x_stop as i32,
+                end_y as i32,
+                end_x as i32,
                 boxmask,
             );
         }
@@ -912,8 +912,8 @@ pub fn ncplane_rounded_box_sized(
     plane: &mut NcPlane,
     stylemask: NcStyle,
     channels: NcChannels,
-    y_len: NcDim,
-    x_len: NcDim,
+    len_y: NcDim,
+    len_x: NcDim,
     boxmask: NcBoxMask,
 ) -> NcIntResult {
     let (mut y, mut x) = (0, 0);
@@ -924,8 +924,8 @@ pub fn ncplane_rounded_box_sized(
         plane,
         stylemask,
         channels,
-        y as NcDim + y_len - 1,
-        x as NcDim + x_len - 1,
+        y as NcDim + len_y - 1,
+        x as NcDim + len_x - 1,
         boxmask,
     )
 }
@@ -933,7 +933,7 @@ pub fn ncplane_rounded_box_sized(
 // gradient --------------------------------------------------------------------
 
 /// Draws a gradient with its upper-left corner at the current cursor position,
-/// stopping at `ystop`×`xstop`.
+/// stopping at `end_y`×`end_x`.
 ///
 /// The glyph composed of `egc` and `stylemask` is used for all cells. The
 /// `NcChannels` specified by `ul`, `ur`, `ll`, and `lr` are composed into
@@ -964,10 +964,10 @@ pub fn ncplane_gradient(
     ur: NcChannels,
     ll: NcChannels,
     lr: NcChannels,
-    y_len: NcDim,
-    x_len: NcDim,
+    len_y: NcDim,
+    len_x: NcDim,
 ) -> NcIntResult {
-    if y_len < 1 || x_len < 1 {
+    if len_y < 1 || len_x < 1 {
         return NCRESULT_ERR;
     }
 
@@ -985,14 +985,14 @@ pub fn ncplane_gradient(
             ur,
             ll,
             lr,
-            y_len as i32,
-            x_len as i32,
+            len_y as i32,
+            len_x as i32,
         )
     }
 }
 
 /// Draw a gradient with its upper-left corner at the current cursor position,
-/// having dimensions `y_len` * `x_len`.
+/// having dimensions `len_y` * `len_x`.
 ///
 /// See [ncplane_gradient][crate::ncplane_gradient] for more information.
 ///
@@ -1006,10 +1006,10 @@ pub fn ncplane_gradient_sized(
     ur: NcChannels,
     ll: NcChannels,
     lr: NcChannels,
-    y_len: NcDim,
-    x_len: NcDim,
+    len_y: NcDim,
+    len_x: NcDim,
 ) -> NcIntResult {
-    if y_len < 1 || x_len < 1 {
+    if len_y < 1 || len_x < 1 {
         return NCRESULT_ERR;
     }
     let (mut y, mut x) = (0, 0);
@@ -1023,8 +1023,8 @@ pub fn ncplane_gradient_sized(
             ur,
             ll,
             lr,
-            y as u32 + y_len - 1,
-            x as u32 + x_len - 1,
+            y as u32 + len_y - 1,
+            x as u32 + len_x - 1,
         )
     }
 }

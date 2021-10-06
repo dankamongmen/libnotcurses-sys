@@ -708,15 +708,15 @@ impl NcPlane {
         }
     }
 
-    /// Erases every cell in the region starting at (`ystart`, `xstart`) and
-    /// having a size (`ylen` × `xlen`) for non-zero lengths.
+    /// Erases every cell in the region beginning at (`beg_y`, `beg_x`) and
+    /// having a size (`len_y` × `len_x`) for non-zero lengths.
     ///
-    /// If `ystart` and/or `xstart` are `None`, the current cursor position
+    /// If `beg_y` and/or `beg_x` are `None`, the current cursor position
     /// along that axis is used.
     ///
-    /// A negative `ylen` means to move up from the origin, and a negative
-    /// `xlen` means to move left from the origin. A positive `ylen` moves down,
-    /// and a positive `xlen` moves right.
+    /// A negative `len_` means to move up from the origin, and a negative
+    /// `len_x` means to move left from the origin. A positive `len_y` moves down,
+    /// and a positive `len_x` moves right.
     ///
     /// A value of `0` for the length erases everything along that dimension.
     ///
@@ -744,24 +744,24 @@ impl NcPlane {
     /// *C style function: [ncplane_erase_region()][crate::ncplane_erase_region].*
     pub fn erase_region(
         &mut self,
-        ystart: Option<NcDim>,
-        xstart: Option<NcDim>,
-        ylen: NcOffset,
-        xlen: NcOffset,
+        beg_y: Option<NcDim>,
+        beg_x: Option<NcDim>,
+        len_y: NcOffset,
+        len_x: NcOffset,
     ) -> NcResult<()> {
         error![
             unsafe {
                 crate::ncplane_erase_region(
                     self,
-                    ystart.unwrap_or(u32::MAX) as i32, // unwrap_or(-1)
-                    xstart.unwrap_or(u32::MAX) as i32, // unwrap_or(-1)
-                    ylen,
-                    xlen,
+                    beg_y.unwrap_or(u32::MAX) as i32, // unwrap_or(-1)
+                    beg_x.unwrap_or(u32::MAX) as i32, // unwrap_or(-1)
+                    len_y,
+                    len_x,
                 )
             },
             &format!(
                 "NcPlane.erase_region({:?}, {:?}, {}, {})",
-                ystart, xstart, ylen, xlen
+                beg_y, beg_x, len_y, len_x
             )
         ]
     }
@@ -1931,7 +1931,7 @@ impl NcPlane {
 
     /// Creates an RGBA flat array from the selected region of the plane.
     ///
-    /// Starts at the plane's `beg_y`x`beg_x` coordinate (which must lie on the
+    /// Begins at the plane's `beg_y`x`beg_x` coordinate (which must lie on the
     /// plane), continuing for `len_y`x`len_x` cells.
     ///
     /// Use `None` for either or both of `len_y` and `len_x` in order to

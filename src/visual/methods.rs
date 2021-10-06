@@ -39,10 +39,10 @@ impl NcVisualOptions {
         scale: NcScale,
         y: NcDim,
         x: NcDim,
-        begy: NcDim,
-        begx: NcDim,
-        leny: NcDim,
-        lenx: NcDim,
+        beg_y: NcDim,
+        beg_x: NcDim,
+        len_y: NcDim,
+        len_x: NcDim,
         blitter: NcBlitter,
         flags: u32,
         transcolor: NcRgba,
@@ -55,11 +55,11 @@ impl NcVisualOptions {
             y: y as i32,
             x: x as i32,
             // origin of rendered section
-            begy: begy as i32,
-            begx: begx as i32,
+            begy: beg_y as i32,
+            begx: beg_x as i32,
             // size of rendered section
-            leny: leny as i32,
-            lenx: lenx as i32,
+            leny: len_y as i32,
+            lenx: len_x as i32,
             // glyph set to use
             blitter,
             // bitmask over NCVISUAL_OPTION_*
@@ -71,10 +71,10 @@ impl NcVisualOptions {
     pub fn without_plane(
         y: NcDim,
         x: NcDim,
-        begy: NcDim,
-        begx: NcDim,
-        leny: NcDim,
-        lenx: NcDim,
+        beg_y: NcDim,
+        beg_x: NcDim,
+        len_y: NcDim,
+        len_x: NcDim,
         blitter: NcBlitter,
         flags: u32,
         transcolor: u32,
@@ -86,11 +86,11 @@ impl NcVisualOptions {
             y: y as i32,
             x: x as i32,
             // origin of rendered section
-            begy: begy as i32,
-            begx: begx as i32,
+            begy: beg_y as i32,
+            begx: beg_x as i32,
             // size of rendered section
-            leny: leny as i32,
-            lenx: lenx as i32,
+            leny: len_y as i32,
+            lenx: len_x as i32,
             // glyph set to use
             blitter,
             // bitmask over NCVISUAL_OPTION_*
@@ -100,8 +100,8 @@ impl NcVisualOptions {
         }
     }
 
-    pub fn fullsize_pixel_without_plane(y: NcDim, x: NcDim, leny: NcDim, lenx: NcDim) -> Self {
-        Self::without_plane(y, x, 0, 0, leny, lenx, NCBLIT_PIXEL, 0, 0)
+    pub fn fullsize_pixel_without_plane(y: NcDim, x: NcDim, len_y: NcDim, len_x: NcDim) -> Self {
+        Self::without_plane(y, x, 0, 0, len_y, len_x, NCBLIT_PIXEL, 0, 0)
     }
 }
 
