@@ -1,4 +1,4 @@
-tools/function-summary/out-*
+tools/
 target
 Cargo.lock
 *.swp

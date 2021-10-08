@@ -1,24 +1,22 @@
+// Docs:
+// - https://rust-lang.github.io/rust-bindgen/tutorial-3.html
+// - https://docs.rs/bindgen/*/bindgen/struct.Builder.html
+
 extern crate bindgen;
 extern crate pkg_config;
 
 use std::env;
 use std::path::PathBuf;
 
-// largely taken from https://rust-lang.github.io/rust-bindgen/tutorial-3.html
 fn main() {
     let plib = pkg_config::Config::new()
-        .atleast_version("2.4.1")
+        .atleast_version("2.4.5")
         .probe("notcurses")
         .unwrap();
 
     // Tell cargo to invalidate the built crate whenever the wrapper changes
     println!("cargo:rerun-if-changed=build/wrapper.h");
 
-    // The bindgen::Builder is the main entry point to bindgen, and lets you
-    // build up options for the resulting bindings.
-    //
-    // https://docs.rs/bindgen/*/bindgen/struct.Builder.html
-    //
     // allow .blacklist_function instead of .blocklist_function for now,
     // until we update bindgen to >= 0.58.
     #[allow(deprecated)]
@@ -86,10 +84,7 @@ fn main() {
     }
 
     // Finish the builder and generate the builder.
-    let bindings = builder
-        .generate()
-        // Unwrap the Result and panic on failure.
-        .expect("Unable to generate bindings");
+    let bindings = builder.generate().expect("Unable to generate bindings");
 
     // Write the bindings to the $OUT_DIR/bindings.rs file.
     let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());

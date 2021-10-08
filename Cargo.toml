@@ -1,6 +1,6 @@
 [package]
 name = "libnotcurses-sys"
-version = "2.4.1"
+version = "2.4.5"
 authors = [
 	"nick black <dankamongmen@gmail.com>",
 	"José Luis Cruz <joseluis@andamira.net>"
@@ -20,23 +20,28 @@ categories = [
 	"visualization",
 	"multimedia",
 	"rendering",
-	]
+]
 keywords = ["tui", "cli", "terminal", "ncurses", "ffi"]
-include = ["build/", "examples/", "src/", "LICENSE-*", "README.md"]
+include = [
+	"/build/build.rs",
+	"/build/wrapper.h",
+	"/src/",
+	"/LICENSE-*",
+	"/README.md"
+]
 
 [dependencies]
 libc = { version = "^0.2.80", default-features = false }
 cty = "^0.2.1"
 
-[build-dependencies]
-bindgen = "^0.57"
-pkg-config = "^0.3.18"
-
 [dev-dependencies]
+rand = "^0.8"
 serial_test = "^0.5.0"
 serial_test_derive = "^0.5.0"
 
-rand = "^0.8"
+[build-dependencies]
+bindgen = "^0.57"
+pkg-config = "^0.3.18"
 
 # https://doc.rust-lang.org/cargo/reference/profiles.html
 [profile.dev]
