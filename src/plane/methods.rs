@@ -1232,6 +1232,23 @@ impl NcPlane {
             res as NcDim
         ]
     }
+
+    /// Considers the glyph at `y`,`x` coordinates as the fill target,
+    /// and copies `cell` to it and to all cardinally-connect cells.
+    ///
+    /// Returns the number of cells polyfilled.
+    ///
+    /// An invalid initial `y`, `x` is an error.
+    ///
+    /// *C style function: [ncplane_putnstr_yx()][crate::ncplane_putnstr_yx].*
+    pub fn polyfill_yx(&mut self, y: NcDim, x: NcDim, cell: &NcCell) -> NcResult<usize> {
+        let res = unsafe { crate::ncplane_polyfill_yx(self, y as i32, x as i32, cell) };
+        error![
+            res,
+            &format!("NcPlane.polyfill_yx({}, {}, {:?})", y, x, cell),
+            res as usize
+        ]
+    }
 }
 
 // -----------------------------------------------------------------------------
