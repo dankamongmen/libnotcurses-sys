@@ -118,6 +118,7 @@ mod bindings;
 #[doc(inline)]
 pub use bindings::*;
 
+mod blitter;
 mod r#box;
 mod capabilities;
 mod cells;
@@ -142,6 +143,7 @@ mod visual;
 pub mod widgets;
 
 pub use crate::input::*;
+pub use blitter::*;
 pub use capabilities::*;
 pub use cells::*;
 pub use channel::*;

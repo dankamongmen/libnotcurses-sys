@@ -32,7 +32,7 @@
 //W  ncvisual_subtitle_plane
 
 #[allow(unused_imports)] // for the doc comments
-use crate::{NcChannel, NcDim, NcRgb};
+use crate::{NcBlitter, NcChannel, NcDim, NcRgb};
 
 mod methods;
 
@@ -171,71 +171,6 @@ pub const NCVISUAL_OPTION_HORALIGNED: u32 = crate::bindings::ffi::NCVISUAL_OPTIO
 /// Uses non-interpolative scaling.
 pub const NCVISUAL_OPTION_NOINTERPOLATE: u32 = crate::bindings::ffi::NCVISUAL_OPTION_NOINTERPOLATE;
 
-/// The blitter mode to use for rasterizing an [`NcVisual`].
-///
-/// We never blit full blocks, but instead spaces (more efficient) with the
-/// background set to the desired foreground.
-///
-/// ## Modes
-///
-/// - [`NCBLIT_1x1`]
-/// - [`NCBLIT_2x1`]
-/// - [`NCBLIT_2x2`]
-/// - [`NCBLIT_3x2`]
-/// - [`NCBLIT_4x1`]
-/// - [`NCBLIT_8x1`]
-/// - [`NCBLIT_BRAILLE`]
-/// - [`NCBLIT_DEFAULT`]
-/// - [`NCBLIT_PIXEL`]
-///
-/// There is a mechanism of graceful degradation, that works as follows:
-/// - without braille support, NCBLIT_BRAILLE decays to NCBLIT_3x2
-/// - without bitmap support, NCBLIT_PIXEL decays to NCBLIT_3x2
-/// - without sextant support, NCBLIT_3x2 decays to NCBLIT_2x2
-/// - without quadrant support, NCBLIT_2x2 decays to NCBLIT_2x1
-/// - the only viable blitters in ASCII are NCBLIT_1x1 and NCBLIT_PIXEL
-///
-/// If you don't want this behaviour you have to use [NCVISUAL_OPTION_NODEGRADE]
-///
-pub type NcBlitter = crate::bindings::ffi::ncblitter_e;
-
-/// [`NcBlitter`] mode using: space, compatible with ASCII
-pub const NCBLIT_1x1: NcBlitter = crate::bindings::ffi::ncblitter_e_NCBLIT_1x1;
-
-/// [`NcBlitter`] mode using: halves + 1x1 (space)
-/// ▄▀
-pub const NCBLIT_2x1: NcBlitter = crate::bindings::ffi::ncblitter_e_NCBLIT_2x1;
-
-/// [`NcBlitter`] mode using: quadrants + 2x1
-/// ▗▐ ▖▀▟▌▙
-pub const NCBLIT_2x2: NcBlitter = crate::bindings::ffi::ncblitter_e_NCBLIT_2x2;
-
-/// [`NcBlitter`] mode using: sextants
-/// 🬀🬁🬂🬃🬄🬅🬆🬇🬈🬉🬊🬋🬌🬍🬎🬏🬐🬑🬒🬓🬔🬕🬖🬗🬘🬙🬚🬛🬜🬝🬞🬟🬠🬡🬢🬣🬤🬥🬦🬧🬨🬩🬪🬫🬬🬭🬮🬯🬰🬱🬲🬳🬴🬵🬶🬷🬸🬹🬺🬻
-pub const NCBLIT_3x2: NcBlitter = crate::bindings::ffi::ncblitter_e_NCBLIT_3x2;
-
-/// [`NcBlitter`] mode using: four vertical levels
-/// █▆▄▂
-pub const NCBLIT_4x1: NcBlitter = crate::bindings::ffi::ncblitter_e_NCBLIT_4x1;
-
-/// [`NcBlitter`] mode using: eight vertical levels
-/// █▇▆▅▄▃▂▁
-pub const NCBLIT_8x1: NcBlitter = crate::bindings::ffi::ncblitter_e_NCBLIT_8x1;
-
-/// [`NcBlitter`] mode using: 4 rows, 2 cols (braille)
-/// ⡀⡄⡆⡇⢀⣀⣄⣆⣇⢠⣠⣤⣦⣧⢰⣰⣴⣶⣷⢸⣸⣼⣾⣿
-pub const NCBLIT_BRAILLE: NcBlitter = crate::bindings::ffi::ncblitter_e_NCBLIT_BRAILLE;
-
-/// [`NcBlitter`] mode where the blitter is automatically chosen
-pub const NCBLIT_DEFAULT: NcBlitter = crate::bindings::ffi::ncblitter_e_NCBLIT_DEFAULT;
-
-/// Sixel/Pixel mode
-///
-/// NCBLIT_PIXEL
-///
-/// See [Sixel in Wikipedia](https://en.wikipedia.org/wiki/Sixel).
-pub const NCBLIT_PIXEL: NcBlitter = crate::bindings::ffi::ncblitter_e_NCBLIT_PIXEL;
-
 /// Contains the pixel geometry information as returned by the
 /// NcPlane.[pixelgeom()][crate::NcPlane#method.pixelgeom] method.
 ///
@@ -254,25 +189,4 @@ pub struct NcPixelGeometry {
     pub max_bitmap_y: NcDim,
     /// The width in pixels of the maximum displayable bitmap (0 if not supported).
     pub max_bitmap_x: NcDim,
-}
-
-/// Contains the blitter geometry information as returned by the
-/// NcPlane.[blitter_geom()][crate::NcPlane#method.blitter_geom] method.
-///
-/// - `y`, `x`: the input size in pixels.
-/// - `scale_y`, `scale_x`: the scaling
-/// - `blitter` The blitter that will be used
-///
-#[derive(Clone, Debug)]
-pub struct NcBlitterGeometry {
-    ///
-    y: NcDim,
-    ///
-    x: NcDim,
-    ///
-    scale_y: NcDim,
-    ///
-    scale_x: NcDim,
-    /// The blitter that will be used.
-    blitter: NcBlitter,
 }
