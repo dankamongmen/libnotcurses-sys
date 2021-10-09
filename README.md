@@ -5,18 +5,19 @@
 `libnotcurses-sys` is a low-level Rust wrapper for the
 [notcurses C library](https://www.github.com/dankamongmen/notcurses/)
 
-This library is built with several layers of zero-overhead abstractions
+It is built with several layers of zero-overhead abstractions
 over the C functions and pointers accessed through FFI.
 
-# How to use this library
+It adds greater safety and type correctness over the underlying C library API,
+while trying to remain very close to it.
 
-There are basically two ways: The [**Rust way**](#1-the-rust-way),
-and the [**C way**](#2-the-c-way). (Or a mix of both).
+It offers the choice of using it [**more like Rust**](#like-rust)
+and/or [**more like C**](#like-C).
 
-## 1. The Rust way
+## like Rust
 
 Where you use the more safely wrapped types, with its methods and constructors,
-and painless error handling, like this:
+and error handling with the `NcResult` enum:
 
 ```rust
 use libnotcurses_sys::*;
@@ -31,10 +32,11 @@ fn main() -> NcResult<()> {
 }
 ```
 
-Although you still have to manually call the `stop()` method for `Nc`
+The `Drop` trait is not implemented for any wrapping type in this library.
+
+This means you still have to manually call the `stop()` method for `Nc`
 and `NcDirect` objects, and the `destroy()` method for the rest of types that
-allocate, (like `NcPlane`, `NcMenu`…) at the end of their scope, since the Drop
-trait is not implemented for any wrapping type in libnotcurses-sys.
+allocate, (like `NcPlane`, `NcMenu`…) at the end of their scope, since the
 
 But they do implement methods and use `NcResult` as the return type,
 for handling errors in the way we are used to in Rust.
@@ -45,10 +47,16 @@ For the types that don't allocate, most are based on primitives like `i32`,
 leverage type checking, and they implement methods through traits
 (e.g. `NcChannelMethods` must be in scope to use the `NcChannel` methods.
 
-## 2. The C way
+### even more like Rust
 
-You can always use the C API functions directly if you prefer,
-in a very similar way as the C library is used.
+The WIP sister crate [`notcurses`](https://github.com/dankamongmen/notcurses-rs)
+will eventually offer a *closer to Rust*, higher-level, safer, and simpler API,
+and make it easier to interoperate with the rest of the Rust ecosystem.
+
+## like C
+
+You can access the imported, or reimplemented C API functions directly,
+and use it in a very similar way as the C library is used.
 
 It requires the use of unsafe, since most functions are wrapped directly
 by `bindgen` marked as such.
@@ -62,7 +70,7 @@ or in case of receiving a pointer, by comparing it to `null_mut()`.
 use core::ptr::{null, null_mut};
 use std::process::exit;
 
-use libnotcurses_sys::*;
+use libnotcurses_sys::{*, fns::*};
 
 fn main() {
     let options = ffi::notcurses_options {
@@ -90,7 +98,6 @@ fn main() {
         }
     }
 }
-
 ```
 
 ### The `notcurses` C API docs
@@ -102,4 +109,3 @@ fn main() {
 - [HACKING.md](https://github.com/dankamongmen/notcurses/blob/master/doc/HACKING.md)
 - [Doxygen Documentation](https://nick-black.com/notcurses/html/index.html)
 - [FOSDEM 2021 presentation](https://fosdem.org/2021/schedule/event/notcurses/)
-
