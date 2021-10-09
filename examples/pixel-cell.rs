@@ -1,11 +1,5 @@
 //! pixel-cell example
 //!
-//! Shows how to get the size of a cell in pixels
-//!
-//! It works on the following terminals:
-//! - kitty
-//! - xterm (invoked with `xterm -ti vt340`)
-//! - alacritty (WIP: https://github.com/ayosec/alacritty/tree/graphics)
 
 use rand::{distributions::Uniform, Rng};
 
@@ -19,14 +13,17 @@ fn main() -> NcResult<()> {
         return Err(NcError::new_msg("Current terminal doesn't support pixels."));
     }
 
-    let mut stdplane = nc.stdplane();
-    let pg = stdplane.pixel_geom();
+    let mut splane = nc.stdplane();
+    splane.set_scrolling(true);
+
+    let pg = splane.pixel_geom();
 
     // print visual delimiters around our pixelized cell
-    println!("0▗│▖\n│─ ─\n2▝│▘");
-    println!("a cell is {}x{} pixels", pg.cell_y, pg.cell_x);
-    println!("\ninterpolated  not-interpolated  not-interpolated  interpolated");
-    println!("   SCALE          SCALE               RESIZE          RESIZE");
+    putstrln!(splane, "0▗│▖\n│─ ─\n2▝│▘")?;
+    putstrln!(splane, "a cell is {}x{} pixels", pg.cell_y, pg.cell_x)?;
+    putstrln!(splane, "\ninterpolated  not-interpolated  not-interpolated  interpolated")?;
+    putstrln!(splane, "   SCALE          SCALE               RESIZE          RESIZE")?;
+    nrs![nc, 1];
 
     // fill the buffer with random color pixels
     let mut rng = rand::thread_rng();
@@ -48,7 +45,7 @@ fn main() -> NcResult<()> {
     nrs![&mut nc, 1];
 
     // show the ncvisual, scaled with interpolated values
-    let mut vplane2 = NcPlane::new_bound(&mut stdplane, 7, 4, 5, 4)?;
+    let mut vplane2 = NcPlane::new_bound(&mut splane, 7, 4, 5, 4)?;
     let voptions2 = NcVisualOptions::with_plane(
         &mut vplane2,
         NCSCALE_SCALE,
@@ -66,7 +63,7 @@ fn main() -> NcResult<()> {
     nrs![&mut nc, 0, 250];
 
     // show the ncvisual, scaled without using interpolation
-    let mut vplane3 = NcPlane::new_bound(&mut stdplane, 7, 19, 5, 4)?;
+    let mut vplane3 = NcPlane::new_bound(&mut splane, 7, 19, 5, 4)?;
     let voptions3 = NcVisualOptions::with_plane(
         &mut vplane3,
         NCSCALE_SCALE,

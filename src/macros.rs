@@ -56,7 +56,7 @@ macro_rules! nrs {
 /// [`sleep!`]`[$sleep_args]`.
 ///
 /// Renders and rasterizes the `$p` [NcPlane] pile and then, if there are
-/// no errors, calls the sleep macro with the rest of the arguments.  
+/// no errors, calls the sleep macro with the rest of the arguments.
 ///
 /// Returns [NcResult].
 #[macro_export]
@@ -171,6 +171,93 @@ macro_rules! printf {
     };
     ($s:expr $(, $opt:expr)*) => {
         unsafe { libc::printf(cstring![$s], $($opt),*) }
+    };
+}
+
+/// Wrapper around [`NcPlane.putstr`][NcPlane#method.putstr],
+/// rendering and rasterizing the plane afterwards.
+///
+/// Returns an `NcResult` with the number of columns advanced,
+/// without including newlines.
+///
+/// # Example
+/// ```
+/// # use libnotcurses_sys::*;
+/// # fn main() -> NcResult<()> {
+/// let nc = Nc::new_cli()?;
+/// let splane = nc.stdplane();
+/// splane.set_scrolling(true);
+/// putstr!(splane, "hello ")?;
+/// putstr!(splane, " world\n")?;
+/// putstr!(splane, "formatted text: {:?}\n", (0, 1.0, "two") )?;
+/// # nc.stop()?;
+/// # Ok(())
+/// # }
+/// ```
+#[macro_export]
+macro_rules! putstr {
+    ($plane:ident, $text:literal) => {
+        {
+            let res = $plane.putstr($text)?;
+            $plane.render()?;
+            $plane.rasterize()?;
+            Ok(res)
+        }
+    };
+    ($plane:ident, $text:literal, $($args:tt)*) => {
+        {
+            let res = $plane.putstr(&format![$text, $($args)*])?;
+            $plane.render()?;
+            $plane.rasterize()?;
+            Ok(res)
+        }
+    };
+}
+
+/// Wrapper around [`NcPlane.putstrln`][NcPlane#method.putstrln].
+/// rendering and rasterizing the plane afterwards.
+///
+/// Returns an `NcResult` with the number of columns advanced,
+/// without including newlines.
+///
+/// # Example
+/// ```
+/// # use libnotcurses_sys::*;
+/// # fn main() -> NcResult<()> {
+/// let nc = Nc::new_cli()?;
+/// let splane = nc.stdplane();
+/// splane.set_scrolling(true);
+/// putstrln!(splane, "hello world")?;
+/// putstrln!(splane, "formatted text: {:?}", (0, 1.0, "two") )?;
+/// # nc.stop()?;
+/// # Ok(())
+/// # }
+/// ```
+#[macro_export]
+macro_rules! putstrln {
+    ($plane:ident) => {
+        {
+            let res = $plane.putln()?;
+            $plane.render()?;
+            $plane.rasterize()?;
+            Ok(res)
+        }
+    };
+    ($plane:ident, $text:literal) => {
+        {
+            let res = $plane.putstrln($text)?;
+            $plane.render()?;
+            $plane.rasterize()?;
+            Ok(res)
+        }
+    };
+    ($plane:ident, $text:literal, $($args:tt)*) => {
+        {
+            let res = $plane.putstrln(&format![$text, $($args)*])?;
+            $plane.render()?;
+            $plane.rasterize()?;
+            Ok(res)
+        }
     };
 }
 

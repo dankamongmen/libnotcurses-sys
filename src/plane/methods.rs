@@ -983,33 +983,26 @@ impl NcPlane {
         error![res, &format!("NcPlane.putstr({:?})", string), res as NcDim]
     }
 
-    /// Same as [`putstr`][NcPlane#method.putstr], but it also tries to move the
-    /// cursor to the beginning of the next row.
+    /// Same as [`putstr`][NcPlane#method.putstr], but it also puts a newline
+    /// character at the end.
     ///
-    /// Advances the cursor by some positive number of columns (though not
-    /// beyond the end of the plane); this number will be returned on success,
-    /// after calling [`putln`][NcPlane#method.putln].
-    ///
-    /// On error, a non-positive number is returned, indicating the number of
-    /// columns which were written before the error.
-    ///
-    /// If a glyph can not fit in the current line, it is an error, unless
-    /// scrolling is enabled.
+    /// This will only work if scrolling is enabled in the plane.
     ///
     /// *(No equivalent C style function)*
     pub fn putstrln(&mut self, string: &str) -> NcResult<NcDim> {
-        let cols = self.putstr(string)?;
-        self.putln()?;
+        let mut cols = self.putstr(string)?;
+        cols += self.putstr("\n")?;
         Ok(cols)
     }
 
-    /// Moves the cursor to the beginning of the next row.
+    /// Prints a new line character.
+    ///
+    /// This will only work if scrolling is enabled in the plane.
     ///
     /// *(No equivalent C style function)*
-    pub fn putln(&mut self) -> NcResult<()> {
-        let (y, _x) = self.cursor_yx();
-        self.cursor_move_yx(y + 1, 0)?;
-        Ok(())
+    pub fn putln(&mut self) -> NcResult<NcDim> {
+        let cols = self.putstr("\n")?;
+        Ok(cols)
     }
 
     /// Writes a string to the current location, retaining the previous style.

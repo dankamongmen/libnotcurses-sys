@@ -2,17 +2,18 @@ use libnotcurses_sys::*;
 
 fn main() -> NcResult<()> {
     let nc = Nc::new_cli()?;
+    let splane = nc.stdplane();
+    splane.set_scrolling(true);
 
-    println!("notcurses version: {}", Nc::version());
-    println!("terminal name: {}", nc.detected_terminal());
-    println!("user name: {}", Nc::accountname());
-    println!("host name: {}", Nc::hostname());
-    println!();
+    putstrln!(splane, "ENVIRONMENT\n-----------")?;
+    putstrln!(splane, "notcurses version: {}", Nc::version())?;
+    putstrln!(splane, "terminal name: {}", nc.detected_terminal())?;
+    putstrln!(splane, "user name: {}", Nc::accountname())?;
+    putstrln!(splane, "host name: {}", Nc::hostname())?;
+    putstrln!(splane)?;
 
-    let (t_rows, t_cols) = nc.term_dim_yx();
-    println!("Terminal rows={0}, cols={1}", t_rows, t_cols);
-
-    println!(
+    putstrln!(splane, "CAPABILITIES\n------------")?;
+    putstrln!(splane,
         "Can display UTF-8: {0}
 Can display braille characters: {1}
 Can display sextant characters: {2}
@@ -38,10 +39,13 @@ Palette size: {11:?}
         nc.canfade(),
         nc.canchangecolor(),
         nc.palette_size(),
-    );
+    )?;
 
+    putstrln!(splane, "GEOMETRY\n------------")?;
+    let (t_rows, t_cols) = nc.term_dim_yx();
+    putstrln!(splane, "Terminal dimensions: rows={0}, cols={1}", t_rows, t_cols)?;
     let pgeom = nc.stdplane().pixel_geom();
-    println!("{:#?}", pgeom);
+    putstr!(splane, "{:#?}.", pgeom)?;
 
     nc.render()?;
     nc.stop()?;
