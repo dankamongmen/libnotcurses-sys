@@ -182,16 +182,13 @@
 //   ncplane_putwstr_yx
 //   ncplane_vprintf
 
-#[cfg(test)]
-mod test;
-
-mod helpers;
 mod methods;
-mod reimplemented;
 
-#[allow(unused_imports)]
-pub(crate) use helpers::*;
-pub use reimplemented::*;
+pub(crate) mod helpers;
+pub(crate) mod reimplemented;
+
+#[cfg(test)]
+pub(crate) mod test;
 
 // NcPlane
 /// Fundamental drawing surface.

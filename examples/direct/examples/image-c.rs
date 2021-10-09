@@ -5,7 +5,7 @@
 //! NOTE: This example uses the C style with functions.
 
 use core::ptr::{null, null_mut};
-use libnotcurses_sys::*;
+use libnotcurses_sys::{*, fns::*};
 
 mod shared;
 

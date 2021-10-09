@@ -11,11 +11,11 @@ use libc::{
     c_long, c_void, fclose, /* feof, */ fread, fseek, ftell, SEEK_CUR, SEEK_END, SEEK_SET,
 };
 
-/// See [NcFile]. Notcurses functions expects this type of `*FILE` (a struct)
+/// See [`NcFile`]. Notcurses functions expects this type of `*FILE` (a struct)
 #[allow(clippy::upper_case_acronyms)]
 pub type FILE_NC = crate::ffi::FILE;
 
-/// See [NcFile]. The [`libc`](https://docs.rs/libc/) crate expects this type
+/// See [`NcFile`]. The [`libc`](https://docs.rs/libc/) crate expects this type
 /// of `*FILE` (an opaque enum)
 #[allow(clippy::upper_case_acronyms)]
 pub type FILE_LIBC = libc::FILE;
@@ -79,14 +79,14 @@ pub struct NcFile {
 impl NcFile {
     // constructors --
 
-    /// `NcFile` constructor from a file produced by notcurses
+    /// `NcFile` constructor from a file produced by notcurses.
     pub fn from_nc(file: *mut FILE_NC) -> Self {
         NcFile {
             file_ptr: unsafe { NonNull::new_unchecked(NcFile::nc2libc(file)) },
         }
     }
 
-    /// `NcFile` constructor from a file produced by the libc crate
+    /// `NcFile` constructor from a file produced by the libc crate.
     #[allow(clippy::missing_safety_doc)]
     pub unsafe fn from_libc(file: *mut FILE_LIBC) -> Self {
         NcFile {
@@ -96,13 +96,13 @@ impl NcFile {
 
     // methods --
 
-    /// Returns the file pointer in the format expected by the [`libc`] crate
+    /// Returns the file pointer in the format expected by the [`libc`] crate.
     #[inline]
     pub fn as_libc_ptr(&self) -> *mut FILE_LIBC {
         self.file_ptr.as_ptr()
     }
 
-    /// Returns the file pointer in the format expected by notcurses
+    /// Returns the file pointer in the format expected by notcurses.
     #[inline]
     pub fn as_nc_ptr(&self) -> *mut FILE_NC {
         Self::libc2nc(self.file_ptr.as_ptr())
@@ -122,7 +122,7 @@ impl NcFile {
         }
     }
 
-    /// Reads the file from start to end. Convenience method
+    /// Reads the file from start to end. Convenience method.
     ///
     #[inline]
     pub fn read_all(&mut self, buf: &mut Vec<u8>) -> Result<usize, Error> {
@@ -133,14 +133,14 @@ impl NcFile {
     // private methods --
 
     /// Converts a file pointer from the struct notcurses uses to the
-    /// opaque enum type libc expects
+    /// opaque enum type libc expects.
     #[inline]
     fn nc2libc(file: *mut FILE_NC) -> *mut FILE_LIBC {
         file as *mut _ as *mut FILE_LIBC
     }
 
     /// Converts a file pointer from the libc opaque enum format to the struct
-    /// expected by notcurses
+    /// expected by notcurses.
     #[inline]
     fn libc2nc(file: *mut FILE_LIBC) -> *mut FILE_NC {
         file as *mut _ as *mut FILE_NC
@@ -224,7 +224,7 @@ impl Read for NcFile {
         }
     }
 
-    /// Reads the entire file from the beginning and stores it in a string
+    /// Reads the entire file from the beginning and stores it in a string.
     ///
     /// On a successful read, this function will return `Ok(bytes_read)`.
     ///

@@ -82,9 +82,7 @@
 mod test;
 
 mod methods;
-mod reimplemented;
-
-pub use reimplemented::*;
+pub(crate) mod reimplemented;
 
 /// Minimal notcurses instance for styling text.
 pub type NcDirect = crate::bindings::ffi::ncdirect;

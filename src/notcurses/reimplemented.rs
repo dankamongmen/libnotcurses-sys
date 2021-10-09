@@ -3,8 +3,8 @@
 use core::ptr::{null, null_mut};
 
 use crate::{
-    Nc, NcAlign, NcDim, NcError, NcInput, NcIntResult, NcPlane, NcResult, NcTime, NCALIGN_BOTTOM,
-    NCALIGN_CENTER, NCALIGN_LEFT, NCALIGN_RIGHT, NCALIGN_TOP, NCRESULT_MAX,
+    fns, Nc, NcAlign, NcDim, NcError, NcInput, NcIntResult, NcPlane, NcResult, NcTime,
+    NCALIGN_BOTTOM, NCALIGN_CENTER, NCALIGN_LEFT, NCALIGN_RIGHT, NCALIGN_TOP, NCRESULT_MAX,
 };
 
 /// Returns the offset into `avail_u` at which `u` ought be output given
@@ -43,7 +43,7 @@ pub fn notcurses_getc_blocking(nc: &mut Nc, input: Option<&mut NcInput>) -> NcIn
     } else {
         input_ptr = null_mut();
     }
-    unsafe { crate::notcurses_get(nc, null(), input_ptr) as NcIntResult }
+    unsafe { fns::notcurses_get(nc, null(), input_ptr) as NcIntResult }
 }
 
 /// Reads input without blocking.
@@ -65,11 +65,11 @@ pub fn notcurses_getc_nblock(nc: &mut Nc, input: Option<&mut NcInput>) -> NcIntR
     }
     unsafe {
         let ts = NcTime::new(0, 0);
-        crate::notcurses_get(nc, &ts, input_ptr) as NcIntResult
+        fns::notcurses_get(nc, &ts, input_ptr) as NcIntResult
     }
 }
 
-/// [notcurses_stdplane()][crate::notcurses_stdplane], plus free bonus
+/// [notcurses_stdplane()][fns::notcurses_stdplane], plus free bonus
 /// dimensions written to non-NULL y/x!
 ///
 /// *Method: Nc.[getc_stddim_yx()][Nc#method.stddim_yx].*
@@ -80,16 +80,16 @@ pub fn notcurses_stddim_yx<'a>(
     x: &mut NcDim,
 ) -> NcResult<&'a mut NcPlane> {
     unsafe {
-        let sp = crate::notcurses_stdplane(nc);
+        let sp = fns::notcurses_stdplane(nc);
         if !sp.is_null() {
-            crate::ncplane_dim_yx(sp, &mut (*y as i32), &mut (*x as i32));
+            fns::ncplane_dim_yx(sp, &mut (*y as i32), &mut (*x as i32));
             return Ok(&mut *sp);
         }
     }
     Err(NcError::new())
 }
 
-/// [notcurses_stdplane_const()][crate::notcurses_stdplane_const], plus free
+/// [notcurses_stdplane_const()][fns::notcurses_stdplane_const], plus free
 /// bonus dimensions written to non-NULL y/x!
 ///
 /// *Method: Nc.[getc_stddim_yx_const()][Nc#method.stddim_yx_const].*
@@ -100,9 +100,9 @@ pub fn notcurses_stddim_yx_const<'a>(
     x: &mut NcDim,
 ) -> NcResult<&'a NcPlane> {
     unsafe {
-        let sp = crate::notcurses_stdplane_const(nc);
+        let sp = fns::notcurses_stdplane_const(nc);
         if !sp.is_null() {
-            crate::ncplane_dim_yx(sp, &mut (*y as i32), &mut (*x as i32));
+            fns::ncplane_dim_yx(sp, &mut (*y as i32), &mut (*x as i32));
             return Ok(&*sp);
         }
     }
@@ -116,7 +116,7 @@ pub fn notcurses_stddim_yx_const<'a>(
 pub fn notcurses_term_dim_yx(nc: &Nc) -> (NcDim, NcDim) {
     let (mut y, mut x) = (0, 0);
     unsafe {
-        crate::ncplane_dim_yx(crate::notcurses_stdplane_const(nc), &mut y, &mut x);
+        fns::ncplane_dim_yx(fns::notcurses_stdplane_const(nc), &mut y, &mut x);
     }
     (y as NcDim, x as NcDim)
 }

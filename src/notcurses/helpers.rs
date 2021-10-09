@@ -1,4 +1,4 @@
-use crate::{notcurses_init, Nc, NcOptions, NCOPTION_SUPPRESS_BANNERS};
+use crate::{fns::notcurses_init, Nc, NcOptions, NCOPTION_SUPPRESS_BANNERS};
 
 /// Helper function for initializing Nc on C style tests.
 #[allow(dead_code)]

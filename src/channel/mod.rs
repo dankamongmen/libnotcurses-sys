@@ -72,9 +72,8 @@ use crate::{NcCell, NcRgba};
 mod test;
 
 mod methods;
-mod reimplemented;
+pub(crate) mod reimplemented;
 pub use methods::{NcChannelMethods, NcChannelsMethods};
-pub use reimplemented::*;
 
 // NcChannel
 //

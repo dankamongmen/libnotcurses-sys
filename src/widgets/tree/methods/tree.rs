@@ -1,5 +1,6 @@
 use crate::{
-    error, error_ref_mut, nctree_create,
+    error, error_ref_mut,
+    fns::{self, nctree_create},
     widgets::{NcTree, NcTreeItem, NcTreeOptions},
     NcError, NcInput, NcPlane, NcResult, NCRESULT_ERR,
 };
@@ -8,16 +9,16 @@ use crate::{
 impl NcTree {
     /// Creates an [NcTree] with the specified options.
     ///
-    /// *C style function: [nctree_create()][crate::nctree_create].*
+    /// *C style function: [nctree_create()][fns::nctree_create].*
     pub fn new<'a>(plane: &mut NcPlane, options: NcTreeOptions) -> NcResult<&'a mut Self> {
         error_ref_mut![unsafe { nctree_create(plane, &options) }, "Creating NcTree"]
     }
 
     /// Destroys an NcTree created with [new()][NcTree#method.new].
     ///
-    /// *C style function: [nctree_destroy()][crate::nctree_destroy].*
+    /// *C style function: [nctree_destroy()][fns::nctree_destroy].*
     pub fn destroy(&mut self) {
-        unsafe { crate::nctree_destroy(self) };
+        unsafe { fns::nctree_destroy(self) };
     }
 }
 
@@ -34,9 +35,9 @@ impl NcTree {
     // /// and the curry is returned (|failspec| is necessary because the
     // /// curry could itself be NULL).
     // ///
-    // /// *C style function: [nctree_goto()][crate::nctree_goto].*
+    // /// *C style function: [nctree_goto()][fns::nctree_goto].*
     // pub fn goto(&mut self, spec: ... , failspec: ...) -> NcResult<&mut NcTreeItem> {
-    //     let res = unsafe { crate::nctree_goto(self) };
+    //     let res = unsafe { fns::nctree_goto(self) };
     //     if !res.is_null() {
     //         Ok(unsafe { &mut *(res as *mut NcTreeItem) })
     //     } else {
@@ -49,9 +50,9 @@ impl NcTree {
     /// This is not a copy; be careful to use it only for the duration of a
     /// critical section.
     ///
-    /// *C style function: [nctree_focused()][crate::nctree_focused].*
+    /// *C style function: [nctree_focused()][fns::nctree_focused].*
     pub fn focused(&mut self) -> NcResult<&mut NcTreeItem> {
-        let res = unsafe { crate::nctree_focused(self) };
+        let res = unsafe { fns::nctree_focused(self) };
         if !res.is_null() {
             Ok(unsafe { &mut *(res as *mut NcTreeItem) })
         } else {
@@ -61,10 +62,10 @@ impl NcTree {
 
     /// Changes the focus to the next item, and returns it.
     ///
-    /// *C style function: [nctree_next()][crate::nctree_next].*
+    /// *C style function: [nctree_next()][fns::nctree_next].*
     #[allow(clippy::should_implement_trait)]
     pub fn next(&mut self) -> NcResult<&mut NcTreeItem> {
-        let res = unsafe { crate::nctree_next(self) };
+        let res = unsafe { fns::nctree_next(self) };
         if !res.is_null() {
             Ok(unsafe { &mut *(res as *mut NcTreeItem) })
         } else {
@@ -74,9 +75,9 @@ impl NcTree {
 
     /// Changes the focus to the previous item, and returns it.
     ///
-    /// *C style function: [nctree_prev()][crate::nctree_prev].*
+    /// *C style function: [nctree_prev()][fns::nctree_prev].*
     pub fn prev(&mut self) -> NcResult<&mut NcTreeItem> {
-        let res = unsafe { crate::nctree_prev(self) };
+        let res = unsafe { fns::nctree_prev(self) };
         if !res.is_null() {
             Ok(unsafe { &mut *(res as *mut NcTreeItem) })
         } else {
@@ -96,16 +97,16 @@ impl NcTree {
     /// - a mouse scrollwheel event (srolls tree)
     /// - up, down, pgup, or pgdown (navigates among items)
     ///
-    /// *C style function: [nctree_offer_input()][crate::nctree_offer_input].*
+    /// *C style function: [nctree_offer_input()][fns::nctree_offer_input].*
     pub fn offer_input(&mut self, input: NcInput) -> bool {
-        unsafe { crate::nctree_offer_input(self, &input) }
+        unsafe { fns::nctree_offer_input(self, &input) }
     }
 
     /// Returns the [NcPlane] backing this NcTree.
     ///
-    /// *C style function: [nctree_plane()][crate::nctree_plane].*
+    /// *C style function: [nctree_plane()][fns::nctree_plane].*
     pub fn plane(&mut self) -> NcResult<&NcPlane> {
-        error_ref_mut![unsafe { crate::nctree_plane(self) }, "NcTree.plane()"]
+        error_ref_mut![unsafe { fns::nctree_plane(self) }, "NcTree.plane()"]
     }
 
     /// Redraws the NcTree in its entirety.
@@ -115,8 +116,8 @@ impl NcTree {
     ///
     /// Item-drawing callbacks will be invoked for each visible item.
     ///
-    /// *C style function: [nctree_redraw()][crate::nctree_redraw].*
+    /// *C style function: [nctree_redraw()][fns::nctree_redraw].*
     pub fn redraw(&mut self) -> NcResult<()> {
-        error![unsafe { crate::nctree_redraw(self) }, "NcTree.redraw()"]
+        error![unsafe { fns::nctree_redraw(self) }, "NcTree.redraw()"]
     }
 }

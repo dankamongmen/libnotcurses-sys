@@ -114,14 +114,10 @@
 #![allow(non_upper_case_globals, non_camel_case_types, non_snake_case)]
 #![allow(clippy::too_many_arguments, clippy::needless_doctest_main)]
 
-mod bindings;
-#[doc(inline)]
-pub use bindings::*;
-
 mod blitter;
 mod r#box;
 mod capabilities;
-mod cells;
+mod cell;
 mod channel;
 mod dimension;
 mod direct;
@@ -140,12 +136,13 @@ mod resizecb;
 mod stats;
 mod time;
 mod visual;
+
 pub mod widgets;
 
-pub use crate::input::*;
+// export methods and constants at the root
 pub use blitter::*;
 pub use capabilities::*;
-pub use cells::*;
+pub use cell::*;
 pub use channel::*;
 pub use dimension::*;
 pub use direct::*;
@@ -153,6 +150,7 @@ pub use error::*;
 pub use fade::*;
 pub use fd::*;
 pub use file::*;
+pub use input::*;
 pub use macros::*;
 pub use metric::*;
 pub use notcurses::*;
@@ -165,5 +163,45 @@ pub use stats::*;
 pub use time::*;
 pub use visual::*;
 
-// re-export
+mod bindings;
+pub mod ffi {
+    //! Rust FFI bindings, automatically generated with bindgen.
+    //!
+    //! Almost all of the notcurses API functions are reexported to the public
+    //! API, while structs, enums and constants are type aliased or wrapped up.
+    //!
+    pub use crate::bindings::ffi::*;
+}
+
+pub mod fns {
+    //! The global notcurses functions, either imported or reimplemented.
+
+    // public re-export of imported functions:
+    #[doc(inline)]
+    pub use crate::bindings::*;
+
+    // public re-export of reimplemented functions:
+    pub use crate::capabilities::reimplemented::*;
+    pub use crate::cell::reimplemented::*;
+    pub use crate::channel::reimplemented::*;
+    pub use crate::direct::reimplemented::*;
+    pub use crate::input::reimplemented::*;
+    pub use crate::metric::reimplemented::*;
+    pub use crate::notcurses::reimplemented::*;
+    pub use crate::palette::reimplemented::*;
+    pub use crate::pixel::reimplemented::*;
+    pub use crate::plane::reimplemented::*;
+    pub use crate::resizecb::reimplemented::*;
+
+    // private re-export of helper functions for testing:
+    mod helpers {
+        #![allow(unused_imports)]
+        pub use crate::notcurses::helpers::*;
+        pub use crate::plane::helpers::*;
+    }
+    #[allow(unused_imports)]
+    pub(crate) use helpers::*;
+}
+
+// public re-export of external crates:
 pub use libc;

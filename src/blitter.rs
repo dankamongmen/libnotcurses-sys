@@ -1,6 +1,6 @@
 //!
 
-use crate::{error, NcDim, NcResult, NcVisualOptions};
+use crate::{error, fns, NcDim, NcResult, NcVisualOptions};
 use core::ffi::c_void;
 
 /// The blitter mode to use for rasterizing an [`NcVisual`][crate::NcVisual].
@@ -30,7 +30,7 @@ use core::ffi::c_void;
 /// If you don't want this behaviour you have to use
 /// [`NCVISUAL_OPTION_NODEGRADE`][crate::NCVISUAL_OPTION_NODEGRADE]
 ///
-pub type NcBlitter = crate::bindings::ffi::ncblitter_e;
+pub type NcBlitter = u32;
 
 /// [`NcBlitter`] mode using: space, compatible with ASCII
 pub const NCBLIT_1x1: NcBlitter = crate::bindings::ffi::ncblitter_e_NCBLIT_1x1;
@@ -90,6 +90,7 @@ pub struct NcBlitterGeometry {
     pub blitter: NcBlitter,
 }
 
+/// Enables the [`NcBlitter`] methods.
 pub trait NcBlitterMethods {
     fn blit_bgrx(data: &[u8], line_size: usize, vopts: &NcVisualOptions) -> NcResult<usize>;
     fn blit_rgba(data: &[u8], line_size: usize, vopts: &NcVisualOptions) -> NcResult<usize>;
@@ -121,10 +122,10 @@ impl NcBlitterMethods for NcBlitter {
     ///
     /// Returns the number of pixels blitted on success.
     ///
-    /// *C style function: [ncblit_rgba()][crate::ncblit_rgba].*
+    /// *C style function: [ncblit_rgba()][fns::ncblit_rgba].*
     fn blit_rgba(data: &[u8], line_size: usize, vopts: &NcVisualOptions) -> NcResult<usize> {
         let data_ptr: *const c_void = data as *const _ as *const c_void;
-        let res = unsafe { crate::ncblit_rgba(data_ptr, line_size as i32, vopts) };
+        let res = unsafe { fns::ncblit_rgba(data_ptr, line_size as i32, vopts) };
         error![
             res,
             &format!["NcBlitter::blit_rgba(data, {}, {:?})", line_size, vopts],
@@ -134,10 +135,10 @@ impl NcBlitterMethods for NcBlitter {
 
     /// Like [`blit_rgba`][NcBlitter#method.blit_rgba], but for BGRx.
     ///
-    /// *C style function: [ncblit_bgrx()][crate::ncblit_bgrx].*
+    /// *C style function: [ncblit_bgrx()][fns::ncblit_bgrx].*
     fn blit_bgrx(data: &[u8], line_size: usize, vopts: &NcVisualOptions) -> NcResult<usize> {
         let data_ptr: *const c_void = data as *const _ as *const c_void;
-        let res = unsafe { crate::ncblit_bgrx(data_ptr, line_size as i32, vopts) };
+        let res = unsafe { fns::ncblit_bgrx(data_ptr, line_size as i32, vopts) };
         error![
             res,
             &format!["NcBlitter::blit_bgrx(data, {}, {:?})", line_size, vopts],
@@ -151,7 +152,7 @@ impl NcBlitterMethods for NcBlitter {
     ///
     /// Supply an `alpha` value to be applied throughout.
     ///
-    /// *C style function: [ncblit_rgb_packed()][crate::ncblit_rgb_packed].*
+    /// *C style function: [ncblit_rgb_packed()][fns::ncblit_rgb_packed].*
     fn blit_rgb_packed(
         data: &[u8],
         line_size: usize,
@@ -160,7 +161,7 @@ impl NcBlitterMethods for NcBlitter {
     ) -> NcResult<usize> {
         let data_ptr: *const c_void = data as *const _ as *const c_void;
         let res =
-            unsafe { crate::ncblit_rgb_packed(data_ptr, line_size as i32, vopts, alpha as i32) };
+            unsafe { fns::ncblit_rgb_packed(data_ptr, line_size as i32, vopts, alpha as i32) };
         error![
             res,
             &format![
@@ -176,7 +177,7 @@ impl NcBlitterMethods for NcBlitter {
     ///
     /// Supply an `alpha` value to be applied throughout.
     ///
-    /// *C style function: [ncblit_rgb_loose()][crate::ncblit_rgb_loose].*
+    /// *C style function: [ncblit_rgb_loose()][fns::ncblit_rgb_loose].*
     fn blit_rgb_loose(
         data: &[u8],
         line_size: usize,
@@ -184,8 +185,7 @@ impl NcBlitterMethods for NcBlitter {
         alpha: u8,
     ) -> NcResult<usize> {
         let data_ptr: *const c_void = data as *const _ as *const c_void;
-        let res =
-            unsafe { crate::ncblit_rgb_loose(data_ptr, line_size as i32, vopts, alpha as i32) };
+        let res = unsafe { fns::ncblit_rgb_loose(data_ptr, line_size as i32, vopts, alpha as i32) };
         error![
             res,
             &format![

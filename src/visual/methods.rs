@@ -4,7 +4,7 @@ use core::ptr::null_mut;
 use libc::c_void;
 
 use crate::{
-    cstring, error, error_ref_mut, rstring_free, Nc, NcBlitter, NcBlitterGeometry, NcChannel,
+    cstring, error, error_ref_mut, fns, rstring_free, Nc, NcBlitter, NcBlitterGeometry, NcChannel,
     NcComponent, NcDim, NcDirect, NcDirectF, NcError, NcIntResult, NcPixel, NcPlane, NcResult,
     NcRgba, NcScale, NcTime, NcVGeom, NcVisual, NcVisualOptions, NCBLIT_PIXEL, NCRESULT_ERR,
 };
@@ -128,7 +128,7 @@ impl NcVisualOptions {
 impl NcVisual {
     /// Like [from_rgba][NcVisual#method.from_rgba], but 'bgra' is arranged as BGRA.
     ///
-    /// *C style function: [ncvisual_from_bgra()][crate::ncvisual_from_bgra].*
+    /// *C style function: [ncvisual_from_bgra()][fns::ncvisual_from_bgra].*
     pub fn from_bgra<'a>(
         bgra: &[u8],
         rows: NcDim,
@@ -137,7 +137,7 @@ impl NcVisual {
     ) -> NcResult<&'a mut NcVisual> {
         error_ref_mut![
             unsafe {
-                crate::ncvisual_from_bgra(
+                fns::ncvisual_from_bgra(
                     bgra.as_ptr() as *const c_void,
                     rows as i32,
                     rowstride as i32,
@@ -154,10 +154,10 @@ impl NcVisual {
     /// Opens a visual at `file`, extracts the codec and parameters and
     /// decodes the first image to memory.
     ///
-    /// *C style function: [ncvisual_from_file()][crate::ncvisual_from_file].*
+    /// *C style function: [ncvisual_from_file()][fns::ncvisual_from_file].*
     pub fn from_file<'a>(file: &str) -> NcResult<&'a mut NcVisual> {
         error_ref_mut![
-            unsafe { crate::ncvisual_from_file(cstring![file]) },
+            unsafe { fns::ncvisual_from_file(cstring![file]) },
             &format!("NcVisual::from_file({})", file)
         ]
     }
@@ -171,7 +171,7 @@ impl NcVisual {
     /// If possible, it's better to create the ncvisual from memory using
     /// [from_rgba][NcVisual#method.from_rgba].
     ///
-    /// *C style function: [ncvisual_from_plane()][crate::ncvisual_from_plane].*
+    /// *C style function: [ncvisual_from_plane()][fns::ncvisual_from_plane].*
     pub fn from_plane<'a>(
         plane: &NcPlane,
         blitter: NcBlitter,
@@ -182,7 +182,7 @@ impl NcVisual {
     ) -> NcResult<&'a mut NcVisual> {
         error_ref_mut![
             unsafe {
-                crate::ncvisual_from_plane(
+                fns::ncvisual_from_plane(
                     plane,
                     blitter,
                     beg_y as i32,
@@ -203,7 +203,7 @@ impl NcVisual {
     ///
     /// `rowstride` must be a multiple of 4.
     ///
-    /// *C style function: [ncvisual_from_rgb_loose()][crate::ncvisual_from_rgb_loose].*
+    /// *C style function: [ncvisual_from_rgb_loose()][fns::ncvisual_from_rgb_loose].*
     pub fn from_rgb_loose<'a>(
         rgb: &[u8],
         rows: NcDim,
@@ -213,7 +213,7 @@ impl NcVisual {
     ) -> NcResult<&'a mut NcVisual> {
         error_ref_mut![
             unsafe {
-                crate::ncvisual_from_rgb_loose(
+                fns::ncvisual_from_rgb_loose(
                     rgb.as_ptr() as *const c_void,
                     rows as i32,
                     rowstride as i32,
@@ -231,7 +231,7 @@ impl NcVisual {
     /// Like [`from_rgba`][NcVisual#method.from_rgba], but the pixels are
     /// 3-byte RGB. Alpha is filled in throughout using 'alpha'.
     ///
-    /// *C style function: [ncvisual_from_rgb_packed()][crate::ncvisual_from_rgb_packed].*
+    /// *C style function: [ncvisual_from_rgb_packed()][fns::ncvisual_from_rgb_packed].*
     pub fn from_rgb_packed<'a>(
         rgb: &[u8],
         rows: NcDim,
@@ -241,7 +241,7 @@ impl NcVisual {
     ) -> NcResult<&'a mut NcVisual> {
         error_ref_mut![
             unsafe {
-                crate::ncvisual_from_rgb_packed(
+                fns::ncvisual_from_rgb_packed(
                     rgb.as_ptr() as *const c_void,
                     rows as i32,
                     rowstride as i32,
@@ -266,7 +266,7 @@ impl NcVisual {
     /// The total size of `rgba` is thus (rows * rowstride) bytes, of which
     /// (rows * cols * 4) bytes are actual non-padding data.
     ///
-    /// *C style function: [ncvisual_from_rgba()][crate::ncvisual_from_rgba].*
+    /// *C style function: [ncvisual_from_rgba()][fns::ncvisual_from_rgba].*
     pub fn from_rgba<'a>(
         rgba: &[u8],
         rows: NcDim,
@@ -275,7 +275,7 @@ impl NcVisual {
     ) -> NcResult<&'a mut NcVisual> {
         error_ref_mut![
             unsafe {
-                crate::ncvisual_from_rgba(
+                fns::ncvisual_from_rgba(
                     rgba.as_ptr() as *const c_void,
                     rows as i32,
                     rowstride as i32,
@@ -295,7 +295,7 @@ impl NcVisual {
     ///
     /// `palette` is an array of at least `palsize` [`NcChannel`]s.
     ///
-    /// *C style function: [ncvisual_from_palidx()][crate::ncvisual_from_palidx].*
+    /// *C style function: [ncvisual_from_palidx()][fns::ncvisual_from_palidx].*
     //
     // API ALLOC struct ncvisual* ncvisual_from_palidx(const void* data, int rows,
     // int rowstride, int cols, int palsize, int pstride, const uint32_t* palette)
@@ -320,7 +320,7 @@ impl NcVisual {
         // assert![];
         error_ref_mut![
             unsafe {
-                crate::ncvisual_from_palidx(
+                fns::ncvisual_from_palidx(
                     data.as_ptr() as *const c_void,
                     rows as i32,
                     rowstride as i32,
@@ -342,9 +342,9 @@ impl NcVisual {
     /// Rendered elements will not be disrupted, but the visual can be neither
     /// decoded nor rendered any further.
     ///
-    /// *C style function: [ncvisual_destroy()][crate::ncvisual_destroy].*
+    /// *C style function: [ncvisual_destroy()][fns::ncvisual_destroy].*
     pub fn destroy(&mut self) {
-        unsafe { crate::ncvisual_destroy(self) }
+        unsafe { fns::ncvisual_destroy(self) }
     }
 }
 
@@ -352,10 +352,10 @@ impl NcVisual {
 impl NcVisual {
     /// Gets the specified pixel from this NcVisual.
     ///
-    /// *C style function: [ncvisual_at_yx()][crate::ncvisual_at_yx].*
+    /// *C style function: [ncvisual_at_yx()][fns::ncvisual_at_yx].*
     pub fn at_yx(&self, y: NcDim, x: NcDim) -> NcResult<NcPixel> {
         let mut pixel = 0;
-        let res = unsafe { crate::ncvisual_at_yx(self, y as i32, x as i32, &mut pixel) };
+        let res = unsafe { fns::ncvisual_at_yx(self, y as i32, x as i32, &mut pixel) };
         error![res, "NcVisual.at_yx()", pixel]
     }
 
@@ -363,9 +363,9 @@ impl NcVisual {
     ///
     /// Returns 0 for normal frames, and 1 to indicate EOF.
     ///
-    /// *C style function: [ncvisual_decode()][crate::ncvisual_decode].*
+    /// *C style function: [ncvisual_decode()][fns::ncvisual_decode].*
     pub fn decode(&mut self) -> NcResult<NcIntResult> {
-        let res = unsafe { crate::ncvisual_decode(self) };
+        let res = unsafe { fns::ncvisual_decode(self) };
         if res == NCRESULT_ERR {
             Err(NcError::with_msg(res, "NcVisual.decode()"))
         } else {
@@ -381,9 +381,9 @@ impl NcVisual {
     ///
     /// Returns 0 for normal frames and 1 to indicate EOF.
     ///
-    /// *C style function: [ncvisual_decode_loop()][crate::ncvisual_decode_loop].*
+    /// *C style function: [ncvisual_decode_loop()][fns::ncvisual_decode_loop].*
     pub fn decode_loop(&mut self) -> NcResult<NcIntResult> {
-        let res = unsafe { crate::ncvisual_decode_loop(self) };
+        let res = unsafe { fns::ncvisual_decode_loop(self) };
         if res == NCRESULT_ERR {
             Err(NcError::with_msg(res, "NcVisual.decode_loop()"))
         } else {
@@ -401,7 +401,7 @@ impl NcVisual {
     ///
     /// Errors on invalid blitter in `options`. Scaling is taken into consideration.
     ///
-    /// *C style function: [ncvisual_blitter_geom()][crate::ncvisual_blitter_geom].*
+    /// *C style function: [ncvisual_blitter_geom()][fns::ncvisual_blitter_geom].*
     pub fn blitter_geom(&self, nc: &Nc, options: &NcVisualOptions) -> NcResult<NcBlitterGeometry> {
         let mut y = 0;
         let mut x = 0;
@@ -410,7 +410,7 @@ impl NcVisual {
         let mut blitter = 0;
 
         let res = unsafe {
-            crate::ncvisual_blitter_geom(
+            fns::ncvisual_blitter_geom(
                 nc,
                 self,
                 options,
@@ -442,17 +442,17 @@ impl NcVisual {
     ///   distort the original aspect ratio, thus [`NCBLIT_2x1`] is used
     ///   outside of [`NCSCALE_STRETCH`].
     ///
-    /// *C style function: [ncvisual_media_defblitter()][crate::ncvisual_media_defblitter].*
+    /// *C style function: [ncvisual_media_defblitter()][fns::ncvisual_media_defblitter].*
     pub fn media_defblitter(nc: &Nc, scale: NcScale) -> NcBlitter {
-        unsafe { crate::ncvisual_media_defblitter(nc, scale) }
+        unsafe { fns::ncvisual_media_defblitter(nc, scale) }
     }
 
     /// Polyfills at the specified location using `rgba`.
     ///
-    /// *C style function: [ncvisual_polyfill_yx()][crate::ncvisual_polyfill_yx].*
+    /// *C style function: [ncvisual_polyfill_yx()][fns::ncvisual_polyfill_yx].*
     pub fn polyfill_yx(&mut self, y: NcDim, x: NcDim, rgba: NcRgba) -> NcResult<()> {
         error![
-            unsafe { crate::ncvisual_polyfill_yx(self, y as i32, x as i32, rgba) },
+            unsafe { fns::ncvisual_polyfill_yx(self, y as i32, x as i32, rgba) },
             &format!["NcVisual.polyfill_yx({}, {}, {})", y, x, rgba]
         ]
     }
@@ -464,10 +464,10 @@ impl NcVisual {
     ///
     /// See [`NcVisualOptions`].
     ///
-    /// *C style function: [ncvisual_render()][crate::ncvisual_render].*
+    /// *C style function: [ncvisual_render()][fns::ncvisual_render].*
     pub fn render(&mut self, nc: &mut Nc, options: &NcVisualOptions) -> NcResult<&mut NcPlane> {
         error_ref_mut![
-            unsafe { crate::ncvisual_render(nc, self, options) },
+            unsafe { fns::ncvisual_render(nc, self, options) },
             "NcVisual.render(Nc, &NcVisualOptions)"
         ]
     }
@@ -476,10 +476,10 @@ impl NcVisual {
     ///
     /// This is a lossy transformation, unless the size is unchanged.
     ///
-    /// *C style function: [ncvisual_resize()][crate::ncvisual_resize].*
+    /// *C style function: [ncvisual_resize()][fns::ncvisual_resize].*
     pub fn resize(&mut self, rows: NcDim, cols: NcDim) -> NcResult<()> {
         error![
-            unsafe { crate::ncvisual_resize(self, rows as i32, cols as i32) },
+            unsafe { fns::ncvisual_resize(self, rows as i32, cols as i32) },
             &format!["NcVisual.resize({}, {})", rows, cols]
         ]
     }
@@ -490,10 +490,10 @@ impl NcVisual {
     /// The original color is retained.
     ///
     /// *C style function:
-    /// [ncvisual_resize_noninterpolative()][crate::ncvisual_resize_noninterpolative].*
+    /// [ncvisual_resize_noninterpolative()][fns::ncvisual_resize_noninterpolative].*
     pub fn resize_noninterpolative(&mut self, rows: NcDim, cols: NcDim) -> NcResult<()> {
         error![
-            unsafe { crate::ncvisual_resize_noninterpolative(self, rows as i32, cols as i32) },
+            unsafe { fns::ncvisual_resize_noninterpolative(self, rows as i32, cols as i32) },
             &format!["NcVisual.resize_noninterpolative({}, {})", cols, rows]
         ]
     }
@@ -503,20 +503,20 @@ impl NcVisual {
     /// Only M_PI/2 and -M_PI/2 are supported at the moment,
     /// but this will change. (FIXME)
     ///
-    /// *C style function: [ncvisual_rotate()][crate::ncvisual_rotate].*
+    /// *C style function: [ncvisual_rotate()][fns::ncvisual_rotate].*
     pub fn rotate(&mut self, rads: f64) -> NcResult<()> {
         error![
-            unsafe { crate::ncvisual_rotate(self, rads) },
+            unsafe { fns::ncvisual_rotate(self, rads) },
             &format!["NcVisual.rotate({})", rads]
         ]
     }
 
     /// Sets the specified pixel.
     ///
-    /// *C style function: [ncvisual_set_yx()][crate::ncvisual_set_yx].*
+    /// *C style function: [ncvisual_set_yx()][fns::ncvisual_set_yx].*
     pub fn set_yx(&mut self, y: NcDim, x: NcDim, pixel: NcPixel) -> NcResult<()> {
         error![
-            unsafe { crate::ncvisual_set_yx(self, y as i32, x as i32, pixel) },
+            unsafe { fns::ncvisual_set_yx(self, y as i32, x as i32, pixel) },
             &format!["NcVisual.set_yx({}, {}, {})", y, x, pixel]
         ]
     }
@@ -528,7 +528,7 @@ impl NcVisual {
     /// If you'd like subtitles to be decoded, provide an ncplane as the curry.
     /// If the curry is NULL, subtitles will not be displayed.
     ///
-    /// *C style function: [ncvisual_simple_streamer()][crate::ncvisual_simple_streamer].*
+    /// *C style function: [ncvisual_simple_streamer()][fns::ncvisual_simple_streamer].*
     pub fn simple_streamer(
         &mut self,
         options: &mut NcVisualOptions,
@@ -538,7 +538,7 @@ impl NcVisual {
         if let Some(plane) = curry {
             error![
                 unsafe {
-                    crate::ncvisual_simple_streamer(
+                    fns::ncvisual_simple_streamer(
                         self,
                         options,
                         time,
@@ -552,7 +552,7 @@ impl NcVisual {
             ]
         } else {
             error![
-                unsafe { crate::ncvisual_simple_streamer(self, options, time, null_mut()) },
+                unsafe { fns::ncvisual_simple_streamer(self, options, time, null_mut()) },
                 &format!["NcVisual.simple_streamer({:?}, {:?}, null)", options, time]
             ]
         }
@@ -575,7 +575,7 @@ impl NcVisual {
     // /// in 300 FPS, and a `timescale` of 10 will result in 3 FPS.
     // /// It is an error to supply `timescale` less than or equal to 0.
     // ///
-    // /// *C style function: [ncvisual_streamer()][crate::ncvisual_streamer].*
+    // /// *C style function: [ncvisual_streamer()][fns::ncvisual_streamer].*
     // //
     // // TODO: add streamcb
     // // INFO: QUESTION: is curry also optional like in simple_streamer?
@@ -593,10 +593,10 @@ impl NcVisual {
     /// If a subtitle ought be displayed at this time, returns a heap-allocated
     /// copy of the UTF8 text.
     ///
-    /// *C style function: [ncvisual_subtitle()][crate::ncvisual_subtitle].*
+    /// *C style function: [ncvisual_subtitle()][fns::ncvisual_subtitle].*
     #[deprecated]
     pub fn subtitle(&self) -> NcResult<String> {
-        let res = unsafe { crate::ncvisual_subtitle(self) };
+        let res = unsafe { fns::ncvisual_subtitle(self) };
         if !res.is_null() {
             Ok(rstring_free![res])
         } else {
@@ -609,9 +609,9 @@ impl NcVisual {
     /// The returned plane is bound to `parent` and contains the subtitle,
     /// which might be text or graphics (depending on the input format).
     ///
-    /// *C style function: [ncvisual_subtitle_plane()][crate::ncvisual_subtitle_plane].*
+    /// *C style function: [ncvisual_subtitle_plane()][fns::ncvisual_subtitle_plane].*
     pub fn subtitle_plane(&self, parent: &mut NcPlane) -> NcResult<&mut NcPlane> {
-        error_ref_mut![unsafe { crate::ncvisual_subtitle_plane(parent, self) }]
+        error_ref_mut![unsafe { fns::ncvisual_subtitle_plane(parent, self) }]
     }
 }
 
@@ -627,10 +627,10 @@ impl NcDirectF {
     /// [1]: crate::NcDirectF#method.ncdirectf_render
     /// [2]: crate::NcDirectF#method.ncdirectf_free
     ///
-    /// *C style function: [ncdirectf_from_file()][crate::ncdirectf_from_file].*
+    /// *C style function: [ncdirectf_from_file()][fns::ncdirectf_from_file].*
     pub fn ncdirectf_from_file<'a>(ncd: &mut NcDirect, file: &str) -> NcResult<&'a mut NcDirectF> {
         error_ref_mut![
-            unsafe { crate::ncdirectf_from_file(ncd, cstring![file]) },
+            unsafe { fns::ncdirectf_from_file(ncd, cstring![file]) },
             &format!("NcDirectF::ncdirectf_from_file(ncd, {})", file)
         ]
     }
@@ -639,9 +639,9 @@ impl NcDirectF {
     ///
     /// [0]: crate::NcDirectF#method.ncdirectf_from_file
     ///
-    /// *C style function: [ncdirectf_free()][crate::ncdirectf_free].*
+    /// *C style function: [ncdirectf_free()][fns::ncdirectf_free].*
     pub fn ncdirectf_free(&mut self) {
-        unsafe { crate::ncdirectf_free(self) };
+        unsafe { fns::ncdirectf_free(self) };
     }
 }
 
@@ -654,20 +654,20 @@ impl NcDirectF {
     ///
     /// [0]: NcDirect#method.render_frame
     ///
-    /// *C style function: [ncvisual_render()][crate::ncvisual_render].*
+    /// *C style function: [ncvisual_render()][fns::ncvisual_render].*
     pub fn ncdirectf_render(
         &mut self,
         ncd: &mut NcDirect,
         options: &NcVisualOptions,
     ) -> NcResult<&mut NcPlane> {
         error_ref_mut![
-            unsafe { crate::ncdirectf_render(ncd, self, options) },
+            unsafe { fns::ncdirectf_render(ncd, self, options) },
             "NcVisual.render()"
         ]
     }
     /// Having loaded the `frame`, get the geometry of a potential render.
     ///
-    /// *C style function: [ncdirectf_geom()][crate::ncdirectf_geom].*
+    /// *C style function: [ncdirectf_geom()][fns::ncdirectf_geom].*
     pub fn ncdirectf_geom(
         &mut self,
         ncd: &mut NcDirect,
@@ -675,7 +675,7 @@ impl NcDirectF {
     ) -> NcResult<NcVGeom> {
         let mut geom = NcVGeom::new();
 
-        let res = unsafe { crate::ncdirectf_geom(ncd, self, options, &mut geom) };
+        let res = unsafe { fns::ncdirectf_geom(ncd, self, options, &mut geom) };
         error![res, "NcDirectF.ncdirectf_geom()", geom];
     }
 }

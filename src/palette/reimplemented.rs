@@ -1,6 +1,6 @@
 //! `ncpalette_*` reimplemented functions.
 
-use crate::{NcChannel, NcComponent, NcPalette, NcPaletteIndex, NcRgb};
+use crate::{fns, NcChannel, NcComponent, NcPalette, NcPaletteIndex, NcRgb};
 
 /// Extracts the RGB [`NcComponent`]s from an [`NcChannel`] entry inside
 /// an [`NcPalette`], and returns the `NcChannel`.
@@ -15,7 +15,7 @@ pub fn ncpalette_get_rgb8(
     green: &mut NcComponent,
     blue: &mut NcComponent,
 ) -> NcChannel {
-    crate::ncchannel_rgb8(palette.chans[index as usize], red, green, blue)
+    fns::ncchannel_rgb8(palette.chans[index as usize], red, green, blue)
 }
 
 /// Sets the [`NcRgb`] value of the [`NcChannel`] entry inside an [`NcPalette`].
@@ -23,7 +23,7 @@ pub fn ncpalette_get_rgb8(
 /// *Method: NcPalette.[set()][NcPalette#method.set].*
 #[inline]
 pub fn ncpalette_set(palette: &mut NcPalette, index: NcPaletteIndex, rgb: NcRgb) {
-    crate::ncchannel_set(&mut palette.chans[index as usize], rgb);
+    fns::ncchannel_set(&mut palette.chans[index as usize], rgb);
 }
 
 /// Sets the RGB [`NcComponent`]s of the [`NcChannel`] entry inside an
@@ -38,5 +38,5 @@ pub fn ncpalette_set_rgb8(
     green: NcComponent,
     blue: NcComponent,
 ) {
-    crate::ncchannel_set_rgb8(&mut palette.chans[index as usize], red, green, blue)
+    fns::ncchannel_set_rgb8(&mut palette.chans[index as usize], red, green, blue)
 }

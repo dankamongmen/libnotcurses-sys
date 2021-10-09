@@ -69,10 +69,9 @@
 mod test;
 
 mod methods;
-mod reimplemented;
-pub use reimplemented::*;
+pub(crate) mod reimplemented;
 
-#[allow(unused_imports)] // TEMP
+#[allow(unused_imports)]
 use crate::{NcChannel, NcPlane};
 
 // NcCell

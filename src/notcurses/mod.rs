@@ -68,16 +68,13 @@
 //~r   notcurses_stddim_yx_const     //
 // rm  notcurses_term_dim_yx
 
+mod methods;
+
+pub(crate) mod helpers;
+pub(crate) mod reimplemented;
+
 #[cfg(test)]
 mod test;
-
-mod helpers;
-mod methods;
-mod reimplemented;
-
-#[allow(unused_imports)]
-pub(crate) use helpers::*;
-pub use reimplemented::*;
 
 /// The full **notcurses** context.
 ///

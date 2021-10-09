@@ -26,9 +26,9 @@
 //   ncpalette_set_rgb8
 
 mod methods;
-mod reimplemented;
+pub(crate) mod reimplemented;
 pub use methods::*;
-pub use reimplemented::*;
+// pub use reimplemented::*;
 
 /// NcPalette structure consisting of an array of 256
 /// [`NcChannel`][crate::NcChannel]s.

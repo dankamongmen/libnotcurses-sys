@@ -5,10 +5,11 @@
 use libc::strcmp;
 
 use crate::{
-    cstring, nccell_release, rstring, NcAlphaBits, NcCell, NcChannel, NcChannels, NcComponent,
-    NcIntResult, NcPaletteIndex, NcPlane, NcRgb, NcStyle, NCALPHA_BGDEFAULT_MASK,
-    NCALPHA_BG_PALETTE, NCALPHA_FGDEFAULT_MASK, NCALPHA_FG_PALETTE, NCALPHA_OPAQUE, NCRESULT_ERR,
-    NCRESULT_OK, NCSTYLE_MASK,
+    cstring,
+    fns::{self, nccell_release},
+    rstring, NcAlphaBits, NcCell, NcChannel, NcChannels, NcComponent, NcIntResult, NcPaletteIndex,
+    NcPlane, NcRgb, NcStyle, NCALPHA_BGDEFAULT_MASK, NCALPHA_BG_PALETTE, NCALPHA_FGDEFAULT_MASK,
+    NCALPHA_FG_PALETTE, NCALPHA_OPAQUE, NCRESULT_ERR, NCRESULT_OK, NCSTYLE_MASK,
 };
 
 const NCBOXLIGHT: &str = "┌┐└┘─│";
@@ -25,7 +26,7 @@ const NCBOXOUTER: &str = "🭽🭾🭼🭿▁🭵🭶🭰";
 /// *Method: NcCell.[fg_alpha()][NcCell#method.fg_alpha].*
 #[inline]
 pub fn nccell_fg_alpha(cell: &NcCell) -> NcAlphaBits {
-    crate::ncchannels_fg_alpha(cell.channels)
+    fns::ncchannels_fg_alpha(cell.channels)
 }
 
 /// Extracts the background [`NcAlphaBits`] from an [`NcCell`] (shifted to LSBs).
@@ -33,7 +34,7 @@ pub fn nccell_fg_alpha(cell: &NcCell) -> NcAlphaBits {
 /// *Method: NcCell.[bg_alpha()][NcCell#method.bg_alpha].*
 #[inline]
 pub fn nccell_bg_alpha(cell: &NcCell) -> NcAlphaBits {
-    crate::ncchannels_bg_alpha(cell.channels)
+    fns::ncchannels_bg_alpha(cell.channels)
 }
 
 /// Sets the foreground [`NcAlphaBits`] of an [`NcCell`].
@@ -41,7 +42,7 @@ pub fn nccell_bg_alpha(cell: &NcCell) -> NcAlphaBits {
 /// *Method: NcCell.[set_fg_alpha()][NcCell#method.set_fg_alpha].*
 #[inline]
 pub fn nccell_set_fg_alpha(cell: &mut NcCell, alpha: NcAlphaBits) {
-    crate::ncchannels_set_fg_alpha(&mut cell.channels, alpha);
+    fns::ncchannels_set_fg_alpha(&mut cell.channels, alpha);
 }
 
 /// Sets the background [`NcAlphaBits`] of an [`NcCell`].
@@ -49,7 +50,7 @@ pub fn nccell_set_fg_alpha(cell: &mut NcCell, alpha: NcAlphaBits) {
 /// *Method: NcCell.[set_bg_alpha()][NcCell#method.set_bg_alpha].*
 #[inline]
 pub fn nccell_set_bg_alpha(cell: &mut NcCell, alpha: NcAlphaBits) {
-    crate::ncchannels_set_bg_alpha(&mut cell.channels, alpha);
+    fns::ncchannels_set_bg_alpha(&mut cell.channels, alpha);
 }
 
 // NcComponent ---------------------------------------------------------------------
@@ -65,7 +66,7 @@ pub fn nccell_fg_rgb8(
     green: &mut NcComponent,
     blue: &mut NcComponent,
 ) -> NcChannel {
-    crate::ncchannels_fg_rgb8(cell.channels, red, green, blue)
+    fns::ncchannels_fg_rgb8(cell.channels, red, green, blue)
 }
 
 /// Gets the background [`NcComponent`]s of an [`NcCell`],
@@ -79,7 +80,7 @@ pub fn nccell_bg_rgb8(
     green: &mut NcComponent,
     blue: &mut NcComponent,
 ) -> NcChannel {
-    crate::ncchannels_bg_rgb8(cell.channels, red, green, blue)
+    fns::ncchannels_bg_rgb8(cell.channels, red, green, blue)
 }
 
 /// Sets the foreground [`NcComponent`]s of the [`NcCell`],
@@ -93,7 +94,7 @@ pub fn nccell_set_fg_rgb8(
     green: NcComponent,
     blue: NcComponent,
 ) {
-    crate::ncchannels_set_fg_rgb8(&mut cell.channels, red, green, blue);
+    fns::ncchannels_set_fg_rgb8(&mut cell.channels, red, green, blue);
 }
 
 /// Sets the background [`NcComponent`]s of the [`NcCell`],
@@ -107,7 +108,7 @@ pub fn nccell_set_bg_rgb8(
     green: NcComponent,
     blue: NcComponent,
 ) {
-    crate::ncchannels_set_bg_rgb8(&mut cell.channels, red, green, blue);
+    fns::ncchannels_set_bg_rgb8(&mut cell.channels, red, green, blue);
 }
 
 // NcRgb -----------------------------------------------------------------------
@@ -117,7 +118,7 @@ pub fn nccell_set_bg_rgb8(
 /// *Method: NcCell.[fg_rgb()][NcCell#method.fg_rgb].*
 #[inline]
 pub fn nccell_fg_rgb(cell: &NcCell) -> NcRgb {
-    crate::ncchannels_fg_rgb(cell.channels)
+    fns::ncchannels_fg_rgb(cell.channels)
 }
 
 /// Gets the background [`NcRgb`] from an [`NcCell`] (shifted to LSBs).
@@ -125,7 +126,7 @@ pub fn nccell_fg_rgb(cell: &NcCell) -> NcRgb {
 /// *Method: NcCell.[bg_rgb()][NcCell#method.bg_rgb].*
 #[inline]
 pub fn nccell_bg_rgb(cell: &NcCell) -> NcRgb {
-    crate::ncchannels_bg_rgb(cell.channels)
+    fns::ncchannels_bg_rgb(cell.channels)
 }
 
 /// Sets the foreground [`NcRgb`] of an [`NcCell`],
@@ -134,7 +135,7 @@ pub fn nccell_bg_rgb(cell: &NcCell) -> NcRgb {
 /// *Method: NcCell.[set_fg_rgb()][NcCell#method.set_fg_rgb].*
 #[inline]
 pub fn nccell_set_fg_rgb(cell: &mut NcCell, rgb: NcRgb) {
-    crate::ncchannels_set_fg_rgb(&mut cell.channels, rgb);
+    fns::ncchannels_set_fg_rgb(&mut cell.channels, rgb);
 }
 
 /// Sets the background [`NcRgb`] of an [`NcCell`],
@@ -143,7 +144,7 @@ pub fn nccell_set_fg_rgb(cell: &mut NcCell, rgb: NcRgb) {
 /// *Method: NcCell.[set_bg_rgb()][NcCell#method.set_bg_rgb].*
 #[inline]
 pub fn nccell_set_bg_rgb(cell: &mut NcCell, rgb: NcRgb) {
-    crate::ncchannels_set_bg_rgb(&mut cell.channels, rgb);
+    fns::ncchannels_set_bg_rgb(&mut cell.channels, rgb);
 }
 
 // Default ---------------------------------------------------------------------
@@ -154,7 +155,7 @@ pub fn nccell_set_bg_rgb(cell: &mut NcCell, rgb: NcRgb) {
 /// *Method: NcCell.[set_fg_default()][NcCell#method.set_fg_default].*
 #[inline]
 pub fn nccell_set_fg_default(cell: &mut NcCell) {
-    crate::ncchannels_set_fg_default(&mut cell.channels);
+    fns::ncchannels_set_fg_default(&mut cell.channels);
 }
 
 /// Indicates to use the "default color" for the background [`NcChannel`]
@@ -163,7 +164,7 @@ pub fn nccell_set_fg_default(cell: &mut NcCell) {
 /// *Method: NcCell.[set_bg_default()][NcCell#method.set_bg_default].*
 #[inline]
 pub fn nccell_set_bg_default(cell: &mut NcCell) {
-    crate::ncchannels_set_bg_default(&mut cell.channels);
+    fns::ncchannels_set_bg_default(&mut cell.channels);
 }
 
 /// Is the foreground [`NcChannel`] of this [`NcCell`] using the
@@ -172,7 +173,7 @@ pub fn nccell_set_bg_default(cell: &mut NcCell) {
 /// *Method: NcCell.[fg_default_p()][NcCell#method.fg_default_p].*
 #[inline]
 pub fn nccell_fg_default_p(cell: &NcCell) -> bool {
-    crate::ncchannels_fg_default_p(cell.channels)
+    fns::ncchannels_fg_default_p(cell.channels)
 }
 
 /// Is the background [`NcChannel`] of this [`NcCell`] using the
@@ -184,7 +185,7 @@ pub fn nccell_fg_default_p(cell: &NcCell) -> bool {
 /// *Method: NcCell.[bg_default_p()][NcCell#method.bg_default_p].*
 #[inline]
 pub fn nccell_bg_default_p(cell: &NcCell) -> bool {
-    crate::ncchannels_bg_default_p(cell.channels)
+    fns::ncchannels_bg_default_p(cell.channels)
 }
 
 // Palette ---------------------------------------------------------------------
@@ -195,7 +196,7 @@ pub fn nccell_bg_default_p(cell: &NcCell) -> bool {
 /// *Method: NcCell.[fg_palindex_p()][NcCell#method.fg_palindex_p].*
 #[inline]
 pub fn nccell_fg_palindex_p(cell: &NcCell) -> bool {
-    crate::ncchannels_fg_palindex_p(cell.channels)
+    fns::ncchannels_fg_palindex_p(cell.channels)
 }
 
 /// Is the background [`NcChannel`] of this [`NcCell`] using an
@@ -204,7 +205,7 @@ pub fn nccell_fg_palindex_p(cell: &NcCell) -> bool {
 /// *Method: NcCell.[bg_palindex_p()][NcCell#method.bg_palindex_p].*
 #[inline]
 pub fn nccell_bg_palindex_p(cell: &NcCell) -> bool {
-    crate::ncchannels_bg_palindex_p(cell.channels)
+    fns::ncchannels_bg_palindex_p(cell.channels)
 }
 
 /// Gets the [`NcPaletteIndex`] of the foreground [`NcChannel`] of the [`NcCell`].
@@ -300,7 +301,7 @@ pub fn nccell_set_styles(cell: &mut NcCell, stylebits: NcStyle) {
 
 /// Returns the number of columns occupied by `cell`.
 ///
-/// See [`ncstrwidth`][crate::ncstrwidth] for an equivalent for multiple EGCs.
+/// See [`ncstrwidth`][fns::ncstrwidth] for an equivalent for multiple EGCs.
 #[inline]
 pub const fn nccell_cols(cell: &NcCell) -> u8 {
     if cell.width != 0 {
@@ -347,7 +348,7 @@ pub const fn nccell_wide_left_p(cell: &NcCell) -> bool {
 /// *Method: NcCell.[strdup()][NcCell#method.strdup].*
 #[inline]
 pub fn nccell_strdup(plane: &NcPlane, cell: &NcCell) -> String {
-    rstring![libc::strdup(crate::nccell_extended_gcluster(plane, cell))].into()
+    rstring![libc::strdup(fns::nccell_extended_gcluster(plane, cell))].into()
 }
 
 // Misc. -----------------------------------------------------------------------
@@ -386,8 +387,8 @@ pub fn nccellcmp(plane1: &NcPlane, cell1: &NcCell, plane2: &NcPlane, cell2: &NcC
     }
     unsafe {
         strcmp(
-            crate::nccell_extended_gcluster(plane1, cell1),
-            crate::nccell_extended_gcluster(plane2, cell2),
+            fns::nccell_extended_gcluster(plane1, cell1),
+            fns::nccell_extended_gcluster(plane2, cell2),
         ) != 0
     }
 }
@@ -400,7 +401,7 @@ pub fn nccell_init(cell: &mut NcCell) {
     *cell = unsafe { core::mem::zeroed() }
 }
 
-/// Same as [`nccell_load`][crate::nccell_load], plus blasts the styling with
+/// Same as [`nccell_load`][fns::nccell_load], plus blasts the styling with
 /// `style` and `channels`.
 ///
 /// - Breaks the UTF-8 string in `gcluster` down, setting up the cell `cell`.
@@ -419,7 +420,7 @@ pub fn nccell_prime(
 ) -> NcIntResult {
     cell.stylemask = style;
     cell.channels = channels;
-    unsafe { crate::nccell_load(plane, cell, cstring![gcluster]) }
+    unsafe { fns::nccell_load(plane, cell, cstring![gcluster]) }
 }
 
 /// Loads up six cells with the `EGC`s necessary to draw a box.

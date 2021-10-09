@@ -28,40 +28,40 @@
 ///
 /// ## Bit masks
 ///
-/// - [NCBOXMASK_TOP]
-/// - [NCBOXMASK_RIGHT]
-/// - [NCBOXMASK_BOTTOM]
-/// - [NCBOXMASK_LEFT]
+/// - [`NCBOXMASK_TOP`]
+/// - [`NCBOXMASK_RIGHT`]
+/// - [`NCBOXMASK_BOTTOM`]
+/// - [`NCBOXMASK_LEFT`]
 ///
-/// - [NCBOXGRAD_TOP]
-/// - [NCBOXGRAD_RIGHT]
-/// - [NCBOXGRAD_BOTTOM]
-/// - [NCBOXGRAD_LEFT]
+/// - [`NCBOXGRAD_TOP`]
+/// - [`NCBOXGRAD_RIGHT`]
+/// - [`NCBOXGRAD_BOTTOM`]
+/// - [`NCBOXGRAD_LEFT`]
 ///
-/// - [NCBOXCORNER_MASK]
-/// - [NCBOXCORNER_SHIFT]
+/// - [`NCBOXCORNER_MASK`]
+/// - [`NCBOXCORNER_SHIFT`]
 ///
 pub type NcBoxMask = u32;
 
-/// [NcBoxMask] top gradient mask.
+/// [`NcBoxMask`] top gradient mask.
 pub const NCBOXGRAD_TOP: NcBoxMask = crate::bindings::ffi::NCBOXGRAD_TOP;
-/// [NcBoxMask] right gradient mask.
+/// [`NcBoxMask`] right gradient mask.
 pub const NCBOXGRAD_RIGHT: NcBoxMask = crate::bindings::ffi::NCBOXGRAD_RIGHT;
-/// [NcBoxMask] bottom gradient mask.
+/// [`NcBoxMask`] bottom gradient mask.
 pub const NCBOXGRAD_BOTTOM: NcBoxMask = crate::bindings::ffi::NCBOXGRAD_BOTTOM;
-/// [NcBoxMask] left gradient mask.
+/// [`NcBoxMask`] left gradient mask.
 pub const NCBOXGRAD_LEFT: NcBoxMask = crate::bindings::ffi::NCBOXGRAD_LEFT;
 
-/// [NcBoxMask] top border mask.
+/// [`NcBoxMask`] top border mask.
 pub const NCBOXMASK_TOP: NcBoxMask = crate::bindings::ffi::NCBOXMASK_TOP;
-/// [NcBoxMask] right border mask.
+/// [`NcBoxMask`] right border mask.
 pub const NCBOXMASK_RIGHT: NcBoxMask = crate::bindings::ffi::NCBOXMASK_RIGHT;
-/// [NcBoxMask] bottom border mask.
+/// [`NcBoxMask`] bottom border mask.
 pub const NCBOXMASK_BOTTOM: NcBoxMask = crate::bindings::ffi::NCBOXMASK_BOTTOM;
-/// [NcBoxMask] left border mask.
+/// [`NcBoxMask`] left border mask.
 pub const NCBOXMASK_LEFT: NcBoxMask = crate::bindings::ffi::NCBOXMASK_LEFT;
 
-/// [NcBoxMask] corner mask to control the drawing of boxes corners.
+/// [`NcBoxMask`] corner mask to control the drawing of boxes corners.
 ///
 /// By default, vertexes are drawn whether their connecting edges are drawn
 /// or not. The value of the bits control this, and are interpreted as the
@@ -71,5 +71,5 @@ pub const NCBOXMASK_LEFT: NcBoxMask = crate::bindings::ffi::NCBOXMASK_LEFT;
 /// (since at most 2 edges can touch a box's corner).
 pub const NCBOXCORNER_MASK: NcBoxMask = crate::bindings::ffi::NCBOXCORNER_MASK;
 
-/// The number of bits [NCBOXCORNER_MASK] is shifted in [NcBoxMask].
+/// The number of bits [`NCBOXCORNER_MASK`] is shifted in [`NcBoxMask`].
 pub const NCBOXCORNER_SHIFT: NcBoxMask = crate::bindings::ffi::NCBOXCORNER_SHIFT;
