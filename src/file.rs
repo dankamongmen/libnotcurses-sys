@@ -11,76 +11,77 @@ use libc::{
     c_long, c_void, fclose, /* feof, */ fread, fseek, ftell, SEEK_CUR, SEEK_END, SEEK_SET,
 };
 
-/// See [`NcFile`]. Notcurses functions expects this type of `*FILE` (a struct)
-#[allow(clippy::upper_case_acronyms)]
-pub type FILE_NC = crate::ffi::FILE;
-
-/// See [`NcFile`]. The [`libc`](https://docs.rs/libc/) crate expects this type
-/// of `*FILE` (an opaque enum)
-#[allow(clippy::upper_case_acronyms)]
-pub type FILE_LIBC = libc::FILE;
-
-// TODO: the following static strings aren't made public
-
-/// Intended to be passed into the CFile::open method.
-/// It will open the file in a way that will allow reading and writing,
-/// including overwriting old data.
-/// It will not create the file if it does not exist.
-pub static RANDOM_ACCESS_MODE: &str = "rb+";
-
-/// Intended to be passed into the CFile::open method.
-/// It will open the file in a way that will allow reading and writing,
-/// including overwriting old data
-pub static UPDATE: &str = "rb+";
-
-/// Intended to be passed into the CFile::open method.
-/// It will only allow reading.
-pub static READ_ONLY: &str = "r";
-
-/// Intended to be passed into the CFile::open method.
-/// It will only allow writing.
-pub static WRITE_ONLY: &str = "w";
-
-/// Intended to be passed into the CFile::open method.
-/// It will only allow data to be appended to the end of the file.
-pub static APPEND_ONLY: &str = "a";
-
-/// Intended to be passed into the CFile::open method.
-/// It will allow data to be appended to the end of the file, and data to be
-/// read from the file. It will create the file if it doesn't exist.
-pub static APPEND_READ: &str = "a+";
-
-/// Intended to be passed into the CFile::open method.
-/// It will open the file in a way that will allow reading and writing,
-/// including overwriting old data. It will create the file if it doesn't exist
-pub static TRUNCATE_RANDOM_ACCESS_MODE: &str = "wb+";
-
 /// A utility function to pull the current value of errno and put it into an
 /// Error::Errno
 fn get_error<T>() -> Result<T, Error> {
     Err(Error::last_os_error())
 }
 
+/// See [`NcFile`]. Notcurses functions expects this type of `*FILE` (a struct)
+#[allow(clippy::upper_case_acronyms)]
+type NcFile_nc = crate::ffi::FILE;
+
+/// See [`NcFile`]. The [`libc`](https://docs.rs/libc/) crate expects this type
+/// of `*FILE` (an opaque enum)
+#[allow(clippy::upper_case_acronyms)]
+type NcFile_libc = libc::FILE;
+
 /// A wrapper struct around
 /// [`libc::FILE`](https://docs.rs/libc/0.2.80/libc/enum.FILE.html)
 ///
-/// The notcurses `FILE` type [`FILE_NC`] a struct imported through bindgen,
-/// while the equivalent [`libc`](https://docs.rs/libc) crate FILE
-/// ([`FILE_LIBC`]) is an opaque enum.
+/// The `notcurses`' [`FILE`][crate::ffi::FILE] type is a transparent struct,
+/// while the equivalent `libc`'s [`FILE`][libc::FILE] is an opaque enum.
 ///
 /// Several methods are provided to cast back and forth between both types,
 /// in order to allow both rust libc operations and notcurses file operations
 /// over the same underlying `*FILE`.
 #[derive(Debug)]
 pub struct NcFile {
-    file_ptr: NonNull<FILE_LIBC>,
+    file_ptr: NonNull<NcFile_libc>,
 }
 
+/// # Constants
 impl NcFile {
-    // constructors --
+    // TODO: the following static strings aren't made public
 
+    /// Intended to be passed into the CFile::open method.
+    /// It will open the file in a way that will allow reading and writing,
+    /// including overwriting old data.
+    /// It will not create the file if it does not exist.
+    pub const RANDOM_ACCESS_MODE: &'static str = "rb+";
+
+    /// Intended to be passed into the CFile::open method.
+    /// It will open the file in a way that will allow reading and writing,
+    /// including overwriting old data
+    pub const UPDATE: &'static str = "rb+";
+
+    /// Intended to be passed into the CFile::open method.
+    /// It will only allow reading.
+    pub const READ_ONLY: &'static str = "r";
+
+    /// Intended to be passed into the CFile::open method.
+    /// It will only allow writing.
+    pub const WRITE_ONLY: &'static str = "w";
+
+    /// Intended to be passed into the CFile::open method.
+    /// It will only allow data to be appended to the end of the file.
+    pub const APPEND_ONLY: &'static str = "a";
+
+    /// Intended to be passed into the CFile::open method.
+    /// It will allow data to be appended to the end of the file, and data to be
+    /// read from the file. It will create the file if it doesn't exist.
+    pub const APPEND_READ: &'static str = "a+";
+
+    /// Intended to be passed into the CFile::open method.
+    /// It will open the file in a way that will allow reading and writing,
+    /// including overwriting old data. It will create the file if it doesn't exist
+    pub const TRUNCATE_RANDOM_ACCESS_MODE: &'static str = "wb+";
+}
+
+/// # Constructors
+impl NcFile {
     /// `NcFile` constructor from a file produced by notcurses.
-    pub fn from_nc(file: *mut FILE_NC) -> Self {
+    pub fn from_nc(file: *mut NcFile_nc) -> Self {
         NcFile {
             file_ptr: unsafe { NonNull::new_unchecked(NcFile::nc2libc(file)) },
         }
@@ -88,23 +89,24 @@ impl NcFile {
 
     /// `NcFile` constructor from a file produced by the libc crate.
     #[allow(clippy::missing_safety_doc)]
-    pub unsafe fn from_libc(file: *mut FILE_LIBC) -> Self {
+    pub unsafe fn from_libc(file: *mut NcFile_libc) -> Self {
         NcFile {
             file_ptr: NonNull::new_unchecked(file),
         }
     }
+}
 
-    // methods --
-
+/// # Methods
+impl NcFile {
     /// Returns the file pointer in the format expected by the [`libc`] crate.
     #[inline]
-    pub fn as_libc_ptr(&self) -> *mut FILE_LIBC {
+    pub fn as_libc_ptr(&self) -> *mut NcFile_libc {
         self.file_ptr.as_ptr()
     }
 
     /// Returns the file pointer in the format expected by notcurses.
     #[inline]
-    pub fn as_nc_ptr(&self) -> *mut FILE_NC {
+    pub fn as_nc_ptr(&self) -> *mut NcFile_nc {
         Self::libc2nc(self.file_ptr.as_ptr())
     }
 
@@ -130,20 +132,20 @@ impl NcFile {
         self.read_to_end(buf)
     }
 
-    // private methods --
+    // private methods:
 
     /// Converts a file pointer from the struct notcurses uses to the
     /// opaque enum type libc expects.
     #[inline]
-    fn nc2libc(file: *mut FILE_NC) -> *mut FILE_LIBC {
-        file as *mut _ as *mut FILE_LIBC
+    fn nc2libc(file: *mut NcFile_nc) -> *mut NcFile_libc {
+        file as *mut _ as *mut NcFile_libc
     }
 
     /// Converts a file pointer from the libc opaque enum format to the struct
     /// expected by notcurses.
     #[inline]
-    fn libc2nc(file: *mut FILE_LIBC) -> *mut FILE_NC {
-        file as *mut _ as *mut FILE_NC
+    fn libc2nc(file: *mut NcFile_libc) -> *mut NcFile_nc {
+        file as *mut _ as *mut NcFile_nc
     }
 
     /// A utility function to expand a vector without increasing its capacity
@@ -322,7 +324,7 @@ impl Drop for NcFile {
             if !(self.as_libc_ptr()).is_null() {
                 let res = fclose(self.as_libc_ptr());
                 if res == 0 {
-                    self.file_ptr = NonNull::new_unchecked(null_mut::<FILE_LIBC>());
+                    self.file_ptr = NonNull::new_unchecked(null_mut::<NcFile_libc>());
                     Ok(())
                 } else {
                     get_error()
