@@ -49,9 +49,10 @@ leverage type checking, and they implement methods through traits
 
 ### even more like Rust
 
-The WIP sister crate [`notcurses`](https://github.com/dankamongmen/notcurses-rs)
-will eventually offer a *closer to Rust*, higher-level, safer, and simpler API,
-and make it easier to interoperate with the rest of the Rust ecosystem.
+The *WIP* sister crate
+[`notcurses`](https://github.com/dankamongmen/notcurses-rs) will eventually
+offer a *closer to Rust*, higher-level, safer, and simpler API, and make it
+easier to interoperate with the rest of the Rust ecosystem.
 
 ## like C
 
