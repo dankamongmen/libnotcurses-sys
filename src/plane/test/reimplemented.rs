@@ -1,8 +1,8 @@
 //! Test `ncplane_*` reimplemented functions.
 
 use crate::{
-    fns::{self, ncplane_new_test, notcurses_init_test, notcurses_stop},
-    NCRESULT_OK,
+    c_api::{self, ncplane_new_test, notcurses_init_test, notcurses_stop},
+    NcIntResult, NcIntResultApi,
 };
 use serial_test::serial;
 
@@ -13,10 +13,10 @@ fn ncplane_notcurses() {
         let nc = notcurses_init_test();
         let plane = ncplane_new_test(nc, 0, 0, 20, 20);
 
-        let nc2 = fns::ncplane_notcurses(plane);
+        let nc2 = c_api::ncplane_notcurses(plane);
         assert_eq![nc as *mut _, nc2];
 
-        let nc3 = fns::ncplane_notcurses_const(plane);
+        let nc3 = c_api::ncplane_notcurses_const(plane);
         assert_eq![nc as *const _, nc3];
 
         notcurses_stop(nc);
@@ -31,24 +31,24 @@ fn ncplane_cursor() {
         let plane = ncplane_new_test(nc, 0, 0, 20, 20);
 
         let (mut y, mut x) = (0, 0);
-        fns::ncplane_cursor_yx(plane, &mut y, &mut x);
+        c_api::ncplane_cursor_yx(plane, &mut y, &mut x);
         assert_eq![x, 0];
         assert_eq![y, 0];
 
-        let res = fns::ncplane_cursor_move_yx(plane, 10, 15);
+        let res = c_api::ncplane_cursor_move_yx(plane, 10, 15);
         assert_eq![res, 0];
-        fns::ncplane_cursor_yx(plane, &mut y, &mut x);
+        c_api::ncplane_cursor_yx(plane, &mut y, &mut x);
         assert_eq![x, 15];
         assert_eq![y, 10];
 
-        fns::ncplane_home(plane);
-        fns::ncplane_cursor_yx(plane, &mut y, &mut x);
+        c_api::ncplane_home(plane);
+        c_api::ncplane_cursor_yx(plane, &mut y, &mut x);
         assert_eq![x, 0];
         assert_eq![y, 0];
 
-        let _res = fns::ncplane_cursor_move_yx(plane, 10, 15);
-        fns::ncplane_erase(plane); // has to move the cursor to 0,0
-        fns::ncplane_cursor_yx(plane, &mut y, &mut x);
+        let _res = c_api::ncplane_cursor_move_yx(plane, 10, 15);
+        c_api::ncplane_erase(plane); // has to move the cursor to 0,0
+        c_api::ncplane_cursor_yx(plane, &mut y, &mut x);
         assert_eq![x, 0];
         assert_eq![y, 0];
 
@@ -63,11 +63,11 @@ fn ncplane_channels() {
         let nc = notcurses_init_test();
         let plane = ncplane_new_test(nc, 0, 0, 20, 20);
 
-        let channels = fns::ncplane_channels(plane);
+        let channels = c_api::ncplane_channels(plane);
         assert_eq![channels, 0];
 
-        fns::ncplane_set_channels(plane, 0x1122334455667788);
-        assert_eq![0x1122334455667788, fns::ncplane_channels(plane)];
+        c_api::ncplane_set_channels(plane, 0x1122334455667788);
+        assert_eq![0x1122334455667788, c_api::ncplane_channels(plane)];
 
         notcurses_stop(nc);
     }
@@ -80,12 +80,12 @@ fn ncplane_fchannel() {
         let nc = notcurses_init_test();
         let plane = ncplane_new_test(nc, 0, 0, 20, 20);
 
-        fns::ncplane_set_channels(plane, 0x1122334455667788);
-        let channels = fns::ncplane_channels(plane);
-        assert_eq![0x11223344, fns::ncchannels_fchannel(channels)];
+        c_api::ncplane_set_channels(plane, 0x1122334455667788);
+        let channels = c_api::ncplane_channels(plane);
+        assert_eq![0x11223344, c_api::ncchannels_fchannel(channels)];
 
-        let channels = fns::ncplane_set_fchannel(plane, 0x10203040);
-        assert_eq![0x10203040, fns::ncchannels_fchannel(channels)];
+        let channels = c_api::ncplane_set_fchannel(plane, 0x10203040);
+        assert_eq![0x10203040, c_api::ncchannels_fchannel(channels)];
         assert_eq![0x1020304055667788, channels];
 
         notcurses_stop(nc);
@@ -99,15 +99,15 @@ fn ncplane_bchannel() {
         let nc = notcurses_init_test();
         let plane = ncplane_new_test(nc, 0, 0, 20, 20);
 
-        fns::ncplane_set_channels(plane, 0x1122334455667788);
-        let channels = fns::ncplane_channels(plane);
-        assert_eq![0x55667788, fns::ncchannels_bchannel(channels)];
+        c_api::ncplane_set_channels(plane, 0x1122334455667788);
+        let channels = c_api::ncplane_channels(plane);
+        assert_eq![0x55667788, c_api::ncchannels_bchannel(channels)];
 
         // BUG? ncplane_set_bchannel and ncplane_set_fchannel don't get
         // applied unless they are assigned to a variable. Weird.
 
-        let channels = fns::ncplane_set_bchannel(plane, 0x50607080);
-        assert_eq![0x50607080, fns::ncchannels_bchannel(channels)];
+        let channels = c_api::ncplane_set_bchannel(plane, 0x50607080);
+        assert_eq![0x50607080, c_api::ncchannels_bchannel(channels)];
         assert_eq![0x1122334450607080, channels];
 
         notcurses_stop(nc);
@@ -121,8 +121,8 @@ fn ncplane_rgb() {
         let nc = notcurses_init_test();
         let plane = ncplane_new_test(nc, 0, 0, 20, 20);
 
-        fns::ncplane_set_fg_rgb(plane, 0x112233);
-        assert_eq![0x112233, fns::ncplane_fg_rgb(plane)];
+        c_api::ncplane_set_fg_rgb(plane, 0x112233);
+        assert_eq![0x112233, c_api::ncplane_fg_rgb(plane)];
 
         notcurses_stop(nc);
     }
@@ -134,18 +134,18 @@ fn ncplane_default() {
     unsafe {
         let nc = notcurses_init_test();
         let plane = ncplane_new_test(nc, 0, 0, 20, 20);
-        assert_eq![true, fns::ncplane_bg_default_p(plane)];
-        assert_eq![true, fns::ncplane_fg_default_p(plane)];
+        assert_eq![true, c_api::ncplane_bg_default_p(plane)];
+        assert_eq![true, c_api::ncplane_fg_default_p(plane)];
 
-        fns::ncplane_set_bg_rgb8(plane, 11, 22, 33);
-        fns::ncplane_set_fg_rgb8(plane, 44, 55, 66);
-        assert_eq![false, fns::ncplane_bg_default_p(plane)];
-        assert_eq![false, fns::ncplane_fg_default_p(plane)];
+        c_api::ncplane_set_bg_rgb8(plane, 11, 22, 33);
+        c_api::ncplane_set_fg_rgb8(plane, 44, 55, 66);
+        assert_eq![false, c_api::ncplane_bg_default_p(plane)];
+        assert_eq![false, c_api::ncplane_fg_default_p(plane)];
 
-        fns::ncplane_set_bg_default(plane);
-        fns::ncplane_set_fg_default(plane);
-        assert_eq![true, fns::ncplane_bg_default_p(plane)];
-        assert_eq![true, fns::ncplane_fg_default_p(plane)];
+        c_api::ncplane_set_bg_default(plane);
+        c_api::ncplane_set_fg_default(plane);
+        assert_eq![true, c_api::ncplane_bg_default_p(plane)];
+        assert_eq![true, c_api::ncplane_fg_default_p(plane)];
 
         notcurses_stop(nc);
     }
@@ -159,11 +159,11 @@ fn ncplane_dimensions() {
         let plane = ncplane_new_test(nc, 0, 0, 10, 20);
 
         let (mut y, mut x) = (0, 0);
-        fns::ncplane_dim_yx(plane, &mut y, &mut x);
+        c_api::ncplane_dim_yx(plane, &mut y, &mut x);
         assert_eq!((10, 20), (y, x));
 
-        assert_eq!(10, fns::ncplane_dim_y(plane));
-        assert_eq!(20, fns::ncplane_dim_x(plane));
+        assert_eq!(10, c_api::ncplane_dim_y(plane));
+        assert_eq!(20, c_api::ncplane_dim_x(plane));
 
         notcurses_stop(nc);
     }
@@ -176,19 +176,19 @@ fn ncplane_resize() {
         let nc = notcurses_init_test();
         let plane = ncplane_new_test(nc, 0, 0, 20, 20);
 
-        let res = fns::ncplane_resize_simple(plane, 40, 40);
-        assert_eq![NCRESULT_OK, res];
+        let res = c_api::ncplane_resize_simple(plane, 40, 40);
+        assert_eq![NcIntResult::OK, res];
 
         let (mut y, mut x) = (0, 0);
-        fns::ncplane_dim_yx(plane, &mut y, &mut x);
+        c_api::ncplane_dim_yx(plane, &mut y, &mut x);
         assert_eq!((40, 40), (y, x));
 
         // TODO: test further plane subset keeping unchanged features
-        let res = fns::ncplane_resize(plane, 0, 0, 0, 0, 0, 0, 60, 70);
-        assert_eq![NCRESULT_OK, res];
+        let res = c_api::ncplane_resize(plane, 0, 0, 0, 0, 0, 0, 60, 70);
+        assert_eq![NcIntResult::OK, res];
 
-        assert_eq!(60, fns::ncplane_dim_y(plane));
-        assert_eq!(70, fns::ncplane_dim_x(plane));
+        assert_eq!(60, c_api::ncplane_dim_y(plane));
+        assert_eq!(70, c_api::ncplane_dim_x(plane));
 
         notcurses_stop(nc);
     }
@@ -205,16 +205,16 @@ fn ncplane_erase() {
         let nc = notcurses_init_test();
         let plane = ncplane_new_test(nc, 0, 0, 20, 20);
 
-        fns::ncplane_set_bg_rgb(plane, 0x112233);
-        fns::ncplane_set_fg_rgb(plane, 0x445566);
-        assert_eq![false, fns::ncplane_bg_default_p(plane)];
-        assert_eq![false, fns::ncplane_fg_default_p(plane)];
+        c_api::ncplane_set_bg_rgb(plane, 0x112233);
+        c_api::ncplane_set_fg_rgb(plane, 0x445566);
+        assert_eq![false, c_api::ncplane_bg_default_p(plane)];
+        assert_eq![false, c_api::ncplane_fg_default_p(plane)];
 
         // FIXME? DEBUG
-        fns::ncplane_erase(plane);
-        // assert_eq![true, fns::ncplane_bg_default_p(plane)];
-        // assert_eq![true, fns::ncplane_fg_default_p(plane)];
-        //print!(" C: {:#0x} ", fns::ncplane_channels(plane));
+        c_api::ncplane_erase(plane);
+        // assert_eq![true, c_api::ncplane_bg_default_p(plane)];
+        // assert_eq![true, c_api::ncplane_fg_default_p(plane)];
+        //print!(" C: {:#0x} ", c_api::ncplane_channels(plane));
 
         notcurses_stop(nc);
     }

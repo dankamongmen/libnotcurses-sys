@@ -7,20 +7,32 @@ use std::{self, error, fmt};
 /// A value < 0 means error, (usually -1).
 ///
 /// # Defined constants:
-///
-/// - [`NCRESULT_OK`]
-/// - [`NCRESULT_ERR`]
-/// - [`NCRESULT_MAX`]
 pub type NcIntResult = i32;
 
-/// OK value, for the functions that return [`NcIntResult`].
-pub const NCRESULT_OK: i32 = 0;
+crate::impl_api![
+    NcIntResult,
+    NcIntResultApi,
+    /// OK value, for the functions that return [`NcIntResult`].
+    const OK: i32 = 0;,
+    /// ERROR value, for the functions that return an [`NcIntResult`].
+    const ERR: i32 = -1;,
+    /// MAX value, for the functions that return [`NcIntResult`].
+    const MAX: i32 = i32::MAX;
+];
 
-/// ERROR value, for the functions that return an [`NcIntResult`].
-pub const NCRESULT_ERR: i32 = -1;
+pub(crate) mod constants {
+    #[allow(unused_imports)]
+    use crate::NcIntResult;
 
-/// MAX value, for the functions that return [`NcIntResult`].
-pub const NCRESULT_MAX: i32 = i32::MAX;
+    /// OK value, for the functions that return [`NcIntResult`].
+    pub const NCRESULT_OK: i32 = 0;
+
+    /// ERROR value, for the functions that return an [`NcIntResult`].
+    pub const NCRESULT_ERR: i32 = -1;
+
+    /// MAX value, for the functions that return [`NcIntResult`].
+    pub const NCRESULT_MAX: i32 = i32::MAX;
+}
 
 /// The error type for the Rust methods API.
 #[derive(Debug, Clone, Default)]
@@ -43,10 +55,12 @@ impl error::Error for NcError {
 }
 
 impl NcError {
-    /// New NcError with default [`NCRESULT_ERR`] error number, and no message.
+    /// New NcError with default
+    /// [`NcIntResult::ERR`][NcIntResult#associatedconstant.ERR]
+    /// error number, and no message.
     pub fn new() -> Self {
         Self {
-            int: NCRESULT_ERR,
+            int: NcIntResult::ERR,
             ..Default::default()
         }
     }
@@ -59,10 +73,12 @@ impl NcError {
         }
     }
 
-    /// New NcError with default [`NCRESULT_ERR`] error number and a custom message.
+    /// New NcError with default
+    /// [`NcIntResult::ERR`][NcIntResult#associatedconstant.ERR]
+    /// error number and a custom message.
     pub fn new_msg(msg: &str) -> Self {
         Self {
-            int: NCRESULT_ERR,
+            int: NcIntResult::ERR,
             msg: msg.to_string(),
         }
     }

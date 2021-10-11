@@ -25,7 +25,8 @@ fn main() -> NcResult<()> {
     let height = H_CELLS * geo.cell_y;
     let buffer: Vec<u8> = vec![0xBB; (height * width) as usize * 3];
     let visual1 = NcVisual::from_rgb_packed(buffer.as_slice(), height, width * 3, width, 255)?;
-    let voptions1 = NcVisualOptions::without_plane(1, 2, 0, 0, height, width, NCBLIT_PIXEL, 0, 0);
+    let voptions1 =
+        NcVisualOptions::without_plane(1, 2, 0, 0, height, width, NcBlitter::PIXEL, 0, 0);
     let visual1plane = visual1.render(&mut nc, &voptions1)?;
 
     for _ in 0..CELLS_MOVEMENT {

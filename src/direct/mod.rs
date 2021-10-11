@@ -90,43 +90,84 @@ pub type NcDirect = crate::bindings::ffi::ncdirect;
 /// Flags (options) for [`NcDirect`]
 pub type NcDirectFlags = u64;
 
-/// Input may be freely dropped.
-///
-/// This ought be provided when the program does not intend to handle input.
-/// Otherwise, input can accumulate in internal buffers, eventually preventing
-/// Notcurses from processing terminal messages.
-pub const NCDIRECT_OPTION_DRAIN_INPUT: u64 =
-    crate::bindings::ffi::NCDIRECT_OPTION_DRAIN_INPUT as u64;
+crate::impl_api![
+    NcDirectFlags,
+    NcDirectFlagsApi,
+    /// Input may be freely dropped.
+    ///
+    /// This ought be provided when the program does not intend to handle input.
+    /// Otherwise, input can accumulate in internal buffers, eventually preventing
+    /// Notcurses from processing terminal messages.
+    const DRAIN_INPUT: u64 = constants::NCDIRECT_OPTION_DRAIN_INPUT as u64;,
+    /// Flag that avoids placing the terminal into cbreak mode
+    /// (disabling echo and line buffering)
+    ///
+    const INHIBIT_CBREAK: NcDirectFlags =
+        constants::NCDIRECT_OPTION_INHIBIT_CBREAK as NcDirectFlags;,
+    /// Flag that avoids calling setlocale(LC_ALL, NULL)
+    ///
+    /// If the result is either "C" or "POSIX", it will print a
+    /// diagnostic to stderr, and then call setlocale(LC_ALL, "").
+    ///
+    /// This will attempt to set the locale based off the LANG
+    /// environment variable. Your program should call setlocale(3)
+    /// itself, usually as one of the first lines.
+    ///
+    const INHIBIT_SETLOCALE: NcDirectFlags =
+        constants::NCDIRECT_OPTION_INHIBIT_SETLOCALE as NcDirectFlags;,
+    /// Flag that inhibits registration of the SIGINT, SIGSEGV, SIGABRT & SIGQUIT
+    /// signal handlers.
+    const NO_QUIT_SIGHANDLERS: NcDirectFlags =
+        constants::NCDIRECT_OPTION_NO_QUIT_SIGHANDLERS as NcDirectFlags;,
+    /// Flag that enables showing detailed information.
+    const VERBOSE: NcDirectFlags = constants::NCDIRECT_OPTION_VERBOSE as NcDirectFlags;,
+    /// Flag that enables showing all diagnostics (equivalent to
+    /// [`NcLogLevel::TRACE`][crate::NcLogLevel#associatedconstant.TRACE]).
+    /// Implies [`NcDirectFlags::VERBOSE`][NcDirectFlags].
+    const VERY_VERBOSE: NcDirectFlags = constants::NCDIRECT_OPTION_VERY_VERBOSE as NcDirectFlags;
+];
 
-/// Flag that avoids placing the terminal into cbreak mode
-/// (disabling echo and line buffering)
-///
-pub const NCDIRECT_OPTION_INHIBIT_CBREAK: NcDirectFlags =
-    crate::bindings::ffi::NCDIRECT_OPTION_INHIBIT_CBREAK as NcDirectFlags;
+pub(crate) mod constants {
+    use crate::NcDirectFlags;
 
-/// Flag that avoids calling setlocale(LC_ALL, NULL)
-///
-/// If the result is either "C" or "POSIX", it will print a
-/// diagnostic to stderr, and then call setlocale(LC_ALL, "").
-///
-/// This will attempt to set the locale based off the LANG
-/// environment variable. Your program should call setlocale(3)
-/// itself, usually as one of the first lines.
-///
-pub const NCDIRECT_OPTION_INHIBIT_SETLOCALE: NcDirectFlags =
-    crate::bindings::ffi::NCDIRECT_OPTION_INHIBIT_SETLOCALE as NcDirectFlags;
+    /// Input may be freely dropped.
+    ///
+    /// This ought be provided when the program does not intend to handle input.
+    /// Otherwise, input can accumulate in internal buffers, eventually preventing
+    /// Notcurses from processing terminal messages.
+    pub const NCDIRECT_OPTION_DRAIN_INPUT: u64 =
+        crate::bindings::ffi::NCDIRECT_OPTION_DRAIN_INPUT as u64;
 
-/// Flag that inhibits registration of the SIGINT, SIGSEGV, SIGABRT & SIGQUIT
-/// signal handlers.
-pub const NCDIRECT_OPTION_NO_QUIT_SIGHANDLERS: NcDirectFlags =
-    crate::bindings::ffi::NCDIRECT_OPTION_NO_QUIT_SIGHANDLERS as NcDirectFlags;
+    /// Flag that avoids placing the terminal into cbreak mode
+    /// (disabling echo and line buffering)
+    ///
+    pub const NCDIRECT_OPTION_INHIBIT_CBREAK: NcDirectFlags =
+        crate::bindings::ffi::NCDIRECT_OPTION_INHIBIT_CBREAK as NcDirectFlags;
 
-/// Flag that enables showing detailed information.
-pub const NCDIRECT_OPTION_VERBOSE: NcDirectFlags =
-    crate::bindings::ffi::NCDIRECT_OPTION_VERBOSE as NcDirectFlags;
+    /// Flag that avoids calling setlocale(LC_ALL, NULL)
+    ///
+    /// If the result is either "C" or "POSIX", it will print a
+    /// diagnostic to stderr, and then call setlocale(LC_ALL, "").
+    ///
+    /// This will attempt to set the locale based off the LANG
+    /// environment variable. Your program should call setlocale(3)
+    /// itself, usually as one of the first lines.
+    ///
+    pub const NCDIRECT_OPTION_INHIBIT_SETLOCALE: NcDirectFlags =
+        crate::bindings::ffi::NCDIRECT_OPTION_INHIBIT_SETLOCALE as NcDirectFlags;
 
-/// Flag that enables showing all diagnostics (equivalent to
-/// [`NCLOGLEVEL_TRACE`][crate::NCLOGLEVEL_TRACE]).
-/// Implies [`NCDIRECT_OPTION_VERBOSE`].
-pub const NCDIRECT_OPTION_VERY_VERBOSE: NcDirectFlags =
-    crate::bindings::ffi::NCDIRECT_OPTION_VERY_VERBOSE as NcDirectFlags;
+    /// Flag that inhibits registration of the SIGINT, SIGSEGV, SIGABRT & SIGQUIT
+    /// signal handlers.
+    pub const NCDIRECT_OPTION_NO_QUIT_SIGHANDLERS: NcDirectFlags =
+        crate::bindings::ffi::NCDIRECT_OPTION_NO_QUIT_SIGHANDLERS as NcDirectFlags;
+
+    /// Flag that enables showing detailed information.
+    pub const NCDIRECT_OPTION_VERBOSE: NcDirectFlags =
+        crate::bindings::ffi::NCDIRECT_OPTION_VERBOSE as NcDirectFlags;
+
+    /// Flag that enables showing all diagnostics (equivalent to
+    /// [`NcLogLevel::TRACE`][crate::NcLogLevel#associatedconstant.TRACE]).
+    /// Implies [`NCDIRECT_OPTION_VERBOSE`].
+    pub const NCDIRECT_OPTION_VERY_VERBOSE: NcDirectFlags =
+        crate::bindings::ffi::NCDIRECT_OPTION_VERY_VERBOSE as NcDirectFlags;
+}

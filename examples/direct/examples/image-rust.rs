@@ -11,9 +11,9 @@ mod shared;
 fn main() -> NcResult<()> {
     let mut ncd = NcDirect::new()?;
 
-    render_image(&mut ncd, NCBLIT_1x1)?;
-    render_image(&mut ncd, NCBLIT_2x1)?;
-    render_image(&mut ncd, NCBLIT_BRAILLE)?;
+    render_image(&mut ncd, NcBlitter::_1x1)?;
+    render_image(&mut ncd, NcBlitter::_2x1)?;
+    render_image(&mut ncd, NcBlitter::BRAILLE)?;
 
     ncd.stop()?;
     Ok(())
@@ -22,7 +22,7 @@ fn main() -> NcResult<()> {
 fn render_image(ncd: &mut NcDirect, blit: NcBlitter) -> NcResult<()> {
     let image_path = shared::project_root_path_string("examples/res/image-16x16.png");
 
-    if let Err(nc_error) = ncd.render_image(&image_path, NCALIGN_CENTER, blit, NCSCALE_NONE) {
+    if let Err(nc_error) = ncd.render_image(&image_path, NcAlign::CENTER, blit, NcScale::NOSCALE) {
         return Err(NcError::with_msg(
             nc_error.int,
             "ERROR: ncdirect_render_image(). Make sure you \

@@ -1,4 +1,4 @@
-use crate::{NcInput, NCKEY_BUTTON1, NCKEY_BUTTON11};
+use crate::{NcInput, NcKey};
 
 /// Are all the modifiers off (alt, control, shift)?
 pub const fn ncinput_nomod_p(input: &NcInput) -> bool {
@@ -18,7 +18,7 @@ pub const fn nckey_supppuab_p(w: char) -> bool {
 /// Is the event a synthesized mouse event?
 #[inline]
 pub const fn nckey_mouse_p(r: char) -> bool {
-    r >= NCKEY_BUTTON1 && r <= NCKEY_BUTTON11
+    r >= NcKey::BUTTON1 && r <= NcKey::BUTTON11
 }
 
 /// Compares two NcInput structs for data equality.

@@ -4,7 +4,6 @@
 //! [cfile-rs crate](https://github.com/jkarns275/cfile) by Joshua Karns
 
 use core::ptr::{null_mut, NonNull};
-
 use std::io::{Error, ErrorKind, Read, Seek, SeekFrom};
 
 use libc::{
@@ -19,7 +18,7 @@ fn get_error<T>() -> Result<T, Error> {
 
 /// See [`NcFile`]. Notcurses functions expects this type of `*FILE` (a struct)
 #[allow(clippy::upper_case_acronyms)]
-type NcFile_nc = crate::ffi::FILE;
+type NcFile_nc = crate::c_api::ffi::FILE;
 
 /// See [`NcFile`]. The [`libc`](https://docs.rs/libc/) crate expects this type
 /// of `*FILE` (an opaque enum)
@@ -29,8 +28,8 @@ type NcFile_libc = libc::FILE;
 /// A wrapper struct around
 /// [`libc::FILE`](https://docs.rs/libc/0.2.80/libc/enum.FILE.html)
 ///
-/// The `notcurses`' [`FILE`][crate::ffi::FILE] type is a transparent struct,
-/// while the equivalent `libc`'s [`FILE`][libc::FILE] is an opaque enum.
+/// The `notcurses`' [`FILE`][crate::c_api::ffi::FILE] type is a transparent
+/// struct, while the equivalent `libc`'s [`FILE`][libc::FILE] is an opaque enum.
 ///
 /// Several methods are provided to cast back and forth between both types,
 /// in order to allow both rust libc operations and notcurses file operations

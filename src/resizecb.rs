@@ -1,11 +1,11 @@
 //! `NcResizeCb`
 
-use crate::{fns, NcIntResult, NcPlane};
+use crate::{c_api, NcIntResult, NcPlane};
 
 /// A callback function called when an [`NcPlane`] is resized.
 ///
-/// See also [`ncresizecb_to_rust`][fns::ncresizecb_to_rust]
-/// & [`ncresizecb_to_c`][fns::ncresizecb_to_c].
+/// See also [`ncresizecb_to_rust`][c_api::ncresizecb_to_rust]
+/// & [`ncresizecb_to_c`][c_api::ncresizecb_to_c].
 ///
 pub type NcResizeCb = fn(&mut NcPlane) -> NcIntResult;
 
@@ -29,18 +29,18 @@ pub(crate) mod reimplemented {
     }
 }
 
-/// Enables the [`NcResizeCb`] methods.
-pub trait NcResizeCbMethods {
+/// Enables the [`NcResizeCb`] associated methods and constants.
+pub trait NcResizeCbApi {
     fn to_rust(&self) -> Option<NcResizeCb>;
     fn to_c(&self) -> Option<NcResizeCbUnsafe>;
 }
 
-impl NcResizeCbMethods for NcResizeCb {
+impl NcResizeCbApi for NcResizeCb {
     /// Returns [`NcResizeCbUnsafe`].
     ///
-    /// *C style function: [fns::ncresizecb_to_c()][fns::ncresizecb_to_c].*
+    /// *C style function: [c_api::ncresizecb_to_c()][c_api::ncresizecb_to_c].*
     fn to_c(&self) -> Option<NcResizeCbUnsafe> {
-        fns::ncresizecb_to_c(Some(*self))
+        c_api::ncresizecb_to_c(Some(*self))
     }
     /// no-op.
     fn to_rust(&self) -> Option<NcResizeCb> {
@@ -48,7 +48,7 @@ impl NcResizeCbMethods for NcResizeCb {
     }
 }
 
-impl NcResizeCbMethods for NcResizeCbUnsafe {
+impl NcResizeCbApi for NcResizeCbUnsafe {
     /// no-op.
     fn to_c(&self) -> Option<NcResizeCbUnsafe> {
         Some(*self)
@@ -56,8 +56,8 @@ impl NcResizeCbMethods for NcResizeCbUnsafe {
 
     /// Returns [`NcResizeCb`].
     ///
-    /// *C style function: [fns::ncresizecb_to_rust()][fns::ncresizecb_to_rust].*
+    /// *C style function: [c_api::ncresizecb_to_rust()][c_api::ncresizecb_to_rust].*
     fn to_rust(&self) -> Option<NcResizeCb> {
-        fns::ncresizecb_to_rust(Some(*self))
+        c_api::ncresizecb_to_rust(Some(*self))
     }
 }

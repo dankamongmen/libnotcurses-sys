@@ -13,7 +13,8 @@ fn main() -> NcResult<()> {
     putstrln!(splane)?;
 
     putstrln!(splane, "CAPABILITIES\n------------")?;
-    putstrln!(splane,
+    putstrln!(
+        splane,
         "Can display UTF-8: {0}
 Can display braille characters: {1}
 Can display sextant characters: {2}
@@ -43,7 +44,12 @@ Palette size: {11:?}
 
     putstrln!(splane, "GEOMETRY\n------------")?;
     let (t_rows, t_cols) = nc.term_dim_yx();
-    putstrln!(splane, "Terminal dimensions: rows={0}, cols={1}", t_rows, t_cols)?;
+    putstrln!(
+        splane,
+        "Terminal dimensions: rows={0}, cols={1}",
+        t_rows,
+        t_cols
+    )?;
     let pgeom = nc.stdplane().pixel_geom();
     putstr!(splane, "{:#?}.", pgeom)?;
 

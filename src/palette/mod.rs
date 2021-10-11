@@ -28,7 +28,6 @@
 mod methods;
 pub(crate) mod reimplemented;
 pub use methods::*;
-// pub use reimplemented::*;
 
 /// NcPalette structure consisting of an array of 256
 /// [`NcChannel`][crate::NcChannel]s.
@@ -48,5 +47,12 @@ pub type NcPalette = crate::bindings::ffi::ncpalette;
 ///
 pub type NcPaletteIndex = u8;
 
-/// The supported palette-indexed colors number is up to 8 bits.
-pub const NCPALETTE_SIZE: u32 = crate::bindings::ffi::NCPALETTESIZE;
+impl NcPalette {
+    /// The supported palette-indexed colors number is up to 8 bits.
+    pub const SIZE: u32 = constants::NCPALETTE_SIZE;
+}
+
+pub(crate) mod constants {
+    /// The supported palette-indexed colors number is up to 8 bits.
+    pub const NCPALETTE_SIZE: u32 = crate::bindings::ffi::NCPALETTESIZE;
+}

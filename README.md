@@ -71,7 +71,7 @@ or in case of receiving a pointer, by comparing it to `null_mut()`.
 use core::ptr::{null, null_mut};
 use std::process::exit;
 
-use libnotcurses_sys::{*, fns::*};
+use libnotcurses_sys::{*, c_api::*};
 
 fn main() {
     let options = ffi::notcurses_options {

@@ -263,7 +263,7 @@ pub(crate) mod test;
 /// - [Constructors & Destructors](#ncplane-constructors--destructors)
 ///
 /// Methods:
-/// - [`NcAlphaBits`](#ncplane-methods-ncalphabits)
+/// - [`NcAlpha`](#ncplane-methods-ncalphabits)
 /// - [`NcChannel` & `NcChannels`](#ncplane-methods-ncchannel)
 /// - [`NcComponent`, `NcRgb` & default color](#ncplane-methods-nccomponent-ncrgb--default-color)
 /// - [`NcStyle` & `NcPaletteIndex`](#ncplane-methods-ncstylemask--paletteindex)
@@ -279,18 +279,39 @@ pub type NcPlane = crate::bindings::ffi::ncplane;
 /// Options struct for [`NcPlane`]
 pub type NcPlaneOptions = crate::bindings::ffi::ncplane_options;
 
-/// Horizontal alignment relative to the parent plane. Use NcAlign for 'x'.
-pub const NCPLANE_OPTION_HORALIGNED: u64 = crate::bindings::ffi::NCPLANE_OPTION_HORALIGNED as u64;
+impl NcPlaneOptions {
+    /// Horizontal alignment relative to the parent plane. Use NcAlign for 'x'.
+    pub const HORALIGNED: u64 = constants::NCPLANE_OPTION_HORALIGNED as u64;
 
-/// Vertical alignment relative to the parent plane. Use NcAlign for 'y'.
-pub const NCPLANE_OPTION_VERALIGNED: u64 = crate::bindings::ffi::NCPLANE_OPTION_VERALIGNED as u64;
+    /// Vertical alignment relative to the parent plane. Use NcAlign for 'y'.
+    pub const VERALIGNED: u64 = constants::NCPLANE_OPTION_VERALIGNED as u64;
 
-/// Maximize relative to the parent plane, modulo the provided margins.
-///
-/// The margins are best-effort; the plane will always be at least 1 column by
-/// 1 row. If the margins can be effected, the plane will be sized to all
-/// remaining space. 'y' and 'x' are overloaded as the top and left margins
-/// when this flag is used. 'rows' and 'cols' must be 0 when this flag is
-/// used. This flag is exclusive with both of the alignment flags.
-pub const NCPLANE_OPTION_MARGINALIZED: u64 =
-    crate::bindings::ffi::NCPLANE_OPTION_MARGINALIZED as u64;
+    /// Maximize relative to the parent plane, modulo the provided margins.
+    ///
+    /// The margins are best-effort; the plane will always be at least 1 column by
+    /// 1 row. If the margins can be effected, the plane will be sized to all
+    /// remaining space. 'y' and 'x' are overloaded as the top and left margins
+    /// when this flag is used. 'rows' and 'cols' must be 0 when this flag is
+    /// used. This flag is exclusive with both of the alignment flags.
+    pub const MARGINALIZED: u64 = constants::NCPLANE_OPTION_MARGINALIZED as u64;
+}
+
+pub(crate) mod constants {
+    /// Horizontal alignment relative to the parent plane. Use NcAlign for 'x'.
+    pub const NCPLANE_OPTION_HORALIGNED: u64 =
+        crate::bindings::ffi::NCPLANE_OPTION_HORALIGNED as u64;
+
+    /// Vertical alignment relative to the parent plane. Use NcAlign for 'y'.
+    pub const NCPLANE_OPTION_VERALIGNED: u64 =
+        crate::bindings::ffi::NCPLANE_OPTION_VERALIGNED as u64;
+
+    /// Maximize relative to the parent plane, modulo the provided margins.
+    ///
+    /// The margins are best-effort; the plane will always be at least 1 column by
+    /// 1 row. If the margins can be effected, the plane will be sized to all
+    /// remaining space. 'y' and 'x' are overloaded as the top and left margins
+    /// when this flag is used. 'rows' and 'cols' must be 0 when this flag is
+    /// used. This flag is exclusive with both of the alignment flags.
+    pub const NCPLANE_OPTION_MARGINALIZED: u64 =
+        crate::bindings::ffi::NCPLANE_OPTION_MARGINALIZED as u64;
+}

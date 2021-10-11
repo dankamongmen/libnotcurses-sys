@@ -1,7 +1,7 @@
 //! `NcMetric`
 
 pub(crate) mod reimplemented {
-    use crate::{cstring_mut, rstring};
+    use crate::{c_api::ffi, cstring_mut, rstring};
 
     // TODO: clarify, update and visibilize doc-comments
 
@@ -40,40 +40,42 @@ pub(crate) mod reimplemented {
         uprefix: i32,
     ) -> &str {
         let buf = cstring_mut![buf];
-        rstring![crate::ffi::ncmetric(
-            val, decimal, buf, omitdec, mult, uprefix
-        )]
+        rstring![ffi::ncmetric(val, decimal, buf, omitdec, mult, uprefix)]
     }
 }
 
-// The number of columns is one fewer, as the STRLEN expressions must leave
-// an extra byte open in case 'µ' (U+00B5, 0xC2 0xB5) shows up.
+pub(crate) mod constants {
+    use crate::c_api::ffi;
 
-// This is the true number of columns;
-//
-// to set up a printf()-style maximum field width,
-// you should use [IB]PREFIXFMT (see below).
-pub const NCMETRIC_PREFIXCOLUMNS: u32 = crate::bindings::ffi::PREFIXCOLUMNS;
+    // The number of columns is one fewer, as the STRLEN expressions must leave
+    // an extra byte open in case 'µ' (U+00B5, 0xC2 0xB5) shows up.
 
-// The maximum number of columns used by a mult == 1000 (standard)
-// ncmetric() call.
-pub const NCMETRIC_BPREFIXCOLUMNS: u32 = crate::bindings::ffi::BPREFIXCOLUMNS;
+    // This is the true number of columns;
+    //
+    // to set up a printf()-style maximum field width,
+    // you should use [IB]PREFIXFMT (see below).
+    pub const NCMETRIC_PREFIXCOLUMNS: u32 = ffi::PREFIXCOLUMNS;
 
-// IPREFIXCOLUMNS is the maximum number of columns used by a mult == 1024
-// (digital information) ncmetric().
-pub const NCMETRIC_IPREFIXCOLUMNS: u32 = crate::bindings::ffi::IPREFIXCOLUMNS;
+    // The maximum number of columns used by a mult == 1000 (standard)
+    // ncmetric() call.
+    pub const NCMETRIC_BPREFIXCOLUMNS: u32 = ffi::BPREFIXCOLUMNS;
 
-//
-// Does not include a '\0' (xxx.xxU)
-pub const NCMETRIC_PREFIXSTRLEN: u32 = crate::bindings::ffi::PREFIXSTRLEN;
+    // IPREFIXCOLUMNS is the maximum number of columns used by a mult == 1024
+    // (digital information) ncmetric().
+    pub const NCMETRIC_IPREFIXCOLUMNS: u32 = ffi::IPREFIXCOLUMNS;
 
-// The maximum number of columns used by a mult == 1024 call making use of
-// the 'i' suffix.
-// Does not include a '\0' (xxxx.xxUi), i == prefix
-pub const NCMETRIC_BPREFIXSTRLEN: u32 = crate::bindings::ffi::BPREFIXSTRLEN;
+    //
+    // Does not include a '\0' (xxx.xxU)
+    pub const NCMETRIC_PREFIXSTRLEN: u32 = ffi::PREFIXSTRLEN;
 
-// Does not include a '\0' (xxxx.xxU)
-pub const NCMETRIC_IPREFIXSTRLEN: u32 = crate::bindings::ffi::IPREFIXSTRLEN;
+    // The maximum number of columns used by a mult == 1024 call making use of
+    // the 'i' suffix.
+    // Does not include a '\0' (xxxx.xxUi), i == prefix
+    pub const NCMETRIC_BPREFIXSTRLEN: u32 = ffi::BPREFIXSTRLEN;
 
-// TODO:?
-// WCHAR_MAX_UTF8BYTES
+    // Does not include a '\0' (xxxx.xxU)
+    pub const NCMETRIC_IPREFIXSTRLEN: u32 = ffi::IPREFIXSTRLEN;
+
+    // TODO:?
+    // WCHAR_MAX_UTF8BYTES
+}

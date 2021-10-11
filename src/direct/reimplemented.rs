@@ -3,7 +3,7 @@
 use core::ptr::{null, null_mut};
 
 use crate::{
-    cstring, fns, NcCapabilities, NcChannels, NcComponent, NcDim, NcDirect, NcInput, NcIntResult,
+    c_api, cstring, NcCapabilities, NcChannels, NcComponent, NcDim, NcDirect, NcInput, NcIntResult,
     NcRgb, NcTime,
 };
 
@@ -16,7 +16,7 @@ pub fn ncdirect_cantruecolor(ncd: &NcDirect) -> bool {
 /// Can we set the "hardware" palette? Requires the "ccc" terminfo capability.
 #[inline]
 pub fn ncdirect_canchangecolor(ncd: &NcDirect) -> bool {
-    fns::nccapability_canchangecolor(&ncdirect_capabilities(ncd))
+    c_api::nccapability_canchangecolor(&ncdirect_capabilities(ncd))
 }
 
 /// Can we fade? Fading requires either the "rgb" or "ccc" terminfo capability.
@@ -28,31 +28,31 @@ pub fn ncdirect_canfade(ncd: &NcDirect) -> bool {
 /// Can we load videos? This requires being built against FFmpeg.
 #[inline]
 pub fn ncdirect_canopen_videos(_ncd: &NcDirect) -> bool {
-    unsafe { fns::notcurses_canopen_videos(null()) }
+    unsafe { c_api::notcurses_canopen_videos(null()) }
 }
 
 /// Can we reliably use Unicode halfblocks?
 #[inline]
 pub fn ncdirect_canhalfblock(ncd: &NcDirect) -> bool {
-    unsafe { fns::ncdirect_canutf8(ncd) }
+    unsafe { c_api::ncdirect_canutf8(ncd) }
 }
 
 /// Can we reliably use Unicode quadrants?
 #[inline]
 pub fn ncdirect_canquadrant(ncd: &NcDirect) -> bool {
-    (unsafe { fns::ncdirect_canutf8(ncd) }) && ncdirect_capabilities(ncd).quadrants
+    (unsafe { c_api::ncdirect_canutf8(ncd) }) && ncdirect_capabilities(ncd).quadrants
 }
 
 /// Can we reliably use Unicode 13 sextants?
 #[inline]
 pub fn ncdirect_cansextant(ncd: &NcDirect) -> bool {
-    (unsafe { fns::ncdirect_canutf8(ncd) }) && ncdirect_capabilities(ncd).sextants
+    (unsafe { c_api::ncdirect_canutf8(ncd) }) && ncdirect_capabilities(ncd).sextants
 }
 
 /// Can we reliably use Unicode Braille?
 #[inline]
 pub fn ncdirect_canbraille(_ncd: &NcDirect) -> bool {
-    unsafe { fns::notcurses_canbraille(null()) }
+    unsafe { c_api::notcurses_canbraille(null()) }
 }
 
 /// Returns the detected [`NcCapabilities`].
@@ -76,7 +76,7 @@ pub fn ncdirect_getc_blocking(ncd: &mut NcDirect, input: Option<&mut NcInput>) -
     } else {
         input_ptr = null_mut();
     }
-    unsafe { fns::ncdirect_get(ncd, null(), input_ptr) as NcIntResult }
+    unsafe { c_api::ncdirect_get(ncd, null(), input_ptr) as NcIntResult }
 }
 
 /// Reads input without blocking.
@@ -98,7 +98,7 @@ pub fn ncdirect_getc_nblock(ncd: &mut NcDirect, input: Option<&mut NcInput>) -> 
     }
     unsafe {
         let ts = NcTime::new(0, 0);
-        fns::ncdirect_get(ncd, &ts, input_ptr) as NcIntResult
+        c_api::ncdirect_get(ncd, &ts, input_ptr) as NcIntResult
     }
 }
 
@@ -113,7 +113,7 @@ pub fn ncdirect_set_fg_rgb8(
     blue: NcComponent,
 ) -> NcIntResult {
     let rgb = (red as NcRgb) << 16 | (green as NcRgb) << 8 | blue as NcRgb;
-    unsafe { fns::ncdirect_set_fg_rgb(ncd, rgb) }
+    unsafe { c_api::ncdirect_set_fg_rgb(ncd, rgb) }
 }
 
 /// Sets the background [NcComponent] components.
@@ -127,7 +127,7 @@ pub fn ncdirect_set_bg_rgb8(
     blue: NcComponent,
 ) -> NcIntResult {
     let rgb = (red as NcRgb) << 16 | (green as NcRgb) << 8 | blue as NcRgb;
-    unsafe { fns::ncdirect_set_bg_rgb(ncd, rgb) }
+    unsafe { c_api::ncdirect_set_bg_rgb(ncd, rgb) }
 }
 
 /// Draws horizontal lines using the specified [NcChannels]s, interpolating

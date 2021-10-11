@@ -1,70 +1,68 @@
 //! `channel*_*` reimplemented functions.
 
 use crate::{
-    NcAlphaBits, NcChannel, NcChannels, NcComponent, NcPaletteIndex, NcRgb, NCALPHA_BGDEFAULT_MASK,
-    NCALPHA_BG_PALETTE, NCALPHA_BG_RGB_MASK, NCALPHA_FGDEFAULT_MASK, NCALPHA_FG_PALETTE,
-    NCALPHA_HIGHCONTRAST, NCALPHA_OPAQUE, NCCHANNEL_ALPHA_MASK,
+    c_api, NcAlpha, NcAlphaApi, NcChannel, NcChannels, NcComponent, NcPaletteIndex, NcRgb,
 };
 
 // Alpha -----------------------------------------------------------------------
 
-/// Gets the [`NcAlphaBits`] from an [`NcChannel`].
+/// Gets the [`NcAlpha`] from an [`NcChannel`].
 ///
 /// *Method: NcChannel.[alpha()][NcChannel#method.alpha]*
 #[inline]
-pub const fn ncchannel_alpha(channel: NcChannel) -> NcAlphaBits {
-    channel & NCCHANNEL_ALPHA_MASK
+pub const fn ncchannel_alpha(channel: NcChannel) -> NcAlpha {
+    channel & c_api::NC_BG_ALPHA_MASK
 }
 
-/// Sets the [`NcAlphaBits`] of an [`NcChannel`].
+/// Sets the [`NcAlpha`] of an [`NcChannel`].
 ///
 /// *Method: NcChannel.[set_alpha()][NcChannel#method.set_alpha]*
 #[inline]
-pub fn ncchannel_set_alpha(channel: &mut NcChannel, alpha: NcAlphaBits) {
-    let alpha_clean = alpha & NCCHANNEL_ALPHA_MASK;
-    *channel = alpha_clean | (*channel & !NCCHANNEL_ALPHA_MASK);
+pub fn ncchannel_set_alpha(channel: &mut NcChannel, alpha: NcAlpha) {
+    let alpha_clean = alpha & c_api::NC_BG_ALPHA_MASK;
+    *channel = alpha_clean | (*channel & !c_api::NC_BG_ALPHA_MASK);
 
-    if alpha != NCALPHA_OPAQUE {
+    if alpha != NcAlpha::OPAQUE {
         // indicate that we are *not* using the default background color
-        *channel |= NCALPHA_BGDEFAULT_MASK;
+        *channel |= c_api::NC_BGDEFAULT_MASK;
     }
 }
 
-/// Gets the foreground [`NcAlphaBits`] from an [`NcChannels`], shifted to LSBs.
+/// Gets the foreground [`NcAlpha`] from an [`NcChannels`], shifted to LSBs.
 ///
 /// *Method: NcChannels.[fg_alpha()][NcChannels#method.fg_alpha]*
 #[inline]
-pub const fn ncchannels_fg_alpha(channels: NcChannels) -> NcAlphaBits {
+pub const fn ncchannels_fg_alpha(channels: NcChannels) -> NcAlpha {
     ncchannel_alpha(ncchannels_fchannel(channels))
 }
 
-/// Gets the background [`NcAlphaBits`] from an [`NcChannels`], shifted to LSBs.
+/// Gets the background [`NcAlpha`] from an [`NcChannels`], shifted to LSBs.
 ///
 /// *Method: NcChannels.[bg_alpha()][NcChannels#method.bg_alpha]*
 #[inline]
-pub const fn ncchannels_bg_alpha(channels: NcChannels) -> NcAlphaBits {
+pub const fn ncchannels_bg_alpha(channels: NcChannels) -> NcAlpha {
     ncchannel_alpha(ncchannels_bchannel(channels))
 }
 
-/// Sets the [`NcAlphaBits`] of the foreground [`NcChannel`] of an [`NcChannels`].
+/// Sets the [`NcAlpha`] of the foreground [`NcChannel`] of an [`NcChannels`].
 ///
 /// *Method: NcChannels.[set_fg_alpha()][NcChannels#method.set_fg_alpha]*
 #[inline]
-pub fn ncchannels_set_fg_alpha(channels: &mut NcChannels, alpha: NcAlphaBits) {
+pub fn ncchannels_set_fg_alpha(channels: &mut NcChannels, alpha: NcAlpha) {
     let mut channel = ncchannels_fchannel(*channels);
     ncchannel_set_alpha(&mut channel, alpha);
     *channels = (channel as NcChannels) << 32 | *channels & 0xffffffff_u64;
 }
 
-/// Sets the [`NcAlphaBits`] of the background [`NcChannel`] of an [`NcChannels`].
+/// Sets the [`NcAlpha`] of the background [`NcChannel`] of an [`NcChannels`].
 ///
 /// *Method: NcChannels.[set_bg_alpha()][NcChannels#method.set_bg_alpha]*
 #[inline]
-pub fn ncchannels_set_bg_alpha(channels: &mut NcChannels, alpha: NcAlphaBits) {
+pub fn ncchannels_set_bg_alpha(channels: &mut NcChannels, alpha: NcAlpha) {
     let mut alpha_clean = alpha;
-    if alpha == NCALPHA_HIGHCONTRAST {
+    if alpha == NcAlpha::HIGHCONTRAST {
         // forbidden for background alpha, so makes it opaque
-        alpha_clean = NCALPHA_OPAQUE;
+        alpha_clean = NcAlpha::OPAQUE;
     }
     let mut channel = ncchannels_bchannel(*channels);
     ncchannel_set_alpha(&mut channel, alpha_clean);
@@ -200,7 +198,7 @@ pub fn ncchannel_rgb8(
 #[inline]
 pub fn ncchannel_set_rgb8(channel: &mut NcChannel, r: NcComponent, g: NcComponent, b: NcComponent) {
     let rgb: NcRgb = (r as NcChannel) << 16 | (g as NcChannel) << 8 | (b as NcChannel);
-    *channel = (*channel & !NCALPHA_BG_RGB_MASK) | NCALPHA_BGDEFAULT_MASK | rgb;
+    *channel = (*channel & !c_api::NC_BG_RGB_MASK) | c_api::NC_BGDEFAULT_MASK | rgb;
 }
 
 /// Gets the three foreground RGB [`NcComponent`]s from an [`NcChannels`], and
@@ -276,7 +274,7 @@ pub fn ncchannels_set_bg_rgb8(
 /// *Method: NcChannels.[fg_rgb()][NcChannels#method.fg_rgb]*
 #[inline]
 pub fn ncchannels_fg_rgb(channels: NcChannels) -> NcRgb {
-    ncchannels_fchannel(channels) & NCALPHA_BG_RGB_MASK
+    ncchannels_fchannel(channels) & c_api::NC_BG_RGB_MASK
 }
 
 /// Gets the background [`NcRgb`] from an [`NcChannels`], shifted to LSBs.
@@ -284,7 +282,7 @@ pub fn ncchannels_fg_rgb(channels: NcChannels) -> NcRgb {
 /// *Method: NcChannels.[bg_rgb()][NcChannels#method.bg_rgb]*
 #[inline]
 pub fn ncchannels_bg_rgb(channels: NcChannels) -> NcRgb {
-    ncchannels_bchannel(channels) & NCALPHA_BG_RGB_MASK
+    ncchannels_bchannel(channels) & c_api::NC_BG_RGB_MASK
 }
 
 /// Gets the [`NcRgb`] of an [`NcChannel`].
@@ -296,7 +294,7 @@ pub fn ncchannels_bg_rgb(channels: NcChannels) -> NcRgb {
 // Not in the C API
 #[inline]
 pub const fn ncchannel_rgb(channel: NcChannel) -> NcRgb {
-    channel & NCALPHA_BG_RGB_MASK
+    channel & c_api::NC_BG_RGB_MASK
 }
 
 /// Sets the [`NcRgb`] of an [`NcChannel`], and marks it as NOT using the
@@ -305,7 +303,7 @@ pub const fn ncchannel_rgb(channel: NcChannel) -> NcRgb {
 /// *Method: NcChannel.[set()][NcChannel#method.set]*
 #[inline]
 pub fn ncchannel_set(channel: &mut NcChannel, rgb: NcRgb) {
-    *channel = (*channel & !NCALPHA_BG_RGB_MASK) | NCALPHA_BGDEFAULT_MASK | (rgb & 0x00ffffff);
+    *channel = (*channel & !c_api::NC_BG_RGB_MASK) | c_api::NC_BGDEFAULT_MASK | (rgb & 0x00ffffff);
 }
 
 /// Sets the foreground [`NcRgb`] of an [`NcChannels`], and marks it as NOT using
@@ -337,7 +335,7 @@ pub fn ncchannels_set_bg_rgb(channels: &mut NcChannels, rgb: NcRgb) {
 /// *Method: NcChannel.[default_p()][NcChannel#method.default_p]*
 #[inline]
 pub const fn ncchannel_default_p(channel: NcChannel) -> bool {
-    (channel & NCALPHA_BGDEFAULT_MASK) == 0
+    (channel & c_api::NC_BGDEFAULT_MASK) == 0
 }
 
 /// Marks an [`NcChannel`] as using its "default color", which also marks it opaque.
@@ -345,7 +343,7 @@ pub const fn ncchannel_default_p(channel: NcChannel) -> bool {
 /// *Method: NcChannel.[set_default()][NcChannel#method.set_default]*
 #[inline]
 pub fn ncchannel_set_default(channel: &mut NcChannel) -> NcChannel {
-    *channel &= !(NCALPHA_BGDEFAULT_MASK | NCALPHA_HIGHCONTRAST);
+    *channel &= !(c_api::NC_BGDEFAULT_MASK | NcAlpha::HIGHCONTRAST);
     *channel
 }
 
@@ -357,7 +355,7 @@ pub fn ncchannel_set_default(channel: &mut NcChannel) -> NcChannel {
 // Not in the C API
 #[inline]
 pub fn ncchannel_set_not_default(channel: &mut NcChannel) -> NcChannel {
-    *channel |= NCALPHA_BGDEFAULT_MASK;
+    *channel |= c_api::NC_BGDEFAULT_MASK;
     *channel
 }
 
@@ -461,7 +459,7 @@ pub fn ncchannels_set_not_default(channels: &mut NcChannels) -> NcChannels {
 /// *Method: NcChannel.[palindex_p()][NcChannel#method.palindex_p]*
 #[inline]
 pub fn ncchannel_palindex_p(channel: NcChannel) -> bool {
-    !(ncchannel_default_p(channel) && (channel & NCALPHA_BG_PALETTE) == 0)
+    !(ncchannel_default_p(channel) && (channel & c_api::NC_BG_PALETTE) == 0)
 }
 
 /// Is the foreground of an [`NcChannels`] using an [indexed][`NcPaletteIndex`]
@@ -489,9 +487,9 @@ pub fn ncchannels_bg_palindex_p(channels: NcChannels) -> bool {
 #[inline]
 #[allow(clippy::unnecessary_cast)]
 pub fn ncchannels_set_fg_palindex(channels: &mut NcChannels, index: NcPaletteIndex) {
-    *channels |= NCALPHA_FGDEFAULT_MASK;
-    *channels |= NCALPHA_FG_PALETTE as NcChannels;
-    ncchannels_set_fg_alpha(channels, NCALPHA_OPAQUE);
+    *channels |= c_api::NC_FGDEFAULT_MASK;
+    *channels |= c_api::NC_FG_PALETTE as NcChannels;
+    ncchannels_set_fg_alpha(channels, NcAlpha::OPAQUE);
     *channels &= 0xff000000ffffffff as NcChannels;
     *channels |= (index as NcChannels) << 32;
 }
@@ -502,9 +500,9 @@ pub fn ncchannels_set_fg_palindex(channels: &mut NcChannels, index: NcPaletteInd
 /// *Method: NcChannels.[set_bg_palindex()][NcChannels#method.set_bg_palindex]*
 #[inline]
 pub fn ncchannels_set_bg_palindex(channels: &mut NcChannels, index: NcPaletteIndex) {
-    *channels |= NCALPHA_BGDEFAULT_MASK as NcChannels;
-    *channels |= NCALPHA_BG_PALETTE as NcChannels;
-    ncchannels_set_bg_alpha(channels, NCALPHA_OPAQUE);
+    *channels |= c_api::NC_BGDEFAULT_MASK as NcChannels;
+    *channels |= c_api::NC_BG_PALETTE as NcChannels;
+    ncchannels_set_bg_alpha(channels, NcAlpha::OPAQUE);
     *channels &= 0xffffffffff000000;
     *channels |= index as NcChannels;
 }

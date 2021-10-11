@@ -1,7 +1,8 @@
-// without an alternate screen the cursor is not restored afterwards
+// This doesn't exit properly when run inside screen or tmux
 use libnotcurses_sys::*;
+
 fn main() -> NcResult<()> {
-    let nc = Nc::with_flags(NCOPTION_NO_ALTERNATE_SCREEN)?;
+    let nc = Nc::with_flags(NcOptions::NO_ALTERNATE_SCREEN)?;
     nc.stop()?;
     Ok(())
 }

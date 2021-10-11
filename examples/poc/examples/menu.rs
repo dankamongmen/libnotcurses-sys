@@ -52,7 +52,7 @@ fn main() -> NcResult<()> {
     stdplane.set_fg_rgb(0x00dddd);
     stdplane.putstr_aligned(
         dim_y - 1,
-        NCALIGN_RIGHT,
+        NcAlign::RIGHT,
         " -=+ menu poc. press q to exit +=-",
     )?;
 
@@ -61,9 +61,9 @@ fn main() -> NcResult<()> {
     stdplane.erase(); // is this needed?
 
     // BUG FIXME: this doesn't show over the menu (at row 0)
-    stdplane.putstr_aligned(0, NCALIGN_RIGHT, " -=+ menu poc. press q to exit +=-")?;
-    stdplane.putstr_aligned(1, NCALIGN_CENTER, " -=+ menu poc. press q to exit +=-")?;
-    stdplane.putstr_aligned(2, NCALIGN_LEFT, " -=+ menu poc. press q to exit +=-")?;
+    stdplane.putstr_aligned(0, NcAlign::RIGHT, " -=+ menu poc. press q to exit +=-")?;
+    stdplane.putstr_aligned(1, NcAlign::CENTER, " -=+ menu poc. press q to exit +=-")?;
+    stdplane.putstr_aligned(2, NcAlign::LEFT, " -=+ menu poc. press q to exit +=-")?;
 
     mopts.flags |= NCMENU_OPTION_BOTTOM;
     let menu_bottom = NcMenu::new(stdplane, mopts)?;
@@ -75,7 +75,7 @@ fn main() -> NcResult<()> {
 
 fn run_menu(nc: &mut Nc, menu: &mut NcMenu) -> NcResult<()> {
     // yellow rectangle
-    let planeopts = NcPlaneOptions::new_aligned(10, NCALIGN_CENTER, 3, 40);
+    let planeopts = NcPlaneOptions::new_aligned(10, NcAlign::CENTER, 3, 40);
     let stdplane = nc.stdplane();
     let selplane = NcPlane::with_options_bound(stdplane, planeopts)?;
     selplane.set_fg_rgb(0);
@@ -108,7 +108,7 @@ fn run_menu(nc: &mut Nc, menu: &mut NcMenu) -> NcResult<()> {
                     nc.stop()?;
                     return Ok(());
                 }
-                NCKEY_ENTER => {
+                NcKey::ENTER => {
                     if let Some(selection) = menu.selected(Some(&mut ni)) {
                         match selection.as_ref() {
                             "Quit" => {
@@ -127,10 +127,10 @@ fn run_menu(nc: &mut Nc, menu: &mut NcMenu) -> NcResult<()> {
 
         let mut selni = NcInput::new_empty();
         if let Some(selitem) = menu.selected(Some(&mut selni)) {
-            selplane.putstr_aligned(1, NCALIGN_CENTER, &selitem)?;
+            selplane.putstr_aligned(1, NcAlign::CENTER, &selitem)?;
         } else {
             // DEBUG
-            selplane.putstr_aligned(1, NCALIGN_CENTER, "nothing opened")?;
+            selplane.putstr_aligned(1, NcAlign::CENTER, "nothing opened")?;
         }
         nc.render()?;
     }

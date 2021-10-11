@@ -1,10 +1,7 @@
-use crate::{fns, NcComponent, NcPixel};
+use crate::{c_api, NcComponent, NcPixel};
 
-/// Enables the [`NcPixel`] methods.
-//
-// NOTE: waiting for: https://github.com/rust-lang/rust/issues/56546
-// to move doc comments to the trait and appear unhidden at the implementation.
-pub trait NcPixelMethods {
+/// Enables the [`NcPixel`] associated methods and constants.
+pub trait NcPixelApi {
     fn new(r: NcComponent, g: NcComponent, b: NcComponent) -> Self;
     fn a(self) -> NcComponent;
     fn b(self) -> NcComponent;
@@ -17,54 +14,54 @@ pub trait NcPixelMethods {
     fn set_rgb8(&mut self, red: NcComponent, green: NcComponent, blue: NcComponent);
 }
 
-impl NcPixelMethods for NcPixel {
+impl NcPixelApi for NcPixel {
     /// Constructs a libav-compatible ABGR pixel from RGB [`NcComponent`]s.
     fn new(red: NcComponent, green: NcComponent, blue: NcComponent) -> Self {
-        fns::ncpixel(red, green, blue)
+        c_api::ncpixel(red, green, blue)
     }
 
     /// Extracts the 8-bit alpha [`NcComponent`] from an ABGR pixel.
     fn a(self) -> NcComponent {
-        fns::ncpixel_a(self)
+        c_api::ncpixel_a(self)
     }
 
     /// Extracts the 8 bit blue [`NcComponent`] from an ABGR pixel.
     fn b(self) -> NcComponent {
-        fns::ncpixel_b(self)
+        c_api::ncpixel_b(self)
     }
 
     /// Extracts the 8 bit green [`NcComponent`] from an ABGR pixel.
     fn g(self) -> NcComponent {
-        fns::ncpixel_g(self)
+        c_api::ncpixel_g(self)
     }
 
     /// Extracts the 8 bit red [`NcComponent`] from an ABGR pixel.
     fn r(self) -> NcComponent {
-        fns::ncpixel_r(self)
+        c_api::ncpixel_r(self)
     }
 
     /// Sets the 8-bit alpha [`NcComponent`] of an ABGR pixel.
     fn set_a(&mut self, alpha: NcComponent) {
-        fns::ncpixel_set_a(self, alpha)
+        c_api::ncpixel_set_a(self, alpha)
     }
 
     /// Sets the 8-bit green [`NcComponent`] of an ABGR pixel.
     fn set_g(&mut self, green: NcComponent) {
-        fns::ncpixel_set_b(self, green)
+        c_api::ncpixel_set_b(self, green)
     }
 
     /// Sets the 8-bit blue [`NcComponent`] of an ABGR pixel.
     fn set_b(&mut self, blue: NcComponent) {
-        fns::ncpixel_set_b(self, blue)
+        c_api::ncpixel_set_b(self, blue)
     }
 
     /// Sets the 8-bit red [`NcComponent`] of an ABGR pixel.
     fn set_r(&mut self, red: NcComponent) {
-        fns::ncpixel_set_r(self, red)
+        c_api::ncpixel_set_r(self, red)
     }
 
     /// Sets the RGB [`NcComponent`]s of an ABGR pixel.
     fn set_rgb8(&mut self, red: NcComponent, green: NcComponent, blue: NcComponent) {
-        fns::ncpixel_set_rgb8(self, red, green, blue);
+        c_api::ncpixel_set_rgb8(self, red, green, blue);
     }
 }

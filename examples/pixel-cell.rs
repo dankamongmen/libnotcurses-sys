@@ -8,7 +8,7 @@ use libnotcurses_sys::*;
 fn main() -> NcResult<()> {
     let mut nc = Nc::new()?;
 
-    if nc.check_pixel_support() == NCPIXEL_NONE {
+    if nc.check_pixel_support() == NcPixelImpl::NOPIXEL {
         nc.stop()?;
         return Err(NcError::new_msg("Current terminal doesn't support pixels."));
     }
@@ -21,8 +21,14 @@ fn main() -> NcResult<()> {
     // print visual delimiters around our pixelized cell
     putstrln!(splane, "0▗│▖\n│─ ─\n2▝│▘")?;
     putstrln!(splane, "a cell is {}x{} pixels", pg.cell_y, pg.cell_x)?;
-    putstrln!(splane, "\ninterpolated  not-interpolated  not-interpolated  interpolated")?;
-    putstrln!(splane, "   SCALE          SCALE               RESIZE          RESIZE")?;
+    putstrln!(
+        splane,
+        "\ninterpolated  not-interpolated  not-interpolated  interpolated"
+    )?;
+    putstrln!(
+        splane,
+        "   SCALE          SCALE               RESIZE          RESIZE"
+    )?;
     nrs![nc, 1];
 
     // fill the buffer with random color pixels
@@ -40,7 +46,7 @@ fn main() -> NcResult<()> {
     // show the newly created ncvisual delimited with the box drawing characters
     let v1 = NcVisual::from_rgba(buffer.as_slice(), pg.cell_y, pg.cell_x * 4, pg.cell_x)?;
     let voptions =
-        NcVisualOptions::without_plane(1, 2, 0, 0, pg.cell_y, pg.cell_x, NCBLIT_PIXEL, 0, 0);
+        NcVisualOptions::without_plane(1, 2, 0, 0, pg.cell_y, pg.cell_x, NcBlitter::PIXEL, 0, 0);
     v1.render(&mut nc, &voptions)?;
     nrs![&mut nc, 1];
 
@@ -48,14 +54,14 @@ fn main() -> NcResult<()> {
     let mut vplane2 = NcPlane::new_bound(&mut splane, 7, 4, 5, 4)?;
     let voptions2 = NcVisualOptions::with_plane(
         &mut vplane2,
-        NCSCALE_SCALE,
+        NcScale::SCALE,
         0,
         0,
         0,
         0,
         pg.cell_y,
         pg.cell_x,
-        NCBLIT_PIXEL,
+        NcBlitter::PIXEL,
         0,
         0,
     );
@@ -66,15 +72,15 @@ fn main() -> NcResult<()> {
     let mut vplane3 = NcPlane::new_bound(&mut splane, 7, 19, 5, 4)?;
     let voptions3 = NcVisualOptions::with_plane(
         &mut vplane3,
-        NCSCALE_SCALE,
+        NcScale::SCALE,
         0,
         0,
         0,
         0,
         pg.cell_y,
         pg.cell_x,
-        NCBLIT_PIXEL,
-        NCVISUAL_OPTION_NOINTERPOLATE,
+        NcBlitter::PIXEL,
+        NcVisualOptions::NOINTERPOLATE,
         0,
     );
     v1.render(&mut nc, &voptions3)?;
@@ -82,7 +88,7 @@ fn main() -> NcResult<()> {
 
     // resize the ncvisual (doesn't use interpolation)
     let voptions4 =
-        NcVisualOptions::without_plane(7, 39, 0, 0, pg.cell_y, pg.cell_x, NCBLIT_PIXEL, 0, 0);
+        NcVisualOptions::without_plane(7, 39, 0, 0, pg.cell_y, pg.cell_x, NcBlitter::PIXEL, 0, 0);
     v1.resize_noninterpolative(pg.cell_y * 4, pg.cell_x * 4)?;
     v1.render(&mut nc, &voptions4)?;
     nrs![&mut nc, 0, 250];
@@ -90,7 +96,7 @@ fn main() -> NcResult<()> {
     // resize the ncvisual (uses interpolation)
     let v5 = NcVisual::from_rgba(buffer.as_slice(), pg.cell_y, pg.cell_x * 4, pg.cell_x)?;
     let voptions5 =
-        NcVisualOptions::without_plane(7, 56, 0, 0, pg.cell_y, pg.cell_x, NCBLIT_PIXEL, 0, 0);
+        NcVisualOptions::without_plane(7, 56, 0, 0, pg.cell_y, pg.cell_x, NcBlitter::PIXEL, 0, 0);
     v5.resize(pg.cell_y * 4, pg.cell_x * 4)?;
     v5.render(&mut nc, &voptions5)?;
     nrs![&mut nc, 0, 250];

@@ -5,7 +5,10 @@
 
 #[allow(unused_imports)]
 // enjoy briefer doc comments
-use crate::{Nc, NcDirect, NcError, NcPlane, NcResult, NCRESULT_ERR, NCRESULT_OK};
+use crate::{
+    c_api::{NCRESULT_ERR, NCRESULT_OK},
+    Nc, NcDirect, NcError, NcIntResultApi, NcPlane, NcResult,
+};
 
 // Sleep, Render & Flush Macros ------------------------------------------------
 
@@ -157,20 +160,20 @@ macro_rules! rstring_free {
         #[allow(unused_unsafe)]
         let nc_string = unsafe { $s };
         let string = crate::rstring![nc_string].to_string();
-        unsafe { libc::free(nc_string as *mut core::ffi::c_void) };
+        unsafe { c_api::libc::free(nc_string as *mut core::ffi::c_void) };
         string
     }};
 }
 
-/// Wrapper around [libc::printf].
+/// Wrapper around [`libc::printf`][c_api::libc::printf].
 #[macro_export]
 #[doc(hidden)]
 macro_rules! printf {
     ($s:expr) => {
-        unsafe { libc::printf(cstring![$s]) }
+        unsafe { c_api::libc::printf(cstring![$s]) }
     };
     ($s:expr $(, $opt:expr)*) => {
-        unsafe { libc::printf(cstring![$s], $($opt),*) }
+        unsafe { c_api::libc::printf(cstring![$s], $($opt),*) }
     };
 }
 
@@ -277,7 +280,7 @@ macro_rules! putstrln {
 macro_rules! error {
     ($res:expr, $msg:expr, $ok:expr) => {{
         let res = $res;
-        if res >= crate::NCRESULT_OK {
+        if res >= crate::c_api::NCRESULT_OK {
             return Ok($ok);
         } else {
             return Err(crate::NcError::with_msg(res, $msg));
@@ -305,7 +308,7 @@ macro_rules! error_ref {
     ($ptr:expr, $msg:expr, $ok:expr) => {{
         let ptr = $ptr; // avoid calling a function multiple times
         if ptr.is_null() {
-            return Err(crate::NcError::with_msg(crate::NCRESULT_ERR, $msg));
+            return Err(crate::NcError::with_msg(crate::c_api::NCRESULT_ERR, $msg));
         } else {
             #[allow(unused_unsafe)]
             return Ok(unsafe { $ok });
@@ -335,7 +338,7 @@ macro_rules! error_ref_mut {
     ($ptr:expr, $msg:expr, $ok:expr) => {{
         let ptr = $ptr; // avoid calling a function multiple times
         if ptr.is_null() {
-            return Err(crate::NcError::with_msg(crate::NCRESULT_ERR, $msg));
+            return Err(crate::NcError::with_msg(crate::c_api::NCRESULT_ERR, $msg));
         } else {
             #[allow(unused_unsafe)]
             return Ok(unsafe { $ok });
@@ -367,10 +370,31 @@ macro_rules! error_str {
             #[allow(unused_unsafe)]
             return Ok(unsafe { (&*$str).to_string() });
         } else {
-            return Err(crate::NcError::with_msg(crate::NCRESULT_ERR, $msg));
+            return Err(crate::NcError::with_msg(crate::c_api::NCRESULT_ERR, $msg));
         }
     };
     ($str:expr) => {
         error_str![$str, ""];
+    };
+}
+
+// Implementation Helper Macros ------------------------------------------------
+
+/// Implements methods and constants for an existing type.
+//
+// Allows to have full doc-comments both in the trait definition
+// and in the concrete implementation.
+#[macro_export]
+#[doc(hidden)]
+macro_rules! impl_api {
+    ($type:ident, $trait:ident, $($i:item),*) => {
+        #[doc = concat!("Enables the [`", stringify!($type), "`] associated methods and constants.")]
+        pub trait $trait {
+            $($i)*
+        }
+
+        impl $trait for $type {
+            $($i)*
+        }
     };
 }

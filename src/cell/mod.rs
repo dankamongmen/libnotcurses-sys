@@ -72,7 +72,7 @@ mod methods;
 pub(crate) mod reimplemented;
 
 #[allow(unused_imports)]
-use crate::{NcChannel, NcPlane};
+use crate::{NcChannel, NcPlane, NcStyle};
 
 // NcCell
 /// A coordinate on an [`NcPlane`][crate::NcPlane] storing 128 bits of data.
@@ -113,7 +113,7 @@ use crate::{NcChannel, NcPlane};
 /// NcCell: 128 bits structure comprised of the following 5 elements:
 ///
 /// GCLUSTER|GCLUSTER|GCLUSTER|GCLUSTER  1. `EGC`
-/// 00000000║WWWWWWWW║11111111|11111111  2. NcEgcBackstop + 3. width + 4. NcStyle
+/// 00000000║WWWWWWWW║11111111|11111111  2. backstop + 3. width + 4. [`NcStyle`]
 /// ~~AA~~~~|RRRRRRRR|GGGGGGGG|BBBBBBBB  5. NcChannels
 /// ~~AA~~~~|RRRRRRRR|GGGGGGGG|BBBBBBBB     "
 ///
@@ -125,13 +125,13 @@ use crate::{NcChannel, NcPlane};
 ///     1.2. A `0x01` in the first byte, plus 3 bytes with a 24b address to an egcpool:
 ///     00000001|IIIIIIII|IIIIIIII|IIIIIIII
 ///
-/// 2. (8b) Backstop (zero)
+/// 2. (8b) backstop (zero)
 /// 00000000
 ///
 /// 3. (8b) column width
 /// WWWWWWWW
 ///
-/// 4. (16b) NcStyle
+/// 4. (16b) [`NcStyle`]
 /// 11111111 11111111
 ///
 /// 5. (64b) NcChannels
@@ -162,14 +162,17 @@ use crate::{NcChannel, NcPlane};
 /// have two bits of inverted alpha. The actual grapheme written to a cell is
 /// the topmost non-zero grapheme.
 ///
-/// - If its alpha is 00 ([`NCALPHA_OPAQUE`][crate::NCALPHA_OPAQUE])
+/// - If its alpha is 00
+///   ([`NcAlpha::OPAQUE`][crate::NcAlpha#associatedconstant.OPAQUE])
 ///   its foreground color is used unchanged.
 ///
-/// - If its alpha is 10 ([`NCALPHA_TRANSPARENT`][crate::NCALPHA_TRANSPARENT])
+/// - If its alpha is 10
+///   ([`NcAlpha::TRANSPARENT`][crate::NcAlpha#associatedconstant.TRANSPARENT])
 ///   its foreground color is derived
 ///   entirely from cells underneath it.
 ///
-/// - If its alpha is 01 ([`NCALPHA_BLEND`][crate::NCALPHA_BLEND])
+/// - If its alpha is 01
+///   ([`NcAlpha::BLEND`][crate::NcAlpha#associatedconstant.BLEND])
 ///   the result will be a composite.
 ///
 /// Likewise for the background. If the bottom of a coordinate's zbuffer is
@@ -178,7 +181,7 @@ use crate::{NcChannel, NcPlane};
 /// multiple occluding ncplanes.
 ///
 /// A foreground alpha of 11
-/// ([`NCALPHA_HIGHCONTRAST`][crate::NCALPHA_HIGHCONTRAST])
+/// ([`NcAlpha::HIGHCONTRAST`][crate::NcAlpha#associatedconstant.HIGHCONTRAST])
 /// requests high-contrast text (relative to the computed background).
 /// A background alpha of 11 is currently forbidden.
 ///
@@ -229,8 +232,8 @@ pub type NcCell = crate::bindings::ffi::nccell;
 // /// If more than four bytes are required, it will be spilled into the egcpool.
 // /// In either case, there's a NUL-terminated string available without copying,
 // /// because (1) the egcpool is all NUL-terminated sequences and (2) the fifth
-// /// byte of this struct (the GClusterBackStop field, see below) is
-// /// guaranteed to be zero, as are any unused bytes in gcluster.
+// /// byte of this struct (the backstop field) is guaranteed to be zero, as are
+// /// any unused bytes in gcluster.
 // ///
 // /// A spilled `NcEgc` is indicated by the value `0x01iiiiii`. This cannot alias a
 // /// true supra-ASCII NcEgc, because UTF-8 only encodes bytes <= 0x80 when they
@@ -264,99 +267,3 @@ pub type NcCell = crate::bindings::ffi::nccell;
 // FIXME: should be an utf-8 string len 1 of type &str.
 // pub type NcEgc = String;
 // pub type NcEgc<'a> = &'a str;
-
-// NcEgcBackStop
-/// An `u8` always at zero, part of the [`NcCell`] struct
-///
-/// ## Diagram
-///
-/// ```txt
-/// 00000000
-/// ```
-///
-/// `type in C: uint_8t`
-///
-pub type NcEgcBackstop = u8;
-
-// NcStyle
-///
-/// An `u16` of `NCSTYLE_*` boolean styling attribute flags
-///
-/// ## Attributes
-///
-/// - [`NCSTYLE_MASK`]
-/// - [`NCSTYLE_ITALIC`]
-/// - [`NCSTYLE_UNDERLINE`]
-/// - [`NCSTYLE_UNDERCURL`]
-/// - [`NCSTYLE_STRUCK`]
-/// - [`NCSTYLE_BOLD`]
-/// - [`NCSTYLE_NONE`]
-///
-/// ## Diagram
-///
-/// ```txt
-/// 11111111 11111111
-/// ```
-///
-/// `type in C:  uint16_t`
-///
-pub type NcStyle = u16;
-
-///
-pub const NCSTYLE_MASK: u16 = crate::bindings::ffi::NCSTYLE_MASK as u16;
-
-///
-pub const NCSTYLE_ITALIC: u16 = crate::bindings::ffi::NCSTYLE_ITALIC as u16;
-
-///
-pub const NCSTYLE_UNDERLINE: u16 = crate::bindings::ffi::NCSTYLE_UNDERLINE as u16;
-
-///
-pub const NCSTYLE_UNDERCURL: u16 = crate::bindings::ffi::NCSTYLE_UNDERCURL as u16;
-
-///
-pub const NCSTYLE_STRUCK: u16 = crate::bindings::ffi::NCSTYLE_STRUCK as u16;
-
-///
-pub const NCSTYLE_BOLD: u16 = crate::bindings::ffi::NCSTYLE_BOLD as u16;
-
-///
-pub const NCSTYLE_NONE: u16 = crate::bindings::ffi::NCSTYLE_NONE as u16;
-
-/// Enables the [`NcStyle`] methods.
-pub trait NcStyleMethods {
-    fn add(&mut self, other_style: NcStyle);
-    fn has(&self, other: NcStyle) -> bool;
-    fn to_vec(&self) -> Vec<NcStyle>;
-}
-
-impl NcStyleMethods for NcStyle {
-    /// Returns a `Vec` with all the styles contained in the current style.
-    fn to_vec(&self) -> Vec<NcStyle> {
-        let mut v = vec![];
-        let styles = [
-            NCSTYLE_ITALIC,
-            NCSTYLE_UNDERLINE,
-            NCSTYLE_UNDERCURL,
-            NCSTYLE_STRUCK,
-            NCSTYLE_BOLD,
-            NCSTYLE_NONE,
-        ];
-        for s in &styles {
-            if self.has(*s) {
-                v.push(*s)
-            }
-        }
-        v
-    }
-
-    /// Returns true if the current style has included the `other_style`.
-    fn has(&self, other_style: NcStyle) -> bool {
-        (self & other_style) == other_style
-    }
-
-    /// Adds the `other_style` to the current style.
-    fn add(&mut self, other_style: NcStyle) {
-        *self |= other_style
-    }
-}

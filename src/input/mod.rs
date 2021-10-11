@@ -12,10 +12,7 @@
 
 use crate::NcDim;
 
-mod keys;
 pub(crate) mod reimplemented;
-
-pub use keys::*;
 
 /// Reads and decodes input events.
 ///
@@ -46,7 +43,7 @@ impl NcInput {
             alt: false,
             shift: false,
             ctrl: false,
-            evtype: NCEVTYPE_UNKNOWN,
+            evtype: NcEvType::UNKNOWN,
         }
     }
 
@@ -105,22 +102,42 @@ impl NcInput {
 }
 
 /// The type of the event, part of [`NcInput`].
-///
-/// ## Defined constants
-/// - [`NCEVTYPE_UNKNOWN`]
-/// - [`NCEVTYPE_PRESS`]
-/// - [`NCEVTYPE_REPEAT`]
-/// - [`NCEVTYPE_RELEASE`]
 pub type NcEvType = u32;
 
-/// *Unknown* type event ([`NcEvType`]).
-pub const NCEVTYPE_UNKNOWN: NcEvType = crate::bindings::ffi::ncinput_NCTYPE_UNKNOWN;
+/// Enables the [`NcEvType`] associated methods and constants.
+pub trait NcEvTypeApi {
+    const UNKNOWN: NcEvType = constants::NCEVTYPE_UNKNOWN;
+    const PRESS: NcEvType = constants::NCEVTYPE_PRESS;
+    const REPEAT: NcEvType = constants::NCEVTYPE_REPEAT;
+    const RELEASE: NcEvType = constants::NCEVTYPE_RELEASE;
+}
 
-/// *Press* type event ([`NcEvType`]).
-pub const NCEVTYPE_PRESS: NcEvType = crate::bindings::ffi::ncinput_NCTYPE_PRESS;
+impl NcEvTypeApi for NcEvType {
+    /// *Unknown* type event ([`NcEvType`]).
+    const UNKNOWN: NcEvType = constants::NCEVTYPE_UNKNOWN;
 
-/// *Repeat* type event ([`NcEvType`]).
-pub const NCEVTYPE_REPEAT: NcEvType = crate::bindings::ffi::ncinput_NCTYPE_REPEAT;
+    /// *Press* type event ([`NcEvType`]).
+    const PRESS: NcEvType = constants::NCEVTYPE_PRESS;
 
-/// *Release* type event ([`NcEvType`]).
-pub const NCEVTYPE_RELEASE: NcEvType = crate::bindings::ffi::ncinput_NCTYPE_RELEASE;
+    /// *Repeat* type event ([`NcEvType`]).
+    const REPEAT: NcEvType = constants::NCEVTYPE_REPEAT;
+
+    /// *Release* type event ([`NcEvType`]).
+    const RELEASE: NcEvType = constants::NCEVTYPE_RELEASE;
+}
+
+pub(crate) mod constants {
+    use crate::NcEvType;
+
+    /// *Unknown* type event ([`NcEvType`]).
+    pub const NCEVTYPE_UNKNOWN: NcEvType = crate::bindings::ffi::ncinput_NCTYPE_UNKNOWN;
+
+    /// *Press* type event ([`NcEvType`]).
+    pub const NCEVTYPE_PRESS: NcEvType = crate::bindings::ffi::ncinput_NCTYPE_PRESS;
+
+    /// *Repeat* type event ([`NcEvType`]).
+    pub const NCEVTYPE_REPEAT: NcEvType = crate::bindings::ffi::ncinput_NCTYPE_REPEAT;
+
+    /// *Release* type event ([`NcEvType`]).
+    pub const NCEVTYPE_RELEASE: NcEvType = crate::bindings::ffi::ncinput_NCTYPE_RELEASE;
+}

@@ -11,7 +11,7 @@
 
 use std::ffi::c_void;
 
-use crate::{fns, Nc, NcIntResult, NcPlane, NcTime};
+use crate::{c_api, Nc, NcIntResult, NcPlane, NcTime};
 
 /// Called for each fade iteration on the NcPlane.
 ///
@@ -32,18 +32,18 @@ impl NcFadeCtx {
     /// ncfadectx_setup() can be paired with a loop over
     /// ncplane_fade{in/out}_iteration() + ncfadectx_free().
     pub fn setup(plane: &mut NcPlane) -> &mut NcFadeCtx {
-        unsafe { &mut *fns::ncfadectx_setup(plane) }
+        unsafe { &mut *c_api::ncfadectx_setup(plane) }
     }
 
     /// Releases the resources associated.
     pub fn free(&mut self) {
         unsafe {
-            fns::ncfadectx_free(self);
+            c_api::ncfadectx_free(self);
         }
     }
 
     /// Returns the number of iterations through which will fade.
     pub fn iterations(&self) -> u32 {
-        unsafe { fns::ncfadectx_iterations(self) as u32 }
+        unsafe { c_api::ncfadectx_iterations(self) as u32 }
     }
 }

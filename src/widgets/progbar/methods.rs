@@ -1,7 +1,7 @@
 //! `NcProgBar` & `NcProgBarOptions` methods and associated functions.
 
 use super::{NcProgBar, NcProgBarOptions};
-use crate::{error, fns, NcPlane, NcResult};
+use crate::{c_api, error, NcPlane, NcResult};
 
 /// # `NcProgBarOptions` Methods
 impl NcProgBarOptions {
@@ -29,40 +29,41 @@ impl NcProgBar {
 
     /// New NcProgBar. Expects an [NcProgBarOptions] struct.
     ///
-    /// *C style function: [ncprogbar_create()][fns::ncprogbar_create].*
+    /// *C style function: [ncprogbar_create()][c_api::ncprogbar_create].*
     pub fn with_options<'a>(plane: &mut NcPlane, options: &NcProgBarOptions) -> &'a mut Self {
-        unsafe { &mut *fns::ncprogbar_create(plane, options) }
+        unsafe { &mut *c_api::ncprogbar_create(plane, options) }
     }
 
     /// Destroy the progress bar and its underlying ncplane.
     ///
-    /// *C style function: [ncprogbar_destroy()][fns::ncprogbar_destroy].*
+    /// *C style function: [ncprogbar_destroy()][c_api::ncprogbar_destroy].*
     pub fn destroy(&mut self) {
         unsafe {
-            fns::ncprogbar_destroy(self);
+            c_api::ncprogbar_destroy(self);
         }
     }
 
     /// Return a reference to the ncprogbar's underlying ncplane.
     ///
-    /// *C style function: [ncprogbar_plane()][fns::ncprogbar_plane].*
+    /// *C style function: [ncprogbar_plane()][c_api::ncprogbar_plane].*
     pub fn plane(&mut self) -> &mut NcPlane {
-        unsafe { &mut *fns::ncprogbar_plane(self) }
+        unsafe { &mut *c_api::ncprogbar_plane(self) }
     }
 
     /// Get the progress bar's completion, an [f64] on [0, 1].
     ///
-    /// *C style function: [ncprogbar_progress()][fns::ncprogbar_progress].*
+    /// *C style function: [ncprogbar_progress()][c_api::ncprogbar_progress].*
     pub fn progress(&self) -> f64 {
-        unsafe { fns::ncprogbar_progress(self) }
+        unsafe { c_api::ncprogbar_progress(self) }
     }
 
     /// Sets the progress bar's completion, an 0 <= [f64] <= 1.
     ///
-    /// Returns [NCRESULT_ERR][crate::NCRESULT_ERR] if progress is < 0 || > 1.
+    /// Returns [`NcIntResult::ERR`][crate::NcIntResult#associatedconstant.ERR]
+    /// if progress is < 0 || > 1.
     ///
-    /// *C style function: [ncprogbar_set_progress()][fns::ncprogbar_set_progress].*
+    /// *C style function: [ncprogbar_set_progress()][c_api::ncprogbar_set_progress].*
     pub fn set_progress(&mut self, progress: f64) -> NcResult<()> {
-        error![unsafe { fns::ncprogbar_set_progress(self, progress) }]
+        error![unsafe { c_api::ncprogbar_set_progress(self, progress) }]
     }
 }
