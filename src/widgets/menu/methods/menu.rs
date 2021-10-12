@@ -163,7 +163,7 @@ impl NcMenu {
         }
         let res = unsafe { c_api::ncmenu_selected(self, ninput) };
         if !res.is_null() {
-            Some( rstring![&*res].to_string() )
+            Some(rstring![&*res].to_string())
         } else {
             None
         }

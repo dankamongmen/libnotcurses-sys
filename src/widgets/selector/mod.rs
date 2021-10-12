@@ -20,12 +20,14 @@
 use core::ptr::null_mut;
 
 use crate::{
-    error_ref_mut, error_str, cstring_mut, cstring, error,
-    c_api::{ncselector_create, ncselector_destroy, ncselector_offer_input, ncselector_nextitem, ncselector_previtem, ncselector_selected, ncselector_additem, ncselector_delitem, ncselector_plane, },
-    NcInput, NcPlane, NcResult, NcChannels,
+    c_api::{
+        ncselector_additem, ncselector_create, ncselector_delitem, ncselector_destroy,
+        ncselector_nextitem, ncselector_offer_input, ncselector_plane, ncselector_previtem,
+        ncselector_selected,
+    },
+    cstring, cstring_mut, error, error_ref_mut, error_str, NcChannels, NcChannelsApi, NcInput,
+    NcPlane, NcResult,
 };
-use crate::channel::*;
-
 
 /// High-level widget for selecting one item from a set
 pub type NcSelector = crate::bindings::ffi::ncselector;
@@ -39,13 +41,15 @@ pub type NcSelectorOptions = crate::bindings::ffi::ncselector_options;
 /// # `NcSelector` constructors & destructors
 impl NcSelector {
     pub fn new<'a>(plane: &mut NcPlane, options: NcSelectorOptions) -> NcResult<&'a mut Self> {
-        error_ref_mut![unsafe { ncselector_create(plane, &options) }, "Creating NcSelector"]
+        error_ref_mut![
+            unsafe { ncselector_create(plane, &options) },
+            "Creating NcSelector"
+        ]
     }
 
     pub fn offer_input(&mut self, input: NcInput) -> bool {
         unsafe { ncselector_offer_input(self, &input) }
     }
-
 
     /// Destroy the ncselector. If 'item' is not NULL, the last selected option will
     /// be strdup()ed and assigned to '*item' (and must be free()d by the caller).
@@ -54,48 +58,54 @@ impl NcSelector {
         Ok(())
     }
 
-
     /// Dynamically add items. It is usually sufficient to supply a static
     /// list of items via ncselector_options->items.
-    pub fn additem(&mut self, item: NcSelectorItem) -> NcResult<i32>{
-        error![unsafe { ncselector_additem(self, &item) }, "Calling selector.additem", -1 ]
+    pub fn additem(&mut self, item: NcSelectorItem) -> NcResult<i32> {
+        error![
+            unsafe { ncselector_additem(self, &item) },
+            "Calling selector.additem", -1
+        ]
     }
 
     /// Dynamically delete item
     // TODO API int ncselector_delitem(struct ncselector* n, const char* item);
-    pub fn delitem(&mut self, item: &str) -> NcResult<i32>{
-        error![unsafe { ncselector_delitem(self, cstring![item]) }, "Calling selector.delitem", -1 ]
+    pub fn delitem(&mut self, item: &str) -> NcResult<i32> {
+        error![
+            unsafe { ncselector_delitem(self, cstring![item]) },
+            "Calling selector.delitem", -1
+        ]
     }
 
     /// Return reference to the selected option, or NULL if there are no items.
     pub fn selected(&mut self) -> NcResult<String> {
-        error_str![ unsafe { ncselector_selected(self) }, "Calling selector.selected" ]
+        error_str![
+            unsafe { ncselector_selected(self) },
+            "Calling selector.selected"
+        ]
     }
 
     /// Return a reference to the ncselector's underlying ncplane.
     pub fn plane<'a>(&mut self) -> NcResult<&'a mut NcPlane> {
-        error_ref_mut![ unsafe { ncselector_plane(self) }, "Calling selector.plane" ]
+        error_ref_mut![unsafe { ncselector_plane(self) }, "Calling selector.plane"]
     }
 
     /// Move down in the list. A reference to the newly-selected item is
     /// returned, or NULL if there are no items in the list.
     pub fn nextitem(&mut self) -> NcResult<String> {
         let cstr: *const i8 = unsafe { ncselector_nextitem(self) };
-        error_str![ cstr, "Calling selector.nextitem"]
+        error_str![cstr, "Calling selector.nextitem"]
     }
 
     /// Move up in the list. A reference to the newly-selected item is
     /// returned, or NULL if there are no items in the list.
     pub fn previtem(&mut self) -> NcResult<String> {
         let cstr: *const i8 = unsafe { ncselector_previtem(self) };
-        error_str![ cstr, "Calling selector.previtem"]
+        error_str![cstr, "Calling selector.previtem"]
     }
 }
 
-
-
 impl NcSelectorItem {
-    pub fn new(option: &str, desc: &str)-> Self {
+    pub fn new(option: &str, desc: &str) -> Self {
         Self {
             option: cstring_mut![option],
             desc: cstring_mut![desc],
@@ -104,7 +114,7 @@ impl NcSelectorItem {
         }
     }
 
-    /// New empty NcMenuItem for [`NcMenu`].
+    /// New empty NcMenuItem for [`NcMenu`][crate::widgets::NcMenu].
     pub fn new_empty() -> Self {
         Self {
             option: null_mut(),
@@ -117,10 +127,15 @@ impl NcSelectorItem {
 
 /// # `NcMenuOptions` constructors
 impl NcSelectorOptions {
-    /// New NcMenuOptions for [`NcMenu`].
+    /// New NcMenuOptions for [`crate::widgets::NcMenu`].
     ///
-    /// `sections` must contain at least 1 [`NcMenuSection`].
-    pub fn new(title: &str, secondary: &str, footer: &str, selector_item: &mut [NcSelectorItem]) -> Self {
+    /// `sections` must contain at least 1 [`NcMenuSection`][crate::widgets::NcMenuSection].
+    pub fn new(
+        title: &str,
+        secondary: &str,
+        footer: &str,
+        selector_item: &mut [NcSelectorItem],
+    ) -> Self {
         //assert![!selector_item.is_empty()];
         Self {
             title: cstring_mut![title], // title may be null, inhibiting riser, saving two rows.

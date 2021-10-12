@@ -5,7 +5,7 @@
 //! At all times, exactly one item is selected.
 //!
 //!
-//!01:                                                                        selector widget demo
+//!01:                                                      selector widget demo
 //!02: ╭───────────────────────────────────────────────────────────────────────╮
 //!03: │ this is truly, absolutely an awfully long example of a selector title │
 //!04: ╰─────┬──────────────────────────────pick one (you will die regardless)─┤
@@ -21,18 +21,22 @@
 //!14:
 
 use libnotcurses_sys::{
+    //// Selector:
+    widgets::{NcSelector, NcSelectorItem, NcSelectorOptions},
     // Core
-    Nc, NcResult,
-    // Plane
-    NcPlane, NcPlaneOptions,
+    Nc,
+    NcAlign,
+    NcAlignApi,
+    NcEvType,
+    NcEvTypeApi,
     // Input
-    NcInput, NcKey, NcEvType, NcAlign,
+    NcInput,
+    NcKey,
+    // Plane
+    NcPlane,
+    NcPlaneOptions,
+    NcResult,
 };
-use libnotcurses_sys::*;  // Got a problem with NcAlign
-
-//// Selector:
-use libnotcurses_sys::widgets::{NcSelector, NcSelectorItem, NcSelectorOptions};
-
 
 fn main() -> NcResult<()> {
     // Init context
@@ -45,7 +49,10 @@ fn main() -> NcResult<()> {
     let mut selector_items: [NcSelectorItem; 11] = [
         NcSelectorItem::new("Afrikaans", "Ek kan glas eet, dit maak my nie seer nie."),
         NcSelectorItem::new("AngloSax", "ᛁᚳ᛫ᛗᚨᚷ᛫ᚷᛚᚨᛋ᛫ᛖᚩᛏᚪᚾ᛫ᚩᚾᛞ᛫ᚻᛁᛏ᛫ᚾᛖ᛫ᚻᛖᚪᚱᛗᛁᚪᚧ᛫ᛗᛖ᛬"),
-        NcSelectorItem::new("Japanese", "私はガラスを食べられます。それは私を傷つけません。"),
+        NcSelectorItem::new(
+            "Japanese",
+            "私はガラスを食べられます。それは私を傷つけません。",
+        ),
         NcSelectorItem::new("Kabuverdianu", "M’tá podê kumê vidru, ká stá máguame."),
         NcSelectorItem::new("Khmer", "ខ្ញុំអាចញុំកញ្ចក់បាន ដោយគ្មានបញ្ហារ"),
         NcSelectorItem::new("Lao", "ຂອ້ຍກິນແກ້ວໄດ້ໂດຍທີ່ມັນບໍ່ໄດ້ເຮັດໃຫ້ຂອ້ຍເຈັບ."),
@@ -75,7 +82,6 @@ fn main() -> NcResult<()> {
     stdplane.set_scrolling(true);
     stdplane.putstr_aligned(0, NcAlign::RIGHT, "selector widget demo")?;
 
-
     // Create selection plane
     // y: NcOffset, x: NcOffset, rows: NcDim, cols: NcDim
     let planeopts: NcPlaneOptions = NcPlaneOptions::new_aligned(1, NcAlign::LEFT, 15, 80);
@@ -88,11 +94,13 @@ fn main() -> NcResult<()> {
     let planeopts2: NcPlaneOptions = NcPlaneOptions::new_aligned(15, NcAlign::LEFT, 30, 80);
     let descplane: &mut NcPlane = NcPlane::with_options_bound(stdplane, planeopts2)?;
     descplane.set_scrolling(true);
-    descplane.puttext(0, NcAlign::LEFT,
+    descplane.puttext(
+        0,
+        NcAlign::LEFT,
         "Example of a selector widget:\n\
         -- Use the default mouse or arrow key to change selected line.\n\
         -- Or the customized J, K, TAB, SHIFT-TAB.\n\
-        -- Press ENTER (or Q) when satisfied with selection (or bored)."
+        -- Press ENTER (or Q) when satisfied with selection (or bored).",
     )?;
 
     // Render loop
@@ -118,7 +126,7 @@ fn run_selector(nc: &mut Nc, selector: &mut NcSelector) -> NcResult<String> {
     // Pre render <= do not wait input for first rendering
     nc.render()?;
 
-    loop{
+    loop {
         // Wait until user acts
         let keypress: char = nc.getc_blocking(Some(&mut ni))?;
 
@@ -133,20 +141,22 @@ fn run_selector(nc: &mut Nc, selector: &mut NcSelector) -> NcResult<String> {
                 // Q => quit
                 'q' | 'Q' | NcKey::ENTER => {
                     return Ok(selector.selected()?);
-                },
+                }
                 // J => down
                 'j' | 'J' => {
                     selector.nextitem()?;
-                },
+                }
                 // K => up
                 'k' | 'K' => {
                     selector.previtem()?;
-                },
+                }
                 // Tab => up or down depending if shift is pressed
-                '\u{0009}' => {
-                    match ni.shift {
-                        true => { selector.previtem()?; }
-                        false => { selector.nextitem()?; }
+                '\u{0009}' => match ni.shift {
+                    true => {
+                        selector.previtem()?;
+                    }
+                    false => {
+                        selector.nextitem()?;
                     }
                 },
                 // Default: ignore
