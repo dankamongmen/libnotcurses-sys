@@ -55,7 +55,7 @@ pub type NcVisual = crate::bindings::ffi::ncvisual;
 ///
 /// This is the return type of the [`NcDirectF.ncdirectf_geom`][0] method.
 ///
-/// [0]: NcDirectF#method.ncdirectf_geom
+/// [0]: NcVisual#method.ncdirectf_geom
 /// [1]: crate::bindings::ffi::ncvgeom
 pub type NcVGeom = crate::bindings::ffi::ncvgeom;
 
@@ -158,7 +158,3 @@ pub(crate) mod constants {
     pub const NCVISUAL_OPTION_NOINTERPOLATE: u32 =
         crate::bindings::ffi::NCVISUAL_OPTION_NOINTERPOLATE;
 }
-
-/// A type alias of [`NcVisual`] (NcDirect ***F**rame*) intended to be used
-/// with its `ncdirectf_*` methods, in [`NcDirect`][crate::NcDirect] mode.
-pub type NcDirectF = NcVisual;

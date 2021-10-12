@@ -5,7 +5,7 @@ use libc::c_void;
 
 use crate::{
     c_api, cstring, error, error_ref_mut, rstring_free, Nc, NcBlitter, NcBlitterApi,
-    NcBlitterGeometry, NcChannel, NcComponent, NcDim, NcDirect, NcDirectF, NcError, NcIntResult,
+    NcBlitterGeometry, NcChannel, NcComponent, NcDim, NcDirect, NcError, NcIntResult,
     NcIntResultApi, NcPixel, NcPlane, NcResult, NcRgba, NcScale, NcTime, NcVGeom, NcVisual,
     NcVisualOptions,
 };
@@ -613,29 +613,29 @@ impl NcVisual {
     }
 }
 
-/// # NcDirectF Constructors & destructors
-impl NcDirectF {
+/// # `NcDirectF` Constructors & destructors
+impl NcVisual {
     /// Loads media from disk, but do not yet renders it (presumably because you
     /// want to get its geometry via [ncdirectf_geom()][0], or to use the same
     /// file with [ncdirectf_render()][1] multiple times).
     ///
     /// You must destroy the result with [ncdirectf_free()][2];
     ///
-    /// [0]: crate::NcDirectF#method.ncdirectf_geom
-    /// [1]: crate::NcDirectF#method.ncdirectf_render
-    /// [2]: crate::NcDirectF#method.ncdirectf_free
+    /// [0]: NcVisual#method.ncdirectf_geom
+    /// [1]: NcVisual#method.ncdirectf_render
+    /// [2]: NcVisual#method.ncdirectf_free
     ///
     /// *C style function: [ncdirectf_from_file()][c_api::ncdirectf_from_file].*
-    pub fn ncdirectf_from_file<'a>(ncd: &mut NcDirect, file: &str) -> NcResult<&'a mut NcDirectF> {
+    pub fn ncdirectf_from_file<'a>(ncd: &mut NcDirect, file: &str) -> NcResult<&'a mut NcVisual> {
         error_ref_mut![
             unsafe { c_api::ncdirectf_from_file(ncd, cstring![file]) },
-            &format!("NcDirectF::ncdirectf_from_file(ncd, {})", file)
+            &format!("NcVisual::ncdirectf_from_file(ncd, {})", file)
         ]
     }
 
-    /// Frees a [`NcDirectF`] returned from [ncdirectf_from_file()][0].
+    /// Frees a [`NcVisual`] returned from [ncdirectf_from_file()][0].
     ///
-    /// [0]: crate::NcDirectF#method.ncdirectf_from_file
+    /// [0]: NcVisual#method.ncdirectf_from_file
     ///
     /// *C style function: [ncdirectf_free()][c_api::ncdirectf_free].*
     pub fn ncdirectf_free(&mut self) {
@@ -643,8 +643,8 @@ impl NcDirectF {
     }
 }
 
-/// # NcDirectF Methods
-impl NcDirectF {
+/// # `NcDirectF` Methods
+impl NcVisual {
     /// Same as [`NcDirect.render_frame()`][0], except `frame` must already have
     /// been loaded.
     ///
@@ -674,7 +674,7 @@ impl NcDirectF {
         let mut geom = NcVGeom::new();
 
         let res = unsafe { c_api::ncdirectf_geom(ncd, self, options, &mut geom) };
-        error![res, "NcDirectF.ncdirectf_geom()", geom];
+        error![res, "NcVisual.ncdirectf_geom()", geom];
     }
 }
 
