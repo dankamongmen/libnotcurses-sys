@@ -12,7 +12,7 @@ fn main() -> NcResult<()> {
 
     let mut demo_items = [
         NcMenuItem::new("Restart", NcInput::with_ctrl('r')),
-        NcMenuItem::new("Disabled", NcInput::with_ctrl('d')),
+        NcMenuItem::new("Disabled", NcInput::with_ctrl('🙂')),
     ];
     let mut file_items = [
         NcMenuItem::new("New", NcInput::with_ctrl('n')),
@@ -25,7 +25,7 @@ fn main() -> NcResult<()> {
     let mut help_items = [NcMenuItem::new("About", NcInput::with_ctrl('a'))];
 
     let mut sections = [
-        NcMenuSection::new("Schwarzgerät", &mut demo_items, NcInput::with_alt('ä')),
+        NcMenuSection::new("Demo", &mut demo_items, NcInput::with_alt('a')),
         NcMenuSection::new("File", &mut file_items, NcInput::with_alt('f')),
         NcMenuSection::new_separator(),
         // DEBUG: remove alt modifier for now.
@@ -42,8 +42,8 @@ fn main() -> NcResult<()> {
     let (dim_y, _dim_x) = stdplane.dim_yx();
 
     let menu_top = NcMenu::new(stdplane, mopts)?;
-    menu_top.item_set_status("Schwarzgerät", "Disabled", false)?;
-    menu_top.item_set_status("Schwarzgerät", "Restart", false)?;
+    //menu_top.item_set_status("Schwarzgerät", "Disabled", false)?;
+    //menu_top.item_set_status("Schwarzgerät", "Restart", false)?;
 
     stdplane.set_base("x", 0, NcChannels::from_rgb(0x88aa00, 0x000088))?;
 
@@ -75,7 +75,7 @@ fn main() -> NcResult<()> {
 
 fn run_menu(nc: &mut Nc, menu: &mut NcMenu) -> NcResult<()> {
     // yellow rectangle
-    let planeopts = NcPlaneOptions::new_aligned(10, NcAlign::CENTER, 3, 40);
+    let planeopts = NcPlaneOptions::new_aligned(10, NcAlign::CENTER, 10, 40);
     let stdplane = nc.stdplane();
     let selplane = NcPlane::with_options_bound(stdplane, planeopts)?;
     selplane.set_fg_rgb(0);
@@ -84,6 +84,8 @@ fn run_menu(nc: &mut Nc, menu: &mut NcMenu) -> NcResult<()> {
     channels.set_fg_rgb(0x000088);
     channels.set_bg_rgb(0x88aa00);
     selplane.set_base(" ", 0, channels)?;
+    // Otherwise get crash with puttext
+    selplane.set_scrolling(true);
 
     let mut ni = NcInput::new_empty();
     let mut keypress: char;
@@ -127,10 +129,14 @@ fn run_menu(nc: &mut Nc, menu: &mut NcMenu) -> NcResult<()> {
 
         let mut selni = NcInput::new_empty();
         if let Some(selitem) = menu.selected(Some(&mut selni)) {
-            selplane.putstr_aligned(1, NcAlign::CENTER, &selitem)?;
+            let mut msg = String::new();
+            msg.push_str("Item selected:\n\nDescription: ");
+            msg.push_str(&selitem);
+            msg.push_str("\nInput Id: ");
+            msg.push_str(&selni.id.to_string());
+            selplane.puttext(1, NcAlign::LEFT, &msg)?;
         } else {
-            // DEBUG
-            selplane.putstr_aligned(1, NcAlign::CENTER, "nothing opened")?;
+            selplane.puttext(1, NcAlign::CENTER, "No menu item currently selected")?;
         }
         nc.render()?;
     }

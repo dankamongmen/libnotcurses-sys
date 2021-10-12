@@ -2,7 +2,7 @@ use core::ptr::null_mut;
 
 use crate::{
     c_api::{self, ncmenu_create},
-    cstring, error, error_ref_mut, error_str,
+    cstring, error, error_ref_mut, error_str, rstring,
     widgets::{NcMenu, NcMenuOptions},
     NcInput, NcPlane, NcResult,
 };
@@ -163,7 +163,7 @@ impl NcMenu {
         }
         let res = unsafe { c_api::ncmenu_selected(self, ninput) };
         if !res.is_null() {
-            Some(unsafe { (&*res).to_string() })
+            Some(rstring![&*res].to_string())
         } else {
             None
         }

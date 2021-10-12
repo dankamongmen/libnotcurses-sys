@@ -368,7 +368,7 @@ macro_rules! error_str {
     ($str:expr, $msg:expr) => {
         if !$str.is_null() {
             #[allow(unused_unsafe)]
-            return Ok(unsafe { (&*$str).to_string() });
+            return Ok(unsafe { crate::rstring!($str).to_string() });
         } else {
             return Err(crate::NcError::with_msg(crate::c_api::NCRESULT_ERR, $msg));
         }
