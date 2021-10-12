@@ -1305,22 +1305,18 @@ impl NcPlane {
         unsafe { &mut *c_api::ncpile_bottom(self) }
     }
 
-    /// Relocates this `NcPlane` at the top of the z-buffer.
-    ///
-    /// *C style function: [ncplane_move_top()][c_api::ncplane_move_top].*
-    pub fn move_top(&mut self) {
-        unsafe {
-            c_api::ncplane_move_top(self);
-        }
-    }
-
     /// Relocates this `NcPlane` at the bottom of the z-buffer.
     ///
     /// *C style function: [ncplane_move_bottom()][c_api::ncplane_move_bottom].*
     pub fn move_bottom(&mut self) {
-        unsafe {
-            c_api::ncplane_move_bottom(self);
-        }
+        c_api::ncplane_move_bottom(self);
+    }
+
+    /// Relocates this `NcPlane` at the top of the z-buffer.
+    ///
+    /// *C style function: [ncplane_move_top()][c_api::ncplane_move_top].*
+    pub fn move_top(&mut self) {
+        c_api::ncplane_move_top(self);
     }
 
     /// Moves this `NcPlane` relative to the standard plane, or the plane to
@@ -1634,8 +1630,7 @@ impl NcPlane {
 
     /// Writes the last rendered frame, in its entirety, to `fp`.
     ///
-    /// If [`Nc.render()`][Nc#method.render] has not yet been called,
-    /// nothing will be written.
+    /// If a frame has not yet been rendered, nothing will be written.
     ///
     /// *C style function: [ncpile_render_to_file()][c_api::ncpile_render_to_file].*
     pub fn render_to_file(&mut self, fp: &mut NcFile) -> NcResult<()> {

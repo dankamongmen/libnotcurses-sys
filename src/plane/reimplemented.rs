@@ -413,6 +413,26 @@ pub fn ncplane_moverel(plane: &mut NcPlane, rows: NcOffset, cols: NcOffset) -> N
     }
 }
 
+/// Relocates this `NcPlane` at the bottom of the z-buffer.
+///
+/// *Method: NcPlane.[move_bottom()][NcPlane#method.move_bottom].*
+#[inline]
+pub fn ncplane_move_bottom(plane: &mut NcPlane) {
+    unsafe {
+        c_api::ncplane_move_above(plane, null_mut());
+    }
+}
+
+/// Relocates this `NcPlane` at the top of the z-buffer.
+///
+/// *Method: NcPlane.[move_top()][NcPlane#method.move_top].*
+#[inline]
+pub fn ncplane_move_top(plane: &mut NcPlane) {
+    unsafe {
+        c_api::ncplane_move_below(plane, null_mut());
+    }
+}
+
 /// Splices this plane and its bound planes out of the z-buffer,
 /// and reinserts them at the top.
 ///

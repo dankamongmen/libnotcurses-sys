@@ -1,9 +1,9 @@
 //! `NcPlane`
 
-// functions already exported by bindgen : 103
+// functions already exported by bindgen : 101
 // -------------------------------------------
 // (#) test: 9
-// (W) wrap: 95
+// (W) wrap: 93
 // -------------------------------------------
 //W  ncpile_bottom
 //W# ncpile_create
@@ -49,10 +49,8 @@
 //W  ncplane_mergedown_simple
 //W  ncplane_move_above
 //W  ncplane_move_below
-//W  ncplane_move_bottom
 //W  ncplane_move_family_above
 //W  ncplane_move_family_below
-//W  ncplane_move_top
 //W  ncplane_move_yx
 //W# ncplane_notcurses
 //W# ncplane_notcurses_const
@@ -109,10 +107,10 @@
 //W  ncplane_y
 //W  ncplane_yx
 
-// functions manually reimplemented: 43
+// functions manually reimplemented: 45
 // ------------------------------------------
-// (+) done: 43
-// (W) wrap: 39
+// (+) done: 45
+// (W) wrap: 41
 // (#) test:  9
 // ------------------------------------------
 //W+ ncplane_bchannel
@@ -136,8 +134,10 @@
 //W+ ncplane_halign
 // + ncplane_hline
 //W+ ncplane_moverel
+//W+ ncplane_move_bottom
 //W+ ncplane_move_family_bottom
 //W+ ncplane_move_family_top
+//W+ ncplane_move_top
 //W+ ncplane_perimeter
 //W+ ncplane_perimeter_double
 //W+ ncplane_perimeter_rounded
