@@ -151,7 +151,14 @@ mod visual;
 
 pub mod widgets;
 
-// export methods and constants at the root
+// wrapper types and traits
+//
+// `*Api` traits allows using methods and associated constants over type aliased
+// primitives, like in the case of `NcAlign`, for example.
+//
+// Note that the names of the implemented traits can't coincide for type aliases
+// with the same underlying primitive, like in the case of `NcAlign` & `NcScale`
+// in which case are both aliases over `u32`.
 pub use align::{NcAlign, NcAlignApi};
 pub use alpha::{NcAlpha, NcAlphaApi};
 pub use blitter::{NcBlitter, NcBlitterApi, NcBlitterGeometry};
@@ -182,6 +189,9 @@ pub use visual::{NcDirectF, NcRgba, NcVGeom, NcVisual, NcVisualOptions}; // ←
 
 pub mod c_api {
     //! The C API including global constants and functions.
+    //!
+    //! Includes also both automatically imported functions by bindgen, and
+    //! manually wrapped and reimplemented global functions.
 
     // public re-export of external crates:
     pub use libc;
