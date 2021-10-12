@@ -2,7 +2,7 @@
 
 use std::{self, error, fmt};
 
-/// The [`i32`] value used to return errors by the underlying C API.
+/// The value used to return errors by the underlying C API (alias of [`i32`]).
 ///
 /// A value < 0 means error, (usually -1).
 ///
@@ -21,7 +21,7 @@ crate::impl_api![
 ];
 
 pub(crate) mod constants {
-    #[allow(unused_imports)]
+    #[allow(unused_imports)] // for doc comments
     use crate::NcIntResult;
 
     /// OK value, for the functions that return [`NcIntResult`].

@@ -3,7 +3,7 @@ use crate::{
     NcChannels,
 };
 
-#[allow(unused_imports)]
+#[allow(unused_imports)] // for doc comments
 use crate::widgets::NcMenu;
 
 /// # `NcMenuOptions` constructors

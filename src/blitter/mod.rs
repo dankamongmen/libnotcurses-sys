@@ -6,7 +6,8 @@ use core::ffi::c_void;
 mod geometry;
 pub use geometry::NcBlitterGeometry;
 
-/// The blitter mode to use for rasterizing an [`NcVisual`][crate::NcVisual].
+/// The blitter mode to use for rasterizing an [`NcVisual`][crate::NcVisual]
+/// (alias of [`u32`]).
 ///
 /// We never blit full blocks, but instead spaces (more efficient) with the
 /// background set to the desired foreground.

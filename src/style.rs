@@ -1,4 +1,4 @@
-/// An `u16` of `NCSTYLE_*` boolean styling attribute flags
+/// Styling attribute flags (alias of [`u16`]).
 ///
 /// ## Diagram
 ///

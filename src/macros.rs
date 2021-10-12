@@ -3,8 +3,7 @@
 //
 // NOTE: Use full paths everywhere. Don't assume anything will be in scope.
 
-#[allow(unused_imports)]
-// enjoy briefer doc comments
+#[allow(unused_imports)] // for doc comments
 use crate::{
     c_api::{NCRESULT_ERR, NCRESULT_OK},
     Nc, NcDirect, NcError, NcIntResultApi, NcPlane, NcResult,
@@ -124,6 +123,8 @@ macro_rules! rsleep {
 // String & Print Macros -------------------------------------------------------
 
 /// Converts an `&str` into `*const c_char`.
+///
+/// See [`Cstring`].
 #[macro_export]
 #[doc(hidden)]
 macro_rules! cstring {
@@ -133,6 +134,10 @@ macro_rules! cstring {
 }
 
 /// Converts an `&str` into `*mut c_char`.
+///
+/// See [`Cstring`].
+//
+// FIXME: https://github.com/dankamongmen/libnotcurses-sys/issues/9
 #[macro_export]
 #[doc(hidden)]
 macro_rules! cstring_mut {

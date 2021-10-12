@@ -35,7 +35,7 @@
 
 #![allow(dead_code)]
 
-#[allow(unused_imports)] // for the doc comments
+#[allow(unused_imports)] // for doc comments
 use crate::NcPlane;
 
 mod methods;

@@ -1,4 +1,5 @@
-/// Indicates how to scale an [`NcVisual`][crate::NcVisual] during rendering.
+/// Indicates how to scale an [`NcVisual`][crate::NcVisual] during rendering
+/// (alias of [`u32`]).
 ///
 /// - `NONE` will apply no scaling.
 /// - `SCALE` scales a visual to the plane's size,
@@ -21,7 +22,7 @@
 /// [`NcVisual.resize_noninterpolative`][crate::NcVisual#method.resize_noninterpolative]
 /// are changing that original frame.
 ///
-pub type NcScale = crate::bindings::ffi::ncscale_e;
+pub type NcScale = u32; // crate::bindings::ffi::ncscale_e;
 
 crate::impl_api![
     NcScale,

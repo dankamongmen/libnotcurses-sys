@@ -7,7 +7,7 @@ use crate::{
     NcInput, NcPlane, NcResult,
 };
 
-#[allow(unused_imports)]
+#[allow(unused_imports)] // for doc comments
 use crate::widgets::{NcMenuItem, NcMenuSection};
 
 /// # `NcMenu` constructors & destructors
@@ -51,7 +51,7 @@ impl NcMenu {
     /// Returns the [`NcMenuItem`] description
     /// corresponding to the mouse `click`.
     ///
-    /// The NcMenuItem must be on an actively unrolled section, and the click
+    /// The `NcMenuItem` must be on an actively unrolled section, and the click
     /// must be in the area of a valid item.
     ///
     /// If `ninput` is provided, and the selected item has a shortcut,

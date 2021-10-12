@@ -3,7 +3,7 @@ use crate::{
     NcDim,
 };
 
-#[allow(unused_imports)]
+#[allow(unused_imports)] // for doc comments
 use crate::widgets::NcTree;
 
 /// # `NcTreeOptions` constructors

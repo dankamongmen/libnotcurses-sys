@@ -1,8 +1,8 @@
-#[allow(unused_imports)]
+#[allow(unused_imports)] // for doc comments
 use crate::NcCell;
 
-/// 2 bits of alpha (surrounded by context dependent bits).
-/// It is part of an [`NcChannel`][crate::NcChannel].
+/// 2 bits of alpha (surrounded by context dependent bits)
+/// part of an [`NcChannel`][crate::NcChannel], (alias of [`u32`]).
 ///
 /// ## Diagram
 ///
@@ -34,7 +34,7 @@ crate::impl_api![
 
 /// Enable the [`NcAlpha`] associated methods and constants.
 pub(crate) mod constants {
-    #[allow(unused_imports)]
+    #[allow(unused_imports)] // for doc comments
     use crate::{NcAlpha, NcCell};
 
     /// [`NcAlpha`] bits indicating [`NcCell`]'s foreground or background color

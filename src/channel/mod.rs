@@ -65,7 +65,7 @@
 // X channels_set_fg_rgb8_clipped    // not needed
 //W  channels_set_not_default        // not in the original C API
 
-#[allow(unused_imports)] // for the doc comments
+#[allow(unused_imports)] // for doc comments
 use crate::{NcCell, NcRgba};
 
 #[cfg(test)]
@@ -77,8 +77,8 @@ pub use methods::{NcChannelApi, NcChannelsApi};
 
 // NcChannel
 //
-/// 32 bits of context-dependent info
-/// containing RGB + 2 bits of alpha + extra
+/// 32 bits of context-dependent info containing RGB + 2 bits of alpha + extra
+/// (alias of [`u32`]).
 ///
 /// It is:
 /// - a 24-bit [`NcRgb`] value
@@ -100,7 +100,7 @@ pub type NcChannel = u32;
 
 // NcChannels
 //
-/// 64 bits containing a foreground and background [`NcChannel`]
+/// 64 bits containing a foreground and background [`NcChannel`] (alias of [`u64`]).
 ///
 /// At render time, both 24-bit [`NcRgb`] values are quantized down to terminal
 /// capabilities, if necessary. There's a clear path to 10-bit support should
@@ -187,7 +187,7 @@ pub type NcChannels = u64;
 
 // NcRgb
 //
-/// 24 bits broken into 3x 8bpp channels.
+/// 24 bits broken into 3x 8bpp channels (alias of [`u32`]).
 ///
 /// Unlike with [`NcChannel`], operations involving `NcRgb` ignores the last 4th byte
 ///
@@ -203,7 +203,8 @@ pub type NcRgb = u32;
 
 // NcComponent
 //
-/// 8 bits representing an R/G/B color component or an alpha channel component.
+/// 8 bits representing an R/G/B color component or an alpha channel component
+/// (alias of [`u8`]).
 ///
 /// ## Diagram
 ///

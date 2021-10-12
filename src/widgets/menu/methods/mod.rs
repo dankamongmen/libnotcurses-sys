@@ -4,7 +4,7 @@ use super::{NcMenuItem, NcMenuSection};
 use crate::{cstring_mut, NcInput};
 use core::ptr::null_mut;
 
-#[allow(unused_imports)]
+#[allow(unused_imports)] // for doc comments
 use crate::widgets::NcMenu;
 
 mod menu;
@@ -39,7 +39,7 @@ impl NcMenuItem {
 ///
 // Must contain at least 1 NcMenuItem.
 impl NcMenuSection {
-    /// New NcMenuSection for [`NcMenu`].
+    /// New `NcMenuSection` for [`NcMenu`].
     pub fn new(name: &str, items: &mut [NcMenuItem], shortcut: NcInput) -> Self {
         Self {
             // utf-8 name string

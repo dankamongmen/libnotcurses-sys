@@ -71,9 +71,6 @@ mod test;
 mod methods;
 pub(crate) mod reimplemented;
 
-#[allow(unused_imports)]
-use crate::{NcChannel, NcPlane, NcStyle};
-
 // NcCell
 /// A coordinate on an [`NcPlane`][crate::NcPlane] storing 128 bits of data.
 ///
@@ -92,11 +89,11 @@ use crate::{NcChannel, NcPlane, NcStyle};
 /// spacing glyph, along with possible combining characters, which might span
 /// multiple columns).
 ///
-/// An NcCell is bounded to an `NcPlane`, but the cell doesn't store anything
+/// An `NcCell` is bounded to an `NcPlane`, but the cell doesn't store anything
 /// about the plane.
 ///
 /// At any `NcCell`, we can have a theoretically arbitrarily long UTF-8 string,
-/// a foreground color, a background color, and an [`NcStyle`] attribute set.
+/// a foreground color, a background color, and an [`NcStyle`][crate::NcStyle] attribute set.
 ///
 /// Valid grapheme cluster contents include:
 ///
@@ -110,11 +107,11 @@ use crate::{NcChannel, NcPlane, NcStyle};
 /// ## Diagram
 ///
 /// ```txt
-/// NcCell: 128 bits structure comprised of the following 5 elements:
+/// `NcCell`: 128 bits structure comprised of the following 5 elements:
 ///
 /// GCLUSTER|GCLUSTER|GCLUSTER|GCLUSTER  1. `EGC`
-/// 00000000║WWWWWWWW║11111111|11111111  2. backstop + 3. width + 4. [`NcStyle`]
-/// ~~AA~~~~|RRRRRRRR|GGGGGGGG|BBBBBBBB  5. NcChannels
+/// 00000000║WWWWWWWW║11111111|11111111  2. backstop + 3. width + 4. `NcStyle`
+/// ~~AA~~~~|RRRRRRRR|GGGGGGGG|BBBBBBBB  5. `NcChannels`
 /// ~~AA~~~~|RRRRRRRR|GGGGGGGG|BBBBBBBB     "
 ///
 /// 1. (32b) Extended Grapheme Cluster, presented either as:
@@ -131,16 +128,16 @@ use crate::{NcChannel, NcPlane, NcStyle};
 /// 3. (8b) column width
 /// WWWWWWWW
 ///
-/// 4. (16b) [`NcStyle`]
+/// 4. (16b) `NcStyle`
 /// 11111111 11111111
 ///
-/// 5. (64b) NcChannels
+/// 5. (64b) `NcChannels`
 /// ~~AA~~~~|RRRRRRRR|GGGGGGGG|BBBBBBBB║~~AA~~~~|RRRRRRRR|GGGGGGGG|BBBBBBBB
 /// ```
 ///
 /// `type in C: cell (struct)`
 ///
-/// # More NcCell Information
+/// # More `NcCell` Information
 ///
 /// ## Size
 ///

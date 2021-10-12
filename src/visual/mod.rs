@@ -31,8 +31,8 @@
 //W  ncvisual_subtitle
 //W  ncvisual_subtitle_plane
 
-#[allow(unused_imports)] // for the doc comments
-use crate::{NcChannel, NcDim, NcRgb};
+#[allow(unused_imports)] // for doc comments
+use crate::{NcChannel, NcRgb};
 
 mod methods;
 
@@ -40,10 +40,10 @@ mod methods;
 ///
 /// It can be constructed from a rgba or bgra buffer.
 ///
-/// The [NcVisualOptions] structure is used only by the following methods:
-/// - [.geom][NcVisual#method.geom]
-/// - [.render][NcVisual#method.render]
-/// - [.simple_streamer][NcVisual#method.simple_streamer]
+/// The [`NcVisualOptions`] structure is used only by the following methods:
+/// - [`geom`][NcVisual#method.geom]
+/// - [`render`][NcVisual#method.render]
+/// - [`simple_streamer`][NcVisual#method.simple_streamer]
 pub type NcVisual = crate::bindings::ffi::ncvisual;
 
 /// Describes all geometries of an [`NcVisual`] ncvisual–both those which are inherent, and
@@ -51,9 +51,9 @@ pub type NcVisual = crate::bindings::ffi::ncvisual;
 ///
 /// *FIXME this ought be used in the rendered mode API as well;
 /// it’s currently only used by direct mode.*
-/// *(See [ncvgeom][1] more more information)*
+/// *(See [`ncvgeom`][1] more more information)*
 ///
-/// This is the return type of the [NcDirectF.ncdirectf_geom()][0] method.
+/// This is the return type of the [`NcDirectF.ncdirectf_geom`][0] method.
 ///
 /// [0]: NcDirectF#method.ncdirectf_geom
 /// [1]: crate::bindings::ffi::ncvgeom
@@ -73,7 +73,7 @@ pub type NcVisualOptions = crate::bindings::ffi::ncvisual_options;
 
 // NcRgba
 //
-/// 32 bits broken into 3x 8bpp RGB channels + 8ppp alpha.
+/// 32 bits broken into 3x 8bpp RGB channels + 8ppp alpha (alias of [`u32`]).
 ///
 /// Unlike with [`NcChannel`], operations involving `NcRgb` ignores the last 4th byte
 ///
@@ -84,7 +84,7 @@ pub type NcVisualOptions = crate::bindings::ffi::ncvisual_options;
 /// ```
 /// `type in C: no data type`
 ///
-/// See also: [NcRgb] and [NcChannel] types.
+/// See also: [`NcRgb`] and [`NcChannel`] types.
 pub type NcRgba = u32;
 
 // // NcBgra
@@ -99,7 +99,7 @@ pub type NcRgba = u32;
 // ///
 // /// `type in C: no data type`
 // ///
-// /// See also: [NcRgba], [NcRgb] and [NcChannel] types.
+// /// See also: [`NcRgba`], [`NcRgb`] and [`NcChannel`] types.
 // pub type NcBgra = u32;
 
 impl NcVisualOptions {

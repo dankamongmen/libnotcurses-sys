@@ -1,4 +1,4 @@
-/// Log level for [`NcOptions`][crate::NcOptions]
+/// Log level for [`NcOptions`][crate::NcOptions] (alias of [`i32`]).
 ///
 /// These log levels consciously map cleanly to those of libav; notcurses itself
 /// does not use this full granularity. The log level does not affect the opening
@@ -6,7 +6,7 @@
 /// `NCOPTION_SUPPRESS_BANNERS`.
 /// Note that if stderr is connected to the same terminal on which we're
 /// rendering, any kind of logging will disrupt the output.
-pub type NcLogLevel = crate::bindings::ffi::ncloglevel_e;
+pub type NcLogLevel = i32; // crate::bindings::ffi::ncloglevel_e;
 
 crate::impl_api![
     NcLogLevel,
