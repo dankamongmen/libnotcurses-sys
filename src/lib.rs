@@ -173,7 +173,7 @@ pub use fd::{NcFdPlane, NcFdPlaneOptions, NcSubproc, NcSubprocOptions};
 pub use file::NcFile;
 pub use input::{NcEvType, NcEvTypeApi, NcInput};
 pub use key::NcKey;
-pub use log_level::NcLogLevel;
+pub use log_level::{NcLogLevel, NcLogLevelApi};
 pub use macros::*;
 pub use notcurses::{Nc, NcOptions};
 pub use palette::{NcPalette, NcPaletteIndex};

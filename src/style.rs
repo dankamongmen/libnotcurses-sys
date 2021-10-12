@@ -18,7 +18,7 @@ pub trait NcStyleApi {
     const UNDERCURL: u16 = constants::NCSTYLE_UNDERCURL as u16;
     const STRUCK: u16 = constants::NCSTYLE_STRUCK as u16;
     const BOLD: u16 = constants::NCSTYLE_BOLD as u16;
-    const NONE: u16 = constants::NCSTYLE_NONE as u16;
+    const NOSTYLE: u16 = constants::NCSTYLE_NONE as u16;
 
     fn add(&mut self, other_style: NcStyle);
     fn has(&self, other: NcStyle) -> bool;
@@ -35,7 +35,7 @@ impl NcStyleApi for NcStyle {
             NcStyle::UNDERCURL,
             NcStyle::STRUCK,
             NcStyle::BOLD,
-            NcStyle::NONE,
+            NcStyle::NOSTYLE,
         ];
         for s in &styles {
             if self.has(*s) {

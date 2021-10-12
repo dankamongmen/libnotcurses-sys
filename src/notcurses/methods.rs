@@ -502,7 +502,7 @@ impl Nc {
     ///
     /// *(No equivalent C style function)*
     pub fn lex_styles(styles_str: &str) -> NcResult<NcStyle> {
-        let mut style = NcStyle::NONE;
+        let mut style = NcStyle::NOSTYLE;
         let mut errstr = String::new();
 
         for s in styles_str.split(' ') {
@@ -758,7 +758,7 @@ impl Nc {
                 NcStyle::STRUCK => "struck",
                 NcStyle::BOLD => "bold",
                 #[allow(unreachable_patterns)] // FIXME
-                NcStyle::NONE => "none",
+                NcStyle::NOSTYLE => "none",
                 _ => "none",
             });
             string.push(' ');

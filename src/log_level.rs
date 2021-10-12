@@ -12,23 +12,23 @@ crate::impl_api![
     NcLogLevel,
     NcLogLevelApi,
     /// this is honestly a bit much.
-    const NCLOGLEVEL_DEBUG: NcLogLevel = constants::NCLOGLEVEL_DEBUG;,
+    const DEBUG: NcLogLevel = constants::NCLOGLEVEL_DEBUG;,
     /// we can't keep doin' this, but we can do other things.
-    const NCLOGLEVEL_ERROR: NcLogLevel = constants::NCLOGLEVEL_ERROR;,
+    const ERROR: NcLogLevel = constants::NCLOGLEVEL_ERROR;,
     /// we're hanging around, but we've had a horrible fault.
-    const NCLOGLEVEL_FATAL: NcLogLevel = constants::NCLOGLEVEL_FATAL;,
+    const FATAL: NcLogLevel = constants::NCLOGLEVEL_FATAL;,
     /// "detailed information.
-    const NCLOGLEVEL_INFO: NcLogLevel = constants::NCLOGLEVEL_INFO;,
+    const INFO: NcLogLevel = constants::NCLOGLEVEL_INFO;,
     /// print diagnostics immediately related to crashing.
-    const NCLOGLEVEL_PANIC: NcLogLevel = constants::NCLOGLEVEL_PANIC;,
+    const PANIC: NcLogLevel = constants::NCLOGLEVEL_PANIC;,
     /// default. print nothing once fullscreen service begins.
-    const NCLOGLEVEL_SILENT: NcLogLevel = constants::NCLOGLEVEL_SILENT;,
+    const SILENT: NcLogLevel = constants::NCLOGLEVEL_SILENT;,
     /// there's probably a better way to do what you want.
-    const NCLOGLEVEL_TRACE: NcLogLevel = constants::NCLOGLEVEL_TRACE;,
+    const TRACE: NcLogLevel = constants::NCLOGLEVEL_TRACE;,
     /// "detailed information.
-    const NCLOGLEVEL_VERBOSE: NcLogLevel = constants::NCLOGLEVEL_VERBOSE;,
+    const VERBOSE: NcLogLevel = constants::NCLOGLEVEL_VERBOSE;,
     /// you probably don't want what's happening to happen.
-    const NCLOGLEVEL_WARNING: NcLogLevel = constants::NCLOGLEVEL_WARNING;
+    const WARNING: NcLogLevel = constants::NCLOGLEVEL_WARNING;
 ];
 
 pub(crate) mod constants {
