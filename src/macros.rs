@@ -160,7 +160,7 @@ macro_rules! rstring_free {
         #[allow(unused_unsafe)]
         let nc_string = unsafe { $s };
         let string = crate::rstring![nc_string].to_string();
-        unsafe { c_api::libc::free(nc_string as *mut core::ffi::c_void) };
+        unsafe { crate::c_api::libc::free(nc_string as *mut core::ffi::c_void) };
         string
     }};
 }
@@ -170,10 +170,10 @@ macro_rules! rstring_free {
 #[doc(hidden)]
 macro_rules! printf {
     ($s:expr) => {
-        unsafe { c_api::libc::printf(cstring![$s]) }
+        unsafe { crate::c_api::libc::printf(cstring![$s]) }
     };
     ($s:expr $(, $opt:expr)*) => {
-        unsafe { c_api::libc::printf(cstring![$s], $($opt),*) }
+        unsafe { crate::c_api::libc::printf(cstring![$s], $($opt),*) }
     };
 }
 
