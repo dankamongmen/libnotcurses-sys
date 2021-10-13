@@ -24,19 +24,7 @@ pub use ffi::{
     ncstrwidth_valid,
 };
 
-// blitset ---------------------------------------------------------------------
-//
-// already wrapped:
-//
-// // structs
-// blitset,
-
 // cell ------------------------------------------------------------------------
-//
-// already wrapped:
-//
-// // structs
-// cell,
 //
 // // constants
 // NCALPHA_BLEND,
@@ -54,6 +42,8 @@ pub use ffi::{
 
 #[doc(inline)]
 pub use ffi::{
+    // structs
+    nccell,
     // functions
     nccell_duplicate,
     nccell_extended_gcluster,
@@ -65,14 +55,10 @@ pub use ffi::{
 
 // channel ---------------------------------------------------------------------
 //
-// already wrapped:
-//
 // // constants
 // CHANNEL_ALPHA_MASK,
 
 // ncalign ---------------------------------------------------------------------
-//
-// already wrapped:
 //
 // // type definitions
 // ncalign_e,
@@ -84,8 +70,6 @@ pub use ffi::{
 // ncalign_e_NCALIGN_UNALIGNED,
 
 // ncblitter -------------------------------------------------------------------
-//
-// already wrapped:
 //
 // // type definitions
 // ncblitter_e,
@@ -126,20 +110,12 @@ pub use ffi::{
 
 // nccapabilit* ----------------------------------------------------------------
 //
-// already wrapped:
-//
-// // structs
-// nccapabilities,
-//
 // // functions
 // nccapability_canchangecolor,
+#[doc(inline)]
+pub use ffi::nccapabilities;
 
 // ncdirect --------------------------------------------------------------------
-//
-// already wrapped:
-//
-// // structs
-// ncdirect,
 //
 // // functions
 // ncdirect_canbraille,
@@ -163,6 +139,8 @@ pub use ffi::{
 
 #[doc(inline)]
 pub use ffi::{
+    // structs
+    ncdirect,
     // functions
     ncdirect_box,
     ncdirect_canget_cursor,
@@ -214,30 +192,25 @@ pub use ffi::{
 
 // ncdirectf --------------------------------------------------------------------
 //
-// already wrapped:
-//
 // // type alias
 // ncdirectf,
 //
 
 #[doc(inline)]
 pub use ffi::{
-    ncdirectf_free,
     // functions
+    ncdirectf_free,
     ncdirectf_from_file,
     ncdirectf_geom,
     ncdirectf_render,
 };
 
 // ncfadectx -------------------------------------------------------------------
-//
-// already wrapped:
-//
-// // structs
-// ncfadectx,
 
 #[doc(inline)]
 pub use ffi::{
+    // structs
+    ncfadectx,
     // functions
     ncfadectx_free,
     ncfadectx_iterations,
@@ -245,15 +218,10 @@ pub use ffi::{
 };
 
 // ncinput ---------------------------------------------------------------------
-//
-// already wrapped:
-//
-// // structs
-// ncinput,
+#[doc(inline)]
+pub use ffi::ncinput;
 
 // ncloglevel ------------------------------------------------------------------
-//
-// already wrapped:
 //
 // // type definitions
 // ncloglevel_e,
@@ -270,30 +238,19 @@ pub use ffi::{
 // ncloglevel_e_NCLOGLEVEL_WARNING,
 
 // ncfdplane -------------------------------------------------------------------
-//
-// already wrapped:
-//
-// // structs
-// ncfdplane,
-// ncfdplane_options,
 
 #[doc(inline)]
 pub use ffi::{
+    // structs
+    ncfdplane,
     // functions
     ncfdplane_create,
     ncfdplane_destroy,
+    ncfdplane_options,
     ncfdplane_plane,
 };
 
 // ncmenu ----------------------------------------------------------------------
-//
-// already wrapped:
-//
-// // structs
-// ncmenu,
-// ncmenu_item,
-// ncmenu_options,
-// ncmenu_section,
 //
 // // constants
 // NCMENU_OPTION_BOTTOM,
@@ -301,25 +258,28 @@ pub use ffi::{
 
 #[doc(inline)]
 pub use ffi::{
+    // structs
+    ncmenu,
     // functions
     ncmenu_create,
     ncmenu_destroy,
+    ncmenu_item,
     ncmenu_item_set_status,
     ncmenu_mouse_selected,
     ncmenu_nextitem,
     ncmenu_nextsection,
     ncmenu_offer_input,
+    ncmenu_options,
     ncmenu_plane,
     ncmenu_previtem,
     ncmenu_prevsection,
     ncmenu_rollup,
+    ncmenu_section,
     ncmenu_selected,
     ncmenu_unroll,
 };
 
 // ncmetric --------------------------------------------------------------------
-//
-// already wrapped:
 //
 // // functions
 // ncmetric
@@ -333,20 +293,17 @@ pub use ffi::{
 // IPREFIXSTRLEN,
 
 // ncmultiselector -------------------------------------------------------------
-//
-// already wrapped:
-//
-// // structs
-// ncmultiselector,
-// ncmselector_item,
-// ncmultiselector_options,
 
 #[doc(inline)]
 pub use ffi::{
+    ncmselector_item,
+    // structs
+    ncmultiselector,
     // functions
     ncmultiselector_create,
     ncmultiselector_destroy,
     ncmultiselector_offer_input,
+    ncmultiselector_options,
     ncmultiselector_plane,
     ncmultiselector_selected,
 };
@@ -367,12 +324,6 @@ pub use ffi::{
 
 // ncplane ---------------------------------------------------------------------
 //
-// already wrapped:
-//
-// // structs
-// ncplane,
-// ncplane_options,
-//
 // // functions
 // ncplane_channels,
 // ncplane_gradient,
@@ -390,6 +341,8 @@ pub use ffi::{
 
 #[doc(inline)]
 pub use ffi::{
+    // structs
+    ncplane,
     // functions
     ncplane_above,
     ncplane_abs_x,
@@ -435,6 +388,7 @@ pub use ffi::{
     ncplane_notcurses_const,
     ncplane_off_styles,
     ncplane_on_styles,
+    ncplane_options,
     ncplane_parent,
     ncplane_parent_const,
     ncplane_pixelgeom,
@@ -491,13 +445,6 @@ pub use ffi::{
 
 // ncplot ----------------------------------------------------------------------
 //
-// already wrapped:
-//
-// // structs
-// ncdplot, // f64
-// ncuplot, // u64
-// ncplot_options,
-//
 // // constants
 // NCPLOT_OPTION_DETECTMAXONLY,
 // NCPLOT_OPTION_EXPONENTIALD,
@@ -507,6 +454,8 @@ pub use ffi::{
 
 #[doc(inline)]
 pub use ffi::{
+    // structs
+    ncdplot, // f64
     // functions
     ncdplot_add_sample,
     ncdplot_create,
@@ -515,6 +464,8 @@ pub use ffi::{
     ncdplot_sample,
     ncdplot_set_sample,
 
+    ncplot_options,
+    ncuplot, // u64
     ncuplot_add_sample,
     ncuplot_create,
     ncuplot_destroy,
@@ -525,12 +476,6 @@ pub use ffi::{
 
 // ncreader --------------------------------------------------------------------
 //
-// already wrapped:
-//
-// // structs
-// ncreader,
-// ncreader_options,
-//
 // // constants
 // NCREADER_OPTION_CURSOR,
 // NCREADER_OPTION_HORSCROLL,
@@ -539,6 +484,8 @@ pub use ffi::{
 
 #[doc(inline)]
 pub use ffi::{
+    // structs
+    ncreader,
     // functions
     ncreader_clear,
     ncreader_contents,
@@ -549,26 +496,24 @@ pub use ffi::{
     ncreader_move_right,
     ncreader_move_up,
     ncreader_offer_input,
+    ncreader_options,
     ncreader_plane,
     ncreader_write_egc,
 };
 
 // ncprogbar -------------------------------------------------------------------
 //
-// already wrapped:
-//
-// // structs
-// ncprogbar,
-// ncprogbar_options,
-//
 // // constants
 // NCPROGBAR_OPTION_RETROGRADE,
 
 #[doc(inline)]
 pub use ffi::{
+    // structs
+    ncprogbar,
     // functions
     ncprogbar_create,
     ncprogbar_destroy,
+    ncprogbar_options,
     ncprogbar_plane,
     ncprogbar_progress,
     ncprogbar_set_progress,
@@ -576,18 +521,14 @@ pub use ffi::{
 
 // ncreel ----------------------------------------------------------------------
 //
-// already wrapped:
-//
-// // structs
-// ncreel,
-// ncreel_options,
-//
 // // constants
 // NCREEL_OPTION_CIRCULAR,
 // NCREEL_OPTION_INFINITESCROLL,
 
 #[doc(inline)]
 pub use ffi::{
+    // structs
+    ncreel,
     // functions
     ncreel_add,
     ncreel_create,
@@ -596,6 +537,7 @@ pub use ffi::{
     ncreel_focused,
     ncreel_next,
     ncreel_offer_input,
+    ncreel_options,
     ncreel_plane,
     ncreel_prev,
     ncreel_redraw,
@@ -603,8 +545,6 @@ pub use ffi::{
 };
 
 // ncscale ---------------------------------------------------------------------
-//
-// already wrapped:
 //
 // // type definitions
 // ncscale_e,
@@ -617,56 +557,46 @@ pub use ffi::{
 // ncscale_e_NCSCALE_SCALE_HIRES,
 
 // ncselector ------------------------------------------------------------------
-//
-// already wrapped:
-//
-// // structs
-// ncselector,
-// ncselector_item,
-// ncselector_options,
 
 #[doc(inline)]
 pub use ffi::{
+    // structs
+    ncselector,
     // functions
     ncselector_additem,
     ncselector_create,
     ncselector_delitem,
     ncselector_destroy,
+    ncselector_item,
     ncselector_nextitem,
     ncselector_offer_input,
+    ncselector_options,
     ncselector_plane,
     ncselector_previtem,
     ncselector_selected,
 };
 
 // ncstats ---------------------------------------------------------------------
-//
-// already wrapped:
-//
-// // structs
-// ncstats,
+
+#[doc(inline)]
+pub use ffi::ncstats;
 
 // ncssubproc ------------------------------------------------------------------
-//
-// already wrapped:
-//
-// // structs
-// ncsubproc
-// ncsubproc_options
 
 #[doc(inline)]
 pub use ffi::{
+    // structs
+    ncsubproc,
     // functions
     ncsubproc_createv,
     ncsubproc_createvp,
     ncsubproc_createvpe,
     ncsubproc_destroy,
+    ncsubproc_options,
     ncsubproc_plane,
 };
 
 // ncstyle ---------------------------------------------------------------------
-//
-// already wrapped:
 //
 // // constants
 // NCSTYLE_MASK,
@@ -679,16 +609,13 @@ pub use ffi::{
 
 // nctabbed --------------------------------------------------------------------
 //
-// // structs
-// nctab,
-// nctabbed,
-// nctabbed_options,
-//
 // // constants
 // NCTABBED_OPTION_BOTTOM,
 
 #[doc(inline)]
 pub use ffi::{
+    // structs
+    nctab,
     // functions
     nctab_cb,
     nctab_move,
@@ -702,6 +629,7 @@ pub use ffi::{
     nctab_set_name,
     nctab_set_userptr,
     nctab_userptr,
+    nctabbed,
     nctabbed_add,
     nctabbed_channels,
     nctabbed_content_plane,
@@ -711,6 +639,7 @@ pub use ffi::{
     nctabbed_ensure_selected_header_visible,
     nctabbed_leftmost,
     nctabbed_next,
+    nctabbed_options,
     nctabbed_plane,
     nctabbed_prev,
     nctabbed_redraw,
@@ -728,54 +657,42 @@ pub use ffi::{
 };
 
 // nctablet --------------------------------------------------------------------
-//
-// already wrapped:
-//
-// // structs
-// nctablet,
 
 #[doc(inline)]
 pub use ffi::{
+    // structs
+    nctablet,
     // functions
     nctablet_plane,
     nctablet_userptr,
 };
 
 // nctree ----------------------------------------------------------------------
-//
-// // structs
-// nctree,
-// nctree_item,
-// nctree_options,
-//
+
 #[doc(inline)]
 pub use ffi::{
+    // structs
+    nctree,
     // functions
     nctree_create,
     nctree_destroy,
     nctree_focused,
     nctree_goto,
+    nctree_item,
     nctree_next,
     nctree_offer_input,
+    nctree_options,
     nctree_plane,
     nctree_prev,
     nctree_redraw,
 };
 
 // ncvgeom ---------------------------------------------------------------------
-//
-// already wrapped:
-//
-// // structs
-// ncvgeom
+
+#[doc(inline)]
+pub use ffi::ncvgeom;
 
 // ncvisual --------------------------------------------------------------------
-//
-// already wrapped:
-//
-// // structs
-// ncvisual,
-// ncvisual_options,
 //
 // // constants
 // NCVISUAL_OPTION_ADDALPHA,
@@ -788,6 +705,8 @@ pub use ffi::{
 
 #[doc(inline)]
 pub use ffi::{
+    // structs
+    ncvisual,
     // functions
     ncvisual_at_yx,
     ncvisual_blitter_geom,
@@ -802,6 +721,7 @@ pub use ffi::{
     ncvisual_from_rgb_packed,
     ncvisual_from_rgba,
     ncvisual_media_defblitter,
+    ncvisual_options,
     ncvisual_polyfill_yx,
     ncvisual_render,
     ncvisual_resize,
@@ -816,12 +736,6 @@ pub use ffi::{
 
 // notcurses -------------------------------------------------------------------
 //
-// already wrapped:
-//
-// // structs
-// notcurses,
-// notcurses_options,
-//
 // // constants
 // NCOPTION_DRAIN_INPUT,
 // NCOPTION_INHIBIT_SETLOCALE,
@@ -835,6 +749,8 @@ pub use ffi::{
 
 #[doc(inline)]
 pub use ffi::{
+    // structs
+    notcurses,
     // functions
     notcurses_accountname,
     notcurses_at_yx,
@@ -871,6 +787,7 @@ pub use ffi::{
     notcurses_linesigs_enable,
     notcurses_mouse_disable,
     notcurses_mouse_enable,
+    notcurses_options,
     notcurses_palette_size,
     notcurses_refresh,
     notcurses_render,
@@ -893,16 +810,13 @@ pub use ffi::{
 
 // palette ---------------------------------------------------------------------
 //
-// already wrapped:
-//
-// // structs
-// ncpalette,
-//
 // // constants
 // NCPALETTESIZE,
 
 #[doc(inline)]
 pub use ffi::{
+    // structs
+    ncpalette,
     // functions
     ncpalette_free,
     ncpalette_new,
@@ -910,8 +824,6 @@ pub use ffi::{
 };
 
 // fade callback ---------------------------------------------------------------
-//
-// already wrapped:
 //
 // // types
 // fadecb,

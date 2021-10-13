@@ -190,7 +190,7 @@ pub use time::NcTime;
 pub use visual::{NcRgba, NcVGeom, NcVisual, NcVisualOptions}; // ←
 
 pub mod c_api {
-    //! The C API including global constants and functions.
+    //! The C API including global constants, functions and structs.
     //!
     //! Includes also both automatically imported functions by bindgen, and
     //! manually wrapped and reimplemented global functions.
@@ -207,7 +207,7 @@ pub mod c_api {
         pub use crate::bindings::ffi::*;
     }
 
-    // public re-export of imported functions:
+    // public re-export of imported functions & structs:
     #[doc(inline)]
     pub use crate::bindings::*;
 
@@ -224,7 +224,7 @@ pub mod c_api {
     pub use crate::plane::reimplemented::*;
     pub use crate::resizecb::reimplemented::*;
 
-    // public re-export of constants:
+    // public re-export of reimplemented constants:
     pub use crate::align::constants::*;
     pub use crate::alpha::constants::*;
     pub use crate::blitter::constants::*;
