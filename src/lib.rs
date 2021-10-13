@@ -145,6 +145,7 @@ mod plane;
 mod resizecb;
 mod scale;
 mod stats;
+mod string;
 mod style;
 mod time;
 mod visual;
@@ -183,6 +184,7 @@ pub use r#box::{NcBoxMask, NcBoxMaskApi};
 pub use resizecb::{NcResizeCb, NcResizeCbApi, NcResizeCbUnsafe};
 pub use scale::{NcScale, NcScaleApi};
 pub use stats::NcStats;
+pub use string::NcString;
 pub use style::{NcStyle, NcStyleApi};
 pub use time::NcTime;
 pub use visual::{NcRgba, NcVGeom, NcVisual, NcVisualOptions}; // ←
