@@ -6,7 +6,7 @@ use libnotcurses_sys::{
     widgets::*,
     *,
 };
-use std::{ffi::{CString, c_void}, ptr::null_mut};
+use std::{ffi::{CString, c_void}, ptr::null};
 
 fn main() -> NcResult<()> {
     let nc: &mut Nc = Nc::new_cli()?;
@@ -19,12 +19,10 @@ fn main() -> NcResult<()> {
     let mut footer_str = NcString::new("footer");
 
     let item1 = NcSelectorItem {
-        option: null_mut(),
+        option: null(),
         // option: option_str.as_mut_ptr(), // BUGFIX: error here
 
         desc: desc_str.as_mut_ptr(),
-        opcolumns: 0,
-        desccolumns: 0,
     };
     let mut selector_items: [NcSelectorItem; 1] = [item1];
     let seloptions = NcSelectorOptions {
@@ -45,7 +43,7 @@ fn main() -> NcResult<()> {
 
     selector.destroy()?;
     // unsafe {
-    //     c_api::ncselector_destroy(selector, null_mut());
+    //     c_api::ncselector_destroy(selector, null());
     // };
 
     nc.stop()?;

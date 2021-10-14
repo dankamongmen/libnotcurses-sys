@@ -35,8 +35,6 @@ fn main() -> NcResult<()> {
         option: null_mut(),
         // option: str_option_dup, // <-- ncselector_destroy doesn't free this
         desc: null_mut(),
-        opcolumns: 0,
-        desccolumns: 0,
     };
     let mut selector_items: [NcSelectorItem; 1] = [item1];
     let seloptions = NcSelectorOptions {

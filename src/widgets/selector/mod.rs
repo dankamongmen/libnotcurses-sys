@@ -22,24 +22,28 @@ use core::ptr::null_mut;
 use crate::{
     c_api::{
         ncselector_additem, ncselector_create, ncselector_delitem, ncselector_destroy,
-        ncselector_nextitem, ncselector_offer_input, ncselector_plane, ncselector_previtem,
+        ncselector_nextitem, ncselector_offer_input, ncselector_previtem,
         ncselector_selected,
     },
     cstring, cstring_mut, error, error_ref_mut, error_str, NcChannels, NcChannelsApi, NcInput,
-    NcPlane, NcResult,
+    NcPlane, NcResult
 };
 
-/// High-level widget for selecting one item from a set
+/// High-level widget for selecting one item from a set.
 pub type NcSelector = crate::bindings::ffi::ncselector;
 
-/// Item structure for [`NcSelector`]
+/// Item structure for [`NcSelector`].
 pub type NcSelectorItem = crate::bindings::ffi::ncselector_item;
 
-/// Options structure for [`NcSelector`]
+/// Options structure for [`NcSelector`].
+///
 pub type NcSelectorOptions = crate::bindings::ffi::ncselector_options;
 
 /// # `NcSelector` constructors & destructors
 impl NcSelector {
+    /// Creates an `NcSelector` over an `NcPlane`.
+    ///
+    /// The selector will take care of destroying the plane.
     pub fn new<'a>(plane: &mut NcPlane, options: NcSelectorOptions) -> NcResult<&'a mut Self> {
         error_ref_mut![
             unsafe { ncselector_create(plane, &options) },
@@ -51,14 +55,20 @@ impl NcSelector {
         unsafe { ncselector_offer_input(self, &input) }
     }
 
-    /// Destroy the ncselector. If 'item' is not NULL, the last selected option will
-    /// be strdup()ed and assigned to '*item' (and must be free()d by the caller).
+    /// Destroys the `NcSelector`.
+    ///
+    /// Note that this also destroys the [`NcPlane`].
+    //
+    // If 'item' is not NULL, the last selected option will
+    // be strdup()ed and assigned to '*item' (and must be free()d by the caller).
     pub fn destroy(&mut self) -> NcResult<()> {
         unsafe { ncselector_destroy(self, null_mut()) };
         Ok(())
     }
 
-    /// Dynamically add items. It is usually sufficient to supply a static
+    /// Dynamically adds items.
+    ///
+    /// It is usually sufficient to supply a static
     /// list of items via ncselector_options->items.
     pub fn additem(&mut self, item: NcSelectorItem) -> NcResult<i32> {
         error![
@@ -84,10 +94,10 @@ impl NcSelector {
         ]
     }
 
-    /// Return a reference to the ncselector's underlying ncplane.
-    pub fn plane<'a>(&mut self) -> NcResult<&'a mut NcPlane> {
-        error_ref_mut![unsafe { ncselector_plane(self) }, "Calling selector.plane"]
-    }
+    // /// Return a reference to the ncselector's underlying ncplane.
+    // pub fn plane<'a>(&mut self) -> NcResult<&'a mut NcPlane> {
+    //     error_ref_mut![unsafe { ncselector_plane(self) }, "Calling selector.plane"]
+    // }
 
     /// Move down in the list. A reference to the newly-selected item is
     /// returned, or NULL if there are no items in the list.
@@ -105,12 +115,13 @@ impl NcSelector {
 }
 
 impl NcSelectorItem {
+    // pub fn new(option: Option<NcString>, desc: Option<NcString>) -> Self {
+    // pub fn new(option: &mut NcString, desc: Option<&mut NcString>) -> Self {
     pub fn new(option: &str, desc: &str) -> Self {
         Self {
+            // option: option.map_or(null_mut(), |mut s|s.as_mut_ptr()),
             option: cstring_mut![option],
             desc: cstring_mut![desc],
-            opcolumns: 0,
-            desccolumns: 0,
         }
     }
 
@@ -119,8 +130,6 @@ impl NcSelectorItem {
         Self {
             option: null_mut(),
             desc: null_mut(),
-            opcolumns: 0,
-            desccolumns: 0,
         }
     }
 }
@@ -136,14 +145,14 @@ impl NcSelectorOptions {
         footer: &str,
         selector_item: &mut [NcSelectorItem],
     ) -> Self {
-        //assert![!selector_item.is_empty()];
+        // assert![!selector_item.is_empty()];
         Self {
             title: cstring_mut![title], // title may be null, inhibiting riser, saving two rows.
             secondary: cstring_mut![secondary], // secondary may be null
             footer: cstring_mut![footer], // footer may be null
 
             items: selector_item.as_mut_ptr(), // initial items and descriptions
-            defidx: 1,
+            defidx: 1,                         // default item
             maxdisplay: 6, // maximum number of options to display at once, 0 to use all available space
             // exhaustive styling options
             opchannels: NcChannels::from_rgb8(0xe0, 0x80, 0x40, 0, 0, 0),
