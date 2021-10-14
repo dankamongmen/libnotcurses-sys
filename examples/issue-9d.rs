@@ -26,9 +26,9 @@ fn main() -> NcResult<()> {
     let secondary_str = NcString::new("secondary");
     let footer_str = NcString::new("footer");
     let seloptions = NcSelectorOptions::with_all_options(
-        &title_str,
-        &secondary_str,
-        &footer_str,
+        Some(&title_str),
+        Some(&secondary_str),
+        Some(&footer_str),
         &selector_items,
         0,
         2,

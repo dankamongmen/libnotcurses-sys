@@ -2,7 +2,7 @@ use core::ptr::{null, null_mut};
 
 use crate::{
     c_api, cstring, error, error_ref_mut, error_str,
-    widgets::{NcSelector, NcSelectorItem, NcSelectorOptions},
+    widgets::{NcSelector, NcSelectorBuilder, NcSelectorItem, NcSelectorOptions},
     NcChannels, NcInput, NcPlane, NcResult, NcString,
 };
 
@@ -15,6 +15,11 @@ impl NcSelector {
             unsafe { c_api::ncselector_create(plane, options) },
             "ncselector_create"
         ]
+    }
+
+    /// Starts the builder.
+    pub fn builder() -> NcSelectorBuilder {
+        NcSelectorBuilder::new()
     }
 
     /// Offers an input to the selector.
@@ -75,7 +80,7 @@ impl NcSelector {
         }
     }
 
-    // too unsafe
+    // NOTE: too unsafe
     // /// Return a reference to the ncselector's underlying ncplane.
     // pub fn plane<'a>(&mut self) -> NcResult<&'a mut NcPlane> {
     //     error_ref_mut![unsafe { c_api::ncselector_plane(self) }, "Calling selector.plane"]
@@ -112,75 +117,9 @@ impl NcSelectorItem {
             desc: null(),
         }
     }
-
-    // DOES NOT WORK
-    // pub fn new_ncstring(option: NcString, desc: NcString) -> Self {
-    //     Self {
-    //         option: option.as_ptr(),
-    //         desc: desc.as_ptr(),
-    //     }
-    // }
-
-    // DOES NOT WORK
-    // pub fn new_str(option: &'static str, desc: &'static str) -> Self {
-    //     use std::ffi::CString;
-    //     Self {
-    //         option: CString::new(option).unwrap().as_ptr(),
-    //         desc: CString::new(desc).unwrap().as_ptr(),
-    //     }
-    // }
 }
 
-// /// A null-terminated list of [`NcSelectorItem`].
-// ///
-// /// This makes sure the list always ends with an empty item.
-// impl NcSelectorItems {
-//     /// Creates a list of items from a vector of items.
-//     // MAYBE: accept a slice
-//     pub fn new(items: Vec<NcSelectorItem>) -> Self {
-//         let mut res = Self { items };
-//         res.add_empty_item();
-//         res
-//     }
-//
-//     /// Creates an empty list of items.
-//     pub fn new_empty() -> Self {
-//         Self {
-//             items: vec![NcSelectorItem::new_empty()],
-//         }
-//     }
-//
-//     /// Adds a new `NcSelectorItem` to the list.
-//     pub fn add(&mut self, item: NcSelectorItem) {
-//         self.items.pop();
-//         self.items.push(item);
-//         self.add_empty_item();
-//     }
-//
-//     // /// Adds a new NcSelectorItem from its constituent components.
-//     // pub fn add_components(&mut self, item_option: &str, item_desc: &str) {
-//     //     self.items.pop();
-//     //     self.items.push(NcSelectorItem::new(item_option, item_desc));
-//     //     self.add_empty_item();
-//     // }
-//
-//     // ///
-//     // // CHECK: is private ok?
-//     // fn as_mut_ptr(&mut self) -> *mut NcSelectorItem {
-//     //     self.items.as_mut_ptr()
-//     // }
-//
-//     fn add_empty_item(&mut self) {
-//         self.items.push(NcSelectorItem::new_empty())
-//     }
-// }
-
 /// # `NcMenuOptions` constructors
-//
-// TODO:IMPROVE:
-// - `title` may be null, inhibiting riser, saving two rows.
-// - `secondary` may be null
-// - `footer` may be null
 impl NcSelectorOptions {
     /// New `NcSelectorOptions` with just the list of items.
     pub fn new(items: &[NcSelectorItem]) -> Self {
@@ -202,9 +141,9 @@ impl NcSelectorOptions {
 
     /// New `NcSelectorOptions` with all options.
     pub fn with_all_options(
-        title: &NcString,
-        secondary: &NcString,
-        footer: &NcString,
+        title: Option<&NcString>,
+        secondary: Option<&NcString>,
+        footer: Option<&NcString>,
         items: &[NcSelectorItem],
         default: u32,
         max_display: u32,
@@ -214,12 +153,28 @@ impl NcSelectorOptions {
         footchannels: NcChannels,
         boxchannels: NcChannels,
     ) -> Self {
-        assert![!items.is_empty()];
-        Self {
-            title: title.as_ptr(),
-            secondary: secondary.as_ptr(),
-            footer: footer.as_ptr(),
+        assert![!items.is_empty()]; // DEBUG
 
+        let title_ptr = if let Some(s) = title {
+            s.as_ptr()
+        } else {
+            null()
+        };
+        let secondary_ptr = if let Some(s) = secondary {
+            s.as_ptr()
+        } else {
+            null()
+        };
+        let footer_ptr = if let Some(s) = footer {
+            s.as_ptr()
+        } else {
+            null()
+        };
+
+        Self {
+            title: title_ptr,
+            secondary: secondary_ptr,
+            footer: footer_ptr,
             // initial items and descriptions,
             items: items.as_ptr(),
             // default item

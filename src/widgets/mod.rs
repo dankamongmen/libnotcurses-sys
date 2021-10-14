@@ -16,6 +16,6 @@ pub use plot::*;
 pub use progbar::*;
 pub use reader::*;
 pub use reel::*;
-pub use selector::*;
+pub use selector::{NcSelector, NcSelectorBuilder, NcSelectorItem, NcSelectorOptions};
 pub use tabbed::*;
 pub use tree::*;

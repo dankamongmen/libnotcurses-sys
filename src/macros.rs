@@ -136,13 +136,15 @@ macro_rules! cstring {
 /// Converts an `&str` into `*mut c_char`.
 ///
 /// See [`Cstring`].
-//
-// FIXME: https://github.com/dankamongmen/libnotcurses-sys/issues/9
 #[macro_export]
 #[doc(hidden)]
 macro_rules! cstring_mut {
     ($s:expr) => {
+        // we can't use this without taking the responsibility of deallocating:
         std::ffi::CString::new($s).unwrap().into_raw()
+
+        // another option:
+        // unsafe { crate::c_api::libc::strdup(crate::cstring![$s]) }
     };
 }
 
@@ -229,7 +231,7 @@ macro_rules! putstr {
 /// without including newlines.
 ///
 /// # Example
-/// ```
+/// ```ignore
 /// # use libnotcurses_sys::*;
 /// # fn main() -> NcResult<()> {
 /// let nc = Nc::new_cli()?;

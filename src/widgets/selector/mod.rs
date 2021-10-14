@@ -17,7 +17,10 @@
 //!
 //! At all times, exactly one item is selected.
 
+mod builder;
 mod methods;
+
+pub use builder::NcSelectorBuilder;
 
 /// High-level widget for selecting one item from a set.
 pub type NcSelector = crate::bindings::ffi::ncselector;
@@ -27,8 +30,3 @@ pub type NcSelectorOptions = crate::bindings::ffi::ncselector_options;
 
 /// Item structure for [`NcSelector`].
 pub type NcSelectorItem = crate::bindings::ffi::ncselector_item;
-
-// ///
-// pub struct NcSelectorItems {
-//     items: Vec<NcSelectorItem>,
-// }

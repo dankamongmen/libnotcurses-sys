@@ -13,7 +13,7 @@ pub trait NcChannelApi {
 
     // constructors
     fn new() -> Self;
-    fn default() -> Self;
+    fn with_default() -> Self;
     fn from_rgb(rgb: NcRgb) -> Self;
     fn from_rgb_alpha(rgb: NcRgb, alpha: NcAlpha) -> Self;
     fn from_rgb8(r: NcComponent, g: NcComponent, b: NcComponent) -> Self;
@@ -177,7 +177,7 @@ impl NcChannelApi for NcChannel {
     }
 
     /// New `NcChannel`, set to black and using the "default color".
-    fn default() -> Self {
+    fn with_default() -> Self {
         0 as NcChannel
     }
 

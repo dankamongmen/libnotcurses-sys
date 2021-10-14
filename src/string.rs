@@ -10,6 +10,7 @@ use std::ffi::CString;
 // WIP
 // methods that accept `*mut c_char`? take care of deallocating it
 //
+#[derive(Debug)]
 pub struct NcString {
     cstring: CString,
     // ptr: *mut c_char,

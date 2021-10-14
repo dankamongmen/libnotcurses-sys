@@ -20,23 +20,7 @@
 //!13:       ╰──────────────────────────────press q to exit (there is no exit)─╯
 //!14:
 
-use libnotcurses_sys::{
-    //// Selector:
-    widgets::{NcSelector, NcSelectorItem, NcSelectorOptions},
-    // Core
-    Nc,
-    NcAlign,
-    NcAlignApi,
-    NcEvType,
-    NcEvTypeApi,
-    // Input
-    NcInput,
-    NcKey,
-    // Plane
-    NcPlane,
-    NcPlaneOptions,
-    NcResult,
-};
+use libnotcurses_sys::{widgets::*, *};
 
 fn main() -> NcResult<()> {
     // Init context
@@ -44,33 +28,6 @@ fn main() -> NcResult<()> {
 
     // Enable mouse
     nc.mouse_enable()?;
-
-    // Declare items of selector
-    let mut selector_items: [NcSelectorItem; 11] = [
-        NcSelectorItem::new("Afrikaans", "Ek kan glas eet, dit maak my nie seer nie."),
-        NcSelectorItem::new("AngloSax", "ᛁᚳ᛫ᛗᚨᚷ᛫ᚷᛚᚨᛋ᛫ᛖᚩᛏᚪᚾ᛫ᚩᚾᛞ᛫ᚻᛁᛏ᛫ᚾᛖ᛫ᚻᛖᚪᚱᛗᛁᚪᚧ᛫ᛗᛖ᛬"),
-        NcSelectorItem::new(
-            "Japanese",
-            "私はガラスを食べられます。それは私を傷つけません。",
-        ),
-        NcSelectorItem::new("Kabuverdianu", "M’tá podê kumê vidru, ká stá máguame."),
-        NcSelectorItem::new("Khmer", "ខ្ញុំអាចញុំកញ្ចក់បាន ដោយគ្មានបញ្ហារ"),
-        NcSelectorItem::new("Lao", "ຂອ້ຍກິນແກ້ວໄດ້ໂດຍທີ່ມັນບໍ່ໄດ້ເຮັດໃຫ້ຂອ້ຍເຈັບ."),
-        NcSelectorItem::new("Russian", "Я могу есть стекло, оно мне не вредит."),
-        NcSelectorItem::new("Sanskrit", "kācaṃ śaknomyattum; nopahinasti mām."),
-        NcSelectorItem::new("Braille", "⠊⠀⠉⠁⠝⠀⠑⠁⠞⠀⠛⠇⠁⠎⠎⠀⠁⠝⠙⠀⠊⠞⠀⠙⠕⠑⠎⠝⠞⠀⠓⠥⠗⠞⠀⠍⠑"),
-        NcSelectorItem::new("Tibetan", "ཤེལ་སྒོ་ཟ་ནས་ང་ན་གི་མ་རེད།"),
-        NcSelectorItem::new_empty(),
-    ];
-
-    // Pack those items in the selector custom option struct
-    // -- with title, description and footer
-    let opts: NcSelectorOptions = NcSelectorOptions::new(
-        "this is truly, absolutely an awfully long example of a selector title",
-        "pick one (you will die regardless)",
-        "press q to exit (there is no exit)",
-        &mut selector_items,
-    );
 
     // Create first plane (full screen)
     let stdplane: &mut NcPlane = nc.stdplane();
@@ -88,7 +45,30 @@ fn main() -> NcResult<()> {
     let selplane: &mut NcPlane = NcPlane::with_options_bound(stdplane, planeopts)?;
 
     // Create selector
-    let selector: &mut NcSelector = NcSelector::new(selplane, opts)?;
+    let selector = NcSelector::builder()
+        .item("Afrikaans", "Ek kan glas eet, dit maak my nie seer nie.")
+        .item("AngloSax", "ᛁᚳ᛫ᛗᚨᚷ᛫ᚷᛚᚨᛋ᛫ᛖᚩᛏᚪᚾ᛫ᚩᚾᛞ᛫ᚻᛁᛏ᛫ᚾᛖ᛫ᚻᛖᚪᚱᛗᛁᚪᚧ᛫ᛗᛖ᛬")
+        .item(
+            "Japanese",
+            "私はガラスを食べられます。それは私を傷つけません。",
+        )
+        .item("Kabuverdianu", "M’tá podê kumê vidru, ká stá máguame.")
+        .item("Khmer", "ខ្ញុំអាចញុំកញ្ចក់បាន ដោយគ្មានបញ្ហារ")
+        .item("Lao", "ຂອ້ຍກິນແກ້ວໄດ້ໂດຍທີ່ມັນບໍ່ໄດ້ເຮັດໃຫ້ຂອ້ຍເຈັບ.")
+        .item("Russian", "Я могу есть стекло, оно мне не вредит.")
+        .item("Sanskrit", "kācaṃ śaknomyattum; nopahinasti mām.")
+        .item("Braille", "⠊⠀⠉⠁⠝⠀⠑⠁⠞⠀⠛⠇⠁⠎⠎⠀⠁⠝⠙⠀⠊⠞⠀⠙⠕⠑⠎⠝⠞⠀⠓⠥⠗⠞⠀⠍⠑")
+        .item("Tibetan", "ཤེལ་སྒོ་ཟ་ནས་ང་ན་གི་མ་རེད།")
+        .title("this is truly, absolutely an awfully long example of a selector title")
+        .secondary("pick one (you will die regardless)")
+        .footer("press q to exit (there is no exit)")
+        .max_display(4)
+        .default_item(1)
+        .box_channels(NcChannels::from_rgb(0x20e040, 0x202020))
+        .item_channels(NcChannels::from_rgb(0xe08040, 0), NcChannels::from_rgb(0x80e040,0))
+        .secondary_channels(NcChannels::from_rgb(0xe00040, 0x200000))
+        .title_channels(NcChannels::from_rgb(0xffff80, 0x000020))
+        .finish(selplane)?;
 
     // Create description plane
     let planeopts2: NcPlaneOptions = NcPlaneOptions::new_aligned(15, NcAlign::LEFT, 30, 80);
@@ -140,7 +120,7 @@ fn run_selector(nc: &mut Nc, selector: &mut NcSelector) -> NcResult<String> {
             match keypress {
                 // Q => quit
                 'q' | 'Q' | NcKey::ENTER => {
-                    return Ok(selector.selected()?);
+                    return selector.selected().ok_or_else(|| NcError::new());
                 }
                 // J => down
                 'j' | 'J' => {
