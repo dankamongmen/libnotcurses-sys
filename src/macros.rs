@@ -34,15 +34,34 @@ macro_rules! sleep {
     };
 }
 
-/// notcurses render sleep:
+#[doc(hidden)]
+#[macro_export]
+#[deprecated]
+#[allow(unused_macros)]
+macro_rules! nrs {
+    ($($rest:tt)*) => {
+        nc_render_sleep!($($rest)*)
+    }
+}
+
+#[doc(hidden)]
+#[macro_export]
+#[deprecated]
+#[allow(unused_macros)]
+macro_rules! prs {
+    ($($rest:tt)*) => {
+        pile_render_sleep!($($rest)*)
+    }
+}
+
 /// [`Nc::render`][Nc#method.render]\(`$nc`\)? + [`sleep!`]`[$sleep_args]`.
 ///
 /// Renders the `$nc` [`Nc`] object's standard plane pile and then,
 /// if there's no error, calls the sleep macro with the rest of the arguments.
 ///
-/// Returns [NcResult].
+/// Returns [`NcResult`].
 #[macro_export]
-macro_rules! nrs {
+macro_rules! nc_render_sleep {
     ($nc:expr, $( $sleep_args:expr),+ ) => {
         crate::Nc::render($nc)?;
         sleep![$( $sleep_args ),+];
@@ -52,17 +71,16 @@ macro_rules! nrs {
     };
 }
 
-/// plane render sleep:
 /// [`NcPlane::render`][NcPlane#method.render]\(`$p`\)? +
 /// [`NcPlane::rasterize`][NcPlane#method.rasterize]\(`$p`\)? +
 /// [`sleep!`]`[$sleep_args]`.
 ///
-/// Renders and rasterizes the `$p` [NcPlane] pile and then, if there are
+/// Renders and rasterizes the `$p` [`NcPlane`] pile and then, if there are
 /// no errors, calls the sleep macro with the rest of the arguments.
 ///
-/// Returns [NcResult].
+/// Returns [`NcResult`].
 #[macro_export]
-macro_rules! prs {
+macro_rules! pile_render_sleep {
     ($p:expr, $( $sleep_args:expr),+ ) => {
         crate::NcPlane::render($p)?;
         crate::NcPlane::rasterize($p)?;

@@ -15,7 +15,7 @@ fn main() -> NcResult<()> {
 
     for _ in 0..CELLS_MOVEMENT {
         plane1.move_rel(1, 1)?;
-        nrs![&mut nc, 0, 50];
+        nc_render_sleep![&mut nc, 0, 50];
     }
     sleep![1];
 
@@ -31,7 +31,7 @@ fn main() -> NcResult<()> {
 
     for _ in 0..CELLS_MOVEMENT {
         visual1plane.move_rel(1, 1)?;
-        nrs![&mut nc, 0, 50];
+        nc_render_sleep![&mut nc, 0, 50];
     }
     sleep![1];
 
