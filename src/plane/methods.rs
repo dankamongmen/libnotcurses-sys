@@ -1604,6 +1604,15 @@ impl NcPlane {
         error![unsafe { c_api::ncpile_render(self) }, "NcPlane.render()"]
     }
 
+    /// Renders and rasterizes the pile of which this `NcPlane` is a part.
+    ///
+    /// *(No equivalent C style function)*
+    pub fn render2(&mut self) -> NcResult<()> {
+        self.render()?;
+        self.rasterize()?;
+        Ok(())
+    }
+
     /// Performs the rendering and rasterization portion of
     /// [`render`][NcPlane#method.render] and [`rasterize`][NcPlane#method.rasterize]
     /// but doe not write the resulting buffer out to the terminal.
