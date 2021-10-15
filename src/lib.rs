@@ -72,7 +72,7 @@
 //! use core::ptr::{null, null_mut};
 //! use std::process::exit;
 //!
-//! use libnotcurses_sys::{*, c_api::*};
+//! use libnotcurses_sys::{c_api::*};
 //!
 //! # #[cfg(not(miri))]
 //! fn main() {

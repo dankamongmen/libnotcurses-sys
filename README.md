@@ -14,6 +14,12 @@ while trying to remain very close to it.
 It offers the choice of using it [**more like Rust**](#like-rust)
 and/or [**more like C**](#like-C).
 
+```
+notcurses           : C library
+libnotcurses-sys  ← : C⇄Rust bridge library *(you are here)*
+notcurses-rs        : Rust library
+```
+
 ## like Rust
 
 Where you use the more safely wrapped types, with its methods and constructors,
@@ -71,7 +77,7 @@ or in case of receiving a pointer, by comparing it to `null_mut()`.
 use core::ptr::{null, null_mut};
 use std::process::exit;
 
-use libnotcurses_sys::{*, c_api::*};
+use libnotcurses_sys::{c_api::*};
 
 fn main() {
     let options = ffi::notcurses_options {
