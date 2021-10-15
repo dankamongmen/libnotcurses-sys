@@ -6,7 +6,7 @@
 #[allow(unused_imports)] // for doc comments
 use crate::{
     c_api::{NCRESULT_ERR, NCRESULT_OK},
-    Nc, NcDirect, NcError, NcIntResultApi, NcPlane, NcResult,
+    Nc, NcDirect, NcError, NcIntResultApi, NcPlane, NcResult, NcVisual, NcVisualOptions,
 };
 
 // Sleep, Render & Flush Macros ------------------------------------------------
@@ -56,8 +56,8 @@ macro_rules! prs {
 
 /// [`Nc::render`][Nc#method.render]\(`$nc`\)? + [`sleep!`]`[$sleep_args]`.
 ///
-/// Renders the `$nc` [`Nc`] object's standard plane pile and then,
-/// if there's no error, calls the sleep macro with the rest of the arguments.
+/// Renders the `$nc` [`Nc`]'s standard pile, and then,
+/// if there's no error, calls the `sleep` macro with the rest of the arguments.
 ///
 /// Returns [`NcResult`].
 #[macro_export]
@@ -84,6 +84,26 @@ macro_rules! pile_render_sleep {
     ($p:expr, $( $sleep_args:expr),+ ) => {
         crate::NcPlane::render($p)?;
         crate::NcPlane::rasterize($p)?;
+        sleep![$( $sleep_args ),+];
+    };
+    ($nc:expr, $( $sleep_args:expr),+ ,) => {
+        rsleep![$nc, $( $sleep_args ),* ]
+    };
+}
+
+/// [`NcVisual::render`][NcVisual#method.render]\(`$v`, `$nc`, `$vo`\)? +
+/// [`Nc::render`][Nc#method.render]\(`$nc`\)? + [`sleep!`]`[$sleep_args]`.
+///
+/// Renders and rasterizes the `$v` [`NcVisual`] with its `$vo`
+/// [`NcVisualOptions`], the $nc` [`Nc`]'s standard pile, and then, if there are
+/// no errors, calls the `sleep` macro with the rest of the arguments.
+///
+/// Returns [`NcResult`].
+#[macro_export]
+macro_rules! visual_render_sleep {
+    ($v: expr, $vo: expr, $nc:expr, $( $sleep_args:expr),+ ) => {
+        crate::NcVisual::render($v, $nc, $vo)?;
+        crate::Nc::render($nc)?;
         sleep![$( $sleep_args ),+];
     };
     ($nc:expr, $( $sleep_args:expr),+ ,) => {
