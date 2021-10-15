@@ -36,26 +36,21 @@ pub use methods::NcPixelApi;
 /// ## Diagram
 ///
 /// ```txt
-/// AAAAAAAA GGGGGGGG BBBBBBBB RRRRRRRR
+/// AAAAAAAA BBBBBBBB GGGGGGGG RRRRRRRR
 /// ```
 ///
 /// `type in C: ncpixel (uint32_t)`
 ///
-/// NcPixel has 8 bits of alpha,  more or less linear, contributing
+/// `NcPixel` has 8 bits of alpha,  more or less linear, contributing
 /// directly to the usual alpha blending equation.
 ///
-/// We map the 8 bits of alpha to 2 bits of alpha via a [level
-/// function](https://nick-black.com/dankwiki/index.php?title=Notcurses#Transparency.2FContrasting)
+/// We map the 8 bits of alpha to 2 bits of alpha via a [level function][0]
 ///
-/// The ncpixel API facilitates direct management of the pixels within an
-/// ncvisual (ncvisuals keep a backing store of 32-bit RGBA pixels, and render
-/// them down to terminal graphics in ncvisual_render()).
+/// [0]: https://nick-black.com/dankwiki/index.php?title=Notcurses#Transparency.2FContrasting
 ///
-/// Per libav, we "store as BGRA on little-endian, and ARGB on big-endian".
-/// This is an RGBA *byte-order* scheme. libav emits bytes, not words. Those
-/// bytes are R-G-B-A. When read as words, on little endian this will be ABGR,
-/// and on big-endian this will be RGBA. force everything to LE ABGR.
-///
+/// The `NcPixel` API facilitates direct management of the pixels within an
+/// `NcVisual` (`NcVisuals` keep a backing store of 32-bit RGBA pixels,
+/// and render them down to terminal graphics in `NcVisual.render`).
 pub type NcPixel = u32;
 
 /// Pixel blitting implementations, informative only (alias of [`u32`]).

@@ -4,7 +4,7 @@ use crate::{NcComponent, NcPixel};
 #[inline]
 #[allow(clippy::unnecessary_cast)]
 pub const fn ncpixel(red: NcComponent, green: NcComponent, blue: NcComponent) -> NcPixel {
-    0xff000000 as NcPixel | red as NcPixel | (blue as NcPixel) << 8 | (green as NcPixel) << 16
+    0xff000000 as NcPixel | red as NcPixel | (green as NcPixel) << 8 | (blue as NcPixel) << 16
 }
 
 /// Extracts the 8-bit alpha [`NcComponent`] from an ABGR pixel.
@@ -40,13 +40,13 @@ pub fn ncpixel_set_a(pixel: &mut NcPixel, alpha: NcComponent) {
 /// Sets the 8-bit blue [`NcComponent`] of an ABGR pixel.
 #[inline]
 pub fn ncpixel_set_b(pixel: &mut NcPixel, blue: NcComponent) {
-    *pixel = (((*pixel).to_le() & 0xffff00ff) | ((blue as NcPixel) << 8)).to_le();
+    *pixel = (((*pixel).to_le() & 0xff00ffff) | ((blue as NcPixel) << 16)).to_le();
 }
 
 /// Sets the 8-bit green [`NcComponent`] of an ABGR pixel.
 #[inline]
 pub fn ncpixel_set_g(pixel: &mut NcPixel, green: NcComponent) {
-    *pixel = (((*pixel).to_le() & 0xff00ffff) | ((green as NcPixel) << 16)).to_le();
+    *pixel = (((*pixel).to_le() & 0xffff00ff) | ((green as NcPixel) << 8)).to_le();
 }
 
 /// Sets the 8-bit red [`NcComponent`] of an ABGR pixel.
@@ -63,7 +63,7 @@ pub fn ncpixel_set_rgb8(
     green: NcComponent,
     blue: NcComponent,
 ) {
-    ncpixel_set_r(pixel, red);
-    ncpixel_set_g(pixel, green);
     ncpixel_set_b(pixel, blue);
+    ncpixel_set_g(pixel, green);
+    ncpixel_set_r(pixel, red);
 }
