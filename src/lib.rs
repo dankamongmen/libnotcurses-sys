@@ -17,12 +17,12 @@
 //!
 //! ### Example
 //!
-//! ```ignore
+//! ```rust
 //! use libnotcurses_sys::*;
 //!
 //! # #[cfg(not(miri))]
 //! fn main() -> NcResult<()> {
-//!     let mut nc = Nc::with_flags(NCOPTION_NO_ALTERNATE_SCREEN)?;
+//!     let nc = Nc::new_cli()?;
 //!     let plane = nc.stdplane();
 //!     plane.putstr("hello world")?;
 //!     nc.render()?;
@@ -68,7 +68,7 @@
 //!
 //! ### Example
 //!
-//! ```ignore
+//! ```rust
 //! use core::ptr::{null, null_mut};
 //! use std::process::exit;
 //!
@@ -84,7 +84,9 @@
 //!         margin_r: 0,
 //!         margin_b: 0,
 //!         margin_l: 0,
-//!         flags: NCOPTION_NO_ALTERNATE_SCREEN,
+//!         flags: NCOPTION_NO_ALTERNATE_SCREEN
+//!         | NCOPTION_PRESERVE_CURSOR
+//!         | NCOPTION_SUPPRESS_BANNERS
 //!     };
 //!     unsafe {
 //!         let nc = notcurses_init(&options, null_mut());
@@ -97,8 +99,11 @@
 //!             notcurses_stop(nc);
 //!             exit(cols.abs());
 //!         }
-//!         if notcurses_stop(nc) < NCRESULT_OK {
+//!         if notcurses_render(nc) < NCRESULT_OK {
 //!             exit(2);
+//!         }
+//!         if notcurses_stop(nc) < NCRESULT_OK {
+//!             exit(3);
 //!         }
 //!     }
 //! }

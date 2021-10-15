@@ -29,7 +29,7 @@ and error handling with the `NcResult` enum:
 use libnotcurses_sys::*;
 
 fn main() -> NcResult<()> {
-    let mut nc = Nc::with_flags(NCOPTION_NO_ALTERNATE_SCREEN)?;
+    let mut nc = Nc::new_cli()?;
     let plane = nc.stdplane();
     plane.putstr("hello world")?;
     nc.render()?;
@@ -77,7 +77,7 @@ or in case of receiving a pointer, by comparing it to `null_mut()`.
 use core::ptr::{null, null_mut};
 use std::process::exit;
 
-use libnotcurses_sys::{c_api::*};
+use libnotcurses_sys::c_api::*;
 
 fn main() {
     let options = ffi::notcurses_options {
@@ -87,7 +87,9 @@ fn main() {
         margin_r: 0,
         margin_b: 0,
         margin_l: 0,
-        flags: NCOPTION_NO_ALTERNATE_SCREEN,
+        flags: NCOPTION_NO_ALTERNATE_SCREEN
+            | NCOPTION_PRESERVE_CURSOR
+            | NCOPTION_SUPPRESS_BANNERS
     };
     unsafe {
         let nc = notcurses_init(&options, null_mut());
@@ -100,14 +102,17 @@ fn main() {
             notcurses_stop(nc);
             exit(cols.abs());
         }
-        if notcurses_stop(nc) < NCRESULT_OK {
+        if notcurses_render(nc) < NCRESULT_OK {
             exit(2);
+        }
+        if notcurses_stop(nc) < NCRESULT_OK {
+            exit(3);
         }
     }
 }
 ```
 
-### The `notcurses` C API docs
+### Official C API docs
 
 - [API reference (man pages)](https://notcurses.com/)
 - [Wiki Page](https://nick-black.com/dankwiki/index.php/Notcurses)
