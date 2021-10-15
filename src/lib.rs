@@ -243,6 +243,12 @@ pub mod c_api {
     pub use crate::scale::constants::*;
     pub use crate::style::constants::*;
     pub use crate::visual::constants::*;
+    pub use crate::widgets::menu::constants::*;
+    pub use crate::widgets::plot::constants::*;
+    pub use crate::widgets::progbar::constants::*;
+    pub use crate::widgets::reader::constants::*;
+    pub use crate::widgets::reel::constants::*;
+    pub use crate::widgets::tabbed::constants::*;
 
     // private re-export of helper functions for testing:
     mod helpers {

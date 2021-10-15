@@ -27,7 +27,8 @@ mod methods;
 /// The procession will take place along the longer dimension at the time of each
 /// redraw, with the horizontal length scaled by 2 for purposes of comparison.
 /// I.e. for a plane of 20 rows and 50 columns, the progress will be to the
-/// right (50 > 40), or left with [NCPROGBAR_OPTION_RETROGRADE].
+/// right (50 > 40), or left with
+/// [NcProgBarOptions::RETROGRADE][NcProgBarOptions#associatedconstant.RETROGRADE].
 ///
 /// `type in C: ncprogbar (struct)`
 ///
@@ -39,5 +40,12 @@ pub type NcProgBar = crate::bindings::ffi::ncprogbar;
 ///
 pub type NcProgBarOptions = crate::bindings::ffi::ncprogbar_options;
 
-/// proceed left/down
-pub const NCPROGBAR_OPTION_RETROGRADE: u32 = crate::bindings::ffi::NCPROGBAR_OPTION_RETROGRADE;
+impl NcProgBarOptions {
+    /// proceeds left/down
+    pub const RETROGRADE: u32 = constants::NCPROGBAR_OPTION_RETROGRADE;
+}
+
+pub(crate) mod constants {
+    /// proceeds left/down
+    pub const NCPROGBAR_OPTION_RETROGRADE: u32 = crate::bindings::ffi::NCPROGBAR_OPTION_RETROGRADE;
+}

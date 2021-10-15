@@ -58,5 +58,12 @@ pub type NcTabbed = crate::bindings::ffi::nctabbed;
 /// `type in C: nctabbed_options (struct)`
 pub type NcTabbedOptions = crate::bindings::ffi::nctabbed_options;
 
-/// To display the tab list at the bottom instead of at the top of the plane.
-pub const NCTABBED_OPTION_BOTTOM: u32 = crate::bindings::ffi::NCTABBED_OPTION_BOTTOM;
+impl NcTabbedOptions {
+    /// To display the tab list at the bottom instead of at the top of the plane.
+    pub const BOTTOM: u32 = constants::NCTABBED_OPTION_BOTTOM;
+}
+
+pub(crate) mod constants {
+    /// To display the tab list at the bottom instead of at the top of the plane.
+    pub const NCTABBED_OPTION_BOTTOM: u32 = crate::bindings::ffi::NCTABBED_OPTION_BOTTOM;
+}

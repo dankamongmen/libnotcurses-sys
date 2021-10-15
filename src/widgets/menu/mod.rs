@@ -26,8 +26,8 @@ mod methods;
 /// An [Nc][crate::Nc] instance supports menu bars on the top or bottom row
 /// of the true screen.
 ///
-/// An NcMenu is composed of [NcMenuSection]s, which are in turn composed of
-/// [NcMenuItem]s.
+/// An NcMenu is composed of [`NcMenuSection`]s, which are in turn composed of
+/// [`NcMenuItem`]s.
 ///
 /// Either no sections are visible, and the menu is rolled up, or exactly one
 /// section is unrolled.
@@ -51,8 +51,21 @@ pub type NcMenuItem = crate::bindings::ffi::ncmenu_item;
 /// Section for [`NcMenu`].
 pub type NcMenuSection = crate::bindings::ffi::ncmenu_section;
 
-/// [NcMenuOptions] flag: Bottom row (as opposed to top row).
-pub const NCMENU_OPTION_BOTTOM: u64 = crate::bindings::ffi::NCMENU_OPTION_BOTTOM as u64;
+impl NcMenuOptions {
+    /// [`NcMenuOptions`] flag: Bottom row (as opposed to top row).
+    pub const BOTTOM: u64 = constants::NCMENU_OPTION_BOTTOM as u64;
 
-/// [NcMenuOptions] flag: Hide the menu when not unrolled
-pub const NCMENU_OPTION_HIDING: u64 = crate::bindings::ffi::NCMENU_OPTION_HIDING as u64;
+    /// [`NcMenuOptions`] flag: Hides the menu when not unrolled.
+    pub const HIDING: u64 = constants::NCMENU_OPTION_HIDING as u64;
+}
+
+pub(crate) mod constants {
+    #[allow(unused_imports)]
+    use super::NcMenuOptions;
+
+    /// [`NcMenuOptions`] flag: Bottom row (as opposed to top row).
+    pub const NCMENU_OPTION_BOTTOM: u64 = crate::bindings::ffi::NCMENU_OPTION_BOTTOM as u64;
+
+    /// [`NcMenuOptions`] flag: Hides the menu when not unrolled.
+    pub const NCMENU_OPTION_HIDING: u64 = crate::bindings::ffi::NCMENU_OPTION_HIDING as u64;
+}

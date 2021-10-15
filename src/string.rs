@@ -5,11 +5,9 @@ use cty::c_char;
 use std::ffi::CString;
 // use std::ffi::{c_void, CString};
 
-/// This type manages a string that t
+/// A wrapped [`CString`] accepted by widgets.
 ///
-// WIP
-// methods that accept `*mut c_char`? take care of deallocating it
-//
+// MAYBE: also for exporting to `*mut c_char`?
 #[derive(Debug)]
 pub struct NcString {
     cstring: CString,
@@ -41,6 +39,7 @@ impl NcString {
     //     self.cstring.as_mut_ptr()
     // }
 }
+
 // impl Drop for NcString {
 //     fn drop(&mut self) {
 //         if self.deallocate {

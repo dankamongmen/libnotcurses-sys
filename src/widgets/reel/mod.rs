@@ -21,11 +21,25 @@ pub type NcReelOptions = crate::bindings::ffi::ncreel_options;
 /// Visual tablet for [`NcReel`]
 pub type NcTablet = crate::bindings::ffi::nctablet;
 
-/// is navigation circular (does moving down from the last tablet move to the
-/// first, and vice versa)? only meaningful when infinitescroll is true. if
-/// infinitescroll is false, this must be false.
-pub const NCREEL_OPTION_CIRCULAR: u32 = crate::bindings::ffi::NCREEL_OPTION_CIRCULAR;
-/// is scrolling infinite (can one move down or up forever, or is an end
-/// reached?). if true, 'circular' specifies how to handle the special case of
-/// an incompletely-filled reel.
-pub const NCREEL_OPTION_INFINITESCROLL: u32 = crate::bindings::ffi::NCREEL_OPTION_INFINITESCROLL;
+impl NcReelOptions {
+    /// is navigation circular (does moving down from the last tablet move to the
+    /// first, and vice versa)? only meaningful when infinitescroll is true. if
+    /// infinitescroll is false, this must be false.
+    pub const CIRCULAR: u32 = constants::NCREEL_OPTION_CIRCULAR;
+    /// is scrolling infinite (can one move down or up forever, or is an end
+    /// reached?). if true, 'circular' specifies how to handle the special case of
+    /// an incompletely-filled reel.
+    pub const INFINITESCROLL: u32 = constants::NCREEL_OPTION_INFINITESCROLL;
+}
+
+pub(crate) mod constants {
+    /// is navigation circular (does moving down from the last tablet move to the
+    /// first, and vice versa)? only meaningful when infinitescroll is true. if
+    /// infinitescroll is false, this must be false.
+    pub const NCREEL_OPTION_CIRCULAR: u32 = crate::bindings::ffi::NCREEL_OPTION_CIRCULAR;
+    /// is scrolling infinite (can one move down or up forever, or is an end
+    /// reached?). if true, 'circular' specifies how to handle the special case of
+    /// an incompletely-filled reel.
+    pub const NCREEL_OPTION_INFINITESCROLL: u32 =
+        crate::bindings::ffi::NCREEL_OPTION_INFINITESCROLL;
+}

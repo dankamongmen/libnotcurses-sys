@@ -65,7 +65,7 @@ fn main() -> NcResult<()> {
     stdplane.putstr_aligned(1, NcAlign::CENTER, " -=+ menu poc. press q to exit +=-")?;
     stdplane.putstr_aligned(2, NcAlign::LEFT, " -=+ menu poc. press q to exit +=-")?;
 
-    mopts.flags |= NCMENU_OPTION_BOTTOM;
+    mopts.flags |= NcMenuOptions::BOTTOM;
     let menu_bottom = NcMenu::new(stdplane, mopts)?;
 
     run_menu(&mut nc, menu_bottom)?;
