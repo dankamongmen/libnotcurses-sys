@@ -21,14 +21,6 @@ jobs:
 
     steps:
 
-      - name: "🦀 install Rust"
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: 1.54
-          override: true
-          default: true
-          # components: rustfmt, clippy
-
       - name: "notcurses: Install tools and libraries via MSYS2"
         uses: msys2/setup-msys2@v2
         with:
@@ -95,9 +87,25 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: "🦀 libnotcurses-sys: build the Rust wrappers"
-        run: |
-          rustc --version
-          cargo build # --verbose
-          cargo t_all
-          #mingw-w64-ucrt-x86_64-rust
+      - name: "🦀 install Rust"
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: 1.54
+          default: true
+          # components: rustfmt, clippy
+
+      - name: "🦀 libnotcurses-sys: build"
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+
+      - name: "🦀 libnotcurses-sys: test"
+        uses: actions-rs/cargo@v1
+        with:
+          command: t_all
+
+        # run: |
+        #   rustc --version
+        #   cargo build # --verbose
+        #   cargo t_all
+        #   #mingw-w64-ucrt-x86_64-rust

@@ -64,11 +64,16 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: "🦀 libnotcurses-sys: build the Rust wrappers"
+      - name: "🦀 libnotcurses-sys: build"
         run: |
           export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig"
           rustc --version
           rustup override set 1.54 # MSRV
           rustc --version
           cargo build
+
+      - name: "🦀 libnotcurses-sys: test"
+        run: |
+          export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig"
+          rustc --version
           cargo t_all
