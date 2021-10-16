@@ -21,6 +21,14 @@ jobs:
 
     steps:
 
+      # WIP
+      - name: "check rust installation"
+        uses: hecrj/setup-rust-action@v1
+        with:
+          rust-version: 1.54
+        run: |
+          rustc --version
+
       - name: "notcurses: Install tools and libraries via MSYS2"
         uses: msys2/setup-msys2@v2
         with:
