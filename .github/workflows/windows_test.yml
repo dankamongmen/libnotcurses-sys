@@ -1,0 +1,97 @@
+---
+name: Windows
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  tests:
+    defaults:
+      run:
+        shell: msys2 {0}
+    env:
+      COLORTERM: truecolor
+      NPROC: 2
+      TERM: xterm
+    name: 🏁 build, test, & install
+    runs-on: windows-latest
+
+    steps:
+
+      - name: "notcurses: Install tools and libraries via MSYS2"
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: >
+            base-devel
+            git
+            mingw-w64-ucrt-x86_64-cmake
+            mingw-w64-ucrt-x86_64-doctest
+            mingw-w64-ucrt-x86_64-openimageio
+            mingw-w64-ucrt-x86_64-libunistring
+            mingw-w64-ucrt-x86_64-ncurses
+            mingw-w64-ucrt-x86_64-toolchain
+
+      - name: "notcurses: checkout"
+        uses: actions/checkout@v2
+        with:
+          repository: dankamongmen/notcurses
+          path: notcurses
+          fetch-depth: 0
+
+      - name: "notcurses: Build libqrcodegen"
+        run: |
+          mkdir "${HOME}/repos" && cd "${HOME}/repos"
+          git clone https://github.com/nayuki/QR-Code-generator.git
+          cd QR-Code-generator/c
+          make
+          cd /ucrt64/include && \
+            ln -s "${HOME}/repos/QR-Code-generator/c" ./qrcodegen
+          cd /ucrt64/lib && \
+            ln -s "${HOME}/repos/QR-Code-generator/c/libqrcodegen.a" ./libqrcodegen.a
+
+      - name: "notcurses: cmake"
+        run: |
+          cd notcurses
+          mkdir build && cd build
+          cmake .. \
+            -G "MSYS Makefiles" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DUSE_DOCTEST=off \
+            -DUSE_MULTIMEDIA=oiio \
+            -DUSE_PANDOC=off \
+            -DUSE_READLINE=off \
+            -DUSE_QRCODEGEN=on
+
+      - name: "notcurses: make"
+        run: |
+          cd notcurses/build
+          make -j${NPROC}
+
+      # - name: ctest
+      #   run: |
+      #     cd build
+      #     #ctest --output-on-failure
+
+      - name: "notcurses: make install"
+        run: |
+          cd notcurses/build
+          make install
+
+      - name: "🦀 libnotcurses-sys: checkout"
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: "🦀 libnotcurses-sys: build the Rust wrappers"
+        run: |
+          rustc --version
+          rustup override set 1.54 # MSRV
+          rustc --version
+          cargo build # --verbose
+          cargo t_all
+          #mingw-w64-ucrt-x86_64-rust
