@@ -1,11 +1,12 @@
-//! The ncpixel API facilitates direct management of the pixels within an
-//! ncvisual (ncvisuals keep a backing store of 32-bit RGBA pixels, and render
-//! them down to terminal graphics in ncvisual_render()).
+//! The `NcPixel` API facilitates direct management of the pixels within an
+//! [`NcVisual`] (`NcVisuals` keep a backing store of 32-bit RGBA pixels,
+//! and render them down to terminal graphics in
+//! [`NcVisual.blit`][crate::NcVisual#method.blit].
 //
 // - NOTE: The pixel color & alpha [`NcComponent`]s are u8 instead of u32.
 //   Because of type enforcing, some runtime checks are now unnecessary.
 //
-// - NOTE: None of the functions can't fail anymore and don't have to return an error.
+// - NOTE: no functions can fail anymore and therefore none returns errors.
 //
 // functions manually reimplemented: 10
 // ------------------------------------------

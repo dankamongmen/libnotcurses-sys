@@ -709,6 +709,7 @@ pub use ffi::{
     ncvisual,
     // functions
     ncvisual_at_yx,
+    ncvisual_blit,
     ncvisual_blitter_geom,
     ncvisual_decode,
     ncvisual_decode_loop,

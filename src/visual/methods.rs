@@ -1,6 +1,6 @@
 //! `NcVisual*` methods and associated functions.
 
-use core::ptr::null_mut;
+use core::ptr::{null, null_mut};
 use libc::c_void;
 
 use crate::{
@@ -467,6 +467,38 @@ impl NcVisual {
         error_ref_mut![
             unsafe { c_api::ncvisual_render(nc, self, options) },
             "NcVisual.render(Nc, &NcVisualOptions)"
+        ]
+    }
+
+    /// Renders the decoded frame according to the provided `options`.
+    ///
+    /// There are 3 options for choosing the the plane used for rendering:
+    /// 1. if the `options` have set the flag
+    /// [`NcVisualOptions::CHILDPLANE`][NcVisualOptions#associatedconstant.CHILDPLANE]
+    /// then there must be a plane, which will be the father of the one created.
+    /// 2. if the flag is not set and there is no plane, a new plane is created
+    ///    as root of a new pile.
+    /// 3. if the flag is not set and there is a plane, we render to it.
+    ///
+    /// A subregion of the visual can be rendered using `beg_y`, `beg_x`,
+    /// `len_y`, and `len_x`.
+    ///
+    /// It is an error to specify any region beyond the boundaries of the frame.
+    ///
+    /// Returns the (possibly newly-created) plane to which we drew.
+    ///
+    /// Pixels may not be blitted to the standard plane.
+    ///
+    /// *C style function: [ncvisual_blit()][c_api::ncvisual_blit].*
+    pub fn blit(
+        &mut self,
+        nc: &mut Nc,
+        options: Option<&NcVisualOptions>,
+    ) -> NcResult<&mut NcPlane> {
+        let options_ptr = if let Some(o) = options { o } else { null() };
+        error_ref_mut![
+            unsafe { c_api::ncvisual_blit(nc, self, options_ptr) },
+            "NcVisual.blit"
         ]
     }
 
