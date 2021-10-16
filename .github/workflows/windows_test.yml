@@ -21,13 +21,13 @@ jobs:
 
     steps:
 
-      # WIP
-      - name: "check rust installation"
-        uses: hecrj/setup-rust-action@v1
+      - name: "🦀 install Rust"
+        uses: actions-rs/toolchain@v1
         with:
-          rust-version: 1.54
-        run: |
-          rustc --version
+          toolchain: 1.54
+          override: true
+          default: true
+          # components: rustfmt, clippy
 
       - name: "notcurses: Install tools and libraries via MSYS2"
         uses: msys2/setup-msys2@v2
@@ -97,8 +97,6 @@ jobs:
 
       - name: "🦀 libnotcurses-sys: build the Rust wrappers"
         run: |
-          rustc --version
-          rustup override set 1.54 # MSRV
           rustc --version
           cargo build # --verbose
           cargo t_all
