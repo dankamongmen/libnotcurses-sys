@@ -31,7 +31,7 @@ fn constructors() -> crate::NcResult<()> {
 
     // from `char`
     assert![NcCell::from_char(plane, 'é').is_ok()];
-    #[cfg_attr(target_os = "macos", ignore)] // FIXME
+    #[cfg(not(target_os = "macos"))] // FIXME
     assert![NcCell::from_char(plane, '௵').is_ok()];
 
     // from `&str`

@@ -34,7 +34,6 @@ jobs:
             mingw-w64-ucrt-x86_64-openimageio
             mingw-w64-ucrt-x86_64-libunistring
             mingw-w64-ucrt-x86_64-ncurses
-            mingw-w64-ucrt-x86_64-pkgconf
             mingw-w64-ucrt-x86_64-toolchain
 
       - name: "notcurses: checkout"
