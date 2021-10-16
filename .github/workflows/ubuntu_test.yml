@@ -17,8 +17,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
-      - name: Install tools and libraries via APT
+      - name: "notcurses: Install tools and libraries via APT"
         run: |
           sudo apt update
           sudo apt install -y \
@@ -36,35 +35,47 @@ jobs:
             libunistring-dev \
             pkg-config
 
-      - uses: actions/checkout@v2
+      - name: "notcurses: checkout"
+        uses: actions/checkout@v2
+        with:
+          repository: dankamongmen/notcurses
+          path: notcurses
+          fetch-depth: 0
 
-      - name: cmake
+      - name: "notcurses: cmake"
         run: |
+          cd notcurses
           mkdir build && cd build
           cmake .. \
             -DCMAKE_BUILD_TYPE=Release \
-            -DUSEPANDOC=OFF \
+            -DUSE_PANDOC=OFF \
             -DUSE_QRCODEGEN=on
 
-      - name: make
+      - name: "notcurses: make"
         run: |
-          cd build
+          cd notcurses/build
           make -j${NPROC}
 
-      - name: ctest
-        run: |
-          cd build
-          ctest --output-on-failure
+      # - name: "ctest"
+      #   run: |
+      #     cd notcurses/build
+      #     ctest --output-on-failure
 
-      - name: make install
+      - name: "notcurses: make install"
         run: |
-          cd build
+          cd notcurses/build
           sudo make install
           sudo ldconfig
 
-      - name: rust wrappers
+      - name: "🦀 libnotcurses-sys: checkout"
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: "🦀 libnotcurses-sys: build the Rust wrappers"
         run: |
-         cd rust
-         rustc --version
-         cargo build
-         cargo t_all
+          # rustc --version
+          # rustup override set 1.48 # MSRV
+          # rustc --version
+          cargo build --verbose
+          cargo t_all
