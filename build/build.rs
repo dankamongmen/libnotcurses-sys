@@ -9,11 +9,6 @@ use std::env;
 use std::path::PathBuf;
 
 fn main() {
-    // WIP
-    println!("cargo:warning=PKG_CONFIG_PATH={:?}", env::var("PKG_CONFIG_PATH"));
-    #[cfg(target_os = "windows")]
-    println!("cargo:rustc-env=PKG_CONFIG_PATH=/usr/local/lib/pkgconfig");
-
     let plib = pkg_config::Config::new()
         .atleast_version("2.4.5")
         .probe("notcurses")
