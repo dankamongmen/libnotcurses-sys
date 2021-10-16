@@ -31,6 +31,7 @@ fn constructors() -> crate::NcResult<()> {
 
     // from `char`
     assert![NcCell::from_char(plane, 'é').is_ok()];
+    #[cfg_attr(target_os = "macos", ignore)] // FIXME
     assert![NcCell::from_char(plane, '௵').is_ok()];
 
     // from `&str`
@@ -42,7 +43,7 @@ fn constructors() -> crate::NcResult<()> {
     // `load` returns the number of bytes copied
     assert_eq![1, NcCell::load(plane, &mut cell, "e")?];
     assert_eq![2, NcCell::load(plane, &mut cell, "é")?];
-    // assert_eq![3, NcCell::load(plane, &mut cell, "௵")?]; // FIXME: fails on macos
+    assert_eq![3, NcCell::load(plane, &mut cell, "௵")?];
     assert_eq![4, NcCell::load(plane, &mut cell, "🚀")?];
     // person face palming emoji
     // + emoji skintone modifier

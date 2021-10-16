@@ -9,6 +9,8 @@ use std::env;
 use std::path::PathBuf;
 
 fn main() {
+    // https://github.com/rust-lang/pkg-config-rs/issues/51
+    #[cfg_attr(target_os = "windows", ignore)]
     let plib = pkg_config::Config::new()
         .atleast_version("2.4.5")
         .probe("notcurses")
