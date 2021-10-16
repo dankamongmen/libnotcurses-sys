@@ -5,7 +5,7 @@ on:
   pull_request:
   push:
     branches:
-      - main
+      # - main # TEMP disabled until works in branch `platform-macos`
 
 jobs:
   tests:
