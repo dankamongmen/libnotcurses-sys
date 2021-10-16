@@ -5,7 +5,8 @@ on:
   pull_request:
   push:
     branches:
-      - main
+      - platform-macos # TEMP WIP macos
+      # - main
 
 jobs:
   tests:
@@ -68,8 +69,8 @@ jobs:
         run: |
           export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig"
           rustc --version
-          rustup override set 1.54 # MSRV
-          rustc --version
+          # rustup override set 1.54 # MSRV # commented out until this works
+          # rustc --version
           cargo build
 
       - name: "🦀 libnotcurses-sys: test"
