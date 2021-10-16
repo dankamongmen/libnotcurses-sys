@@ -1,11 +1,11 @@
 ---
-name: Ubuntu
+name: macOS
 
 on:
   pull_request:
   push:
     branches:
-      # - main # TEMP WIP windows
+      - main
 
 jobs:
   tests:
@@ -13,27 +13,22 @@ jobs:
       COLORTERM: truecolor
       NPROC: 2
       TERM: xterm
-    name: 🐧 build, test, & install
-    runs-on: ubuntu-latest
+    name: 🍎 build, test, & install
+    runs-on: macos-latest
 
     steps:
-      - name: "notcurses: Install tools and libraries via APT"
+
+      - name: "Install tools and libraries via Homebrew"
         run: |
-          sudo apt update
-          sudo apt install -y \
-            build-essential \
-            cmake \
-            doctest-dev \
+          brew install \
+            coreutils \
+            doctest \
             ffmpeg \
-            libavcodec-dev \
-            libavformat-dev \
-            libavutil-dev \
-            libncurses-dev \
-            libqrcodegen-dev \
-            libreadline-dev \
-            libswscale-dev \
-            libunistring-dev \
-            pkg-config
+            libunistring \
+            ncurses \
+            pandoc \
+            readline \
+            rust
 
       - name: "notcurses: checkout"
         uses: actions/checkout@v2
@@ -47,35 +42,38 @@ jobs:
           cd notcurses
           mkdir build && cd build
           cmake .. \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DUSE_PANDOC=OFF \
-            -DUSE_QRCODEGEN=on
+            -DCMAKE_BUILD_TYPE=Release
 
       - name: "notcurses: make"
         run: |
           cd notcurses/build
           make -j${NPROC}
 
-      # - name: "ctest"
+      # - name: ctest
       #   run: |
-      #     cd notcurses/build
+      #     cd build
       #     ctest --output-on-failure
 
       - name: "notcurses: make install"
         run: |
           cd notcurses/build
           sudo make install
-          sudo ldconfig
 
       - name: "🦀 libnotcurses-sys: checkout"
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
-      - name: "🦀 libnotcurses-sys: build the Rust wrappers"
+      - name: "🦀 libnotcurses-sys: build"
         run: |
+          export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig"
           rustc --version
-          # rustup override set 1.54 # MSRV TEMP until this works again
+          # rustup override set 1.54 # MSRV # commented out until this works
+          # rustc --version
+          cargo build
+
+      - name: "🦀 libnotcurses-sys: test"
+        run: |
+          export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig"
           rustc --version
-          cargo build # --verbose
           cargo t_all
