@@ -5,7 +5,8 @@ on:
   pull_request:
   push:
     branches:
-      # - main # TEMP WIP macos
+      platform-windows # TEMP WIP windows
+      # - main
 
 jobs:
   tests:

@@ -5,7 +5,7 @@ on:
   pull_request:
   push:
     branches:
-      # - main # TEMP WIP macos
+      # - main # TEMP WIP windows
 
 jobs:
   tests:
@@ -75,7 +75,7 @@ jobs:
       - name: "🦀 libnotcurses-sys: build the Rust wrappers"
         run: |
           rustc --version
-          rustup override set 1.54 # MSRV
+          # rustup override set 1.54 # MSRV TEMP until this works again
           rustc --version
           cargo build # --verbose
           cargo t_all
