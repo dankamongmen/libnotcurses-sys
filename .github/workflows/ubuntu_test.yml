@@ -75,7 +75,7 @@ jobs:
       - name: "🦀 libnotcurses-sys: build the Rust wrappers"
         run: |
           rustc --version
-          rustup override set 1.48 # MSRV
+          rustup override set 1.49 # MSRV
           rustc --version
           cargo build # --verbose
           cargo t_all

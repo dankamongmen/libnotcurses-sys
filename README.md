@@ -1,6 +1,6 @@
 [![Crate](https://img.shields.io/crates/v/libnotcurses-sys.svg)](https://crates.io/crates/libnotcurses-sys)
 [![API](https://docs.rs/libnotcurses-sys/badge.svg)](https://dankamongmen.github.io/notcurses/rustdoc/libnotcurses_sys/)
-[![MSRV: 1.48.0](https://flat.badgen.net/badge/MSRV/1.48.0/purple)](https://blog.rust-lang.org/2020/11/19/Rust-1.48.html)
+[![MSRV: 1.49.0](https://flat.badgen.net/badge/MSRV/1.49.0/purple)](https://blog.rust-lang.org/2020/11/19/Rust-1.49.html)
 
 `libnotcurses-sys` is a low-level Rust wrapper for the
 [notcurses C library](https://www.github.com/dankamongmen/notcurses/)
