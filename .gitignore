@@ -1,3 +1,5 @@
+build/downloads
+examples/wip*
 tools/
 target
 Cargo.lock
