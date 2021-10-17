@@ -463,6 +463,7 @@ impl NcVisual {
     /// See [`NcVisualOptions`].
     ///
     /// *C style function: [ncvisual_render()][c_api::ncvisual_render].*
+    #[deprecated]
     pub fn render(&mut self, nc: &mut Nc, options: &NcVisualOptions) -> NcResult<&mut NcPlane> {
         error_ref_mut![
             unsafe { c_api::ncvisual_render(nc, self, options) },
