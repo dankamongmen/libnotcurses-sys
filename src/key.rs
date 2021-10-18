@@ -104,6 +104,44 @@ impl NcKey {
     pub const PRINT: char = constants::NCKEY_PRINT;
     pub const REFRESH: char = constants::NCKEY_REFRESH;
 
+    // these keys aren't generally available outside of the kitty protocol
+    pub const CAPS_LOCK: char = constants::NCKEY_CAPS_LOCK;
+    pub const SCROLL_LOCK: char = constants::NCKEY_SCROLL_LOCK;
+    pub const NUM_LOCK: char = constants::NCKEY_NUM_LOCK;
+    pub const PRINT_SCREEN: char = constants::NCKEY_PRINT_SCREEN;
+    pub const PAUSE: char = constants::NCKEY_PAUSE;
+    pub const MENU: char = constants::NCKEY_MENU;
+
+    // media keys, similarly only available through kitty's protocol
+    pub const MEDIA_PLAY: char = constants::NCKEY_MEDIA_PLAY;
+    pub const MEDIA_PAUSE: char = constants::NCKEY_MEDIA_PAUSE;
+    pub const MEDIA_PPAUSE: char = constants::NCKEY_MEDIA_PPAUSE;
+    pub const MEDIA_REV: char = constants::NCKEY_MEDIA_REV;
+    pub const MEDIA_STOP: char = constants::NCKEY_MEDIA_STOP;
+    pub const MEDIA_FF: char = constants::NCKEY_MEDIA_FF;
+    pub const MEDIA_REWIND: char = constants::NCKEY_MEDIA_REWIND;
+    pub const MEDIA_NEXT: char = constants::NCKEY_MEDIA_NEXT;
+    pub const MEDIA_PREV: char = constants::NCKEY_MEDIA_PREV;
+    pub const MEDIA_RECORD: char = constants::NCKEY_MEDIA_RECORD;
+    pub const MEDIA_LVOL: char = constants::NCKEY_MEDIA_LVOL;
+    pub const MEDIA_RVOL: char = constants::NCKEY_MEDIA_RVOL;
+    pub const MEDIA_MUTE: char = constants::NCKEY_MEDIA_MUTE;
+
+    // modifiers when pressed by themselves. this ordering comes from the Kitty
+    // keyboard protocol, and mustn't be changed without updating handlers.
+    pub const LSHIFT: char = constants::NCKEY_LSHIFT;
+    pub const LCTRL: char = constants::NCKEY_LCTRL;
+    pub const LALT: char = constants::NCKEY_LALT;
+    pub const LSUPER: char = constants::NCKEY_LSUPER;
+    pub const LHYPER: char = constants::NCKEY_LHYPER;
+    pub const LMETA: char = constants::NCKEY_LMETA;
+    pub const RSHIFT: char = constants::NCKEY_RSHIFT;
+    pub const RCTRL: char = constants::NCKEY_RCTRL;
+    pub const RALT: char = constants::NCKEY_RALT;
+    pub const RSUPER: char = constants::NCKEY_RSUPER;
+    pub const RHYPER: char = constants::NCKEY_RHYPER;
+    pub const RMETA: char = constants::NCKEY_RMETA;
+
     // Mouse events. We try to encode some details into the char32_t (i.e. which
     // button was pressed);, but some is embedded in the ncinput event. The release
     // event is generic across buttons; callers must maintain state, if they care.
@@ -241,6 +279,44 @@ pub(crate) mod constants {
     pub const NCKEY_EXIT: char = unsafe { transmute(suppuabize(133)) };
     pub const NCKEY_PRINT: char = unsafe { transmute(suppuabize(134)) };
     pub const NCKEY_REFRESH: char = unsafe { transmute(suppuabize(135)) };
+
+    // these keys aren't generally available outside of the kitty protocol
+    pub const NCKEY_CAPS_LOCK: char = unsafe { transmute(suppuabize(150)) };
+    pub const NCKEY_SCROLL_LOCK: char = unsafe { transmute(suppuabize(151)) };
+    pub const NCKEY_NUM_LOCK: char = unsafe { transmute(suppuabize(152)) };
+    pub const NCKEY_PRINT_SCREEN: char = unsafe { transmute(suppuabize(153)) };
+    pub const NCKEY_PAUSE: char = unsafe { transmute(suppuabize(154)) };
+    pub const NCKEY_MENU: char = unsafe { transmute(suppuabize(155)) };
+
+    // media keys, similarly only available through kitty's protocol
+    pub const NCKEY_MEDIA_PLAY: char = unsafe { transmute(suppuabize(158)) };
+    pub const NCKEY_MEDIA_PAUSE: char = unsafe { transmute(suppuabize(159)) };
+    pub const NCKEY_MEDIA_PPAUSE: char = unsafe { transmute(suppuabize(160)) };
+    pub const NCKEY_MEDIA_REV: char = unsafe { transmute(suppuabize(161)) };
+    pub const NCKEY_MEDIA_STOP: char = unsafe { transmute(suppuabize(162)) };
+    pub const NCKEY_MEDIA_FF: char = unsafe { transmute(suppuabize(163)) };
+    pub const NCKEY_MEDIA_REWIND: char = unsafe { transmute(suppuabize(164)) };
+    pub const NCKEY_MEDIA_NEXT: char = unsafe { transmute(suppuabize(165)) };
+    pub const NCKEY_MEDIA_PREV: char = unsafe { transmute(suppuabize(166)) };
+    pub const NCKEY_MEDIA_RECORD: char = unsafe { transmute(suppuabize(167)) };
+    pub const NCKEY_MEDIA_LVOL: char = unsafe { transmute(suppuabize(168)) };
+    pub const NCKEY_MEDIA_RVOL: char = unsafe { transmute(suppuabize(169)) };
+    pub const NCKEY_MEDIA_MUTE: char = unsafe { transmute(suppuabize(170)) };
+
+    // modifiers when pressed by themselves. this ordering comes from the Kitty
+    // keyboard protocol, and mustn't be changed without updating handlers.
+    pub const NCKEY_LSHIFT: char = unsafe { transmute(suppuabize(171)) };
+    pub const NCKEY_LCTRL: char = unsafe { transmute(suppuabize(172)) };
+    pub const NCKEY_LALT: char = unsafe { transmute(suppuabize(173)) };
+    pub const NCKEY_LSUPER: char = unsafe { transmute(suppuabize(174)) };
+    pub const NCKEY_LHYPER: char = unsafe { transmute(suppuabize(175)) };
+    pub const NCKEY_LMETA: char = unsafe { transmute(suppuabize(176)) };
+    pub const NCKEY_RSHIFT: char = unsafe { transmute(suppuabize(177)) };
+    pub const NCKEY_RCTRL: char = unsafe { transmute(suppuabize(178)) };
+    pub const NCKEY_RALT: char = unsafe { transmute(suppuabize(179)) };
+    pub const NCKEY_RSUPER: char = unsafe { transmute(suppuabize(180)) };
+    pub const NCKEY_RHYPER: char = unsafe { transmute(suppuabize(181)) };
+    pub const NCKEY_RMETA: char = unsafe { transmute(suppuabize(182)) };
 
     // Mouse events. We try to encode some details into the char32_t (i.e. which
     // button was pressed);, but some is embedded in the ncinput event. The release
