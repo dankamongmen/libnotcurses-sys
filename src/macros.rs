@@ -91,7 +91,7 @@ macro_rules! pile_render_sleep {
     };
 }
 
-/// [`NcVisual::render`][NcVisual#method.render]\(`$v`, `$nc`, `$vo`\)? +
+/// [`NcVisual::blit`][NcVisual#method.blit]\(`$v`, `$nc`, `$vo`\)? +
 /// [`Nc::render`][Nc#method.render]\(`$nc`\)? + [`sleep!`]`[$sleep_args]`.
 ///
 /// Renders and rasterizes the `$v` [`NcVisual`] with its `$vo`
@@ -102,7 +102,7 @@ macro_rules! pile_render_sleep {
 #[macro_export]
 macro_rules! visual_render_sleep {
     ($v: expr, $vo: expr, $nc:expr, $( $sleep_args:expr),+ ) => {
-        crate::NcVisual::render($v, $nc, $vo)?;
+        crate::NcVisual::blit($v, $nc, Some($vo))?;
         crate::Nc::render($nc)?;
         sleep![$( $sleep_args ),+];
     };
