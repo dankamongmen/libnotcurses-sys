@@ -49,14 +49,6 @@ impl NcOptions {
     ///   General flags; This is expressed as a bitfield so that future options
     ///   can be added without reshaping the struct.
     ///   Undefined bits must be set to 0.
-    ///
-    ///   - [`NcOptions::INHIBIT_SETLOCALE`][crate::NcOptions::INHIBIT_SETLOCALE]
-    ///   - [`NcOptions::NO_ALTERNATE_SCREEN`]
-    ///   - [`NcOptions::NO_FONT_CHANGES`][crate::NcOptions::NO_FONT_CHANGES]
-    ///   - [`NcOptions::NO_QUIT_SIGHANDLERS`][crate::NcOptions::NO_QUIT_SIGHANDLERS]
-    ///   - [`NcOptions::NO_WINCH_SIGHANDLER`][crate::NcOptions::NO_WINCH_SIGHANDLER]
-    ///   - [`NcOptions::SUPPRESS_BANNERS`]
-    ///
     pub const fn with_all_options(
         loglevel: NcLogLevel,
         margin_t: NcDim,
@@ -90,10 +82,10 @@ impl Nc {
     /// New notcurses context in CLI mode.
     ///
     /// It has the following flags:
-    /// - [`NcOptions::SUPPRESS_BANNERS`]
-    /// - [`NcOptions::NO_ALTERNATE_SCREEN`]
-    /// - [`NcOptions::NO_CLEAR_BITMAPS`]
-    /// - [`NcOptions::PRESERVE_CURSOR`]
+    /// - [`NcOptions::SUPPRESS_BANNERS`][NcOptions#associatedconstant.SUPPRESS_BANNERS]
+    /// - [`NcOptions::NO_ALTERNATE_SCREEN`][NcOptions#associatedconstant.NO_ALTERNATE_SCREEN]
+    /// - [`NcOptions::NO_CLEAR_BITMAPS`][NcOptions#associatedconstant.NO_CLEAR_BITMAPS]
+    /// - [`NcOptions::PRESERVE_CURSOR`][NcOptions#associatedconstant.PRESERVE_CURSOR]
     pub fn new_cli<'a>() -> NcResult<&'a mut Nc> {
         Self::with_flags(
             NcOptions::SUPPRESS_BANNERS

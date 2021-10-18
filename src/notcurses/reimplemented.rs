@@ -9,7 +9,7 @@ use crate::{
 /// Returns the offset into `avail_u` at which `u` ought be output given
 /// the requirements of `align`.
 ///
-/// Returns `-`[`NcIntResult::MAX`] if
+/// Returns `-`[`NcIntResult::MAX`][NcIntResult#associatedconstant.MAX] if
 /// [NcAlign::UNALIGNED][NcAlign#associatedconstant.UNALIGNED]
 /// or invalid [NcAlign].
 ///

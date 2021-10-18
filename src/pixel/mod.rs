@@ -25,6 +25,9 @@
 //W+ ncpixel_set_r
 //W+ ncpixel_set_rgb8
 
+#[allow(unused_imports)] // for doc comments
+use crate::NcVisual;
+
 mod methods;
 pub(crate) mod reimplemented;
 
@@ -50,7 +53,7 @@ pub use methods::NcPixelApi;
 /// [0]: https://nick-black.com/dankwiki/index.php?title=Notcurses#Transparency.2FContrasting
 ///
 /// The `NcPixel` API facilitates direct management of the pixels within an
-/// `NcVisual` (`NcVisuals` keep a backing store of 32-bit RGBA pixels,
+/// [`NcVisual`] (`NcVisuals` keep a backing store of 32-bit RGBA pixels,
 /// and render them down to terminal graphics in `NcVisual.render`).
 pub type NcPixel = u32;
 
