@@ -16,22 +16,7 @@
 //! constructors, and error handling with the `NcResult` enum:
 //!
 //! ### Example
-//!
-//! ```rust
-//! use libnotcurses_sys::*;
-//!
-//! # #[cfg(not(miri))]
-//! fn main() -> NcResult<()> {
-//!     let nc = Nc::new_cli()?;
-//!     let plane = nc.stdplane();
-//!     plane.putstr("hello world")?;
-//!     nc.render()?;
-//!     nc.stop()?;
-//!     Ok(())
-//! }
-//! # #[cfg(miri)]
-//! # fn main() {}
-//! ```
+#![doc = concat!["```\n", include_str!("../examples/hello-world-rust.rs"), "\n```" ]]
 //!
 //! The `Drop` trait is not implemented for any wrapping type in this library.
 //!
@@ -67,49 +52,7 @@
 //! or in case of receiving a pointer, by comparing it to `null_mut()`.
 //!
 //! ### Example
-//!
-//! ```rust
-//! use core::ptr::{null, null_mut};
-//! use std::process::exit;
-//!
-//! use libnotcurses_sys::{c_api::*};
-//!
-//! # #[cfg(not(miri))]
-//! fn main() {
-//!     let options = ffi::notcurses_options {
-//!         termtype: null(),
-//!         renderfp: null_mut(),
-//!         loglevel: 0,
-//!         margin_t: 0,
-//!         margin_r: 0,
-//!         margin_b: 0,
-//!         margin_l: 0,
-//!         flags: NCOPTION_NO_ALTERNATE_SCREEN
-//!         | NCOPTION_PRESERVE_CURSOR
-//!         | NCOPTION_SUPPRESS_BANNERS
-//!     };
-//!     unsafe {
-//!         let nc = notcurses_init(&options, null_mut());
-//!         if nc.is_null() {
-//!             exit(1);
-//!         }
-//!         let plane = notcurses_stdplane(nc);
-//!         let cols = ncplane_putstr(&mut *plane, "hello world");
-//!         if cols < NCRESULT_OK {
-//!             notcurses_stop(nc);
-//!             exit(cols.abs());
-//!         }
-//!         if notcurses_render(nc) < NCRESULT_OK {
-//!             exit(2);
-//!         }
-//!         if notcurses_stop(nc) < NCRESULT_OK {
-//!             exit(3);
-//!         }
-//!     }
-//! }
-//! # #[cfg(miri)]
-//! # fn main() {}
-//! ```
+#![doc = concat!["```\n", include_str!("../examples/hello-world-c.rs"), "\n```" ]]
 //!
 //! ### The `notcurses` C API docs
 //!
