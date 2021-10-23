@@ -28,6 +28,14 @@ pub fn notcurses_align(avail_u: NcDim, align: NcAlign, u: NcDim) -> NcIntResult 
     -NcIntResult::MAX
 }
 
+/// Returns true if we can blit pixel-accurate bitmaps.
+///
+/// *Method: Nc.[canpixel()][Nc#method.canpixel].*
+#[inline]
+pub fn notcurses_canpixel(nc: &Nc) -> bool {
+    unsafe { c_api::notcurses_check_pixel_support(nc) != c_api::NCPIXEL_NONE }
+}
+
 /// Reads input blocking until an event is processed or a signal is received.
 ///
 /// Will optionally write the event details in `input`.

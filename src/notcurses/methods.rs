@@ -223,6 +223,15 @@ impl Nc {
         unsafe { c_api::notcurses_canopen_videos(self) }
     }
 
+    /// Returns true if we can blit pixel-accurate bitmaps.
+    ///
+    /// See also [`check_pixel_support`][Nc#method.check_pixel_support].
+    ///
+    /// *C style function: [notcurses_canpixel()][c_api::notcurses_canpixel].*
+    pub fn canpixel(&self) -> bool {
+        c_api::notcurses_canpixel(self)
+    }
+
     /// Returns true if we can reliably use Unicode quadrant blocks.
     ///
     /// See also [`NcBlitter::BLIT_2x2`][NcBlitter#associatedconstant.NCBLIT_2x2].
@@ -346,6 +355,13 @@ impl Nc {
         rstring_free![c_api::notcurses_detected_terminal(self)]
     }
 
+    /// Returns the name of the detected OS version.
+    ///
+    /// *C style function: [notcurses_osversion()][c_api::notcurses_osversion].*
+    pub fn osversion(&self) -> String {
+        rstring_free![c_api::notcurses_detected_terminal(self)]
+    }
+
     /// Destroys all [`NcPlane`]s other than the stdplane.
     ///
     /// *C style function: [notcurses_drop_planes()][c_api::notcurses_drop_planes].*
@@ -361,13 +377,18 @@ impl Nc {
         self.get(time, input)
     }
 
-    /// Returns a [char] representing a single unicode point.
+    /// Reads a [`char`] representing a single unicode point, from input.
     ///
     /// If an event is processed, the return value is the `id` field from that
     /// event.
     ///
-    /// Provide a None `time` to block at length, a `time` of 0 for non-blocking
-    /// operation, and otherwise a timespec to bound blocking.
+    /// Returns `0` on a timeout.
+    ///
+    /// Provide `None` in `time` to block at length, and otherwise
+    /// `Some(`[`NcTime`]`)` to bound blocking.
+    ///
+    /// `time` is an a delay bound against `CLOCK_MONOTONIC`
+    /// (see [*pthread_cond_clockwait(3)*](https://linux.die.net/man/3/pthread_cond_wait)).
     ///
     /// *C style function: [notcurses_get()][c_api::notcurses_get].*
     pub fn get(&mut self, time: Option<NcTime>, input: Option<&mut NcInput>) -> NcResult<char> {

@@ -789,6 +789,7 @@ pub use ffi::{
     notcurses_mouse_disable,
     notcurses_mouse_enable,
     notcurses_options,
+    notcurses_osversion,
     notcurses_palette_size,
     notcurses_refresh,
     notcurses_render,

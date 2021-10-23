@@ -1,15 +1,15 @@
 //! `Nc`
 
-// total: 53
+// total: 55
 // ---------------------------------------------------
 // (X)  1 : wont do
 // (…)  4 : TODO / WIP
 //
-// (f) 45 : unsafe ffi function exported by bindgen
+// (f) 46 : unsafe ffi function exported by bindgen
 // (w)  0 : safely wrapped ffi function
-// (r)  6 : static function manually reimplemented
+// (r)  7 : static function manually reimplemented
 //
-// (m) 38 : method implemented
+// (m) 40 : method implemented
 //
 // (t) 13 : unit test done for the function
 // (T)  0 : unit test done also for the method
@@ -43,6 +43,7 @@
 // fm  notcurses_linesigs_enable
 // fm  notcurses_mouse_disable
 // fm  notcurses_mouse_enable
+// fm  notcurses_osversion
 // fm  notcurses_palette_size
 // fm  notcurses_refresh
 // fm  notcurses_render
@@ -62,6 +63,7 @@
 // fmt notcurses_version
 // fm  notcurses_version_components
 // rmt notcurses_align
+// rm  notcurses_canpixel
 // rm  notcurses_getc_blocking
 // rm  notcurses_getc_nblock
 //~r   notcurses_stddim_yx           // multiple mutable references errors
@@ -127,8 +129,10 @@ impl NcOptions {
 
     /// Do not handle SIG{ING, SEGV, ABRT, QUIT}.
     ///
-    /// A signal handler will usually be installed for SIGINT, SIGQUIT, SIGSEGV,
-    /// SIGTERM, and SIGABRT, cleaning up the terminal on such exceptions.
+    /// A signal handler will usually be installed for `SIGABRT`, `SIGBUS`,
+    /// `SIGFPE`, `SIGILL`, `SIGINT`, `SIGQUIT`, `SIGSEGV` and `SIGTERM`,
+    /// cleaning up the terminal on such exceptions.
+    ///
     /// With this flag, the handler will not be installed.
     pub const NO_QUIT_SIGHANDLERS: u64 = constants::NCOPTION_NO_QUIT_SIGHANDLERS as u64;
 

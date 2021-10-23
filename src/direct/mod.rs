@@ -115,8 +115,8 @@ crate::impl_api![
     ///
     const INHIBIT_SETLOCALE: NcDirectFlags =
         constants::NCDIRECT_OPTION_INHIBIT_SETLOCALE as NcDirectFlags;,
-    /// Flag that inhibits registration of the SIGINT, SIGSEGV, SIGABRT & SIGQUIT
-    /// signal handlers.
+    /// Flag that inhibits registration of the `SIGABRT`, `SIGBUS`, `SIGFPE`,
+    /// `SIGILL`, `SIGINT`, `SIGQUIT`, `SIGSEGV` and `SIGTERM`, signal handlers.
     const NO_QUIT_SIGHANDLERS: NcDirectFlags =
         constants::NCDIRECT_OPTION_NO_QUIT_SIGHANDLERS as NcDirectFlags;,
     /// Flag that enables showing detailed information.
