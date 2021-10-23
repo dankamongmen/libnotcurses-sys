@@ -10,7 +10,7 @@ use std::path::PathBuf;
 
 fn main() {
     let plib = pkg_config::Config::new()
-        .atleast_version("2.4.7")
+        .atleast_version("2.4.8")
         .probe("notcurses")
         .unwrap();
 
