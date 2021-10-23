@@ -47,7 +47,9 @@ fn main() -> NcResult<()> {
     let v1 = NcVisual::from_rgba(buffer.as_slice(), pg.cell_y, pg.cell_x * 4, pg.cell_x)?;
     let voptions =
         NcVisualOptions::without_plane(1, 2, 0, 0, pg.cell_y, pg.cell_x, NcBlitter::PIXEL, 0, 0);
-    v1.blit(&mut nc, Some(&voptions))?;
+    let p1 = v1.blit(&mut nc, Some(&voptions))?;
+    p1.reparent(splane)?;
+
     nc_render_sleep![&mut nc, 1];
 
     // show the ncvisual, scaled with interpolated values
@@ -90,7 +92,8 @@ fn main() -> NcResult<()> {
     let voptions4 =
         NcVisualOptions::without_plane(7, 39, 0, 0, pg.cell_y, pg.cell_x, NcBlitter::PIXEL, 0, 0);
     v1.resize_noninterpolative(pg.cell_y * 4, pg.cell_x * 4)?;
-    v1.blit(&mut nc, Some(&voptions4))?;
+    let p4 = v1.blit(&mut nc, Some(&voptions4))?;
+    p4.reparent(splane)?;
     nc_render_sleep![&mut nc, 0, 250];
 
     // resize the ncvisual (uses interpolation)
@@ -98,10 +101,15 @@ fn main() -> NcResult<()> {
     let voptions5 =
         NcVisualOptions::without_plane(7, 56, 0, 0, pg.cell_y, pg.cell_x, NcBlitter::PIXEL, 0, 0);
     v5.resize(pg.cell_y * 4, pg.cell_x * 4)?;
-    v5.blit(&mut nc, Some(&voptions5))?;
+    let p5 = v5.blit(&mut nc, Some(&voptions5))?;
+    p5.reparent(splane)?;
     nc_render_sleep![&mut nc, 0, 250];
 
     sleep![2];
+
+    vplane3.destroy()?;
+    p4.destroy()?;
+    p5.destroy()?;
 
     v1.destroy();
     v5.destroy();

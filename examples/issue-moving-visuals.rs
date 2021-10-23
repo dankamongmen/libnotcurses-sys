@@ -28,6 +28,7 @@ fn main() -> NcResult<()> {
     let voptions1 =
         NcVisualOptions::without_plane(1, 2, 0, 0, height, width, NcBlitter::PIXEL, 0, 0);
     let visual1plane = visual1.blit(&mut nc, Some(&voptions1))?;
+    visual1plane.reparent(nc.stdplane())?;
 
     for _ in 0..CELLS_MOVEMENT {
         visual1plane.move_rel(1, 1)?;

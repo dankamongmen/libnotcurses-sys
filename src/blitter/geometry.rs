@@ -1,7 +1,7 @@
 use crate::{NcBlitter, NcDim};
 
 /// Contains the blitter geometry information as returned by the
-/// NcPlane.[`blitter_geom`][crate::NcPlane#method.blitter_geom] method.
+/// NcVisual.[`blitter_geom`][crate::NcVisual#method.blitter_geom] method.
 ///
 /// - `y`, `x`: the input size in pixels.
 /// - `scale_y`, `scale_x`: the scaling

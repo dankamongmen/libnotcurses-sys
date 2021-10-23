@@ -10,19 +10,15 @@ fn main() -> NcResult<()> {
     let visual = NcVisual::from_rgb_packed(buffer.as_slice(), height, width * 3, width, 255)?;
     let vopt = NcVisualOptions::without_plane(1, 2, 0, 0, height, width, NcBlitter::PIXEL, 0, 0);
 
-    // THIS WORKS (USING ncvisual_render):
-    // let _plane = visual.render(&mut nc, &vopt)?;
-    // let _plane = unsafe { c_api::ncvisual_render(nc, visual, &vopt) };
+    // let plane = visual.render(&mut nc, &vopt)?; // deprecated function
 
-    // FIXME: THIS DOESN'T WORK (USING ncvisual_blit):
-    let _plane = visual.blit(&mut nc, Some(&vopt))?;
-    // let plane = visual.blit(&mut nc, None)?;
-    // let _plane = unsafe { c_api::ncvisual_blit(nc, visual, &vopt) };
-    // let _plane = unsafe { c_api::ncvisual_blit(nc, visual, std::ptr::null()) };
+    // the new function renders to a root plane if the options don't specify a plane
+    let plane = visual.blit(&mut nc, Some(&vopt))?;
+    plane.reparent(nc.stdplane())?;
 
-    nc_render_sleep![&mut nc, 2];
+    nc_render_sleep![nc, 2];
 
-    // plane.destroy()?;
+    plane.destroy()?;
     visual.destroy();
     nc.stop()?;
 
