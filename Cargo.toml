@@ -6,7 +6,8 @@ authors = [
 	"José Luis Cruz <joseluis@andamira.net>"
 ]
 license = "MIT OR Apache-2.0"
-edition = "2018"
+edition = "2021"
+rust-version = "1.56"
 description = "Low-level Rust bindings for the notcurses C library."
 documentation = "https://dankamongmen.github.io/notcurses/rustdoc/libnotcurses_sys/"
 repository = "https://github.com/dankamongmen/notcurses"

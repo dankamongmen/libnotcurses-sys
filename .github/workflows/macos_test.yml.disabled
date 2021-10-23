@@ -68,7 +68,7 @@ jobs:
         run: |
           export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig"
           rustc --version
-          rustup override set 1.54 # MSRV
+          rustup override set 1.56 # MSRV
           rustc --version
           cargo build
 
