@@ -155,7 +155,7 @@ pub fn ncdirect_hline_interp(
     #[cfg(not(any(target_arch = "armv7l", target_arch = "i686")))]
     let egc_ptr = cstring![egc];
 
-    unsafe { crate::bindings::ffi::ncdirect_hline_interp(ncd, egc_ptr, len as i32, h1, h2) }
+    unsafe { crate::bindings::ffi::ncdirect_hline_interp(ncd, egc_ptr, len, h1, h2) }
 }
 
 /// Draws horizontal lines using the specified [NcChannels]s, interpolating
@@ -182,5 +182,5 @@ pub fn ncdirect_vline_interp(
     #[cfg(not(any(target_arch = "armv7l", target_arch = "i686")))]
     let egc_ptr = cstring![egc];
 
-    unsafe { crate::bindings::ffi::ncdirect_vline_interp(ncd, egc_ptr, len as i32, h1, h2) }
+    unsafe { crate::bindings::ffi::ncdirect_vline_interp(ncd, egc_ptr, len, h1, h2) }
 }

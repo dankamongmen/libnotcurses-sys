@@ -519,12 +519,12 @@ pub fn ncplane_resize_simple(plane: &mut NcPlane, len_y: NcDim, len_x: NcDim) ->
             plane,
             0,
             0,
-            keep_len_y,
-            keep_len_x,
+            keep_len_y as NcDim,
+            keep_len_x as NcDim,
             0,
             0,
-            len_y as i32,
-            len_x as i32,
+            len_y,
+            len_x,
         )
     }
 }
@@ -569,7 +569,7 @@ pub fn ncplane_valign(plane: &NcPlane, align: NcAlign, numrows: NcDim) -> NcIntR
 /// *Method: NcPlane.[hline()][NcPlane#method.hline].*
 #[inline]
 pub fn ncplane_hline(plane: &mut NcPlane, cell: &NcCell, len: NcDim) -> NcIntResult {
-    unsafe { c_api::ncplane_hline_interp(plane, cell, len as i32, cell.channels, cell.channels) }
+    unsafe { c_api::ncplane_hline_interp(plane, cell, len, cell.channels, cell.channels) }
 }
 
 /// Draws vertical lines using the specified `cell`, starting at the current
@@ -584,7 +584,7 @@ pub fn ncplane_hline(plane: &mut NcPlane, cell: &NcCell, len: NcDim) -> NcIntRes
 /// *Method: NcPlane.[vline()][NcPlane#method.vline].*
 #[inline]
 pub fn ncplane_vline(plane: &mut NcPlane, cell: &NcCell, len: NcDim) -> NcIntResult {
-    unsafe { c_api::ncplane_vline_interp(plane, cell, len as i32, cell.channels, cell.channels) }
+    unsafe { c_api::ncplane_vline_interp(plane, cell, len, cell.channels, cell.channels) }
 }
 
 // perimeter -------------------------------------------------------------------
@@ -780,8 +780,8 @@ pub fn ncplane_box_sized(
             lr,
             hline,
             vline,
-            y + len_y as i32 - 1,
-            x + len_x as i32 - 1,
+            (y + len_y as i32 - 1) as NcDim,
+            (x + len_x as i32 - 1) as NcDim,
             boxmask,
         )
     }
@@ -822,18 +822,7 @@ pub fn ncplane_double_box(
             &mut vl,
         );
         if ret == NcIntResult::OK {
-            ret = c_api::ncplane_box(
-                plane,
-                &ul,
-                &ur,
-                &ll,
-                &lr,
-                &hl,
-                &vl,
-                end_y as i32,
-                end_x as i32,
-                boxmask,
-            );
+            ret = c_api::ncplane_box(plane, &ul, &ur, &ll, &lr, &hl, &vl, end_y, end_x, boxmask);
         }
 
         nccell_release(plane, &mut ul);
@@ -907,18 +896,7 @@ pub fn ncplane_rounded_box(
             &mut vl,
         );
         if ret == NcIntResult::OK {
-            ret = c_api::ncplane_box(
-                plane,
-                &ul,
-                &ur,
-                &ll,
-                &lr,
-                &hl,
-                &vl,
-                end_y as i32,
-                end_x as i32,
-                boxmask,
-            );
+            ret = c_api::ncplane_box(plane, &ul, &ur, &ll, &lr, &hl, &vl, end_y, end_x, boxmask);
         }
         nccell_release(plane, &mut ul);
         nccell_release(plane, &mut ur);
@@ -1049,8 +1027,8 @@ pub fn ncplane_gradient_sized(
             ur,
             ll,
             lr,
-            y as u32 + len_y - 1,
-            x as u32 + len_x - 1,
+            y as NcDim + len_y - 1,
+            x as NcDim + len_x - 1,
         )
     }
 }

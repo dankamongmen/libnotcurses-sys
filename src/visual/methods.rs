@@ -192,16 +192,7 @@ impl NcVisual {
         len_x: NcDim,
     ) -> NcResult<&'a mut NcVisual> {
         error_ref_mut![
-            unsafe {
-                c_api::ncvisual_from_plane(
-                    plane,
-                    blitter,
-                    beg_y as i32,
-                    beg_x as i32,
-                    len_y as i32,
-                    len_x as i32,
-                )
-            },
+            unsafe { c_api::ncvisual_from_plane(plane, blitter, beg_y, beg_x, len_y, len_x,) },
             &format!(
                 "NcVisual::from_file(plane, {}, {}, {}, {}, {})",
                 blitter, beg_y, beg_x, len_y, len_x

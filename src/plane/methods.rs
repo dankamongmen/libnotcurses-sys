@@ -690,10 +690,10 @@ impl NcPlane {
     ) -> String {
         rstring_free![c_api::ncplane_contents(
             self,
-            beg_y as i32,
-            beg_x as i32,
-            len_y.map_or(-1, |y| y as i32),
-            len_x.map_or(-1, |x| x as i32)
+            beg_y,
+            beg_x,
+            len_y.unwrap_or(0),
+            len_x.unwrap_or(0)
         )]
     }
 
@@ -1490,14 +1490,7 @@ impl NcPlane {
         error![
             unsafe {
                 c_api::ncplane_mergedown(
-                    source,
-                    self,
-                    source_y as i32,
-                    source_x as i32,
-                    len_y as i32,
-                    len_x as i32,
-                    target_y as i32,
-                    target_x as i32,
+                    source, self, source_y, source_x, len_y, len_x, target_y, target_x,
                 )
             },
             &format!(
@@ -1909,12 +1902,12 @@ impl NcPlane {
                     self,
                     keep_y as i32,
                     keep_x as i32,
-                    keep_len_y as i32,
-                    keep_len_x as i32,
+                    keep_len_y,
+                    keep_len_x,
                     y_off as i32,
                     x_off as i32,
-                    y_len as i32,
-                    x_len as i32,
+                    y_len,
+                    x_len,
                 )
             },
             &format!(
@@ -1969,17 +1962,17 @@ impl NcPlane {
         len_x: Option<NcDim>,
     ) -> NcResult<&mut [u32]> {
         // converts length arguments to expected format
-        let len_y2: i32;
-        let len_x2: i32;
+        let len_y2: u32;
+        let len_x2: u32;
         if let Some(y) = len_y {
-            len_y2 = y as i32;
+            len_y2 = y;
         } else {
-            len_y2 = -1;
+            len_y2 = 0;
         }
         if let Some(x) = len_x {
-            len_x2 = x as i32;
+            len_x2 = x;
         } else {
-            len_x2 = -1;
+            len_x2 = 0;
         }
 
         // pixel geometry
@@ -1990,8 +1983,8 @@ impl NcPlane {
             c_api::ncplane_as_rgba(
                 self,
                 blitter,
-                beg_y as i32,
-                beg_x as i32,
+                beg_y,
+                beg_x,
                 len_y2,
                 len_x2,
                 &mut pxdimy,
@@ -2247,18 +2240,7 @@ impl NcPlane {
         boxmask: NcBoxMask,
     ) -> NcResult<()> {
         error![unsafe {
-            c_api::ncplane_box(
-                self,
-                ul,
-                ur,
-                ll,
-                lr,
-                hline,
-                vline,
-                y_stop as i32,
-                x_stop as i32,
-                boxmask,
-            )
+            c_api::ncplane_box(self, ul, ur, ll, lr, hline, vline, y_stop, x_stop, boxmask)
         }]
     }
 
