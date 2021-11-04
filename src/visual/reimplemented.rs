@@ -8,6 +8,9 @@ use crate::{Nc, NcError, NcPlane, NcPlaneOptions, NcResult, NcVisual, NcVisualOp
 /// Blits `ncv` to the created plane according to `vopts`.
 ///
 /// If `opts` has a plane, `NCVISUAL_OPTION_CHILDPLANE` must also be supplied.
+//
+// NOTE: no equivalent method for now.
+#[allow(dead_code)]
 pub fn ncvisualplane_create<'a>(
     nc: &'a mut Nc,
     opts: &NcPlaneOptions,
@@ -56,7 +59,7 @@ pub fn ncvisualplane_create<'a>(
         vopts2_ref = &_vopts2;
     }
 
-    // WIP…
+    // WIP:
 
     // vopts->n = newn;
     // if(ncvisual_blit(nc, ncv, vopts) == NULL){
