@@ -6,17 +6,31 @@ use libc::c_void;
 use crate::{
     c_api, cstring, error, error_ref_mut, rstring_free, Nc, NcBlitter, NcBlitterApi,
     NcBlitterGeometry, NcChannel, NcComponent, NcDim, NcDirect, NcError, NcIntResult,
-    NcIntResultApi, NcPixel, NcPlane, NcResult, NcRgba, NcScale, NcTime, NcVGeom, NcVisual,
-    NcVisualOptions,
+    NcIntResultApi, NcPixel, NcPlane, NcResult, NcRgba, NcScale, NcScaleApi, NcTime, NcVGeom,
+    NcVisual, NcVisualOptions,
 };
 
 /// # NcVisualOptions Constructors
 impl NcVisualOptions {
-    // /// New NcVisualOptions
-    // pub fn new() -> Self {
-    //     Self::with_flags()
-    // }
-    //
+    /// New empty NcVisualOptions
+    pub fn new() -> Self {
+        Self {
+            n: null_mut(),
+            scaling: NcScale::NOSCALE,
+            y: 0,
+            x: 0,
+            begy: 0,
+            begx: 0,
+            leny: 0,
+            lenx: 0,
+            blitter: NcBlitter::DEFAULT,
+            flags: 0,
+            transcolor: 0,
+            pxoffy: 0,
+            pxoffx: 0,
+        }
+    }
+
     // pub fn new_aligned() -> Self {
     //     Self::with_flags_aligned()
     // }

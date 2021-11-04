@@ -92,7 +92,7 @@ impl NcPlane {
         rows: NcDim,
         cols: NcDim,
     ) -> NcResult<&'a mut NcPlane> {
-        Self::with_options(nc, NcPlaneOptions::new(y, x, rows, cols))
+        Self::with_options(nc, &NcPlaneOptions::new(y, x, rows, cols))
     }
 
     /// New `NcPlane`, expects an [NcPlaneOptions] struct.
@@ -100,10 +100,10 @@ impl NcPlane {
     /// The returned plane will be the top, bottom, and root of this new pile.
     ///
     /// *C style function: [ncpile_create()][c_api::ncpile_create].*
-    pub fn with_options<'a>(nc: &mut Nc, options: NcPlaneOptions) -> NcResult<&'a mut NcPlane> {
+    pub fn with_options<'a>(nc: &mut Nc, options: &NcPlaneOptions) -> NcResult<&'a mut NcPlane> {
         error_ref_mut![
-            unsafe { c_api::ncpile_create(nc, &options) },
-            &format!["NcPlane::with_options(Nc, {:?})", &options]
+            unsafe { c_api::ncpile_create(nc, options) },
+            &format!["NcPlane::with_options(Nc, {:?})", options]
         ]
     }
 
@@ -117,7 +117,7 @@ impl NcPlane {
         rows: NcDim,
         cols: NcDim,
     ) -> NcResult<&'a mut NcPlane> {
-        Self::with_options_bound(bound_to, NcPlaneOptions::new(y, x, rows, cols))
+        Self::with_options_bound(bound_to, &NcPlaneOptions::new(y, x, rows, cols))
     }
 
     /// New `NcPlane`, bound to another plane, expects an [NcPlaneOptions] struct.
@@ -125,11 +125,11 @@ impl NcPlane {
     /// *C style function: [ncplane_create()][c_api::ncplane_create].*
     pub fn with_options_bound<'a>(
         bound_to: &mut NcPlane,
-        options: NcPlaneOptions,
+        options: &NcPlaneOptions,
     ) -> NcResult<&'a mut NcPlane> {
         error_ref_mut![
-            unsafe { c_api::ncplane_create(bound_to, &options) },
-            &format!("NcPlane::with_options_bound(NcPlane, {:?})", &options)
+            unsafe { c_api::ncplane_create(bound_to, options) },
+            &format!("NcPlane::with_options_bound(NcPlane, {:?})", options)
         ]
     }
 
@@ -143,7 +143,7 @@ impl NcPlane {
         assert![(trows > 0) & (tcols > 0)];
         Self::with_options(
             nc,
-            NcPlaneOptions::new(0, 0, trows as NcDim, tcols as NcDim),
+            &NcPlaneOptions::new(0, 0, trows as NcDim, tcols as NcDim),
         )
     }
 

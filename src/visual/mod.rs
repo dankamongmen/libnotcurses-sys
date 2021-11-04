@@ -31,10 +31,19 @@
 //W  ncvisual_subtitle
 //W  ncvisual_subtitle_plane
 
+// functions manually reimplemented: 45
+// ------------------------------------------
+// (+) done: 1
+// (W) wrap: 1
+// (#) test: 0
+// ------------------------------------------
+//W+ ncvisualplane_create
+
 #[allow(unused_imports)] // for doc comments
 use crate::{NcChannel, NcRgb};
 
 mod methods;
+mod reimplemented;
 
 /// A visual bit of multimedia.
 ///
