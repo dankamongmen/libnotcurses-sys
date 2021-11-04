@@ -110,7 +110,7 @@ pub mod widgets;
 // in which case are both aliases over `u32`.
 pub use align::{NcAlign, NcAlignApi};
 pub use alpha::{NcAlpha, NcAlphaApi};
-pub use blitter::{NcBlitter, NcBlitterApi, NcBlitterGeometry};
+pub use blitter::{NcBlitter, NcBlitterApi};
 pub use capabilities::NcCapabilities;
 pub use cell::NcCell;
 pub use channel::{NcChannel, NcChannelApi, NcChannels, NcChannelsApi, NcComponent, NcRgb};

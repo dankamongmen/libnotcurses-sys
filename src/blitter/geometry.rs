@@ -8,6 +8,7 @@ use crate::{NcBlitter, NcDim};
 /// - `blitter` The blitter that will be used
 ///
 #[derive(Clone, Debug)]
+#[deprecated]
 pub struct NcBlitterGeometry {
     ///
     pub y: NcDim,

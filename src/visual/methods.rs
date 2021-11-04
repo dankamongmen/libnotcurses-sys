@@ -4,10 +4,9 @@ use core::ptr::{null, null_mut};
 use libc::c_void;
 
 use crate::{
-    c_api, cstring, error, error_ref_mut, rstring_free, Nc, NcBlitter, NcBlitterApi,
-    NcBlitterGeometry, NcChannel, NcComponent, NcDim, NcDirect, NcError, NcIntResult,
-    NcIntResultApi, NcPixel, NcPlane, NcResult, NcRgba, NcScale, NcScaleApi, NcTime, NcVGeom,
-    NcVisual, NcVisualOptions,
+    c_api, cstring, error, error_ref_mut, rstring_free, Nc, NcBlitter, NcBlitterApi, NcChannel,
+    NcComponent, NcDim, NcDirect, NcError, NcIntResult, NcIntResultApi, NcPixel, NcPlane, NcResult,
+    NcRgba, NcScale, NcScaleApi, NcTime, NcVGeom, NcVisual, NcVisualOptions,
 };
 
 /// # NcVisualOptions Constructors
@@ -403,10 +402,35 @@ impl NcVisual {
         }
     }
 
+    /// An all-purpose `NcVisual` geometry solver, returns [`NcVGeom`].
+    ///
+    /// if `nc` is `None`, only `pixy`/`pixx` will be filled in, with the true
+    /// pixel geometry of the current `NcVisual`.
+    ///
+    /// `cdimy`/`cdimx` and `maxpixely`/`maxpixelx` are only ever filled in if
+    /// we know them.
+    ///
+    /// See also: [`Nc.visual_geom`][Nc#method.visual_geom]
+    ///
+    /// *C style function: [ncvisual_geom()][c_api::ncvisual_geom].*
+    pub fn geom(&self, vopts: &NcVisualOptions, nc: Option<&Nc>) -> NcResult<NcVGeom> {
+        let mut vgeom = NcVGeom::new();
+
+        let nc_ptr: *const Nc;
+        if let Some(nc) = nc {
+            nc_ptr = nc;
+        } else {
+            nc_ptr = null();
+        }
+
+        let res = unsafe { crate::c_api::ncvisual_geom(nc_ptr, self, vopts, &mut vgeom) };
+        error![res, "NcVisual.geom()", vgeom];
+    }
+
     /// Gets the size and ratio of NcVisual pixels to output cells along the
     /// vertical and horizontal axes.
     ///
-    /// Returns [`NcBlitterGeometry`].
+    /// Returns `NcBlitterGeometry`.
     ///
     /// An NcVisual of `y` by `x` pixels will require
     /// (`y` * `to_y`) by (`x` * `to_x`) cells for full output.
@@ -414,7 +438,13 @@ impl NcVisual {
     /// Errors on invalid blitter in `options`. Scaling is taken into consideration.
     ///
     /// *C style function: [ncvisual_blitter_geom()][c_api::ncvisual_blitter_geom].*
-    pub fn blitter_geom(&self, nc: &Nc, options: &NcVisualOptions) -> NcResult<NcBlitterGeometry> {
+    #[deprecated]
+    #[allow(deprecated)]
+    pub fn blitter_geom(
+        &self,
+        nc: &Nc,
+        options: &NcVisualOptions,
+    ) -> NcResult<crate::blitter::geometry::NcBlitterGeometry> {
         let mut y = 0;
         let mut x = 0;
         let mut scale_y = 0;
@@ -433,14 +463,15 @@ impl NcVisual {
                 &mut blitter,
             )
         };
-        let geom = NcBlitterGeometry {
+        #[allow(deprecated)]
+        let bgeom = crate::blitter::geometry::NcBlitterGeometry {
             x: x as NcDim,
             y: y as NcDim,
             scale_y: scale_y as NcDim,
             scale_x: scale_x as NcDim,
             blitter,
         };
-        error![res, "NcVisual.geom()", geom];
+        error![res, "NcVisual.blitter_geom()", bgeom];
     }
 
     /// Gets the default media (not plot) blitter for this environment when using
@@ -742,7 +773,11 @@ impl NcVGeom {
             scalex: 0,
             maxpixely: 0,
             maxpixelx: 0,
-            blitter: 0,
+            begy: 0,
+            begx: 0,
+            leny: 0,
+            lenx: 0,
+            blitter: NcBlitter::DEFAULT,
         }
     }
 }

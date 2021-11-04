@@ -6,7 +6,7 @@ use crate::{
     c_api::{self, notcurses_init},
     cstring, error, error_ref_mut, rstring, rstring_free, Nc, NcAlign, NcBlitter, NcChannels,
     NcDim, NcError, NcFile, NcInput, NcLogLevel, NcOptions, NcPixelImpl, NcPlane, NcResult,
-    NcScale, NcStats, NcStyle, NcStyleApi, NcTime,
+    NcScale, NcStats, NcStyle, NcStyleApi, NcTime, NcVGeom, NcVisual, NcVisualOptions,
 };
 
 /// # `NcOptions` Constructors
@@ -823,5 +823,31 @@ impl Nc {
             c_api::notcurses_version_components(&mut major, &mut minor, &mut patch, &mut tweak);
         }
         (major as u32, minor as u32, patch as u32, tweak as u32)
+    }
+
+    /// An all-purpose `NcVisual` geometry solver, returns [`NcVGeom`].
+    ///
+    /// if `v` is `None`, only `cdimy`/`cdimx`, `blitter`, `scaley`/`scalex`,
+    /// and `maxpixely`/`maxpixelx` are filled in; this is the same as calling
+    /// with a default 'vopts'.
+    ///
+    /// `cdimy`/`cdimx` and `maxpixely`/`maxpixelx` are only ever filled in if
+    /// we know them.
+    ///
+    /// See also: [`NcVisual.geom`][NcVisual#method.geom]
+    ///
+    /// *C style function: [ncvisual_geom()][c_api::ncvisual_geom].*
+    pub fn geom(&self, vopts: &NcVisualOptions, v: Option<&NcVisual>) -> NcResult<NcVGeom> {
+        let mut vgeom = NcVGeom::new();
+
+        let v_ptr: *const NcVisual;
+        if let Some(visual) = v {
+            v_ptr = visual;
+        } else {
+            v_ptr = null();
+        }
+
+        let res = unsafe { crate::c_api::ncvisual_geom(self, v_ptr, vopts, &mut vgeom) };
+        error![res, "Nc.visual_geom()", vgeom];
     }
 }

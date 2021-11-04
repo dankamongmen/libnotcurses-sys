@@ -710,7 +710,7 @@ pub use ffi::{
     // functions
     ncvisual_at_yx,
     ncvisual_blit,
-    ncvisual_blitter_geom,
+    ncvisual_blitter_geom, // deprecated
     ncvisual_decode,
     ncvisual_decode_loop,
     ncvisual_destroy,
@@ -721,6 +721,7 @@ pub use ffi::{
     ncvisual_from_rgb_loose,
     ncvisual_from_rgb_packed,
     ncvisual_from_rgba,
+    ncvisual_geom,
     ncvisual_media_defblitter,
     ncvisual_options,
     ncvisual_polyfill_yx,
