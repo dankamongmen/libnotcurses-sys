@@ -107,6 +107,8 @@ pub(crate) mod constants {
 /// NcPlane.[`pixel_geom`][crate::NcPlane#method.pixel_geom] method.
 ///
 /// If bitmaps are not supported, the fields `max_bitmap_*` will be 0.
+///
+/// See also [`NcVGeom`][crate::NcVGeom].
 #[derive(Clone, Debug)]
 pub struct NcPixelGeometry {
     /// The height in pixels of the display region.

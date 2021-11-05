@@ -45,6 +45,9 @@ use crate::{NcChannel, NcRgb};
 mod methods;
 mod reimplemented;
 
+mod geometry;
+pub use geometry::NcVGeom;
+
 /// A visual bit of multimedia.
 ///
 /// It can be constructed from a rgba or bgra buffer.
@@ -54,19 +57,6 @@ mod reimplemented;
 /// - [`render`][NcVisual#method.render]
 /// - [`simple_streamer`][NcVisual#method.simple_streamer]
 pub type NcVisual = crate::bindings::ffi::ncvisual;
-
-/// Describes all geometries of an [`NcVisual`] ncvisual–both those which are inherent, and
-/// those in a given rendering regime.
-///
-/// *FIXME this ought be used in the rendered mode API as well;
-/// it’s currently only used by direct mode.*
-/// *(See [`ncvgeom`][1] more more information)*
-///
-/// This is the return type of the [`NcDirectF.ncdirectf_geom`][0] method.
-///
-/// [0]: NcVisual#method.ncdirectf_geom
-/// [1]: crate::bindings::ffi::ncvgeom
-pub type NcVGeom = crate::bindings::ffi::ncvgeom;
 
 /// Options struct for [`NcVisual`]
 ///

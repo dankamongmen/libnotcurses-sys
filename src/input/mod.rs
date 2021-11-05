@@ -127,7 +127,7 @@ pub type NcMiceEvents = u32;
 crate::impl_api![
     NcMiceEvents,
     NcMiceEventsApi,
-    /// [`NcEventMask`] flag that **disables all** mice events.
+    /// [`NcMiceEvents`] flag that **disables all** mice events.
     const NO_EVENTS: NcMiceEvents = constants::NCMICE_NO_EVENTS;,
     /// [`NcMiceEvents`] flag that enables mice **move** events.
     const MOVE_EVENTS: NcMiceEvents = constants::NCMICE_MOVE_EVENTS;,

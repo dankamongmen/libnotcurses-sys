@@ -12,22 +12,21 @@ pub(crate) mod geometry;
 /// background set to the desired foreground.
 ///
 /// There is a mechanism of graceful degradation, that works as follows:
-/// - without braille support, [`NcBlitter::BRAILLE`][BRA] decays to [`NcBlitter::_3x2`][3x2].
-/// - without bitmap support, [`NcBlitter::PIXEL`][PIX] decays to [`NcBlitter::_3x2`][3x2].
-/// - without sextant support, [`NcBlitter::_3x2`][3x2] decays to [`NcBlitter::_2x2`][2x2].
-/// - without quadrant support, [`NcBlitter::_2x2`][2x2] decays to [`NcBlitter::_2x1`][2x1].
-/// - the only viable blitters in ASCII are [`NCBlit::1x1`][1x1] and [`NcBlitter::PIXEL`][PIX].
+/// - without braille support, [`NcBlitter::BRAILLE`] decays to [`NcBlitter::_3x2`].
+/// - without bitmap support, [`NcBlitter::PIXEL`] decays to [`NcBlitter::_3x2`].
+/// - without sextant support, [`NcBlitter::_3x2`] decays to [`NcBlitter::_2x2`].
+/// - without quadrant support, [`NcBlitter::_2x2`] decays to [`NcBlitter::_2x1`].
+/// - the only viable blitters in ASCII are [`NCBlitter::_1x1`] and [`NcBlitter::PIXEL`].
 ///
-/// [BRA]: type.NcBlitter.html#associatedconstant.BRAILLE
-/// [PIX]: type.NcBlitter.html#associatedconstant.PIXEL
-/// [1x1]: type.NcBlitter.html#associatedconstant._1x1
-/// [2x1]: type.NcBlitter.html#associatedconstant._2x1
-/// [2x2]: type.NcBlitter.html#associatedconstant._2x2
-/// [3x2]: type.NcBlitter.html#associatedconstant._3x2
+/// [`NCBlitter::BRAILLE`]: NcBlitter#associatedconstant.BRAILLE
+/// [`NCBlitter::PIXEL`]: NcBlitter#associatedconstant.PIXEL
+/// [`NCBlitter::_1x1`]: NcBlitter#associatedconstant._1x1
+/// [`NCBlitter::_2x1`]: NcBlitter#associatedconstant._2x1
+/// [`NCBlitter::_2x2`]: NcBlitter#associatedconstant._2x2
+/// [`NCBlitter::_3x2`]: NcBlitter#associatedconstant._3x2
 ///
 /// If you don't want this behaviour you have to use
 /// [`NcVisualOptions::NODEGRADE`][crate::NcVisualOptions#associatedconstant.NODEGRADE]
-///
 pub type NcBlitter = u32;
 
 crate::impl_api![

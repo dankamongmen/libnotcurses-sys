@@ -851,10 +851,10 @@ impl Nc {
         (major as u32, minor as u32, patch as u32, tweak as u32)
     }
 
-    /// An all-purpose `NcVisual` geometry solver, returns [`NcVGeom`].
+    /// Returns an [`NcVGeom`].
     ///
-    /// if `v` is `None`, only `cdimy`/`cdimx`, `blitter`, `scaley`/`scalex`,
-    /// and `maxpixely`/`maxpixelx` are filled in.
+    /// if an [`NcVisual`] is not provided, only `cdimy`/`cdimx`, `blitter`,
+    /// `scaley`/`scalex`, and `maxpixely`/`maxpixelx` are filled in.
     ///
     /// `cdimy`/`cdimx` and `maxpixely`/`maxpixelx` are only ever filled in if
     /// we know them.
@@ -862,7 +862,7 @@ impl Nc {
     /// See also: [`NcVisual.geom`][NcVisual#method.geom]
     ///
     /// *C style function: [ncvisual_geom()][c_api::ncvisual_geom].*
-    pub fn geom(&self, vopts: &NcVisualOptions, v: Option<&NcVisual>) -> NcResult<NcVGeom> {
+    pub fn visual_geom(&self, vopts: &NcVisualOptions, v: Option<&NcVisual>) -> NcResult<NcVGeom> {
         let mut vgeom = NcVGeom::new();
 
         let v_ptr: *const NcVisual;
