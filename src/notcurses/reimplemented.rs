@@ -36,7 +36,8 @@ pub fn notcurses_canpixel(nc: &Nc) -> bool {
     unsafe { c_api::notcurses_check_pixel_support(nc) != c_api::NCPIXEL_NONE }
 }
 
-/// Reads input blocking until an event is processed or a signal is received.
+/// Reads input blocking until an event is processed or a signal is received
+/// (including resize events)
 ///
 /// Will optionally write the event details in `input`.
 ///
@@ -58,7 +59,7 @@ pub fn notcurses_getc_blocking(nc: &mut Nc, input: Option<&mut NcInput>) -> NcIn
 ///
 /// Will optionally write the event details in `input`.
 ///
-/// If no event is ready, returns 0.
+/// If no event is immediately ready, returns 0.
 ///
 /// In case of an invalid read (including on EOF) *-1* is returned.
 ///
@@ -127,4 +128,10 @@ pub fn notcurses_term_dim_yx(nc: &Nc) -> (NcDim, NcDim) {
         c_api::ncplane_dim_yx(c_api::notcurses_stdplane_const(nc), &mut y, &mut x);
     }
     (y as NcDim, x as NcDim)
+}
+
+/// Disables all mice tracking.
+#[inline]
+pub fn notcurses_mice_disable(nc: &mut Nc) -> NcIntResult {
+    unsafe { c_api::notcurses_mice_enable(nc, c_api::NCMICE_NO_EVENTS) }
 }

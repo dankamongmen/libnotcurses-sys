@@ -5,8 +5,9 @@ use core::ptr::{null, null_mut};
 use crate::{
     c_api::{self, notcurses_init},
     cstring, error, error_ref_mut, rstring, rstring_free, Nc, NcAlign, NcBlitter, NcChannels,
-    NcDim, NcError, NcFile, NcInput, NcLogLevel, NcOptions, NcPixelImpl, NcPlane, NcResult,
-    NcScale, NcStats, NcStyle, NcStyleApi, NcTime, NcVGeom, NcVisual, NcVisualOptions,
+    NcDim, NcError, NcFile, NcInput, NcLogLevel, NcMiceEvents, NcMiceEventsApi, NcOptions,
+    NcPixelImpl, NcPlane, NcResult, NcScale, NcStats, NcStyle, NcStyleApi, NcTime, NcVGeom,
+    NcVisual, NcVisualOptions,
 };
 
 /// # `NcOptions` Constructors
@@ -559,11 +560,34 @@ impl Nc {
         error![unsafe { c_api::notcurses_linesigs_enable(self) }]
     }
 
+    /// Disables mice events.
+    ///
+    /// *C style function: [notcurses_mice_disable()][c_api::notcurses_mice_disable].*
+    pub fn mice_disable(&mut self) -> NcResult<()> {
+        self.mice_enable(NcMiceEvents::NO_EVENTS)
+    }
+
+    /// Enables mice events according to `eventmask`.
+    ///
+    /// An eventmask of 0 will disable all mice tracking.
+    ///
+    /// On success mouse events will be published to `notcurses_get`.
+    ///
+    /// *C style function: [notcurses_mice_enable()][c_api::notcurses_mice_enable].*
+    pub fn mice_enable(&mut self, eventmask: NcMiceEvents) -> NcResult<()> {
+        error![
+            unsafe { c_api::notcurses_mice_enable(self, eventmask) },
+            "Nc.mice_enable()"
+        ]
+    }
+
     /// Disables mouse events.
     ///
     /// Any events in the input queue can still be delivered.
     ///
     /// *C style function: [notcurses_mouse_disable()][c_api::notcurses_mouse_disable].*
+    #[deprecated]
+    #[doc(hidden)]
     pub fn mouse_disable(&mut self) -> NcResult<()> {
         error![unsafe { c_api::notcurses_mouse_disable(self) }]
     }
@@ -574,6 +598,8 @@ impl Nc {
     /// On success, mouse events will be published to [getc()][Nc#method.getc].
     ///
     /// *C style function: [notcurses_mouse_enable()][c_api::notcurses_mouse_enable].*
+    #[deprecated]
+    #[doc(hidden)]
     pub fn mouse_enable(&mut self) -> NcResult<()> {
         error![
             unsafe { c_api::notcurses_mouse_enable(self) },
@@ -828,8 +854,7 @@ impl Nc {
     /// An all-purpose `NcVisual` geometry solver, returns [`NcVGeom`].
     ///
     /// if `v` is `None`, only `cdimy`/`cdimx`, `blitter`, `scaley`/`scalex`,
-    /// and `maxpixely`/`maxpixelx` are filled in; this is the same as calling
-    /// with a default 'vopts'.
+    /// and `maxpixely`/`maxpixelx` are filled in.
     ///
     /// `cdimy`/`cdimx` and `maxpixely`/`maxpixelx` are only ever filled in if
     /// we know them.

@@ -82,7 +82,7 @@ impl NcKey {
     pub const F59: char = constants::NCKEY_F59;
     pub const F60: char = constants::NCKEY_F60;
 
-    // ... leave room for up to 100 function keys, egads
+    // ... leave room for function keys.
 
     pub const ENTER: char = constants::NCKEY_ENTER;
     /// "clear-screen or erase"
@@ -104,7 +104,8 @@ impl NcKey {
     pub const PRINT: char = constants::NCKEY_PRINT;
     pub const REFRESH: char = constants::NCKEY_REFRESH;
 
-    // these keys aren't generally available outside of the kitty protocol
+    // these keys aren't generally available outside of the kitty protocol:
+
     pub const CAPS_LOCK: char = constants::NCKEY_CAPS_LOCK;
     pub const SCROLL_LOCK: char = constants::NCKEY_SCROLL_LOCK;
     pub const NUM_LOCK: char = constants::NCKEY_NUM_LOCK;
@@ -112,7 +113,8 @@ impl NcKey {
     pub const PAUSE: char = constants::NCKEY_PAUSE;
     pub const MENU: char = constants::NCKEY_MENU;
 
-    // media keys, similarly only available through kitty's protocol
+    // media keys, similarly only available through kitty's protocol:
+
     pub const MEDIA_PLAY: char = constants::NCKEY_MEDIA_PLAY;
     pub const MEDIA_PAUSE: char = constants::NCKEY_MEDIA_PAUSE;
     pub const MEDIA_PPAUSE: char = constants::NCKEY_MEDIA_PPAUSE;
@@ -128,7 +130,8 @@ impl NcKey {
     pub const MEDIA_MUTE: char = constants::NCKEY_MEDIA_MUTE;
 
     // modifiers when pressed by themselves. this ordering comes from the Kitty
-    // keyboard protocol, and mustn't be changed without updating handlers.
+    // keyboard protocol, and mustn't be changed without updating handlers:
+
     pub const LSHIFT: char = constants::NCKEY_LSHIFT;
     pub const LCTRL: char = constants::NCKEY_LCTRL;
     pub const LALT: char = constants::NCKEY_LALT;
@@ -142,9 +145,10 @@ impl NcKey {
     pub const RHYPER: char = constants::NCKEY_RHYPER;
     pub const RMETA: char = constants::NCKEY_RMETA;
 
-    // Mouse events. We try to encode some details into the char32_t (i.e. which
-    // button was pressed);, but some is embedded in the ncinput event. The release
-    // event is generic across buttons; callers must maintain state, if they care.
+    // Mouse events. We encode which button was pressed into the char,
+    // but position information is embedded in the larger ncinput event:
+
+    pub const MOTION: char = constants::NCKEY_MOTION;
     pub const BUTTON1: char = constants::NCKEY_BUTTON1;
     pub const BUTTON2: char = constants::NCKEY_BUTTON2;
     pub const BUTTON3: char = constants::NCKEY_BUTTON3;
@@ -161,12 +165,14 @@ impl NcKey {
     /// Will be returned upon reaching the end of input.
     pub const EOF: char = constants::NCKEY_EOF;
 
-    // Synonyms (so far as we're concerned)
+    // Synonyms (so far as we're concerned):
+
     pub const SCROLL_UP: char = constants::NCKEY_SCROLL_UP;
     pub const SCROLL_DOWN: char = constants::NCKEY_SCROLL_DOWN;
     pub const RETURN: char = constants::NCKEY_RETURN;
 
-    // Aliases, from the 128 characters common to ASCII+UTF8
+    // Aliases, from the 128 characters common to ASCII+UTF8:
+
     pub const ESC: char = constants::NCKEY_ESC;
     pub const SPACE: char = constants::NCKEY_SPACE;
 }
@@ -255,7 +261,7 @@ pub(crate) mod constants {
     pub const NCKEY_F59: char = suppuabize(79);
     pub const NCKEY_F60: char = suppuabize(80);
 
-    // ... leave room for function keys
+    // ... leave room for function keys.
 
     pub const NCKEY_ENTER: char = suppuabize(121);
     /// "clear-screen or erase"
@@ -277,7 +283,8 @@ pub(crate) mod constants {
     pub const NCKEY_PRINT: char = suppuabize(134);
     pub const NCKEY_REFRESH: char = suppuabize(135);
 
-    // these keys aren't generally available outside of the kitty protocol
+    // these keys aren't generally available outside of the kitty protocol:
+
     pub const NCKEY_CAPS_LOCK: char = suppuabize(150);
     pub const NCKEY_SCROLL_LOCK: char = suppuabize(151);
     pub const NCKEY_NUM_LOCK: char = suppuabize(152);
@@ -285,7 +292,8 @@ pub(crate) mod constants {
     pub const NCKEY_PAUSE: char = suppuabize(154);
     pub const NCKEY_MENU: char = suppuabize(155);
 
-    // media keys, similarly only available through kitty's protocol
+    // media keys, similarly only available through kitty's protocol:
+
     pub const NCKEY_MEDIA_PLAY: char = suppuabize(158);
     pub const NCKEY_MEDIA_PAUSE: char = suppuabize(159);
     pub const NCKEY_MEDIA_PPAUSE: char = suppuabize(160);
@@ -301,7 +309,8 @@ pub(crate) mod constants {
     pub const NCKEY_MEDIA_MUTE: char = suppuabize(170);
 
     // modifiers when pressed by themselves. this ordering comes from the Kitty
-    // keyboard protocol, and mustn't be changed without updating handlers.
+    // keyboard protocol, and mustn't be changed without updating handlers:
+
     pub const NCKEY_LSHIFT: char = suppuabize(171);
     pub const NCKEY_LCTRL: char = suppuabize(172);
     pub const NCKEY_LALT: char = suppuabize(173);
@@ -315,9 +324,11 @@ pub(crate) mod constants {
     pub const NCKEY_RHYPER: char = suppuabize(181);
     pub const NCKEY_RMETA: char = suppuabize(182);
 
-    // Mouse events. We try to encode some details into the char32_t (i.e. which
-    // button was pressed);, but some is embedded in the ncinput event. The release
-    // event is generic across buttons; callers must maintain state, if they care.
+    // Mouse events. We encode which button was pressed into the char,
+    // but position information is embedded in the larger ncinput event:
+
+    /// no buttons pressed
+    pub const NCKEY_MOTION: char = suppuabize(200);
     pub const NCKEY_BUTTON1: char = suppuabize(201);
     pub const NCKEY_BUTTON2: char = suppuabize(202);
     pub const NCKEY_BUTTON3: char = suppuabize(203);
@@ -334,12 +345,14 @@ pub(crate) mod constants {
     /// Will be returned upon reaching the end of input.
     pub const NCKEY_EOF: char = suppuabize(300);
 
-    // Synonyms (so far as we're concerned)
+    // Synonyms (so far as we're concerned):
+
     pub const NCKEY_SCROLL_UP: char = NCKEY_BUTTON4;
     pub const NCKEY_SCROLL_DOWN: char = NCKEY_BUTTON5;
     pub const NCKEY_RETURN: char = NCKEY_ENTER;
 
-    // Aliases, from the 128 characters common to ASCII+UTF8
+    // Aliases, from the 128 characters common to ASCII+UTF8:
+
     pub const NCKEY_ESC: char = unsafe { transmute(0x1b) };
     pub const NCKEY_SPACE: char = unsafe { transmute(0x20) };
 }

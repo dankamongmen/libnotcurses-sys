@@ -44,6 +44,8 @@ impl NcInput {
             shift: false,
             ctrl: false,
             evtype: NcEvType::UNKNOWN,
+            ypx: -1,
+            xpx: -1,
         }
     }
 
@@ -97,37 +99,48 @@ impl NcInput {
             shift,
             ctrl,
             evtype,
+            ypx: -1,
+            xpx: -1,
         }
     }
 }
 
-/// The type of the event, part of [`NcInput`].
+/// The type of the event, part of [`NcInput`] (alias of u32).
 pub type NcEvType = u32;
 
-/// Enables the [`NcEvType`] associated methods and constants.
-pub trait NcEvTypeApi {
-    const UNKNOWN: NcEvType = constants::NCEVTYPE_UNKNOWN;
-    const PRESS: NcEvType = constants::NCEVTYPE_PRESS;
-    const REPEAT: NcEvType = constants::NCEVTYPE_REPEAT;
-    const RELEASE: NcEvType = constants::NCEVTYPE_RELEASE;
-}
-
-impl NcEvTypeApi for NcEvType {
+crate::impl_api![
+    NcEvType,
+    NcEvTypeApi,
     /// *Unknown* type event ([`NcEvType`]).
-    const UNKNOWN: NcEvType = constants::NCEVTYPE_UNKNOWN;
-
+    const UNKNOWN: NcEvType = constants::NCEVTYPE_UNKNOWN;,
     /// *Press* type event ([`NcEvType`]).
-    const PRESS: NcEvType = constants::NCEVTYPE_PRESS;
-
+    const PRESS: NcEvType = constants::NCEVTYPE_PRESS;,
     /// *Repeat* type event ([`NcEvType`]).
-    const REPEAT: NcEvType = constants::NCEVTYPE_REPEAT;
-
+    const REPEAT: NcEvType = constants::NCEVTYPE_REPEAT;,
     /// *Release* type event ([`NcEvType`]).
     const RELEASE: NcEvType = constants::NCEVTYPE_RELEASE;
-}
+];
+
+/// A mask for mice input events (alias of u32).
+pub type NcMiceEvents = u32;
+
+crate::impl_api![
+    NcMiceEvents,
+    NcMiceEventsApi,
+    /// [`NcEventMask`] flag that **disables all** mice events.
+    const NO_EVENTS: NcMiceEvents = constants::NCMICE_NO_EVENTS;,
+    /// [`NcMiceEvents`] flag that enables mice **move** events.
+    const MOVE_EVENTS: NcMiceEvents = constants::NCMICE_MOVE_EVENTS;,
+    /// [`NcMiceEvents`] flag that enables mice **button** events.
+    const BUTTON_EVENTS: NcMiceEvents = constants::NCMICE_BUTTON_EVENTS;,
+    /// [`NcMiceEvents`] flag that enables mice **drag** events.
+    const DRAG_EVENTS: NcMiceEvents = constants::NCMICE_DRAG_EVENTS;,
+    /// [`NcMiceEvents`] flag that **enables all** mice tracking events.
+    const ALL_EVENTS: NcMiceEvents = constants::NCMICE_ALL_EVENTS;
+];
 
 pub(crate) mod constants {
-    use crate::NcEvType;
+    use crate::{NcEvType, NcMiceEvents};
 
     /// *Unknown* type event ([`NcEvType`]).
     pub const NCEVTYPE_UNKNOWN: NcEvType = crate::bindings::ffi::ncinput_NCTYPE_UNKNOWN;
@@ -140,4 +153,21 @@ pub(crate) mod constants {
 
     /// *Release* type event ([`NcEvType`]).
     pub const NCEVTYPE_RELEASE: NcEvType = crate::bindings::ffi::ncinput_NCTYPE_RELEASE;
+
+    // Mice events:
+
+    /// Disables all mice events.
+    pub const NCMICE_NO_EVENTS: NcMiceEvents = crate::bindings::ffi::NCMICE_NO_EVENTS;
+
+    /// Enables mice *move* events
+    pub const NCMICE_MOVE_EVENTS: NcMiceEvents = crate::bindings::ffi::NCMICE_MOVE_EVENT;
+
+    /// Enables mice *button** events
+    pub const NCMICE_BUTTON_EVENTS: NcMiceEvents = crate::bindings::ffi::NCMICE_BUTTON_EVENT;
+
+    /// Enables mice *drag* events
+    pub const NCMICE_DRAG_EVENTS: NcMiceEvents = crate::bindings::ffi::NCMICE_DRAG_EVENT;
+
+    /// Enables all mice events.
+    pub const NCMICE_ALL_EVENTS: NcMiceEvents = crate::bindings::ffi::NCMICE_ALL_EVENTS;
 }

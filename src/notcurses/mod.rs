@@ -5,9 +5,9 @@
 // (X)  1 : wont do
 // (…)  4 : TODO / WIP
 //
-// (f) 46 : unsafe ffi function exported by bindgen
+// (f) 45 : unsafe ffi function exported by bindgen
 // (w)  0 : safely wrapped ffi function
-// (r)  7 : static function manually reimplemented
+// (r)  8 : static function manually reimplemented
 //
 // (m) 40 : method implemented
 //
@@ -41,8 +41,8 @@
 // fm  notcurses_lex_scalemode
 // fm  notcurses_linesigs_disable
 // fm  notcurses_linesigs_enable
-// fm  notcurses_mouse_disable
-// fm  notcurses_mouse_enable
+// fm  notcurses_mice_enable
+// rm  notcurses_mice_disable
 // fm  notcurses_osversion
 // fm  notcurses_palette_size
 // fm  notcurses_refresh

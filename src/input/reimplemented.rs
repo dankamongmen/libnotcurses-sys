@@ -1,8 +1,8 @@
 use crate::{NcInput, NcKey};
 
-/// Are all the modifiers off (alt, control, shift)?
+/// Is this NcInput free of modifiers (alt, control, shift)?
 pub const fn ncinput_nomod_p(input: &NcInput) -> bool {
-    !input.alt && !input.ctrl && !input.shift
+    !(input.alt && input.ctrl && input.shift)
 }
 
 /// Is this [char] a Supplementary Private Use Area-B codepoint?
@@ -18,7 +18,7 @@ pub const fn nckey_supppuab_p(w: char) -> bool {
 /// Is the event a synthesized mouse event?
 #[inline]
 pub const fn nckey_mouse_p(r: char) -> bool {
-    r >= NcKey::BUTTON1 && r <= NcKey::BUTTON11
+    r >= NcKey::MOTION && r <= NcKey::BUTTON11
 }
 
 /// Compares two NcInput structs for data equality.

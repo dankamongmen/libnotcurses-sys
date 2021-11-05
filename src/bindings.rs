@@ -787,8 +787,9 @@ pub use ffi::{
     notcurses_lex_scalemode,
     notcurses_linesigs_disable,
     notcurses_linesigs_enable,
-    notcurses_mouse_disable,
-    notcurses_mouse_enable,
+    notcurses_mice_enable,
+    notcurses_mouse_disable, // deprecated
+    notcurses_mouse_enable,  // deprecated
     notcurses_options,
     notcurses_osversion,
     notcurses_palette_size,
