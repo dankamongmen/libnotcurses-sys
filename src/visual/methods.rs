@@ -1,139 +1,16 @@
 //! `NcVisual*` methods and associated functions.
 
+mod geom;
+mod options;
+
 use core::ptr::{null, null_mut};
 use libc::c_void;
 
 use crate::{
-    c_api, cstring, error, error_ref_mut, rstring_free, Nc, NcBlitter, NcBlitterApi, NcChannel,
-    NcComponent, NcDim, NcDirect, NcError, NcIntResult, NcIntResultApi, NcPixel, NcPlane, NcResult,
-    NcRgba, NcScale, NcScaleApi, NcTime, NcVGeom, NcVisual, NcVisualOptions,
+    c_api, cstring, error, error_ref_mut, rstring_free, Nc, NcBlitter, NcChannel, NcComponent,
+    NcDim, NcDirect, NcError, NcIntResult, NcIntResultApi, NcPixel, NcPlane, NcResult, NcRgba,
+    NcScale, NcTime, NcVGeom, NcVisual, NcVisualOptions,
 };
-
-/// # NcVisualOptions Constructors
-impl NcVisualOptions {
-    /// New empty NcVisualOptions
-    pub fn new() -> Self {
-        Self {
-            n: null_mut(),
-            scaling: NcScale::NOSCALE,
-            y: 0,
-            x: 0,
-            begy: 0,
-            begx: 0,
-            leny: 0,
-            lenx: 0,
-            blitter: NcBlitter::DEFAULT,
-            flags: 0,
-            transcolor: 0,
-            pxoffy: 0,
-            pxoffx: 0,
-        }
-    }
-
-    // pub fn new_aligned() -> Self {
-    //     Self::with_flags_aligned()
-    // }
-
-    // TODO:
-    // - horizontally aligned
-    // - copy from NcPlaneOptions (with_flags_aligned & with_flags,)
-    // y is an ncalign_e if NCVISUAL_OPTION_VERALIGNED is provided.
-    // x is an ncalign_e value if NCVISUAL_OPTION_HORALIGNED is provided.
-
-    /// Specify an existing plane.
-    ///
-    /// If [`NcVisualOptions::CHILDPLANE`][NcVisualOptions#associatedconstant.CHILDPLANE]
-    /// is used in `flags` then the `plane` is interpreted as the parent
-    /// [`NcPlane`] of the new plane created for this [`NcVisual`].
-    pub fn with_plane(
-        plane: &mut NcPlane,
-        scale: NcScale,
-        y: NcDim,
-        x: NcDim,
-        beg_y: NcDim,
-        beg_x: NcDim,
-        len_y: NcDim,
-        len_x: NcDim,
-        // pxoff_y: NcDim,
-        // pxoff_x: NcDim,
-        blitter: NcBlitter,
-        flags: u32,
-        transcolor: NcRgba,
-    ) -> Self {
-        Self {
-            // provided plane
-            n: plane,
-            // the source is stretched/scaled relative to the provided ncplane
-            scaling: scale,
-            y: y as i32,
-            x: x as i32,
-            // origin of rendered section
-            begy: beg_y as i32,
-            begx: beg_x as i32,
-            // size of rendered section
-            leny: len_y as i32,
-            lenx: len_x as i32,
-            // glyph set to use
-            blitter,
-            // bitmask over NCVISUAL_OPTION_*
-            flags: flags as u64,
-            transcolor,
-            // WIP
-            pxoffy: 0,
-            pxoffx: 0,
-        }
-    }
-
-    // TODO: use Option<> groups for coords
-    pub fn without_plane(
-        y: NcDim,
-        x: NcDim,
-        beg_y: NcDim,
-        beg_x: NcDim,
-        len_y: NcDim,
-        len_x: NcDim,
-        // pxoff_y: NcDim,
-        // pxoff_x: NcDim,
-        blitter: NcBlitter,
-        flags: u32,
-        transcolor: u32,
-    ) -> Self {
-        Self {
-            n: null_mut(),
-            scaling: crate::c_api::NCSCALE_NONE,
-            // where the created plane will be placed relative to stdplane's origin
-            y: y as i32,
-            x: x as i32,
-            // origin of rendered section
-            begy: beg_y as i32,
-            begx: beg_x as i32,
-            // size of rendered section
-            leny: len_y as i32,
-            lenx: len_x as i32,
-            // glyph set to use
-            blitter,
-            // bitmask over NCVISUAL_OPTION_*
-            flags: flags as u64,
-            // This color will be treated as transparent with flag [NCVISUAL_OPTION_ADDALPHA].
-            transcolor,
-            // pixel offsets within the cell.
-            // if NCBLIT_PIXEL is used, the bitmap will be drawn offset from the
-            // upper-left cell's origin by these amounts. it is an error if
-            // either number exceeds the cell-pixel geometry in its dimension.
-            // if NCBLIT_PIXEL is not used, these fields are ignored.
-            // this functionality can be used for smooth bitmap movement.
-            // WIP
-            pxoffy: 0,
-            pxoffx: 0,
-            // pxoffy: pxoff_y,
-            // pxoffx: pxoff_x,
-        }
-    }
-
-    pub fn fullsize_pixel_without_plane(y: NcDim, x: NcDim, len_y: NcDim, len_x: NcDim) -> Self {
-        Self::without_plane(y, x, 0, 0, len_y, len_x, NcBlitter::PIXEL, 0, 0)
-    }
-}
 
 /// # NcVisual Constructors & destructors
 impl NcVisual {
@@ -744,31 +621,5 @@ impl NcVisual {
 
         let res = unsafe { c_api::ncdirectf_geom(ncd, self, options, &mut geom) };
         error![res, "NcVisual.ncdirectf_geom()", geom];
-    }
-}
-
-/// # NcVGeom Constructors
-impl NcVGeom {
-    /// Returns a new `NcVGeom` with zeroed fields.
-    pub fn new() -> Self {
-        Self {
-            pixy: 0,
-            pixx: 0,
-            cdimy: 0,
-            cdimx: 0,
-            rpixy: 0,
-            rpixx: 0,
-            rcelly: 0,
-            rcellx: 0,
-            scaley: 0,
-            scalex: 0,
-            maxpixely: 0,
-            maxpixelx: 0,
-            begy: 0,
-            begx: 0,
-            leny: 0,
-            lenx: 0,
-            blitter: NcBlitter::DEFAULT,
-        }
     }
 }
