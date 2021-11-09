@@ -290,8 +290,8 @@ impl NcVisual {
     /// *C style function: [ncvisual_geom()][c_api::ncvisual_geom].*
     pub fn geom(
         &self,
-        vopts: Option<&NcVisualOptions>,
         nc: Option<&Nc>,
+        vopts: Option<&NcVisualOptions>,
     ) -> NcResult<NcVisualGeometry> {
         let mut vg = NcVGeom::new();
 

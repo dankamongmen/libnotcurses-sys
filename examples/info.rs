@@ -53,11 +53,9 @@ Palette size: {11:?}
     let pgeom = nc.stdplane().pixel_geom();
     putstrln!(splane, "{:#?}.", pgeom)?;
 
-    // Ask for an NcVGeom without providing an NcVisual:
-    let vopts = NcVisualOptions::new();
-    let vgeom = nc.visual_geom(&vopts, None)?;
-    putstrln!(splane, "{:#?}.", vgeom)?;
-    putstr!(splane, "(blitter `{}` = {:?})", vgeom.blitter, vgeom.blitter_name())?;
+    let vg = nc.visual_geom(None, None)?;
+    putstrln!(splane, "{:#?}.", vg)?;
+    putstrln!(splane, "(blitter `{}` = {:?})", vg.blitter, vg.blitter_name())?;
 
     nc.render()?;
     nc.stop()?;
