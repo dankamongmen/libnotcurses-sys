@@ -35,22 +35,16 @@ crate::impl_api![
     /// [`NcBlitter`] mode where the blitter is automatically chosen.
     const DEFAULT: NcBlitter = constants::NCBLIT_DEFAULT;,
     /// [`NcBlitter`] mode using: space, compatible with ASCII.
-    const _1x1: NcBlitter = constants::NCBLIT_1x1;,
+    const ASCII: NcBlitter = constants::NCBLIT_1x1;,
     /// [`NcBlitter`] mode using: halves + 1x1 (space).
     /// ▄▀
-    const _2x1: NcBlitter = constants::NCBLIT_2x1;,
+    const HALF: NcBlitter = constants::NCBLIT_2x1;,
     /// [`NcBlitter`] mode using: quadrants + 2x1.
     /// ▗▐ ▖▀▟▌▙
-    const _2x2: NcBlitter = constants::NCBLIT_2x2;,
+    const QUADRANT: NcBlitter = constants::NCBLIT_2x2;,
     /// [`NcBlitter`] mode using: sextants
     /// 🬀🬁🬂🬃🬄🬅🬆🬇🬈🬉🬊🬋🬌🬍🬎🬏🬐🬑🬒🬓🬔🬕🬖🬗🬘🬙🬚🬛🬜🬝🬞🬟🬠🬡🬢🬣🬤🬥🬦🬧🬨🬩🬪🬫🬬🬭🬮🬯🬰🬱🬲🬳🬴🬵🬶🬷🬸🬹🬺🬻
-    const _3x2: NcBlitter = constants::NCBLIT_3x2;,
-    /// [`NcBlitter`] mode using: four vertical levels.
-    /// █▆▄▂
-    const _4x1: NcBlitter = constants::NCBLIT_4x1;,
-    /// [`NcBlitter`] mode using: eight vertical levels.
-    /// █▇▆▅▄▃▂▁
-    const _8x1: NcBlitter = constants::NCBLIT_8x1;,
+    const SEXTANT: NcBlitter = constants::NCBLIT_3x2;,
     /// [`NcBlitter`] mode using: 4 rows, 2 cols (braille).
     /// ⡀⡄⡆⡇⢀⣀⣄⣆⣇⢠⣠⣤⣦⣧⢰⣰⣴⣶⣷⢸⣸⣼⣾⣿
     const BRAILLE: NcBlitter = constants::NCBLIT_BRAILLE;,
@@ -58,6 +52,20 @@ crate::impl_api![
     ///
     /// See [Sixel in Wikipedia](https://en.wikipedia.org/wiki/Sixel).
     const PIXEL: NcBlitter = constants::NCBLIT_PIXEL;,
+    /// Alias of [`ASCII`][NcBlitter#associatedconstant.ASCII]
+    const _1x1: NcBlitter = constants::NCBLIT_1x1;,
+    /// Alias of [`HALF`][NcBlitter#associatedconstant.HALF]
+    const _2x1: NcBlitter = constants::NCBLIT_2x1;,
+    /// Alias of [`QUADRANT`][NcBlitter#associatedconstant.QUADRANT]
+    const _2x2: NcBlitter = constants::NCBLIT_2x2;,
+    /// Alias of [`SEXTANT`][NcBlitter#associatedconstant.SEXTANT]
+    const _3x2: NcBlitter = constants::NCBLIT_3x2;,
+    /// [`NcBlitter`] mode using: four vertical levels.
+    /// █▆▄▂
+    const _4x1: NcBlitter = constants::NCBLIT_4x1;,
+    /// [`NcBlitter`] mode using: eight vertical levels.
+    /// █▇▆▅▄▃▂▁
+    const _8x1: NcBlitter = constants::NCBLIT_8x1;,
     /// Blit a flat array `data` of RGBA 32-bit values to the plane configured
     /// in `vopts`, which mustn’t be NULL.
     ///
