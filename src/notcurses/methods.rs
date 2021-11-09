@@ -4,10 +4,10 @@ use core::ptr::{null, null_mut};
 
 use crate::{
     c_api::{self, notcurses_init},
-    cstring, error, error_ref_mut, rstring, rstring_free, Nc, NcAlign, NcBlitter, NcChannels,
-    NcDim, NcError, NcFile, NcInput, NcLogLevel, NcMiceEvents, NcMiceEventsApi, NcOptions,
-    NcPixelImpl, NcPlane, NcResult, NcScale, NcStats, NcStyle, NcStyleApi, NcTime, NcVGeom,
-    NcVisual, NcVisualOptions,
+    cstring, error, error_ref_mut, rstring, rstring_free, Nc, NcAlign, NcBlitter, NcBlitterApi,
+    NcChannels, NcDim, NcError, NcFile, NcInput, NcLogLevel, NcMiceEvents, NcMiceEventsApi,
+    NcOptions, NcPixelImpl, NcPlane, NcResult, NcScale, NcStats, NcStyle, NcStyleApi, NcTime,
+    NcVGeom, NcVisual, NcVisualGeometry, NcVisualOptions,
 };
 
 /// # `NcOptions` Constructors
@@ -851,28 +851,131 @@ impl Nc {
         (major as u32, minor as u32, patch as u32, tweak as u32)
     }
 
-    /// Returns an [`NcVGeom`].
+    /// Returns [`NcVisualGeometry`].
     ///
-    /// if an [`NcVisual`] is not provided, only `cdimy`/`cdimx`, `blitter`,
-    /// `scaley`/`scalex`, and `maxpixely`/`maxpixelx` are filled in.
+    /// If an [`NcVisual`] is not provided, only the [`cdim_yx`], [`blitter`],
+    /// [`scale_yx`], and [`maxpixel_yx`] fields will be filled in.
     ///
-    /// `cdimy`/`cdimx` and `maxpixely`/`maxpixelx` are only ever filled in if
-    /// we know them.
+    /// If an [`NcVisualOptions`] is not provided, a default one will be used.
     ///
-    /// See also: [`NcVisual.geom`][NcVisual#method.geom]
+    /// Additionally `cdim_yx` and `maxpixel_yx` are only ever filled in if we
+    /// know them, and `maxpixel_yx` is only defined for `NcBlitter`::PIXEL.
+    ///
+    /// # See also
+    /// - [`NcVisual.geom`][NcVisual#method.geom]
+    ///
+    /// [`cdim_yx`]: NcVisualGeometry#structfield.cdim_yx
+    /// [`blitter`]: NcVisualGeometry#structfield.blitter
+    /// [`scale_yx`]: NcVisualGeometry#structfield.scale_yx
+    /// [`maxpixel_yx`]: NcVisualGeometry#structfield.maxpixel_yx
     ///
     /// *C style function: [ncvisual_geom()][c_api::ncvisual_geom].*
-    pub fn visual_geom(&self, vopts: &NcVisualOptions, v: Option<&NcVisual>) -> NcResult<NcVGeom> {
-        let mut vgeom = NcVGeom::new();
+    pub fn visual_geom(
+        &self,
+        visual: Option<&NcVisual>,
+        vopts: Option<&NcVisualOptions>,
+    ) -> NcResult<NcVisualGeometry> {
+        let mut vg = NcVGeom::new();
 
         let v_ptr: *const NcVisual;
-        if let Some(visual) = v {
-            v_ptr = visual;
+        if let Some(v) = visual {
+            v_ptr = v;
         } else {
             v_ptr = null();
         }
+        let vo_ptr: *const NcVisualOptions;
+        if let Some(o) = vopts {
+            vo_ptr = o;
+        } else {
+            let vo = NcVisualOptions::new();
+            vo_ptr = &vo;
+        }
 
-        let res = unsafe { crate::c_api::ncvisual_geom(self, v_ptr, vopts, &mut vgeom) };
-        error![res, "Nc.visual_geom()", vgeom];
+        let res = unsafe { crate::c_api::ncvisual_geom(self, v_ptr, vo_ptr, &mut vg) };
+        if res <= c_api::NCRESULT_ERR {
+            return Err(NcError::with_msg(
+                res,
+                &format!["Nc.visual_geom({:?}, {:?})", visual, vopts],
+            ));
+        }
+
+        let (pix_yx, cdim_yx, rpix_yx, rcell_yx, scale_yx, maxpixel_yx, beg_yx, len_yx);
+
+        // if an `NcVisual` is not provided, only `maxpixel_yx`, `cdim_yx` and
+        // `scale_yx` can be non-zero.
+        if visual.is_none() {
+            cdim_yx = Some((vg.cdimy as NcDim, vg.cdimx as NcDim));
+            scale_yx = Some((vg.scaley as NcDim, vg.scalex as NcDim));
+
+            // pixel blitter only is defined for Ncblitter::PIXEL
+            if vg.blitter == NcBlitter::PIXEL {
+                maxpixel_yx = Some((vg.maxpixely as NcDim, vg.maxpixelx as NcDim));
+            } else {
+                maxpixel_yx = None;
+            }
+
+            pix_yx = None;
+            rpix_yx = None;
+            rcell_yx = None;
+            beg_yx = None;
+            len_yx = None;
+        } else {
+            // `maxpixel_yx` only is defined for `Ncblitter`::PIXEL.
+            if vg.blitter == NcBlitter::PIXEL {
+                maxpixel_yx = Some((vg.maxpixely as NcDim, vg.maxpixelx as NcDim));
+            } else {
+                maxpixel_yx = None;
+            }
+
+            // `beg_yx` & `len_yx` can be safely ignored if they're all 0.
+            if vg.begy | vg.begx | vg.leny | vg.lenx == 0 {
+                beg_yx = None;
+                len_yx = None;
+            } else {
+                beg_yx = Some((vg.begy as NcDim, vg.begx as NcDim));
+                len_yx = Some((vg.leny as NcDim, vg.lenx as NcDim));
+            }
+
+            // valid values for the following fields can't be 0 either:
+            if vg.pixy | vg.pixx == 0 {
+                pix_yx = None;
+            } else {
+                pix_yx = Some((vg.pixy as NcDim, vg.pixx as NcDim));
+            }
+            if vg.cdimy | vg.cdimx == 0 {
+                cdim_yx = None;
+            } else {
+                cdim_yx = Some((vg.cdimy as NcDim, vg.cdimx as NcDim));
+            }
+            if vg.scaley | vg.scalex == 0 {
+                scale_yx = None;
+            } else {
+                scale_yx = Some((vg.scaley as NcDim, vg.scalex as NcDim));
+            }
+            if vg.rpixy | vg.rpixx == 0 {
+                rpix_yx = None;
+            } else {
+                rpix_yx = Some((vg.rpixy as NcDim, vg.rpixx as NcDim));
+            }
+            if vg.rcelly | vg.rcellx == 0 {
+                rcell_yx = None;
+            } else {
+                rcell_yx = Some((vg.rcelly as NcDim, vg.rcellx as NcDim));
+            }
+        }
+
+        let vgeometry = NcVisualGeometry {
+            pix_yx,
+            cdim_yx,
+            rpix_yx,
+            rcell_yx,
+            scale_yx,
+            maxpixel_yx,
+            beg_yx,
+            len_yx,
+
+            blitter: vg.blitter,
+        };
+        Ok(vgeometry)
     }
 }

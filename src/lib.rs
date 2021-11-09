@@ -135,7 +135,7 @@ pub use stats::NcStats;
 pub use string::NcString;
 pub use style::{NcStyle, NcStyleApi};
 pub use time::NcTime;
-pub use visual::{NcRgba, NcVGeom, NcVisual, NcVisualOptions};
+pub use visual::{NcRgba, NcVGeom, NcVisual, NcVisualGeometry, NcVisualOptions};
 
 pub mod c_api {
     //! The C API including global constants, functions and structs.

@@ -46,7 +46,7 @@ mod methods;
 mod reimplemented;
 
 mod geometry;
-pub use geometry::NcVGeom;
+pub use geometry::{NcVGeom, NcVisualGeometry};
 
 /// A visual bit of multimedia.
 ///
