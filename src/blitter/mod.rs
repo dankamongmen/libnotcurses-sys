@@ -3,8 +3,6 @@
 use crate::{c_api, error, NcResult, NcVisualOptions};
 use core::ffi::c_void;
 
-pub(crate) mod geometry;
-
 /// The blitter mode to use for rasterizing an [`NcVisual`][crate::NcVisual]
 /// (alias of [`u32`]).
 ///

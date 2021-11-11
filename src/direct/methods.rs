@@ -343,7 +343,7 @@ impl NcDirect {
     ///
     /// *C style function: [ncdirect_canopen_images()][c_api::ncdirect_canopen_images].*
     pub fn canopen_images(&self) -> bool {
-        unsafe { c_api::ncdirect_canopen_images(self) }
+        c_api::ncdirect_canopen_images(self)
     }
 
     /// Can we load videos?
@@ -561,12 +561,6 @@ impl NcDirect {
 
 /// ## NcDirect methods: I/O
 impl NcDirect {
-    #[doc(hidden)]
-    #[deprecated = "use `get` method instead"]
-    pub fn getc(&mut self, time: Option<NcTime>, input: Option<&mut NcInput>) -> NcResult<char> {
-        self.get(time, input)
-    }
-
     /// Returns a [char] representing a single unicode point.
     ///
     /// If an event is processed, the return value is the `id` field from that
@@ -602,11 +596,11 @@ impl NcDirect {
     ///
     /// In the case of a valid read, a [`char`] is returned.
     ///
-    /// *C style function: [ncdirect_getc_blocking()][c_api::ncdirect_getc_blocking].*
-    pub fn getc_blocking(&mut self, input: Option<&mut NcInput>) -> NcResult<char> {
-        let res = c_api::ncdirect_getc_blocking(self, input);
+    /// *C style function: [ncdirect_get_blocking()][c_api::ncdirect_get_blocking].*
+    pub fn get_blocking(&mut self, input: Option<&mut NcInput>) -> NcResult<char> {
+        let res = c_api::ncdirect_get_blocking(self, input);
         core::char::from_u32(res as u32)
-            .ok_or_else(|| NcError::with_msg(res, "NcDirect.getc_blocking()"))
+            .ok_or_else(|| NcError::with_msg(res, "NcDirect.get_blocking()"))
     }
 
     /// Reads input without blocking.
@@ -615,17 +609,17 @@ impl NcDirect {
     ///
     /// If no event is ready, returns 0.
     ///
-    /// *C style function: [ncdirect_getc_nblock()][c_api::ncdirect_getc_nblock].*
-    pub fn getc_nblock(&mut self, input: Option<&mut NcInput>) -> NcResult<char> {
-        let res = c_api::ncdirect_getc_nblock(self, input);
+    /// *C style function: [ncdirect_get_nblock()][c_api::ncdirect_get_nblock].*
+    pub fn get_nblock(&mut self, input: Option<&mut NcInput>) -> NcResult<char> {
+        let res = c_api::ncdirect_get_nblock(self, input);
         core::char::from_u32(res as u32)
-            .ok_or_else(|| NcError::with_msg(res, "NcDirect.getc_nblock()"))
+            .ok_or_else(|| NcError::with_msg(res, "NcDirect.get_nblock()"))
     }
 
     /// Get a file descriptor suitable for input event poll()ing.
     ///
     /// When this descriptor becomes available, you can call
-    /// [getc_nblock()][NcDirect#method.getc_nblock], and input ought be ready.
+    /// [get_nblock()][NcDirect#method.get_nblock], and input ought be ready.
     ///
     /// This file descriptor is not necessarily the file descriptor associated
     /// with stdin (but it might be!).

@@ -4,8 +4,10 @@
 
 use libc::strcmp;
 
+use core::ptr::null_mut;
+
 use crate::{
-    c_api::{self, ffi, nccell_release},
+    c_api::{self, nccell_release},
     cstring, rstring, NcAlpha, NcAlphaApi, NcCell, NcChannel, NcChannels, NcChannelsApi,
     NcComponent, NcIntResult, NcIntResultApi, NcPaletteIndex, NcPlane, NcRgb, NcStyle, NcStyleApi,
 };
@@ -311,9 +313,10 @@ pub const fn nccell_cols(cell: &NcCell) -> u8 {
     }
 }
 
-#[deprecated]
-pub fn nccell_width(plane: &NcPlane, cell: &NcCell) -> NcIntResult {
-    unsafe { ffi::nccell_width(plane, cell) }
+/// Returns the number of columns occupied by a string, or -1 if a
+/// non-printable/illegal character is encountered.
+pub fn ncstrwidth(string: &str) -> NcIntResult {
+    unsafe { c_api::ncstrwidth_valid(cstring![string], null_mut(), null_mut()) }
 }
 
 /// Does the [`NcCell`] contain an East Asian Wide codepoint?
@@ -500,7 +503,7 @@ pub fn nccells_load_box(
     NcIntResult::ERR
 }
 
-/// [nccells_load_box] with ASCII characters.
+/// [`nccells_load_box`] with ASCII characters.
 ///
 /// *Method: NcCell.[ascii_box()][NcCell#method.ascii_box].*
 #[inline]
@@ -518,7 +521,25 @@ pub fn nccells_ascii_box(
     nccells_load_box(plane, style, channels, ul, ur, ll, lr, hl, vl, NCBOXASCII)
 }
 
-/// [nccells_load_box] with heavy line box-drawing characters.
+/// [`nccells_load_box`] with double line box-drawing characters.
+///
+/// *Method: NcCell.[double_box()][NcCell#method.double_box].*
+#[inline]
+pub fn nccells_double_box(
+    plane: &mut NcPlane,
+    style: NcStyle,
+    channels: NcChannels,
+    ul: &mut NcCell,
+    ur: &mut NcCell,
+    ll: &mut NcCell,
+    lr: &mut NcCell,
+    hl: &mut NcCell,
+    vl: &mut NcCell,
+) -> NcIntResult {
+    nccells_load_box(plane, style, channels, ul, ur, ll, lr, hl, vl, NCBOXDOUBLE)
+}
+
+/// [`nccells_load_box`] with heavy line box-drawing characters.
 ///
 /// *Method: NcCell.[heavy_box()][NcCell#method.heavy_box].*
 #[inline]
@@ -536,7 +557,7 @@ pub fn nccells_heavy_box(
     nccells_load_box(plane, style, channels, ul, ur, ll, lr, hl, vl, NCBOXHEAVY)
 }
 
-/// [nccells_load_box] with light line box-drawing characters.
+/// [`nccells_load_box`] with light line box-drawing characters.
 ///
 /// *Method: NcCell.[light_box()][NcCell#method.light_box].*
 #[inline]
@@ -552,4 +573,22 @@ pub fn nccells_light_box(
     vl: &mut NcCell,
 ) -> NcIntResult {
     nccells_load_box(plane, style, channels, ul, ur, ll, lr, hl, vl, NCBOXLIGHT)
+}
+
+/// [`nccells_load_box`] with round line box-drawing characters.
+///
+/// *Method: NcCell.[rounded_box()][NcCell#method.rounded_box].*
+#[inline]
+pub fn nccells_rounded_box(
+    plane: &mut NcPlane,
+    style: NcStyle,
+    channels: NcChannels,
+    ul: &mut NcCell,
+    ur: &mut NcCell,
+    ll: &mut NcCell,
+    lr: &mut NcCell,
+    hl: &mut NcCell,
+    vl: &mut NcCell,
+) -> NcIntResult {
+    nccells_load_box(plane, style, channels, ul, ur, ll, lr, hl, vl, NCBOXROUND)
 }

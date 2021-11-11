@@ -30,6 +30,8 @@ fn main() {
         .generate_comments(true)
         .clang_arg("-fretain-comments-from-system-headers")
         .clang_arg("-fparse-all-comments")
+        // https://github.com/dankamongmen/notcurses/pull/2331#issuecomment-966211120
+        .size_t_is_usize(true)
         // Remove warnings about improper_ctypes
         .blacklist_function("strtold")
         .blacklist_function("wcstold")

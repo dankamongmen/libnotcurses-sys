@@ -20,7 +20,6 @@ pub(crate) mod ffi {
 #[doc(inline)]
 pub use ffi::{
     // functions
-    ncstrwidth,
     ncstrwidth_valid,
 };
 
@@ -49,8 +48,6 @@ pub use ffi::{
     nccell_extended_gcluster,
     nccell_load,
     nccell_release,
-    nccells_double_box,
-    nccells_rounded_box,
 };
 
 // channel ---------------------------------------------------------------------
@@ -144,7 +141,6 @@ pub use ffi::{
     // functions
     ncdirect_box,
     ncdirect_canget_cursor,
-    ncdirect_canopen_images,
     ncdirect_canutf8,
     ncdirect_check_pixel_support,
     ncdirect_clear,
@@ -372,9 +368,8 @@ pub use ffi::{
     ncplane_fadeout,
     ncplane_fadeout_iteration,
     ncplane_format,
+    ncplane_gradient2x1,
     ncplane_greyscale,
-    ncplane_highgradient,
-    ncplane_highgradient_sized,
     ncplane_hline_interp,
     ncplane_home,
     ncplane_mergedown,
@@ -391,15 +386,11 @@ pub use ffi::{
     ncplane_options,
     ncplane_parent,
     ncplane_parent_const,
-    ncplane_pixelgeom,
+    ncplane_pixel_geom,
     ncplane_polyfill_yx,
     ncplane_pulse,
     ncplane_putc_yx,
     ncplane_putnstr_aligned,
-    ncplane_putnstr_yx,
-    ncplane_putstr_aligned,
-    ncplane_putstr_stained,
-    ncplane_putstr_yx,
     ncplane_puttext,
     ncplane_putwegc_stained,
     ncplane_putwstr_stained,
@@ -653,7 +644,6 @@ pub use ffi::{
     nctabbed_set_separator,
     nctabbed_set_sepchan,
     nctabbed_tabcount,
-    nctablet_ncplane,
 };
 
 // nctablet --------------------------------------------------------------------
@@ -710,7 +700,6 @@ pub use ffi::{
     // functions
     ncvisual_at_yx,
     ncvisual_blit,
-    ncvisual_blitter_geom, // deprecated
     ncvisual_decode,
     ncvisual_decode_loop,
     ncvisual_destroy,
@@ -725,14 +714,12 @@ pub use ffi::{
     ncvisual_media_defblitter,
     ncvisual_options,
     ncvisual_polyfill_yx,
-    ncvisual_render,
     ncvisual_resize,
     ncvisual_resize_noninterpolative,
     ncvisual_rotate,
     ncvisual_set_yx,
     ncvisual_simple_streamer,
     ncvisual_stream,
-    ncvisual_subtitle, // deprecated
     ncvisual_subtitle_plane,
 };
 
@@ -756,17 +743,9 @@ pub use ffi::{
     // functions
     notcurses_accountname,
     notcurses_at_yx,
-    notcurses_bottom,
-    notcurses_canbraille,
-    notcurses_canchangecolor,
-    notcurses_canfade,
-    notcurses_canhalfblock,
     notcurses_canopen_images,
     notcurses_canopen_videos,
-    notcurses_canquadrant,
-    notcurses_cansextant,
-    notcurses_cantruecolor,
-    notcurses_canutf8,
+    notcurses_capabilities,
     notcurses_check_pixel_support,
     notcurses_core_init,
     notcurses_cursor_disable,
@@ -788,15 +767,10 @@ pub use ffi::{
     notcurses_linesigs_disable,
     notcurses_linesigs_enable,
     notcurses_mice_enable,
-    notcurses_mouse_disable, // deprecated
-    notcurses_mouse_enable,  // deprecated
     notcurses_options,
     notcurses_osversion,
     notcurses_palette_size,
     notcurses_refresh,
-    notcurses_render,
-    notcurses_render_to_buffer, // deprecated
-    notcurses_render_to_file,   // deprecated
     notcurses_stats,
     notcurses_stats_alloc,
     notcurses_stats_reset,
@@ -806,7 +780,6 @@ pub use ffi::{
     notcurses_str_blitter,
     notcurses_str_scalemode,
     notcurses_supported_styles,
-    notcurses_top,
     notcurses_ucs32_to_utf8,
     notcurses_version,
     notcurses_version_components,

@@ -385,6 +385,8 @@ impl NcCell {
         c_api::nccell_cols(self)
     }
 
+    // TODO: add ncstrwidth associated method
+
     /// Returns a pointer to the `EGC` of this NcCell in the `plane`.
     ///
     /// This pointer can be invalidated by any further operation on the referred
@@ -469,9 +471,9 @@ impl NcCell {
         hl: &mut NcCell,
         vl: &mut NcCell,
     ) -> NcResult<()> {
-        error![unsafe {
-            c_api::nccells_double_box(plane, style as u32, channels, ul, ur, ll, lr, hl, vl)
-        }]
+        error![c_api::nccells_double_box(
+            plane, style, channels, ul, ur, ll, lr, hl, vl
+        )]
     }
 
     /// NcCell.[load_box()][NcCell#method.box] with the rounded box-drawing characters.
@@ -488,9 +490,9 @@ impl NcCell {
         hl: &mut NcCell,
         vl: &mut NcCell,
     ) -> NcResult<()> {
-        error![unsafe {
-            c_api::nccells_rounded_box(plane, style as u32, channels, ul, ur, ll, lr, hl, vl)
-        }]
+        error![c_api::nccells_rounded_box(
+            plane, style, channels, ul, ur, ll, lr, hl, vl
+        )]
     }
 
     /// NcCell.[load_box()][NcCell#method.box] with ASCII characters.

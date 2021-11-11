@@ -5,9 +5,9 @@ use core::ptr::{null, null_mut};
 use crate::{
     c_api::{self, notcurses_init},
     cstring, error, error_ref_mut, rstring, rstring_free, Nc, NcAlign, NcBlitter, NcBlitterApi,
-    NcChannels, NcDim, NcError, NcFile, NcInput, NcLogLevel, NcMiceEvents, NcMiceEventsApi,
-    NcOptions, NcPixelImpl, NcPlane, NcResult, NcScale, NcStats, NcStyle, NcStyleApi, NcTime,
-    NcVGeom, NcVisual, NcVisualGeometry, NcVisualOptions,
+    NcCapabilities, NcChannels, NcDim, NcError, NcFile, NcInput, NcLogLevel, NcMiceEvents,
+    NcMiceEventsApi, NcOptions, NcPixelImpl, NcPlane, NcResult, NcScale, NcStats, NcStyle,
+    NcStyleApi, NcTime, NcVGeom, NcVisual, NcVisualGeometry, NcVisualOptions,
 };
 
 /// # `NcOptions` Constructors
@@ -61,7 +61,6 @@ impl NcOptions {
         Self {
             termtype: null(),
             loglevel,
-            renderfp: null_mut(),
             margin_t: margin_t as i32,
             margin_r: margin_r as i32,
             margin_b: margin_b as i32,
@@ -155,19 +154,18 @@ impl Nc {
         stylemask: &mut NcStyle,
         channels: &mut NcChannels,
     ) -> Option<String> {
-        let egc = unsafe { c_api::notcurses_at_yx(self, x as i32, y as i32, stylemask, channels) };
+        let egc = unsafe { c_api::notcurses_at_yx(self, y, x, stylemask, channels) };
         if egc.is_null() {
             return None;
         }
         Some(rstring_free![egc])
     }
 
-    /// Returns the bottommost [`NcPlane`] on the standard pile,
-    /// of which there is always at least one.
+    /// Returns [`NcCapabilities`].
     ///
-    /// *C style function: [notcurses_bottom()][c_api::notcurses_bottom].*
-    pub fn bottom(&mut self) -> &mut NcPlane {
-        unsafe { &mut *c_api::notcurses_bottom(self) }
+    /// *C style function: [notcurses_capabilities()][c_api::notcurses_capabilities].*
+    pub fn capabilities(&self) -> NcCapabilities {
+        unsafe { *c_api::notcurses_capabilities(self) }
     }
 
     /// Returns true if we can reliably use Unicode Braille.
@@ -176,7 +174,7 @@ impl Nc {
     ///
     /// *C style function: [notcurses_canbraille()][c_api::notcurses_canbraille].*
     pub fn canbraille(&self) -> bool {
-        unsafe { c_api::notcurses_canbraille(self) }
+        c_api::notcurses_canbraille(self)
     }
 
     /// Returns true if it's possible to set the "hardware" palette.
@@ -185,7 +183,7 @@ impl Nc {
     ///
     /// *C style function: [notcurses_canchangecolor()][c_api::notcurses_canchangecolor].*
     pub fn canchangecolor(&self) -> bool {
-        unsafe { c_api::notcurses_canchangecolor(self) }
+        c_api::notcurses_canchangecolor(self)
     }
 
     /// Returns true if fading is possible.
@@ -194,7 +192,7 @@ impl Nc {
     ///
     /// *C style function: [notcurses_canfade()][c_api::notcurses_canfade].*
     pub fn canfade(&self) -> bool {
-        unsafe { c_api::notcurses_canfade(self) }
+        c_api::notcurses_canfade(self)
     }
 
     /// Returns true if we can reliably use Unicode half blocks.
@@ -203,7 +201,7 @@ impl Nc {
     ///
     /// *C style function: [notcurses_canhalfblock()][c_api::notcurses_canhalfblock].*
     pub fn canhalfblock(&self) -> bool {
-        unsafe { c_api::notcurses_canhalfblock(self) }
+        c_api::notcurses_canhalfblock(self)
     }
 
     /// Returns true if loading images is possible.
@@ -239,7 +237,7 @@ impl Nc {
     ///
     /// *C style function: [notcurses_canquadrant()][c_api::notcurses_canquadrant].*
     pub fn canquadrant(&self) -> bool {
-        unsafe { c_api::notcurses_canquadrant(self) }
+        c_api::notcurses_canquadrant(self)
     }
 
     /// Returns true if we can reliably use Unicode 13 sextants.
@@ -248,7 +246,7 @@ impl Nc {
     ///
     /// *C style function: [notcurses_cansextant()][c_api::notcurses_cansextant].*
     pub fn cansextant(&self) -> bool {
-        unsafe { c_api::notcurses_cansextant(self) }
+        c_api::notcurses_cansextant(self)
     }
 
     /// Returns true if it's possible to directly specify RGB values per cell,
@@ -256,7 +254,7 @@ impl Nc {
     ///
     /// *C style function: [notcurses_cantruecolor()][c_api::notcurses_cantruecolor].*
     pub fn cantruecolor(&self) -> bool {
-        unsafe { c_api::notcurses_cantruecolor(self) }
+        c_api::notcurses_cantruecolor(self)
     }
 
     /// Returns true if the encoding is UTF-8.
@@ -265,7 +263,7 @@ impl Nc {
     ///
     /// *C style function: [notcurses_canutf8()][c_api::notcurses_canutf8].*
     pub fn canutf8(&self) -> bool {
-        unsafe { c_api::notcurses_canutf8(self) }
+        c_api::notcurses_canutf8(self)
     }
 
     /// Checks for pixel support.
@@ -372,12 +370,6 @@ impl Nc {
         }
     }
 
-    #[doc(hidden)]
-    #[deprecated = "use `get` method instead"]
-    pub fn getc(&mut self, time: Option<NcTime>, input: Option<&mut NcInput>) -> NcResult<char> {
-        self.get(time, input)
-    }
-
     /// Reads a [`char`] representing a single unicode point, from input.
     ///
     /// If an event is processed, the return value is the `id` field from that
@@ -441,10 +433,10 @@ impl Nc {
     ///
     /// In the case of a valid read, a [`char`] is returned.
     ///
-    /// *C style function: [notcurses_getc_blocking()][c_api::notcurses_getc_blocking].*
-    pub fn getc_blocking(&mut self, input: Option<&mut NcInput>) -> NcResult<char> {
-        let res = c_api::notcurses_getc_blocking(self, input);
-        core::char::from_u32(res as u32).ok_or_else(|| NcError::with_msg(res, "Nc.getc_blocking()"))
+    /// *C style function: [notcurses_get_blocking()][c_api::notcurses_get_blocking].*
+    pub fn get_blocking(&mut self, input: Option<&mut NcInput>) -> NcResult<char> {
+        let res = c_api::notcurses_get_blocking(self, input);
+        core::char::from_u32(res as u32).ok_or_else(|| NcError::with_msg(res, "Nc.get_blocking()"))
     }
 
     /// Reads input without blocking.
@@ -453,16 +445,16 @@ impl Nc {
     ///
     /// If no event is ready, returns 0.
     ///
-    /// *C style function: [notcurses_getc_nblock()][c_api::notcurses_getc_nblock].*
-    pub fn getc_nblock(&mut self, input: Option<&mut NcInput>) -> NcResult<char> {
-        let res = c_api::notcurses_getc_nblock(self, input);
-        core::char::from_u32(res as u32).ok_or_else(|| NcError::with_msg(res, "Nc.getc_nblock()"))
+    /// *C style function: [notcurses_get_nblock()][c_api::notcurses_get_nblock].*
+    pub fn get_nblock(&mut self, input: Option<&mut NcInput>) -> NcResult<char> {
+        let res = c_api::notcurses_get_nblock(self, input);
+        core::char::from_u32(res as u32).ok_or_else(|| NcError::with_msg(res, "Nc.get_nblock()"))
     }
 
     /// Gets a file descriptor suitable for input event poll()ing.
     ///
     /// When this descriptor becomes available, you can call
-    /// [getc_nblock()][Nc#method.getc_nblock], and input ought be ready.
+    /// [get_nblock()][Nc#method.get_nblock], and input ought be ready.
     ///
     /// This file descriptor is not necessarily the file descriptor associated
     /// with stdin (but it might be!).
@@ -581,32 +573,6 @@ impl Nc {
         ]
     }
 
-    /// Disables mouse events.
-    ///
-    /// Any events in the input queue can still be delivered.
-    ///
-    /// *C style function: [notcurses_mouse_disable()][c_api::notcurses_mouse_disable].*
-    #[deprecated]
-    #[doc(hidden)]
-    pub fn mouse_disable(&mut self) -> NcResult<()> {
-        error![unsafe { c_api::notcurses_mouse_disable(self) }]
-    }
-
-    /// Enable the mouse in "button-event tracking" mode with focus detection
-    /// and UTF8-style extended coordinates.
-    ///
-    /// On success, mouse events will be published to [getc()][Nc#method.getc].
-    ///
-    /// *C style function: [notcurses_mouse_enable()][c_api::notcurses_mouse_enable].*
-    #[deprecated]
-    #[doc(hidden)]
-    pub fn mouse_enable(&mut self) -> NcResult<()> {
-        error![
-            unsafe { c_api::notcurses_mouse_enable(self) },
-            "Nc.mouse_enable()"
-        ]
-    }
-
     /// Returns the number of simultaneous colors claimed to be supported,
     /// if there is color support.
     ///
@@ -647,44 +613,7 @@ impl Nc {
     ///
     /// *C style function: [notcurses_render()][c_api::notcurses_render].*
     pub fn render(&mut self) -> NcResult<()> {
-        error![unsafe { c_api::notcurses_render(self) }, "Nc.render()"]
-    }
-
-    /// Performs the rendering and rasterization portion of
-    /// [`render`][Nc#method.render] but do not write the resulting buffer
-    /// out to the terminal.
-    ///
-    /// Using this function, the user can control the writeout process,
-    /// and render a second frame while writing another.
-    ///
-    // possible BUG? CHECK:
-    /// The returned buffer must be freed by the caller.
-    ///
-    /// *C style function: [notcurses_render_to_buffer()][c_api::notcurses_render_to_buffer].*
-    //
-    // CHECK that this works.
-    #[deprecated]
-    pub fn render_to_buffer(&mut self, buffer: &mut Vec<u8>) -> NcResult<()> {
-        let len = buffer.len() as u32;
-
-        // https://github.com/dankamongmen/notcurses/issues/1339
-        #[cfg(any(target_arch = "x86_64", target_arch = "i686", target_arch = "x86"))]
-        let mut buf = buffer.as_mut_ptr() as *mut i8;
-        #[cfg(not(any(target_arch = "x86_64", target_arch = "i686", target_arch = "x86")))]
-        let mut buf = buffer.as_mut_ptr() as *mut u8;
-
-        error![unsafe { c_api::notcurses_render_to_buffer(self, &mut buf, &mut len.into()) }]
-    }
-
-    /// Writes the last rendered frame, in its entirety, to 'fp'.
-    ///
-    /// If [`render`][Nc#method.render] has not yet been called,
-    /// nothing will be written.
-    ///
-    /// *C style function: [notcurses_render_to_file()][c_api::notcurses_render_to_file].*
-    #[deprecated]
-    pub fn render_to_file(&mut self, fp: &mut NcFile) -> NcResult<()> {
-        error![unsafe { c_api::notcurses_render_to_file(self, fp.as_nc_ptr()) }]
+        error![c_api::notcurses_render(self), "Nc.render()"]
     }
 
     /// Acquires an atomic snapshot of the notcurses object's stats.
@@ -825,11 +754,19 @@ impl Nc {
         c_api::notcurses_term_dim_yx(self)
     }
 
+    /// Returns the bottommost [`NcPlane`] on the standard pile,
+    /// of which there is always at least one.
+    ///
+    /// *C style function: [notcurses_bottom()][c_api::notcurses_bottom].*
+    pub fn bottom(&mut self) -> &mut NcPlane {
+        c_api::notcurses_bottom(self)
+    }
+
     /// Returns the topmost [`NcPlane`], of which there is always at least one.
     ///
     /// *C style function: [notcurses_top()][c_api::notcurses_top].*
     pub fn top(&mut self) -> &mut NcPlane {
-        unsafe { &mut *c_api::notcurses_top(self) }
+        c_api::notcurses_top(self)
     }
 
     /// Returns a human-readable string describing the running notcurses version.

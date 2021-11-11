@@ -73,7 +73,7 @@ fn main() -> NcResult<()> {
 
     loop {
         // Wait until keypress (instead of sleeping at each loop)
-        let keypress: char = nc.getc_blocking(Some(&mut ni))?;
+        let keypress: char = nc.get_blocking(Some(&mut ni))?;
 
         // Discriminate key pressed to take action
         match keypress {

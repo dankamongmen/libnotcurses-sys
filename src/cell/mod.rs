@@ -1,6 +1,6 @@
 //! `NcCell`
 
-// functions already exported by bindgen : 6
+// functions already exported by bindgen : 5
 // -----------------------------------------
 // (W) wrap: 6
 // (#) test: 3
@@ -9,10 +9,9 @@
 //W# nccell_load
 //W# nccell_duplicate
 //W# nccell_release
-//W  nccells_double_box
-//W  nccells_rounded_box
+//   ncstrwidth_valid
 //
-// functions manually reimplemented: 45
+// functions manually reimplemented: 48
 // ------------------------------------------
 // (X) wont:  2
 // (+) done: 43
@@ -61,9 +60,12 @@
 //W+ nccell_wide_right_p
 //W+ nccellcmp
 //W+ nccells_ascii_box
+//W+ nccells_double_box
+//W+ nccells_rounded_box
 //W+ nccells_heavy_box
 //W+ nccells_light_box
 //W+ nccells_load_box
+// + ncstrwidth
 
 #[cfg(test)]
 mod test;

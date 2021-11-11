@@ -108,7 +108,7 @@ fn run_selector(nc: &mut Nc, selector: &mut NcSelector) -> NcResult<String> {
 
     loop {
         // Wait until user acts
-        let keypress: char = nc.getc_blocking(Some(&mut ni))?;
+        let keypress: char = nc.get_blocking(Some(&mut ni))?;
 
         if !selector.offer_input(ni) {
             // Do not consider release key: only press

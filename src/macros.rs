@@ -167,6 +167,8 @@ macro_rules! rsleep {
 #[doc(hidden)]
 macro_rules! cstring {
     ($s:expr) => {
+        // NOTE: The returned pointer will be valid for as long as self is
+        // CHECK does this live long enough in all circumstances?
         std::ffi::CString::new($s).unwrap().as_ptr()
     };
 }

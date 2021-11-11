@@ -1,9 +1,9 @@
 //! `NcPlane`
 
-// functions already exported by bindgen : 101
+// functions already exported by bindgen : 97
 // -------------------------------------------
 // (#) test: 9
-// (W) wrap: 93
+// (W) wrap: 89
 // -------------------------------------------
 //W  ncpile_bottom
 //W# ncpile_create
@@ -40,9 +40,8 @@
 //W  ncplane_fadeout
 //W  ncplane_fadeout_iteration
 //W  ncplane_format
+//W  ncplane_gradient2x1
 //W  ncplane_greyscale
-//W  ncplane_highgradient
-//W  ncplane_highgradient_sized
 //   ncplane_hline_interp
 //W# ncplane_home
 //W  ncplane_mergedown
@@ -64,9 +63,6 @@
 //W  ncplane_putc_yx
 //W  ncplane_putnstr_aligned
 //W  ncplane_putnstr_yx
-//W  ncplane_putstr_aligned
-//W  ncplane_putstr_stained
-//W  ncplane_putstr_yx
 //W  ncplane_puttext
 //   ncplane_qrcode
 //W  ncplane_reparent
@@ -107,10 +103,10 @@
 //W  ncplane_y
 //W  ncplane_yx
 
-// functions manually reimplemented: 45
+// functions manually reimplemented: 48
 // ------------------------------------------
-// (+) done: 45
-// (W) wrap: 41
+// (+) done: 48
+// (W) wrap: 44
 // (#) test:  9
 // ------------------------------------------
 //W+ ncplane_bchannel
@@ -150,6 +146,9 @@
 //W+ ncplane_putegc_yx
 //W+ ncplane_putnstr
 //W+ ncplane_putstr
+//W+ ncplane_putstr_aligned
+//W+ ncplane_putstr_stained
+//W+ ncplane_putstr_yx
 //W# ncplane_resize_simple
 // + ncplane_rounded_box
 // + ncplane_rounded_box_sized

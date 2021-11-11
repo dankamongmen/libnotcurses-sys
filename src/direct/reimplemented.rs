@@ -31,6 +31,12 @@ pub fn ncdirect_canopen_videos(_ncd: &NcDirect) -> bool {
     unsafe { c_api::notcurses_canopen_videos(null()) }
 }
 
+/// Can we open images? This requires being built against FFmpeg.
+#[inline]
+pub fn ncdirect_canopen_images(_ncd: &NcDirect) -> bool {
+    unsafe { c_api::notcurses_canopen_images(null()) }
+}
+
 /// Can we reliably use Unicode halfblocks?
 #[inline]
 pub fn ncdirect_canhalfblock(ncd: &NcDirect) -> bool {
@@ -51,8 +57,8 @@ pub fn ncdirect_cansextant(ncd: &NcDirect) -> bool {
 
 /// Can we reliably use Unicode Braille?
 #[inline]
-pub fn ncdirect_canbraille(_ncd: &NcDirect) -> bool {
-    unsafe { c_api::notcurses_canbraille(null()) }
+pub fn ncdirect_canbraille(ncd: &NcDirect) -> bool {
+    (unsafe { c_api::ncdirect_canutf8(ncd) }) && ncdirect_capabilities(ncd).braille
 }
 
 /// Returns the detected [`NcCapabilities`].
@@ -67,9 +73,9 @@ pub fn ncdirect_capabilities(ncd: &NcDirect) -> NcCapabilities {
 ///
 /// In case of an invalid read (including on EOF) *-1* is returned.
 ///
-/// *Method: NcDirect.[getc_blocking()][NcDirect#method.getc_blocking].*
+/// *Method: NcDirect.[get_blocking()][NcDirect#method.get_blocking].*
 #[inline]
-pub fn ncdirect_getc_blocking(ncd: &mut NcDirect, input: Option<&mut NcInput>) -> NcIntResult {
+pub fn ncdirect_get_blocking(ncd: &mut NcDirect, input: Option<&mut NcInput>) -> NcIntResult {
     let input_ptr;
     if let Some(i) = input {
         input_ptr = i as *mut _;
@@ -87,9 +93,9 @@ pub fn ncdirect_getc_blocking(ncd: &mut NcDirect, input: Option<&mut NcInput>) -
 ///
 /// In case of an invalid read (including on EOF) *-1* is returned.
 ///
-/// *Method: NcDirect.[getc_nblock()][NcDirect#method.getc_nblock].*
+/// *Method: NcDirect.[get_nblock()][NcDirect#method.get_nblock].*
 #[inline]
-pub fn ncdirect_getc_nblock(ncd: &mut NcDirect, input: Option<&mut NcInput>) -> NcIntResult {
+pub fn ncdirect_get_nblock(ncd: &mut NcDirect, input: Option<&mut NcInput>) -> NcIntResult {
     let input_ptr;
     if let Some(i) = input {
         input_ptr = i as *mut _;

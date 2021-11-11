@@ -1,6 +1,6 @@
-// functions already exported by bindgen : 27
+// functions already exported by bindgen : 24
 // -----------------------------------------
-// (W) wrap: 23
+// (W) wrap: 20
 // (#) test: 0
 // -----------------------------------------
 //W  ncdirectf_free
@@ -18,17 +18,14 @@
 //W  ncvisual_from_rgba
 //W  ncvisual_from_rgb_packed
 //W  ncvisual_from_rgb_loose
-//W  ncvisual_blitter_geom
 //W  ncvisual_media_defblitter
 //W  ncvisual_polyfill_yx
 //   ncvisual_plane_create
-//W  ncvisual_render
 //W  ncvisual_resize
 //W  ncvisual_rotate
 //W  ncvisual_set_yx
 //W  ncvisual_simple_streamer
 //~  ncvisual_stream
-//W  ncvisual_subtitle
 //W  ncvisual_subtitle_plane
 
 // functions manually reimplemented: 45

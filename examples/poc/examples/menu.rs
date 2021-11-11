@@ -95,7 +95,7 @@ fn run_menu(nc: &mut Nc, menu: &mut NcMenu) -> NcResult<()> {
         stdplane.erase();
         selplane.erase();
 
-        keypress = nc.getc_blocking(Some(&mut ni))?;
+        keypress = nc.get_blocking(Some(&mut ni))?;
 
         // DEBUG
         stdplane.putstr_yx(2, 0, &format!["{:?}", ni])?;

@@ -1,13 +1,13 @@
 //! `Nc`
 
-// total: 55
+// total: 53
 // ---------------------------------------------------
 // (X)  1 : wont do
 // (…)  4 : TODO / WIP
 //
-// (f) 45 : unsafe ffi function exported by bindgen
+// (f) 34 : unsafe ffi function exported by bindgen
 // (w)  0 : safely wrapped ffi function
-// (r)  8 : static function manually reimplemented
+// (r) 15 : static function manually reimplemented
 //
 // (m) 40 : method implemented
 //
@@ -15,15 +15,15 @@
 // (T)  0 : unit test done also for the method
 // ---------------------------------------------------
 // fm  notcurses_at_yx
-// fm  notcurses_bottom
-// fm  notcurses_canbraille
-// fmt notcurses_canchangecolor
-// fmt notcurses_canfade
+// rm  notcurses_bottom
+// rm  notcurses_canbraille
+// rmt notcurses_canchangecolor
+// rmt notcurses_canfade
 // fmt notcurses_canopen_images
 // fmt notcurses_canopen_videos
-// fmt notcurses_cansextant
-// fmt notcurses_cantruecolor
-// fmt notcurses_canutf8
+// rmt notcurses_cansextant
+// rmt notcurses_cantruecolor
+// rmt notcurses_canutf8
 // fm  notcurses_check_pixel_support
 //~f   notcurses_core_init
 // fm  notcurses_cursor_disable
@@ -46,9 +46,7 @@
 // fm  notcurses_osversion
 // fm  notcurses_palette_size
 // fm  notcurses_refresh
-// fm  notcurses_render
-// fm  notcurses_render_to_buffer
-// fm  notcurses_render_to_file
+// rm  notcurses_render
 // fm  notcurses_stats
 // fm  notcurses_stats_alloc
 // fm  notcurses_stats_reset
@@ -58,14 +56,14 @@
 // fm  notcurses_str_blitter
 // fm  notcurses_str_scalemode
 // fm  notcurses_supported_styles
-// fm  notcurses_top
+// rm  notcurses_top
 //X    notcurses_ucs32_to_utf8 (not needed in rust)
 // fmt notcurses_version
 // fm  notcurses_version_components
 // rmt notcurses_align
 // rm  notcurses_canpixel
-// rm  notcurses_getc_blocking
-// rm  notcurses_getc_nblock
+// rm  notcurses_get_blocking
+// rm  notcurses_get_nblock
 //~r   notcurses_stddim_yx           // multiple mutable references errors
 //~r   notcurses_stddim_yx_const     //
 // rm  notcurses_term_dim_yx

@@ -7,9 +7,9 @@ use core::ptr::{null, null_mut};
 use libc::c_void;
 
 use crate::{
-    c_api, cstring, error, error_ref_mut, rstring_free, Nc, NcBlitter, NcBlitterApi, NcChannel,
-    NcComponent, NcDim, NcDirect, NcError, NcIntResult, NcIntResultApi, NcPixel, NcPlane, NcResult,
-    NcRgba, NcScale, NcTime, NcVGeom, NcVisual, NcVisualGeometry, NcVisualOptions,
+    c_api, cstring, error, error_ref_mut, Nc, NcBlitter, NcBlitterApi, NcChannel, NcComponent,
+    NcDim, NcDirect, NcError, NcIntResult, NcIntResultApi, NcPixel, NcPlane, NcResult, NcRgba,
+    NcScale, NcTime, NcVGeom, NcVisual, NcVisualGeometry, NcVisualOptions,
 };
 
 /// # NcVisual Constructors & destructors
@@ -50,28 +50,45 @@ impl NcVisual {
         ]
     }
 
-    /// Promotes an NcPlane to an NcVisual.
+    /// Promotes an `NcPlane` to an `NcVisual`.
     ///
     /// The plane may contain only spaces, half blocks, and full blocks.
     /// This will be checked, and any other glyph will result in an error.
     ///
-    /// This function exists so that planes can be subjected to NcVisual transformations.
-    /// If possible, it's better to create the ncvisual from memory using
+    /// This function exists so that planes can be subjected to `NcVisual`
+    /// transformations.
+    ///
+    /// If possible, it's better to create the `NcVisual` from memory using
     /// [from_rgba][NcVisual#method.from_rgba].
+    ///
+    /// Use `None` for either or both of `beg_y` and `beg_x` in order to
+    /// use the current cursor position along that axis.
+    ///
+    /// Use `None` for either or both of `len_y` and `len_x` in order to
+    /// go through the boundary of the plane in that axis (same as `0`).
     ///
     /// *C style function: [ncvisual_from_plane()][c_api::ncvisual_from_plane].*
     pub fn from_plane<'a>(
         plane: &NcPlane,
         blitter: NcBlitter,
-        beg_y: NcDim,
-        beg_x: NcDim,
-        len_y: NcDim,
-        len_x: NcDim,
+        beg_y: Option<NcDim>,
+        beg_x: Option<NcDim>,
+        len_y: Option<NcDim>,
+        len_x: Option<NcDim>,
     ) -> NcResult<&'a mut NcVisual> {
         error_ref_mut![
-            unsafe { c_api::ncvisual_from_plane(plane, blitter, beg_y, beg_x, len_y, len_x,) },
+            unsafe {
+                c_api::ncvisual_from_plane(
+                    plane,
+                    blitter,
+                    beg_y.unwrap_or(NcDim::MAX) as i32,
+                    beg_x.unwrap_or(NcDim::MAX) as i32,
+                    len_y.unwrap_or(0),
+                    len_x.unwrap_or(0),
+                )
+            },
             &format!(
-                "NcVisual::from_file(plane, {}, {}, {}, {}, {})",
+                "NcVisual::from_file(plane, {}, {:?}, {:?}, {:?}, {:?})",
                 blitter, beg_y, beg_x, len_y, len_x
             )
         ]
@@ -234,7 +251,7 @@ impl NcVisual {
     /// *C style function: [ncvisual_at_yx()][c_api::ncvisual_at_yx].*
     pub fn at_yx(&self, y: NcDim, x: NcDim) -> NcResult<NcPixel> {
         let mut pixel = 0;
-        let res = unsafe { c_api::ncvisual_at_yx(self, y as i32, x as i32, &mut pixel) };
+        let res = unsafe { c_api::ncvisual_at_yx(self, y, x, &mut pixel) };
         error![res, "NcVisual.at_yx()", pixel]
     }
 
@@ -390,53 +407,6 @@ impl NcVisual {
         Ok(vgeometry)
     }
 
-    /// Gets the size and ratio of NcVisual pixels to output cells along the
-    /// vertical and horizontal axes.
-    ///
-    /// Returns `NcBlitterGeometry`.
-    ///
-    /// An NcVisual of `y` by `x` pixels will require
-    /// (`y` * `to_y`) by (`x` * `to_x`) cells for full output.
-    ///
-    /// Errors on invalid blitter in `options`. Scaling is taken into consideration.
-    ///
-    /// *C style function: [ncvisual_blitter_geom()][c_api::ncvisual_blitter_geom].*
-    #[deprecated]
-    #[allow(deprecated)]
-    pub fn blitter_geom(
-        &self,
-        nc: &Nc,
-        options: &NcVisualOptions,
-    ) -> NcResult<crate::blitter::geometry::NcBlitterGeometry> {
-        let mut y = 0;
-        let mut x = 0;
-        let mut scale_y = 0;
-        let mut scale_x = 0;
-        let mut blitter = 0;
-
-        let res = unsafe {
-            c_api::ncvisual_blitter_geom(
-                nc,
-                self,
-                options,
-                &mut y,
-                &mut x,
-                &mut scale_y,
-                &mut scale_x,
-                &mut blitter,
-            )
-        };
-        #[allow(deprecated)]
-        let bgeom = crate::blitter::geometry::NcBlitterGeometry {
-            x: x as NcDim,
-            y: y as NcDim,
-            scale_y: scale_y as NcDim,
-            scale_x: scale_x as NcDim,
-            blitter,
-        };
-        error![res, "NcVisual.blitter_geom()", bgeom];
-    }
-
     /// Gets the default media (not plot) blitter for this environment when using
     /// the specified scaling method.
     ///
@@ -458,24 +428,8 @@ impl NcVisual {
     /// *C style function: [ncvisual_polyfill_yx()][c_api::ncvisual_polyfill_yx].*
     pub fn polyfill_yx(&mut self, y: NcDim, x: NcDim, rgba: NcRgba) -> NcResult<()> {
         error![
-            unsafe { c_api::ncvisual_polyfill_yx(self, y as i32, x as i32, rgba) },
+            unsafe { c_api::ncvisual_polyfill_yx(self, y, x, rgba) },
             &format!["NcVisual.polyfill_yx({}, {}, {})", y, x, rgba]
-        ]
-    }
-
-    /// Renders the decoded frame to the [`NcPlane`] specified in `options`.
-    ///
-    /// If a plane is not provided, it will be created, having the exact size
-    /// necessary to display the visual.
-    ///
-    /// See [`NcVisualOptions`].
-    ///
-    /// *C style function: [ncvisual_render()][c_api::ncvisual_render].*
-    #[deprecated]
-    pub fn render(&mut self, nc: &mut Nc, options: &NcVisualOptions) -> NcResult<&mut NcPlane> {
-        error_ref_mut![
-            unsafe { c_api::ncvisual_render(nc, self, options) },
-            "NcVisual.render(Nc, &NcVisualOptions)"
         ]
     }
 
@@ -555,7 +509,7 @@ impl NcVisual {
     /// *C style function: [ncvisual_set_yx()][c_api::ncvisual_set_yx].*
     pub fn set_yx(&mut self, y: NcDim, x: NcDim, pixel: NcPixel) -> NcResult<()> {
         error![
-            unsafe { c_api::ncvisual_set_yx(self, y as i32, x as i32, pixel) },
+            unsafe { c_api::ncvisual_set_yx(self, y, x, pixel) },
             &format!["NcVisual.set_yx({}, {}, {})", y, x, pixel]
         ]
     }
@@ -629,20 +583,6 @@ impl NcVisual {
     // ) -> NcResult<()> {
     // }
 
-    /// If a subtitle ought be displayed at this time, returns a heap-allocated
-    /// copy of the UTF8 text.
-    ///
-    /// *C style function: [ncvisual_subtitle()][c_api::ncvisual_subtitle].*
-    #[deprecated]
-    pub fn subtitle(&self) -> NcResult<String> {
-        let res = unsafe { c_api::ncvisual_subtitle(self) };
-        if !res.is_null() {
-            Ok(rstring_free![res])
-        } else {
-            Err(NcError::with_msg(NcIntResult::ERR, "NcVisual.subtitle()"))
-        }
-    }
-
     /// If a subtitle ought be displayed at this time, return a new plane
     ///
     /// The returned plane is bound to `parent` and contains the subtitle,
@@ -693,7 +633,7 @@ impl NcVisual {
     ///
     /// [0]: NcDirect#method.render_frame
     ///
-    /// *C style function: [ncvisual_render()][c_api::ncvisual_render].*
+    /// *C style function: [ncdirectf_render()][c_api::ncdirectf_render].*
     pub fn ncdirectf_render(
         &mut self,
         ncd: &mut NcDirect,

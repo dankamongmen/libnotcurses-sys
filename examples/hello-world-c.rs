@@ -6,7 +6,6 @@ use libnotcurses_sys::c_api::*;
 fn main() {
     let options = ffi::notcurses_options {
         termtype: null(),
-        renderfp: null_mut(),
         loglevel: 0,
         margin_t: 0,
         margin_r: 0,
@@ -26,7 +25,7 @@ fn main() {
             notcurses_stop(nc);
             exit(cols.abs());
         }
-        if notcurses_render(nc) < NCRESULT_OK {
+        if notcurses_render(&mut *nc) < NCRESULT_OK {
             exit(2);
         }
         if notcurses_stop(nc) < NCRESULT_OK {

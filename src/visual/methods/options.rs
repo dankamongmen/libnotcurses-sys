@@ -49,11 +49,11 @@ impl NcVisualOptions {
             y: y as i32,
             x: x as i32,
             // origin of rendered section
-            begy: beg_y as i32,
-            begx: beg_x as i32,
+            begy: beg_y,
+            begx: beg_x,
             // size of rendered section
-            leny: len_y as i32,
-            lenx: len_x as i32,
+            leny: len_y,
+            lenx: len_x,
             // glyph set to use
             blitter,
             // bitmask over NCVISUAL_OPTION_*
@@ -86,11 +86,11 @@ impl NcVisualOptions {
             y: y as i32,
             x: x as i32,
             // origin of rendered section
-            begy: beg_y as i32,
-            begx: beg_x as i32,
+            begy: beg_y,
+            begx: beg_x,
             // size of rendered section
-            leny: len_y as i32,
-            lenx: len_x as i32,
+            leny: len_y,
+            lenx: len_x,
             // glyph set to use
             blitter,
             // bitmask over NCVISUAL_OPTION_*

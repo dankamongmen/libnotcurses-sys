@@ -179,7 +179,7 @@ fn erase_region(
 /// renders the planes, and waits for input. 'q' quits.
 fn render_and_wait_input(state: &mut State) -> NcResult<()> {
     state.nc.render()?;
-    let key = state.nc.getc_blocking(None)?;
+    let key = state.nc.get_blocking(None)?;
     if key == 'q' {
         state.exit(0)?;
     }
@@ -208,11 +208,12 @@ fn print_info_row(
         state.info.cursor_move_yx(row, 0)?;
         state.info.putstr(&" ".repeat(info_len as usize))?;
         state.info.cursor_move_yx(row, 0)?;
-        state
-            .info
-            .stain(row, info_len - 1, channels, channels, channels, channels)?; // err if overflows
+        // FIXME:
+        // state
+        //     .info
+        //     // .stain(row, info_len - 1, channels, channels, channels, channels)?; // err if overflows
+        //     .stain(None, None, Some(row), Some(info_len - 1), channels, channels, channels, channels)?; // err if overflows
     }
-    // print
     state.info.putstr_aligned_stained(row, align, string)?;
     Ok(())
 }

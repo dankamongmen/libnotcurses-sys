@@ -1,7 +1,16 @@
 //! `NcCapabilities`
 
+use crate::Nc;
+
 /// Capabilities, derived from terminfo, environment variables, and queries.
 pub type NcCapabilities = crate::bindings::ffi::nccapabilities;
+
+impl NcCapabilities {
+    ///
+    pub fn from_nc(nc: &mut Nc) -> Self {
+        nc.capabilities()
+    }
+}
 
 pub(crate) mod reimplemented {
     use crate::{NcCapabilities, NcPalette};

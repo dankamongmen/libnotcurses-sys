@@ -2,12 +2,10 @@
 
 use core::ptr::null_mut;
 
+use std::ffi::CString;
+
 use crate::{
-    c_api::{
-        self,
-        ffi::{self, size_t},
-        nccell_release,
-    },
+    c_api::{self, nccell_release, NCRESULT_ERR},
     cstring, NcAlign, NcAlpha, NcBoxMask, NcCell, NcChannel, NcChannels, NcComponent, NcDim,
     NcIntResult, NcIntResultApi, NcOffset, NcPlane, NcRgb, NcStyle,
 };
@@ -54,7 +52,7 @@ pub fn ncplane_bchannel(plane: &NcPlane) -> NcChannel {
 /// *Method: NcPlane.[set_fchannel()][NcPlane#method.set_fchannel].*
 #[inline]
 pub fn ncplane_set_fchannel(plane: &mut NcPlane, channel: NcChannel) -> NcChannels {
-    unsafe { ffi::ncplane_set_fchannel(plane, channel) }
+    unsafe { c_api::ffi::ncplane_set_fchannel(plane, channel) }
 }
 
 /// Sets the background [NcChannel] on an [NcPlane],
@@ -63,7 +61,7 @@ pub fn ncplane_set_fchannel(plane: &mut NcPlane, channel: NcChannel) -> NcChanne
 /// *Method: NcPlane.[set_bchannel()][NcPlane#method.set_bchannel].*
 #[inline]
 pub fn ncplane_set_bchannel(plane: &mut NcPlane, channel: NcChannel) -> NcChannels {
-    unsafe { ffi::ncplane_set_bchannel(plane, channel) }
+    unsafe { c_api::ffi::ncplane_set_bchannel(plane, channel) }
 }
 
 /// Gets the [NcChannels] of an [NcPlane].
@@ -71,7 +69,7 @@ pub fn ncplane_set_bchannel(plane: &mut NcPlane, channel: NcChannel) -> NcChanne
 /// *Method: NcPlane.[channels()][NcPlane#method.channels].*
 #[inline]
 pub fn ncplane_channels(plane: &NcPlane) -> NcChannels {
-    unsafe { ffi::ncplane_channels(plane) }
+    unsafe { c_api::ffi::ncplane_channels(plane) }
 }
 
 /// Sets the [NcChannels] of an [NcPlane].
@@ -79,7 +77,9 @@ pub fn ncplane_channels(plane: &NcPlane) -> NcChannels {
 /// *Method: NcPlane.[set_channels()][NcPlane#method.set_channels].*
 #[inline]
 pub fn ncplane_set_channels(plane: &mut NcPlane, channels: NcChannels) {
-    unsafe { ffi::ncplane_set_channels(plane, channels) };
+    unsafe {
+        c_api::ffi::ncplane_set_channels(plane, channels);
+    }
 }
 
 // NcComponent ---------------------------------------------------------------------
@@ -265,7 +265,7 @@ pub fn ncplane_putchar_yx(plane: &mut NcPlane, y: NcDim, x: NcDim, ch: char) -> 
 /// *Method: NcPlane.[putchar_stained()][NcPlane#method.putchar_stained].*
 #[inline]
 pub fn ncplane_putchar_stained(plane: &mut NcPlane, ch: char) -> NcIntResult {
-    unsafe { c_api::ncplane_putstr_stained(plane, cstring![ch.to_string()]) }
+    ncplane_putstr_stained(plane, &ch.to_string())
 }
 
 /// Replaces the [`NcCell`] at the current location with the provided `egc`,
@@ -281,10 +281,8 @@ pub fn ncplane_putchar_stained(plane: &mut NcPlane, ch: char) -> NcIntResult {
 /// scrolling is enabled.
 ///
 /// *Method: NcPlane.[putegc()][NcPlane#method.putegc].*
-//
-// MAYBE accept sbytes as Option<&mut usize>
 #[inline]
-pub fn ncplane_putegc(plane: &mut NcPlane, egc: &str, sbytes: Option<&mut i32>) -> NcIntResult {
+pub fn ncplane_putegc(plane: &mut NcPlane, egc: &str, sbytes: Option<&mut usize>) -> NcIntResult {
     let sbytes_ptr;
     if let Some(sb) = sbytes {
         sbytes_ptr = sb as *mut _;
@@ -292,7 +290,7 @@ pub fn ncplane_putegc(plane: &mut NcPlane, egc: &str, sbytes: Option<&mut i32>) 
         sbytes_ptr = null_mut();
     }
 
-    unsafe { ffi::ncplane_putegc_yx(plane, -1, -1, cstring![egc], sbytes_ptr) }
+    unsafe { c_api::ffi::ncplane_putegc_yx(plane, -1, -1, cstring![egc], sbytes_ptr) }
 }
 
 /// Replaces the [`NcCell`] at the specified coordinates with the provided `egc`,
@@ -308,15 +306,13 @@ pub fn ncplane_putegc(plane: &mut NcPlane, egc: &str, sbytes: Option<&mut i32>) 
 /// scrolling is enabled.
 ///
 /// *Method: NcPlane.[putegc_yx()][NcPlane#method.putegc_yx].*
-//
-// MAYBE accept sbytes as Option<&mut usize>
 #[inline]
 pub fn ncplane_putegc_yx(
     plane: &mut NcPlane,
-    y: NcDim,
-    x: NcDim,
+    y: Option<NcDim>,
+    x: Option<NcDim>,
     egc: &str,
-    sbytes: Option<&mut i32>,
+    sbytes: Option<&mut usize>,
 ) -> NcIntResult {
     let sbytes_ptr;
     if let Some(sb) = sbytes {
@@ -325,7 +321,15 @@ pub fn ncplane_putegc_yx(
         sbytes_ptr = null_mut();
     }
 
-    unsafe { ffi::ncplane_putegc_yx(plane, y as i32, x as i32, cstring![egc], sbytes_ptr) }
+    unsafe {
+        c_api::ffi::ncplane_putegc_yx(
+            plane,
+            y.unwrap_or(NcDim::MAX) as i32,
+            x.unwrap_or(NcDim::MAX) as i32,
+            cstring![egc],
+            sbytes_ptr,
+        )
+    }
 }
 
 /// Replaces the [`NcCell`] at the current location with the provided `egc`,
@@ -341,13 +345,11 @@ pub fn ncplane_putegc_yx(
 /// scrolling is enabled.
 ///
 /// *Method: NcPlane.[putegc_stained()][NcPlane#method.putegc_stained].*
-//
-// MAYBE accept sbytes as Option<&mut usize>
 #[inline]
 pub fn ncplane_putegc_stained(
     plane: &mut NcPlane,
     egc: &str,
-    sbytes: Option<&mut i32>,
+    sbytes: Option<&mut usize>,
 ) -> NcIntResult {
     let sbytes_ptr;
     if let Some(sb) = sbytes {
@@ -356,7 +358,7 @@ pub fn ncplane_putegc_stained(
         sbytes_ptr = null_mut();
     }
 
-    unsafe { ffi::ncplane_putegc_stained(plane, cstring![egc], sbytes_ptr) }
+    unsafe { c_api::ffi::ncplane_putegc_stained(plane, cstring![egc], sbytes_ptr) }
 }
 
 /// Writes a string to the current location, using the current style.
@@ -373,7 +375,184 @@ pub fn ncplane_putegc_stained(
 /// *Method: NcPlane.[putstr()][NcPlane#method.putstr].*
 #[inline]
 pub fn ncplane_putstr(plane: &mut NcPlane, string: &str) -> NcIntResult {
-    unsafe { c_api::ncplane_putstr_yx(plane, -1, -1, cstring![string]) }
+    ncplane_putstr_yx(plane, None, None, string)
+}
+
+/// Writes a string to the provided location, using the current style.
+///
+/// Advances the cursor by some positive number of columns (though not beyond
+/// the end of the plane), and this number is returned on success.
+///
+/// On error, a non-positive number is returned, indicating the number of
+/// columns which were written before the error.
+///
+/// If a glyph can not fit in the current line, it is an error, unless
+/// scrolling is enabled.
+///
+/// *Method: NcPlane.[putstr_yx()][NcPlane#method.putstr_yx].*
+#[inline]
+pub fn ncplane_putstr_yx(
+    plane: &mut NcPlane,
+    y: Option<NcDim>,
+    x: Option<NcDim>,
+    string: &str,
+) -> NcIntResult {
+    let cstring = CString::new(string).unwrap();
+    let mut cstring_ptr = cstring.as_ptr();
+
+    let (mut y, mut x) = (y, x);
+    let mut ret = 0;
+
+    while unsafe { cstring_ptr.read() != 0 } {
+        let mut wcs = 0;
+        let cols = unsafe {
+            c_api::ffi::ncplane_putegc_yx(
+                plane,
+                y.unwrap_or(NcDim::MAX) as i32,
+                x.unwrap_or(NcDim::MAX) as i32,
+                cstring_ptr,
+                &mut wcs,
+            )
+        };
+        if cols < 0 {
+            return -ret;
+        }
+        if wcs == 0 {
+            break;
+        }
+        // after the first iteration, just let the cursor code control where we
+        // print, so that scrolling is taken into account
+        y = None;
+        x = None;
+
+        cstring_ptr = unsafe { cstring_ptr.add(wcs) };
+        ret += cols;
+    }
+    ret
+}
+
+/// Writes a string to the provided location, using the current style
+/// and [`NcAlign`]ed on *x*.
+///
+/// Advances the cursor by some positive number of columns (though not
+/// beyond the end of the plane); this number is returned on success.
+///
+/// On error, a non-positive number is returned, indicating the number of
+/// columns which were written before the error.
+///
+/// If a glyph can not fit in the current line, it is an error, unless
+/// scrolling is enabled.
+///
+/// *Method: NcPlane.[putstr_aligned()][NcPlane#method.putstr_aligned].*
+#[inline]
+pub fn ncplane_putstr_aligned(
+    plane: &mut NcPlane,
+    y: Option<NcDim>,
+    align: NcAlign,
+    string: &str,
+) -> NcIntResult {
+    let (mut validbytes, mut validwidth) = (0, 0);
+
+    // we'll want to do the partial write if there's an error somewhere within
+    unsafe {
+        c_api::ncstrwidth_valid(cstring![string], &mut validbytes, &mut validwidth);
+    }
+
+    let xpos = ncplane_halign(plane, align, validwidth as NcDim);
+    if xpos < 0 {
+        NCRESULT_ERR
+    } else {
+        ncplane_putstr_yx(plane, y, Some(xpos as NcDim), string)
+    }
+}
+
+/// Writes a string to the current location, retaining the previous style.
+///
+/// Advances the cursor by some positive number of columns (though not
+/// beyond the end of the plane); this number is returned on success.
+///
+/// On error, a non-positive number is returned, indicating the number of
+/// columns which were written before the error.
+///
+/// If a glyph can not fit in the current line, it is an error, unless
+/// scrolling is enabled.
+///
+/// *Method: NcPlane.[putstr_stained()][NcPlane#method.putstr_stained].*
+#[inline]
+pub fn ncplane_putstr_stained(plane: &mut NcPlane, string: &str) -> NcIntResult {
+    let cstring = CString::new(string).unwrap();
+    let mut cstring_ptr = cstring.as_ptr();
+
+    let mut ret = 0;
+    while unsafe { cstring_ptr.read() != 0 } {
+        let mut wcs = 0;
+        let cols = unsafe { c_api::ffi::ncplane_putegc_stained(plane, cstring_ptr, &mut wcs) };
+
+        if cols < 0 {
+            return -ret;
+        }
+        if wcs == 0 {
+            break;
+        }
+        cstring_ptr = unsafe { cstring_ptr.add(wcs) };
+        ret += cols;
+    }
+    ret
+}
+
+/// Writes a series of EGCs to the provided location, using the current style,
+/// and no more than `num_bytes` bytes will be written.
+///
+/// Advances the cursor by some positive number of columns (though not beyond
+/// the end of the plane); this number is returned on success.
+///
+/// On error, a non-positive number is returned, indicating the number of
+/// columns which were written before the error.
+///
+/// If a glyph can not fit in the current line, it is an error, unless
+/// scrolling is enabled.
+///
+/// *Method: NcPlane.[putnstr()][NcPlane#method.putnstr].*
+#[inline]
+pub fn ncplane_putnstr_yx(
+    plane: &mut NcPlane,
+    y: Option<NcDim>,
+    x: Option<NcDim>,
+    num_bytes: usize,
+    string: &str,
+) -> NcIntResult {
+    let cstring = CString::new(string).unwrap();
+    let cstring_bytes_len = cstring.as_bytes().len();
+    let cstring_ptr = cstring.as_ptr();
+
+    let (ret, mut offset) = (0, 0);
+    let (mut y, mut x) = (y, x);
+
+    while offset < num_bytes && offset < cstring_bytes_len {
+        let mut wcs = 0;
+        let cols = unsafe {
+            c_api::ffi::ncplane_putegc_yx(
+                plane,
+                y.unwrap_or(NcDim::MAX) as i32,
+                x.unwrap_or(NcDim::MAX) as i32,
+                cstring_ptr.add(offset),
+                &mut wcs,
+            )
+        };
+        if cols < 0 {
+            return c_api::NCRESULT_ERR;
+        }
+        if wcs == 0 {
+            break;
+        }
+
+        // after the first iteration, just let the cursor code control where we
+        // print, so that scrolling is taken into account
+        y = None;
+        x = None;
+        offset += wcs as usize;
+    }
+    ret
 }
 
 /// Writes a string to the current location, using the current style,
@@ -391,7 +570,7 @@ pub fn ncplane_putstr(plane: &mut NcPlane, string: &str) -> NcIntResult {
 /// *Method: NcPlane.[putnstr()][NcPlane#method.putnstr].*
 #[inline]
 pub fn ncplane_putnstr(plane: &mut NcPlane, num_bytes: usize, string: &str) -> NcIntResult {
-    unsafe { c_api::ncplane_putnstr_yx(plane, -1, -1, num_bytes as size_t, cstring![string]) }
+    c_api::ncplane_putnstr_yx(plane, None, None, num_bytes, string)
 }
 
 // movement, size & alignment --------------------------------------------------
@@ -501,15 +680,15 @@ pub fn ncplane_resize_simple(plane: &mut NcPlane, len_y: NcDim, len_x: NcDim) ->
         c_api::ncplane_dim_yx(plane, &mut old_y, &mut old_x);
     }
     let keep_len_y = {
-        if old_y > len_y as i32 {
-            len_y as i32
+        if old_y > len_y {
+            len_y
         } else {
             old_y
         }
     };
     let keep_len_x = {
-        if old_x > len_x as i32 {
-            len_x as i32
+        if old_x > len_x {
+            len_x
         } else {
             old_x
         }
@@ -645,19 +824,9 @@ pub fn ncplane_perimeter_double(
     let mut lr = NcCell::new();
     let mut hl = NcCell::new();
     let mut vl = NcCell::new();
-    if unsafe {
-        c_api::nccells_double_box(
-            plane,
-            stylemask as u32,
-            channels,
-            &mut ul,
-            &mut ur,
-            &mut ll,
-            &mut lr,
-            &mut hl,
-            &mut vl,
-        )
-    } != NcIntResult::OK
+    if c_api::nccells_double_box(
+        plane, stylemask, channels, &mut ul, &mut ur, &mut ll, &mut lr, &mut hl, &mut vl,
+    ) != NcIntResult::OK
     {
         return NcIntResult::ERR;
     }
@@ -707,19 +876,9 @@ pub fn ncplane_perimeter_rounded(
     let mut lr = NcCell::new();
     let mut hl = NcCell::new();
     let mut vl = NcCell::new();
-    if unsafe {
-        c_api::nccells_rounded_box(
-            plane,
-            stylemask as u32,
-            channels,
-            &mut ul,
-            &mut ur,
-            &mut ll,
-            &mut lr,
-            &mut hl,
-            &mut vl,
-        )
-    } != NcIntResult::OK
+    if c_api::nccells_rounded_box(
+        plane, stylemask, channels, &mut ul, &mut ur, &mut ll, &mut lr, &mut hl, &mut vl,
+    ) != NcIntResult::OK
     {
         return NcIntResult::ERR;
     }
@@ -780,8 +939,8 @@ pub fn ncplane_box_sized(
             lr,
             hline,
             vline,
-            (y + len_y as i32 - 1) as NcDim,
-            (x + len_x as i32 - 1) as NcDim,
+            (y + len_y - 1) as NcDim,
+            (x + len_x - 1) as NcDim,
             boxmask,
         )
     }
@@ -811,15 +970,7 @@ pub fn ncplane_double_box(
 
     unsafe {
         ret = c_api::nccells_double_box(
-            plane,
-            stylemask as u32,
-            channels,
-            &mut ul,
-            &mut ur,
-            &mut ll,
-            &mut lr,
-            &mut hl,
-            &mut vl,
+            plane, stylemask, channels, &mut ul, &mut ur, &mut ll, &mut lr, &mut hl, &mut vl,
         );
         if ret == NcIntResult::OK {
             ret = c_api::ncplane_box(plane, &ul, &ur, &ll, &lr, &hl, &vl, end_y, end_x, boxmask);
@@ -885,15 +1036,7 @@ pub fn ncplane_rounded_box(
 
     unsafe {
         ret = c_api::nccells_rounded_box(
-            plane,
-            stylemask as u32,
-            channels,
-            &mut ul,
-            &mut ur,
-            &mut ll,
-            &mut lr,
-            &mut hl,
-            &mut vl,
+            plane, stylemask, channels, &mut ul, &mut ur, &mut ll, &mut lr, &mut hl, &mut vl,
         );
         if ret == NcIntResult::OK {
             ret = c_api::ncplane_box(plane, &ul, &ur, &ll, &lr, &hl, &vl, end_y, end_x, boxmask);
@@ -939,6 +1082,12 @@ pub fn ncplane_rounded_box_sized(
 /// Draws a gradient with its upper-left corner at the current cursor position,
 /// stopping at `end_y`×`end_x`.
 ///
+/// Use `None` for either or all of `beg_y` and `beg_x` in order to
+/// use the current cursor position along that axis.
+///
+/// Use `None` for either or both of `len_y` and `len_x` in order to
+/// go through the boundary of the plane in that axis (same as `0`).
+///
 /// The glyph composed of `egc` and `stylemask` is used for all cells. The
 /// `NcChannels` specified by `ul`, `ur`, `ll`, and `lr` are composed into
 /// foreground and background gradients.
@@ -962,19 +1111,17 @@ pub fn ncplane_rounded_box_sized(
 #[inline]
 pub fn ncplane_gradient(
     plane: &mut NcPlane,
+    y: Option<NcDim>,
+    x: Option<NcDim>,
+    len_y: Option<NcDim>,
+    len_x: Option<NcDim>,
     egc: &str,
     stylemask: NcStyle,
     ul: NcChannels,
     ur: NcChannels,
     ll: NcChannels,
     lr: NcChannels,
-    len_y: NcDim,
-    len_x: NcDim,
 ) -> NcIntResult {
-    if len_y < 1 || len_x < 1 {
-        return NcIntResult::ERR;
-    }
-
     #[cfg(any(target_arch = "armv7l", target_arch = "i686"))]
     let egc_ptr = cstring![egc] as *const i8;
     #[cfg(not(any(target_arch = "armv7l", target_arch = "i686")))]
@@ -983,52 +1130,16 @@ pub fn ncplane_gradient(
     unsafe {
         crate::bindings::ffi::ncplane_gradient(
             plane,
+            y.unwrap_or(NcDim::MAX) as i32,
+            x.unwrap_or(NcDim::MAX) as i32,
+            len_y.unwrap_or(0),
+            len_x.unwrap_or(0),
             egc_ptr,
-            stylemask as u32,
-            ul,
-            ur,
-            ll,
-            lr,
-            len_y as i32,
-            len_x as i32,
-        )
-    }
-}
-
-/// Draw a gradient with its upper-left corner at the current cursor position,
-/// having dimensions `len_y` * `len_x`.
-///
-/// See [ncplane_gradient][c_api::ncplane_gradient] for more information.
-///
-/// *Method: NcPlane.[gradient_sized()][NcPlane#method.gradient_sized].*
-#[inline]
-pub fn ncplane_gradient_sized(
-    plane: &mut NcPlane,
-    egc: &str,
-    stylemask: NcStyle,
-    ul: NcChannels,
-    ur: NcChannels,
-    ll: NcChannels,
-    lr: NcChannels,
-    len_y: NcDim,
-    len_x: NcDim,
-) -> NcIntResult {
-    if len_y < 1 || len_x < 1 {
-        return NcIntResult::ERR;
-    }
-    let (mut y, mut x) = (0, 0);
-    unsafe {
-        c_api::ncplane_cursor_yx(plane, &mut y, &mut x);
-        ncplane_gradient(
-            plane,
-            egc,
             stylemask,
             ul,
             ur,
             ll,
             lr,
-            y as NcDim + len_y - 1,
-            x as NcDim + len_x - 1,
         )
     }
 }

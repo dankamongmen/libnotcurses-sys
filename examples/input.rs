@@ -13,7 +13,7 @@ fn main() -> NcResult<()> {
 
     putstrln!(splane, "Input example.\nPress any key to continue:")?;
     nc.render()?;
-    let key = nc.getc_blocking(None)?;
+    let key = nc.get_blocking(None)?;
     putstrln!(splane, "Pressed: {}\n", key)?;
 
     putstrln!(
@@ -22,7 +22,7 @@ fn main() -> NcResult<()> {
     )?;
     let mut input = NcInput::new_empty();
     loop {
-        let key = nc.getc_nblock(Some(&mut input))?;
+        let key = nc.get_nblock(Some(&mut input))?;
         match key {
             NcKey::F01 => break,
             NcKey::ESC..=NcKey::BUTTON11 => {

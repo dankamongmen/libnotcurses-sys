@@ -5,11 +5,11 @@
 // (X)  1 : wont do
 // (~)  3 : TODO / WIP
 //
-// (f) 47 : unsafe ffi function exported by bindgen
+// (f) 46 : unsafe ffi function exported by bindgen
 // (w)  1 : safely wrapped ffi function
 // (r) 11 : static function manually reimplemented
 //
-// (m) 55 : method implemented
+// (m) 56 : method implemented
 //
 // (t)  0 : unit test done for the function
 // (T)  0 : unit test done also for the method
@@ -23,7 +23,7 @@
 // fm  ncdirect_canget_cursor
 // rm  ncdirect_canfade
 // rm  ncdirect_canhalfblock
-// fm  ncdirect_canopen_images
+// rm  ncdirect_canopen_images
 // rm  ncdirect_canopen_videos
 // rm  ncdirect_canquadrant
 // rm  ncdirect_cantruecolor
@@ -75,8 +75,8 @@
 // fm  ncdirect_vline_interp
 // rm  ncdirect_bg_rgb8
 // rm  ncdirect_fg_rgb8
-// rm  ncdirect_getc_nblock
-// rm  ncdirect_getc_nblocking
+// rm  ncdirect_get_blocking
+// rm  ncdirect_get_nblock
 
 #[cfg(test)]
 mod test;
