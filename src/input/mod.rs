@@ -31,8 +31,7 @@ pub enum NcReceived {
 }
 
 impl NcReceived {
-    ///
-    ///
+    /// New `NcReceived`, from a `u32` number.
     pub fn new(num: u32) -> Self {
         if num == 0 {
             Self::NoInput
@@ -46,6 +45,12 @@ impl NcReceived {
     }
 }
 
+impl From<NcInput> for NcReceived {
+    fn from(i: NcInput) -> Self {
+        Self::new(i.id)
+    }
+}
+
 /// Reads and decodes input events.
 ///
 /// Reads from stdin and decodes the input to stdout, including synthesized
@@ -53,7 +58,7 @@ impl NcReceived {
 /// Single Unicode codepoints are received from the keyboard, directly encoded
 /// as `u32`.
 ///
-/// All events carry a ncinput structure with them.
+/// All events carry an `NcInput` structure with them.
 ///
 /// For mouse events, the x and y coordinates are reported within this struct.
 /// For all events, modifiers (e.g. "Alt") are carried as bools in this struct.

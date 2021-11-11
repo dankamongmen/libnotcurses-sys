@@ -416,7 +416,6 @@ impl Nc {
     /// The number read will be returned, or 0 on timeout.
     ///
     /// *C style function: [notcurses_getvec()][c_api::notcurses_getvec].*
-    // FIXME:
     pub fn getvec(
         &mut self,
         time: Option<NcTime>,
