@@ -10,9 +10,41 @@
 // + nckey_mouse_p
 // + nckey_supppuab_p
 
-use crate::NcDim;
+use crate::{NcDim, NcKey};
 
 pub(crate) mod reimplemented;
+
+/// A received char or event.
+#[non_exhaustive]
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum NcReceived {
+    /// A valid [`char`] was received.
+    Char(char),
+    /// A synthesized event was received.
+    Event(NcKey),
+    /// No input was received
+    ///
+    /// A `0x00` (NUL) was received, meaning no input.
+    NoInput,
+    /// Something other was received.
+    Other(u32),
+}
+
+impl NcReceived {
+    ///
+    ///
+    pub fn new(num: u32) -> Self {
+        if num == 0 {
+            Self::NoInput
+        } else if NcKey::is(num) {
+            Self::Event(NcKey::new(num).unwrap())
+        } else if let Some(c) = core::char::from_u32(num) {
+            Self::Char(c)
+        } else {
+            Self::Other(num)
+        }
+    }
+}
 
 /// Reads and decodes input events.
 ///
@@ -21,13 +53,8 @@ pub(crate) mod reimplemented;
 /// Single Unicode codepoints are received from the keyboard, directly encoded
 /// as `u32`.
 ///
-/// The input system must deal with numerous keyboard signals which do not map
-/// to Unicode code points. This includes the keypad arrows and function keys.
-/// These "synthesized" codepoints are enumerated in , and mapped into the
-/// Supplementary Private Use Area-B (U+100000..U+10FFFD).
-/// Mouse button events are similarly mapped into the SPUA-B.
-///
 /// All events carry a ncinput structure with them.
+///
 /// For mouse events, the x and y coordinates are reported within this struct.
 /// For all events, modifiers (e.g. "Alt") are carried as bools in this struct.
 pub type NcInput = crate::bindings::ffi::ncinput;

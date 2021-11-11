@@ -120,7 +120,7 @@ pub use error::{NcError, NcIntResult, NcIntResultApi, NcResult};
 pub use fade::{NcFadeCb, NcFadeCtx};
 pub use fd::{NcFdPlane, NcFdPlaneOptions, NcSubproc, NcSubprocOptions};
 pub use file::NcFile;
-pub use input::{NcEvType, NcEvTypeApi, NcInput, NcMiceEvents, NcMiceEventsApi};
+pub use input::{NcEvType, NcEvTypeApi, NcInput, NcMiceEvents, NcMiceEventsApi, NcReceived};
 pub use key::NcKey;
 pub use log_level::{NcLogLevel, NcLogLevelApi};
 pub use macros::*;
@@ -165,6 +165,7 @@ pub mod c_api {
     pub use crate::channel::reimplemented::*;
     pub use crate::direct::reimplemented::*;
     pub use crate::input::reimplemented::*;
+    pub use crate::key::reimplemented::*;
     pub use crate::metric::reimplemented::*;
     pub use crate::notcurses::reimplemented::*;
     pub use crate::palette::reimplemented::*;
@@ -179,7 +180,7 @@ pub mod c_api {
     pub use crate::channel::constants::*;
     pub use crate::direct::constants::*;
     pub use crate::error::constants::*;
-    pub use crate::input::constants::*; // evdev
+    pub use crate::input::constants::*;
     pub use crate::key::constants::*;
     pub use crate::log_level::constants::*;
     pub use crate::metric::constants::*;

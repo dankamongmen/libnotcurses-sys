@@ -6,8 +6,8 @@ use crate::{
     c_api::{self, notcurses_init},
     cstring, error, error_ref_mut, rstring, rstring_free, Nc, NcAlign, NcBlitter, NcBlitterApi,
     NcCapabilities, NcChannels, NcDim, NcError, NcFile, NcInput, NcLogLevel, NcMiceEvents,
-    NcMiceEventsApi, NcOptions, NcPixelImpl, NcPlane, NcResult, NcScale, NcStats, NcStyle,
-    NcStyleApi, NcTime, NcVGeom, NcVisual, NcVisualGeometry, NcVisualOptions,
+    NcMiceEventsApi, NcOptions, NcPixelImpl, NcPlane, NcReceived, NcResult, NcScale, NcStats,
+    NcStyle, NcStyleApi, NcTime, NcVGeom, NcVisual, NcVisualGeometry, NcVisualOptions,
 };
 
 /// # `NcOptions` Constructors
@@ -384,7 +384,11 @@ impl Nc {
     /// (see [*pthread_cond_clockwait(3)*](https://linux.die.net/man/3/pthread_cond_wait)).
     ///
     /// *C style function: [notcurses_get()][c_api::notcurses_get].*
-    pub fn get(&mut self, time: Option<NcTime>, input: Option<&mut NcInput>) -> NcResult<char> {
+    pub fn get(
+        &mut self,
+        time: Option<NcTime>,
+        input: Option<&mut NcInput>,
+    ) -> NcResult<NcReceived> {
         let ntime;
         if let Some(time) = time {
             ntime = &time as *const _;
@@ -400,8 +404,11 @@ impl Nc {
         }
 
         let res = unsafe { c_api::notcurses_get(self, ntime, ninput) };
-        core::char::from_u32(res)
-            .ok_or_else(|| NcError::with_msg(res as i32, &format!["Nc.get(time: {:?})", time]))
+        if res == c_api::NCRESULT_ERR as u32 {
+            Err(NcError::new_msg(&format!["Nc.get({:?})", time]))
+        } else {
+            Ok(NcReceived::new(res))
+        }
     }
 
     /// Acquire up to 'vcount' [`NcInput`]s at the vector 'ni'.
@@ -409,6 +416,7 @@ impl Nc {
     /// The number read will be returned, or 0 on timeout.
     ///
     /// *C style function: [notcurses_getvec()][c_api::notcurses_getvec].*
+    // FIXME:
     pub fn getvec(
         &mut self,
         time: Option<NcTime>,
@@ -434,9 +442,13 @@ impl Nc {
     /// In the case of a valid read, a [`char`] is returned.
     ///
     /// *C style function: [notcurses_get_blocking()][c_api::notcurses_get_blocking].*
-    pub fn get_blocking(&mut self, input: Option<&mut NcInput>) -> NcResult<char> {
+    pub fn get_blocking(&mut self, input: Option<&mut NcInput>) -> NcResult<NcReceived> {
         let res = c_api::notcurses_get_blocking(self, input);
-        core::char::from_u32(res as u32).ok_or_else(|| NcError::with_msg(res, "Nc.get_blocking()"))
+        if res == c_api::NCRESULT_ERR {
+            Err(NcError::new_msg("Nc.get_blocking()"))
+        } else {
+            Ok(NcReceived::new(res as u32))
+        }
     }
 
     /// Reads input without blocking.
@@ -446,9 +458,13 @@ impl Nc {
     /// If no event is ready, returns 0.
     ///
     /// *C style function: [notcurses_get_nblock()][c_api::notcurses_get_nblock].*
-    pub fn get_nblock(&mut self, input: Option<&mut NcInput>) -> NcResult<char> {
+    pub fn get_nblock(&mut self, input: Option<&mut NcInput>) -> NcResult<NcReceived> {
         let res = c_api::notcurses_get_nblock(self, input);
-        core::char::from_u32(res as u32).ok_or_else(|| NcError::with_msg(res, "Nc.get_nblock()"))
+        if res == c_api::NCRESULT_ERR {
+            Err(NcError::new_msg("Nc.get_nblock()"))
+        } else {
+            Ok(NcReceived::new(res as u32))
+        }
     }
 
     /// Gets a file descriptor suitable for input event poll()ing.

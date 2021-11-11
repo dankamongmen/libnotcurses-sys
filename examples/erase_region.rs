@@ -179,8 +179,9 @@ fn erase_region(
 /// renders the planes, and waits for input. 'q' quits.
 fn render_and_wait_input(state: &mut State) -> NcResult<()> {
     state.nc.render()?;
-    let key = state.nc.get_blocking(None)?;
-    if key == 'q' {
+    let res = state.nc.get_blocking(None)?;
+
+    if res == NcReceived::Char('q') {
         state.exit(0)?;
     }
     Ok(())
