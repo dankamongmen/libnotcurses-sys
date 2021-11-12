@@ -204,17 +204,24 @@ fn print_info_row(
     string: &str,
 ) -> NcResult<()> {
     let info_len = state.info.dim_x();
+
     // stain
     if let Some(channels) = stain {
         state.info.cursor_move_yx(row, 0)?;
         state.info.putstr(&" ".repeat(info_len as usize))?;
         state.info.cursor_move_yx(row, 0)?;
-        // FIXME:
-        // state
-        //     .info
-        //     // .stain(row, info_len - 1, channels, channels, channels, channels)?; // err if overflows
-        //     .stain(None, None, Some(row), Some(info_len - 1), channels, channels, channels, channels)?; // err if overflows
+        state.info.stain(
+            Some(row),
+            Some(0),
+            Some(1),
+            None,
+            channels,
+            channels,
+            channels,
+            channels,
+        )?;
     }
+
     state.info.putstr_aligned_stained(row, align, string)?;
     Ok(())
 }

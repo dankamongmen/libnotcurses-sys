@@ -249,17 +249,23 @@ impl NcPlane {
     /// Sets the given [`NcChannels`]s throughout the specified region,
     /// keeping content and attributes unchanged.
     ///
-    /// Returns the number of cells set.
+    /// The upper left corner is at `y`, `x`, and `None` may be
+    /// specified to indicate the cursor's position in that dimension.
+    ///
+    /// The area is specified by 'len_y', 'len_x', and `None` may be specified
+    /// to indicate everything remaining to the right and below, respectively.
     ///
     /// It is an error for any coordinate to be outside the plane.
+    ///
+    /// Returns the number of cells set, or -1 on failure.
     ///
     /// *C style function: [ncplane_stain()][c_api::ncplane_stain].*
     pub fn stain(
         &mut self,
         y: Option<NcDim>,
         x: Option<NcDim>,
-        y_stop: Option<NcDim>,
-        x_stop: Option<NcDim>,
+        len_y: Option<NcDim>,
+        len_x: Option<NcDim>,
         ul: NcChannels,
         ur: NcChannels,
         ll: NcChannels,
@@ -270,8 +276,8 @@ impl NcPlane {
                 self,
                 y.unwrap_or(NcDim::MAX) as i32,
                 x.unwrap_or(NcDim::MAX) as i32,
-                y_stop.unwrap_or(0),
-                x_stop.unwrap_or(0),
+                len_y.unwrap_or(0),
+                len_x.unwrap_or(0),
                 ul,
                 ur,
                 ll,
@@ -282,7 +288,7 @@ impl NcPlane {
             res,
             &format!(
                 "NcPlane.stain({:?}, {:?}, {:?}, {:?}, {:0X}, {:0X}, {:0X}, {:0X})",
-                y, x, y_stop, x_stop, ul, ur, ll, lr
+                y, x, len_y, len_x, ul, ur, ll, lr
             ),
             res as u32
         ]
@@ -473,24 +479,23 @@ impl NcPlane {
     /// Sets the given style throughout the specified region, keeping content
     /// and channels unchanged.
     ///
-    /// The upper left corner is at `y`, `x`, and `None` may be specified to
-    /// indicate the cursor's position in that dimension.
+    /// The upper left corner is at `y`, `x`, and `None` may be
+    /// specified to indicate the cursor's position in that dimension.
     ///
-    /// The lower right corner is specified by `stop_y`, `stop_x`, and `None`
-    /// may be specified to go through the boundary of the plane in that axis
-    /// (same as `0`).
+    /// The area is specified by 'len_y', 'len_x', and `None` may be specified
+    /// to indicate everything remaining to the right and below, respectively.
     ///
     /// It is an error for any coordinate to be outside the plane.
     ///
-    /// Returns the number of cells set.
+    /// Returns the number of cells set, or -1 on failure.
     ///
     /// *C style function: [ncplane_format()][c_api::ncplane_format].*
     pub fn format(
         &mut self,
         y: Option<NcDim>,
         x: Option<NcDim>,
-        stop_y: Option<NcDim>,
-        stop_x: Option<NcDim>,
+        len_y: Option<NcDim>,
+        len_x: Option<NcDim>,
         stylemask: NcStyle,
     ) -> NcResult<NcDim> {
         let res = unsafe {
@@ -498,8 +503,8 @@ impl NcPlane {
                 self,
                 y.unwrap_or(NcDim::MAX) as i32,
                 x.unwrap_or(NcDim::MAX) as i32,
-                stop_y.unwrap_or(0),
-                stop_x.unwrap_or(0),
+                len_y.unwrap_or(0),
+                len_x.unwrap_or(0),
                 stylemask,
             )
         };
@@ -507,7 +512,7 @@ impl NcPlane {
             res,
             &format!(
                 "NcPlane.format({:?}, {:?}, {:?}, {:?}, {:0X})",
-                y, x, stop_y, stop_x, stylemask
+                y, x, len_y, len_x, stylemask
             ),
             res as u32
         ]
