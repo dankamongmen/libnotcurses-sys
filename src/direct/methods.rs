@@ -687,18 +687,18 @@ impl NcDirect {
         ll: NcChannels,
         lr: NcChannels,
         wchars: &[char; 6],
-        y_len: NcDim,
-        x_len: NcDim,
+        len_y: NcDim,
+        len_x: NcDim,
         ctlword: u32,
     ) -> NcResult<()> {
         error![
             unsafe {
                 let wchars = core::mem::transmute(wchars);
-                c_api::ncdirect_box(self, ul, ur, ll, lr, wchars, y_len, x_len, ctlword)
+                c_api::ncdirect_box(self, ul, ur, ll, lr, wchars, len_y, len_x, ctlword)
             },
             &format!(
                 "NcDirect.box({:0X}, {:0X}, {:0X}, {:0X}, {:?}, {}, {}, {})",
-                ul, ur, ll, lr, wchars, y_len, x_len, ctlword
+                ul, ur, ll, lr, wchars, len_y, len_x, ctlword
             )
         ]
     }
@@ -712,11 +712,11 @@ impl NcDirect {
         ur: NcChannels,
         ll: NcChannels,
         lr: NcChannels,
-        y_len: NcDim,
-        x_len: NcDim,
+        len_y: NcDim,
+        len_x: NcDim,
         ctlword: u32,
     ) -> NcResult<()> {
-        error![unsafe { c_api::ncdirect_double_box(self, ul, ur, ll, lr, y_len, x_len, ctlword) }]
+        error![unsafe { c_api::ncdirect_double_box(self, ul, ur, ll, lr, len_y, len_x, ctlword) }]
     }
 
     /// NcDirect.[box()][NcDirect#method.box] with the rounded box-drawing characters.
@@ -728,11 +728,11 @@ impl NcDirect {
         ur: NcChannels,
         ll: NcChannels,
         lr: NcChannels,
-        y_len: NcDim,
-        x_len: NcDim,
+        len_y: NcDim,
+        len_x: NcDim,
         ctlword: u32,
     ) -> NcResult<()> {
-        error![unsafe { c_api::ncdirect_rounded_box(self, ul, ur, ll, lr, y_len, x_len, ctlword) }]
+        error![unsafe { c_api::ncdirect_rounded_box(self, ul, ur, ll, lr, len_y, len_x, ctlword) }]
     }
 
     /// Draws horizontal lines using the specified [NcChannels]s, interpolating

@@ -35,7 +35,7 @@ use crate::NcDim;
 pub use methods::NcPixelApi;
 
 // NcPixel (RGBA)
-/// An ABGR pixel (alias of [`u32`]).
+/// An ABGR pixel (alias of `u32`).
 ///
 /// ## Diagram
 ///
@@ -57,7 +57,7 @@ pub use methods::NcPixelApi;
 /// and render them down to terminal graphics in `NcVisual.render`).
 pub type NcPixel = u32;
 
-/// Pixel blitting implementations, informative only (alias of [`u32`]).
+/// Pixel blitting implementations, informative only (alias of `u32`).
 ///
 /// Returned by [`check_pixel_support`][crate::Nc#method.check_pixel_support].
 pub type NcPixelImpl = crate::bindings::ffi::ncpixelimpl_e;

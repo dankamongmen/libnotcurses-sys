@@ -51,6 +51,18 @@ impl From<NcInput> for NcReceived {
     }
 }
 
+impl From<NcReceived> for u32 {
+    fn from(r: NcReceived) -> Self {
+        use NcReceived::*;
+        match r {
+            Char(c) => c.into(),
+            Event(e) => e.into(),
+            NoInput => 0,
+            Other(o) => o,
+        }
+    }
+}
+
 /// Reads and decodes input events.
 ///
 /// Reads from stdin and decodes the input to stdout, including synthesized
@@ -137,7 +149,7 @@ impl NcInput {
     }
 }
 
-/// The type of the event, part of [`NcInput`] (alias of u32).
+/// The type of the event, part of [`NcInput`] (alias of `u32`).
 pub type NcEvType = u32;
 
 crate::impl_api![
@@ -153,7 +165,7 @@ crate::impl_api![
     const RELEASE: NcEvType = constants::NCEVTYPE_RELEASE;
 ];
 
-/// A mask for mice input events (alias of u32).
+/// A mask for mice input events (alias of `u32`).
 pub type NcMiceEvents = u32;
 
 crate::impl_api![

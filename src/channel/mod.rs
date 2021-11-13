@@ -77,13 +77,13 @@ pub use methods::{NcChannelApi, NcChannelsApi};
 
 // NcChannel
 //
-/// 32 bits of context-dependent info containing RGB + 2 bits of alpha + extra
-/// (alias of [`u32`]).
+/// 32 bits of context-dependent info containing [`NcRgb`] + [`NcAlpha`] + extra
+/// (alias of `u32`).
 ///
 /// It is:
 /// - a 24-bit [`NcRgb`] value
 /// - plus 8 bits divided in:
-///   - 2 bits of [`NcAlpha`][crate::NcAlpha]
+///   - 2 bits of [`NcAlpha`]
 ///   - 6 bits of context-dependent info
 ///
 /// The context details are documented in [`NcChannels`]
@@ -95,12 +95,16 @@ pub use methods::{NcChannelApi, NcChannelsApi};
 /// ```
 /// `type in C: channel (uint32_t)`
 ///
-/// See also: [NcRgb] and [NcRgba] types.
+/// # See also
+/// - [`NcRgb`]
+/// - [`NcRgba`]
+///
+///[`NcAlpha`]: crate::NcAlpha
 pub type NcChannel = u32;
 
 // NcChannels
 //
-/// 64 bits containing a foreground and background [`NcChannel`] (alias of [`u64`]).
+/// 64 bits containing a foreground and background [`NcChannel`] (alias of `u64`).
 ///
 /// At render time, both 24-bit [`NcRgb`] values are quantized down to terminal
 /// capabilities, if necessary. There's a clear path to 10-bit support should
@@ -187,7 +191,7 @@ pub type NcChannels = u64;
 
 // NcRgb
 //
-/// 24 bits broken into 3x 8bpp channels (alias of [`u32`]).
+/// 24 bits broken into 3x 8bpp channels (alias of `u32`).
 ///
 /// Unlike with [`NcChannel`], operations involving `NcRgb` ignores the last 4th byte
 ///
@@ -204,7 +208,7 @@ pub type NcRgb = u32;
 // NcComponent
 //
 /// 8 bits representing an R/G/B color component or an alpha channel component
-/// (alias of [`u8`]).
+/// (alias of `u8`).
 ///
 /// ## Diagram
 ///

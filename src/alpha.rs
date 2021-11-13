@@ -2,7 +2,7 @@
 use crate::NcCell;
 
 /// 2 bits of alpha (surrounded by context dependent bits)
-/// part of an [`NcChannel`][crate::NcChannel], (alias of [`u32`]).
+/// part of an [`NcChannel`][crate::NcChannel], (alias of `u32`).
 ///
 /// ## Diagram
 ///

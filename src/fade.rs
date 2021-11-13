@@ -13,7 +13,7 @@ use std::ffi::c_void;
 
 use crate::{c_api, Nc, NcIntResult, NcPlane, NcTime};
 
-/// Called for each fade iteration on the NcPlane.
+/// Called for each fade iteration on a fading [`NcPlane`].
 ///
 /// If anything but 0 is returned, the fading operation ceases immediately,
 /// and that value is propagated out.
@@ -26,7 +26,7 @@ pub type NcFadeCb =
 pub type NcFadeCtx = crate::bindings::ffi::ncfadectx;
 
 impl NcFadeCtx {
-    /// NcFadeCtx constructor.
+    /// `NcFadeCtx` constructor.
     ///
     /// Rather than the simple ncplane_fade{in/out}(),
     /// ncfadectx_setup() can be paired with a loop over

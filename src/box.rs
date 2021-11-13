@@ -1,6 +1,6 @@
 //! `NcBoxMask`
 
-/// Controls the drawing of borders, gradients and corners (alias of [`u32`]).
+/// Controls the drawing of borders, gradients and corners (alias of `u32`).
 ///
 /// NcBoxMax is defined in the least significant byte, where bits [3, 0] are
 /// are a border mask, and bits [7, 4] are a gradient mask.

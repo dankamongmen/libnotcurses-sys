@@ -3,7 +3,8 @@
 use core::ptr::{null, null_mut};
 
 use crate::{
-    c_api, Nc, NcAlign, NcAlignApi, NcDim, NcError, NcInput, NcIntResult, NcPlane, NcResult, NcTime,
+    c_api, Nc, NcAlign, NcAlignApi, NcDim, NcError, NcInput, NcIntResult, NcIntResultApi, NcPlane,
+    NcResult, NcTime,
 };
 
 /// Returns the offset into `avail_u` at which `u` ought be output given
@@ -154,8 +155,8 @@ pub fn notcurses_get_nblock(nc: &mut Nc, input: Option<&mut NcInput>) -> NcIntRe
 #[inline]
 pub fn notcurses_render(nc: &mut Nc) -> NcIntResult {
     let stdplane = unsafe { c_api::notcurses_stdplane(nc) };
-    if unsafe { c_api::ncpile_render(stdplane) } == c_api::NCRESULT_ERR {
-        return c_api::NCRESULT_ERR;
+    if unsafe { c_api::ncpile_render(stdplane) } == NcIntResult::ERR {
+        return NcIntResult::ERR;
     }
     unsafe { c_api::ncpile_rasterize(stdplane) }
 }

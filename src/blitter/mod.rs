@@ -4,7 +4,7 @@ use crate::{c_api, error, NcResult, NcVisualOptions};
 use core::ffi::c_void;
 
 /// The blitter mode to use for rasterizing an [`NcVisual`][crate::NcVisual]
-/// (alias of [`u32`]).
+/// (alias of `u32`).
 ///
 /// We never blit full blocks, but instead spaces (more efficient) with the
 /// background set to the desired foreground.

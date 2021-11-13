@@ -43,7 +43,7 @@ pub use methods::*;
 ///
 pub type NcPalette = crate::bindings::ffi::ncpalette;
 
-/// 8-bit value used for indexing into a [`NcPalette`] (alias of [`u8`]).
+/// 8-bit value used for indexing into a [`NcPalette`] (alias of `u8`).
 ///
 pub type NcPaletteIndex = u8;
 

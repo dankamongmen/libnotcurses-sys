@@ -87,7 +87,7 @@ pub(crate) mod reimplemented;
 /// Minimal notcurses instance for styling text.
 pub type NcDirect = crate::bindings::ffi::ncdirect;
 
-/// Flags (options) for [`NcDirect`] (alias of [`u64`]).
+/// Flags (options) for [`NcDirect`] (alias of `u64`).
 pub type NcDirectFlags = u64;
 
 crate::impl_api![

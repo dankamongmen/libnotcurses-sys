@@ -1936,9 +1936,9 @@ impl NcPlane {
     /// `y_off` and `x_off` are relative to `keep_y` and `keep_x`, and place the
     /// upper-left corner of the resized NcPlane.
     ///
-    /// `y_len` and `x_len` are the dimensions of this `NcPlane` after resizing.
-    /// `y_len` must be greater than or equal to `keep_len_y`,
-    /// and `x_len` must be greater than or equal to `keeplenx`.
+    /// `len_y` and `len_x` are the dimensions of this `NcPlane` after resizing.
+    /// `len_y` must be greater than or equal to `keep_len_y`,
+    /// and `len_x` must be greater than or equal to `keeplenx`.
     ///
     /// It is an error to attempt to resize the standard plane.
     ///
@@ -1949,10 +1949,10 @@ impl NcPlane {
         keep_x: NcDim,
         keep_len_y: NcDim,
         keep_len_x: NcDim,
-        y_off: NcOffset,
-        x_off: NcOffset,
-        y_len: NcDim,
-        x_len: NcDim,
+        off_y: NcOffset,
+        off_x: NcOffset,
+        len_y: NcDim,
+        len_x: NcDim,
     ) -> NcResult<()> {
         error![
             unsafe {
@@ -1962,15 +1962,15 @@ impl NcPlane {
                     keep_x as i32,
                     keep_len_y,
                     keep_len_x,
-                    y_off as i32,
-                    x_off as i32,
-                    y_len,
-                    x_len,
+                    off_y as i32,
+                    off_x as i32,
+                    len_y,
+                    len_x,
                 )
             },
             &format!(
                 "NcPlane.resize({}, {}, {}, {}, {}, {}, {}, {})",
-                keep_y, keep_x, keep_len_y, keep_len_x, y_off, x_off, y_len, x_len
+                keep_y, keep_x, keep_len_y, keep_len_x, off_y, off_x, len_y, len_x
             )
         ]
     }
@@ -2102,11 +2102,11 @@ impl NcPlane {
     ///
     /// *C style function: [ncplane_resize_simple()][c_api::ncplane_resize_simple].*
     #[inline]
-    pub fn resize_simple(&mut self, y_len: NcDim, x_len: NcDim) -> NcResult<()> {
+    pub fn resize_simple(&mut self, len_y: NcDim, len_x: NcDim) -> NcResult<()> {
         error![c_api::ncplane_resize_simple(
             self,
-            y_len as u32,
-            x_len as u32
+            len_y as u32,
+            len_x as u32
         )]
     }
 
@@ -2253,7 +2253,7 @@ impl NcPlane {
 /// ## NcPlane methods: boxes & perimeters
 impl NcPlane {
     /// Draws a box with its upper-left corner at the current cursor position,
-    /// and its lower-right corner at `y_stop` * `x_stop`.
+    /// and its lower-right corner at `stop_y` * `stop_x`.
     ///
     /// The 6 cells provided are used to draw the upper-left, ur, ll, and lr corners,
     /// then the horizontal and vertical lines.
@@ -2276,17 +2276,17 @@ impl NcPlane {
         lr: &NcCell,
         hline: &NcCell,
         vline: &NcCell,
-        y_stop: NcDim,
-        x_stop: NcDim,
+        stop_y: NcDim,
+        stop_x: NcDim,
         boxmask: NcBoxMask,
     ) -> NcResult<()> {
         error![unsafe {
-            c_api::ncplane_box(self, ul, ur, ll, lr, hline, vline, y_stop, x_stop, boxmask)
+            c_api::ncplane_box(self, ul, ur, ll, lr, hline, vline, stop_y, stop_x, boxmask)
         }]
     }
 
     /// Draws a box with its upper-left corner at the current cursor position,
-    /// having dimensions `y_len` * `x_len`.
+    /// having dimensions `len_y` * `len_x`.
     /// The minimum box size is 2x2, and it cannot be drawn off-screen.
     ///
     /// See the [`box`][NcPlane#method.box] method for more information.
@@ -2301,12 +2301,12 @@ impl NcPlane {
         lr: &NcCell,
         hline: &NcCell,
         vline: &NcCell,
-        y_len: NcDim,
-        x_len: NcDim,
+        len_y: NcDim,
+        len_x: NcDim,
         boxmask: NcBoxMask,
     ) -> NcResult<()> {
         error![c_api::ncplane_box_sized(
-            self, ul, ur, ll, lr, hline, vline, y_len, x_len, boxmask
+            self, ul, ur, ll, lr, hline, vline, len_y, len_x, boxmask
         )]
     }
 
@@ -2318,12 +2318,12 @@ impl NcPlane {
         &mut self,
         stylemask: NcStyle,
         channels: NcChannels,
-        y_stop: NcDim,
-        x_stop: NcDim,
+        stop_y: NcDim,
+        stop_x: NcDim,
         boxmask: NcBoxMask,
     ) -> NcResult<()> {
         error![c_api::ncplane_double_box(
-            self, stylemask, channels, y_stop, x_stop, boxmask
+            self, stylemask, channels, stop_y, stop_x, boxmask
         )]
     }
 
@@ -2335,12 +2335,12 @@ impl NcPlane {
         &mut self,
         stylemask: NcStyle,
         channels: NcChannels,
-        y_len: NcDim,
-        x_len: NcDim,
+        len_y: NcDim,
+        len_x: NcDim,
         boxmask: NcBoxMask,
     ) -> NcResult<()> {
         error![c_api::ncplane_double_box(
-            self, stylemask, channels, y_len, x_len, boxmask
+            self, stylemask, channels, len_y, len_x, boxmask
         )]
     }
 
@@ -2458,7 +2458,7 @@ impl NcPlane {
     }
 
     /// Draws a gradient with its upper-left corner at the current cursor
-    /// position, stopping at `y_stop` * `xstop`.
+    /// position, stopping at `stop_y` * `stop_x`.
     ///
     /// Returns the number of cells filled on success,
     /// or [`NcIntResult::ERR`][NcIntResult#associatedconstant.ERR] on error.
@@ -2489,8 +2489,8 @@ impl NcPlane {
         &mut self,
         y: Option<NcDim>,
         x: Option<NcDim>,
-        y_stop: Option<NcDim>,
-        x_stop: Option<NcDim>,
+        stop_y: Option<NcDim>,
+        stop_x: Option<NcDim>,
         egc: &str,
         stylemask: NcStyle,
         ul: NcChannels,
@@ -2499,7 +2499,7 @@ impl NcPlane {
         lr: NcChannels,
     ) -> NcResult<NcDim> {
         let res =
-            c_api::ncplane_gradient(self, y, x, y_stop, x_stop, egc, stylemask, ul, ur, ll, lr);
+            c_api::ncplane_gradient(self, y, x, stop_y, stop_x, egc, stylemask, ul, ur, ll, lr);
         error![res, "", res as NcDim]
     }
 

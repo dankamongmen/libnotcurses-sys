@@ -1,4 +1,4 @@
-/// Styling attribute flags (alias of [`u16`]).
+/// Styling attribute flags (alias of `u16`).
 ///
 /// ## Diagram
 ///

@@ -17,7 +17,13 @@ pub(crate) mod reimplemented;
 /// This is safe, since we needn't convert these synthesized characters
 /// into UTF8 (they would otherwise require more than four bytes).
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub struct NcKey(u32);
+pub struct NcKey(pub u32);
+
+impl From<NcKey> for u32 {
+    fn from(k: NcKey) -> Self {
+        k.0
+    }
+}
 
 /// # Methods
 impl NcKey {
@@ -33,11 +39,6 @@ impl NcKey {
         } else {
             None
         }
-    }
-
-    /// Returns the raw inner number.
-    pub const fn raw(&self) -> u32 {
-        self.0
     }
 
     /// Returns the name of the current `NcKey`.

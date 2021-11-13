@@ -1,4 +1,4 @@
-/// Alignment within a plane or terminal (alias of [`u32`]).
+/// Alignment within a plane or terminal (alias of `u32`).
 ///
 /// Left/right-justified, or centered.
 pub type NcAlign = u32; // crate::bindings::ffi::ncalign_e;

@@ -1,4 +1,4 @@
-/// Log level for [`NcOptions`][crate::NcOptions] (alias of [`i32`]).
+/// Log level for [`NcOptions`][crate::NcOptions] (alias of `i32`).
 ///
 /// These log levels consciously map cleanly to those of libav; notcurses itself
 /// does not use this full granularity. The log level does not affect the opening

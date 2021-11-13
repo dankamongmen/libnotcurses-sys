@@ -69,7 +69,7 @@ pub type NcVisualOptions = crate::bindings::ffi::ncvisual_options;
 
 // NcRgba
 //
-/// 32 bits broken into 3x 8bpp RGB channels + 8ppp alpha (alias of [`u32`]).
+/// 32 bits broken into 3x 8bpp RGB channels + 8ppp alpha (alias of `u32`).
 ///
 /// Unlike with [`NcChannel`], operations involving `NcRgb` ignores the last 4th byte
 ///

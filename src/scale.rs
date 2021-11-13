@@ -1,5 +1,5 @@
 /// Indicates how to scale an [`NcVisual`][crate::NcVisual] during rendering
-/// (alias of [`u32`]).
+/// (alias of `u32`).
 ///
 /// - `NOSCALE` will apply no scaling.
 /// - `SCALE` scales a visual to the plane's size,

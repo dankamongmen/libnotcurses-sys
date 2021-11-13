@@ -2,7 +2,7 @@
 
 use std::{self, error, fmt};
 
-/// The value used to return errors by the underlying C API (alias of [`i32`]).
+/// The value used to return errors by the underlying C API (alias of `i32`).
 ///
 /// A value < 0 means error, (usually -1).
 ///
