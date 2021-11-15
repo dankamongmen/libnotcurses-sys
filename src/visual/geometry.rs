@@ -10,8 +10,8 @@ use crate::{NcBlitter, NcBlitterApi, NcDim};
 /// for example, could make all the fields invalid,
 /// except for [`pix_yx`][Self#structfield.pix_yx].
 ///
-/// This type is is returned by the [`geom`] & [`ncdirectf_geom`] methods from
-/// `NcVisual` and by the [`visual_geom`] method from `Nc`.
+/// This type is is returned by the [`NcVisual.geom`] method and by the
+/// [`Nc.visual_geom`] method.
 ///
 /// # See also
 ///
@@ -21,8 +21,8 @@ use crate::{NcBlitter, NcBlitterApi, NcDim};
 ///
 /// [`NcVisual`]: crate::NcVisual
 /// [`ncdirectf_geom`]: crate::NcVisual#method.ncdirectf_geom
-/// [`geom`]: crate::NcVisual#method.ncdirectf_geom
-/// [`visual_geom`]: crate::Nc#method.visual_geom
+/// [`NcVisual.geom`]: crate::NcVisual#method.ncdirectf_geom
+/// [`Nc.visual_geom`]: crate::Nc#method.visual_geom
 #[derive(Debug, Clone, Copy, Default)]
 pub struct NcVisualGeometry {
     /// The true internal pixel geometry of [`NcVisual`] data, taken directly
