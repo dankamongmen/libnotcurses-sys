@@ -26,8 +26,8 @@ impl NcMenu {
     /// Destroys an `NcMenu` created with [`new`][NcMenu#method.new].
     ///
     /// *C style function: [ncmenu_destroy()][c_api::ncmenu_destroy].*
-    pub fn destroy(&mut self) -> NcResult<()> {
-        error![unsafe { c_api::ncmenu_destroy(self) }]
+    pub fn destroy(&mut self) {
+        unsafe { c_api::ncmenu_destroy(self) }
     }
 }
 
