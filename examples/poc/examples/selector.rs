@@ -27,7 +27,7 @@ fn main() -> NcResult<()> {
     let nc: &mut Nc = Nc::new()?;
 
     // Enable mouse
-    nc.mouse_enable()?;
+    nc.mice_enable(NcMiceEvents::ALL_EVENTS)?;
 
     // Create first plane (full screen)
     let stdplane: &mut NcPlane = nc.stdplane();
@@ -37,12 +37,12 @@ fn main() -> NcResult<()> {
 
     // Set title
     stdplane.set_scrolling(true);
-    stdplane.putstr_aligned(0, NcAlign::RIGHT, "selector widget demo")?;
+    stdplane.putstr_aligned(Some(0), NcAlign::RIGHT, "selector widget demo")?;
 
     // Create selection plane
     // y: NcOffset, x: NcOffset, rows: NcDim, cols: NcDim
     let planeopts: NcPlaneOptions = NcPlaneOptions::new_aligned(1, NcAlign::LEFT, 15, 80);
-    let selplane: &mut NcPlane = NcPlane::with_options_bound(stdplane, planeopts)?;
+    let selplane: &mut NcPlane = NcPlane::with_options_bound(stdplane, &planeopts)?;
 
     // Create selector
     let selector = NcSelector::builder()
@@ -65,14 +65,17 @@ fn main() -> NcResult<()> {
         .max_display(4)
         .default_item(1)
         .box_channels(NcChannels::from_rgb(0x20e040, 0x202020))
-        .item_channels(NcChannels::from_rgb(0xe08040, 0), NcChannels::from_rgb(0x80e040,0))
+        .item_channels(
+            NcChannels::from_rgb(0xe08040, 0),
+            NcChannels::from_rgb(0x80e040, 0),
+        )
         .secondary_channels(NcChannels::from_rgb(0xe00040, 0x200000))
         .title_channels(NcChannels::from_rgb(0xffff80, 0x000020))
         .finish(selplane)?;
 
     // Create description plane
     let planeopts2: NcPlaneOptions = NcPlaneOptions::new_aligned(15, NcAlign::LEFT, 30, 80);
-    let descplane: &mut NcPlane = NcPlane::with_options_bound(stdplane, planeopts2)?;
+    let descplane: &mut NcPlane = NcPlane::with_options_bound(stdplane, &planeopts2)?;
     descplane.set_scrolling(true);
     descplane.puttext(
         0,
@@ -108,7 +111,7 @@ fn run_selector(nc: &mut Nc, selector: &mut NcSelector) -> NcResult<String> {
 
     loop {
         // Wait until user acts
-        let keypress: char = nc.get_blocking(Some(&mut ni))?;
+        let keypress: NcReceived = nc.get_blocking(Some(&mut ni))?;
 
         if !selector.offer_input(ni) {
             // Do not consider release key: only press
@@ -118,28 +121,38 @@ fn run_selector(nc: &mut Nc, selector: &mut NcSelector) -> NcResult<String> {
 
             // Act in function of key pressed
             match keypress {
-                // Q => quit
-                'q' | 'Q' | NcKey::ENTER => {
-                    return selector.selected().ok_or_else(|| NcError::new());
-                }
-                // J => down
-                'j' | 'J' => {
-                    selector.nextitem()?;
-                }
-                // K => up
-                'k' | 'K' => {
-                    selector.previtem()?;
-                }
-                // Tab => up or down depending if shift is pressed
-                '\u{0009}' => match ni.shift {
-                    true => {
-                        selector.previtem()?;
+                NcReceived::Char(ch) => {
+                    match ch {
+                        // Q => quit
+                        'q' | 'Q' => {
+                            return selector.selected().ok_or_else(|| NcError::new());
+                        }
+                        // J => down
+                        'j' | 'J' => {
+                            selector.nextitem()?;
+                        }
+                        // K => up
+                        'k' | 'K' => {
+                            selector.previtem()?;
+                        }
+                        // Tab => up or down depending if shift is pressed
+                        '\u{0009}' => match ni.shift {
+                            true => {
+                                selector.previtem()?;
+                            }
+                            false => {
+                                selector.nextitem()?;
+                            }
+                        },
+                        _ => (),
                     }
-                    false => {
-                        selector.nextitem()?;
+                }
+                NcReceived::Event(ev) => match ev {
+                    NcKey::ENTER => {
+                        return selector.selected().ok_or_else(|| NcError::new());
                     }
+                    _ => (),
                 },
-                // Default: ignore
                 _ => (),
             }
         }

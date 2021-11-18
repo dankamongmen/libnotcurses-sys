@@ -322,7 +322,7 @@ impl NcVisual {
         if let Some(o) = vopts {
             vo_ptr = o;
         } else {
-            let vo = NcVisualOptions::new();
+            let vo = NcVisualOptions::default();
             vo_ptr = &vo;
         }
 

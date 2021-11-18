@@ -8,7 +8,17 @@ fn main() -> NcResult<()> {
     let buffer: Vec<u8> = vec![0xBB; (height * width) as usize * 3];
 
     let visual = NcVisual::from_rgb_packed(buffer.as_slice(), height, width * 3, width, 255)?;
-    let vopt = NcVisualOptions::without_plane(1, 2, 0, 0, height, width, NcBlitter::PIXEL, 0, 0);
+    let vopt = NcVisualOptions::new(
+        None,
+        NcScale::NOSCALE,
+        1,
+        2,
+        None,
+        None,
+        NcBlitter::PIXEL,
+        0,
+        0,
+    );
 
     // let plane = visual.render(&mut nc, &vopt)?; // deprecated function
 

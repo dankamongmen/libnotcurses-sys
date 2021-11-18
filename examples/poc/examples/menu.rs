@@ -8,7 +8,7 @@ use widgets::*;
 
 fn main() -> NcResult<()> {
     let mut nc = Nc::new()?;
-    nc.mouse_enable()?;
+    nc.mice_enable(NcMiceEvents::ALL_EVENTS)?;
 
     let mut demo_items = [
         NcMenuItem::new("Restart", NcInput::with_ctrl('r')),
@@ -41,7 +41,7 @@ fn main() -> NcResult<()> {
     let stdplane = nc.stdplane();
     let (dim_y, _dim_x) = stdplane.dim_yx();
 
-    let menu_top = NcMenu::new(stdplane, mopts)?;
+    let menu_top = NcMenu::new(stdplane, &mopts)?;
     //menu_top.item_set_status("Schwarzgerät", "Disabled", false)?;
     //menu_top.item_set_status("Schwarzgerät", "Restart", false)?;
 
@@ -51,7 +51,7 @@ fn main() -> NcResult<()> {
 
     stdplane.set_fg_rgb(0x00dddd);
     stdplane.putstr_aligned(
-        dim_y - 1,
+        Some(dim_y - 1),
         NcAlign::RIGHT,
         " -=+ menu poc. press q to exit +=-",
     )?;
@@ -61,12 +61,20 @@ fn main() -> NcResult<()> {
     stdplane.erase(); // is this needed?
 
     // BUG FIXME: this doesn't show over the menu (at row 0)
-    stdplane.putstr_aligned(0, NcAlign::RIGHT, " -=+ menu poc. press q to exit +=-")?;
-    stdplane.putstr_aligned(1, NcAlign::CENTER, " -=+ menu poc. press q to exit +=-")?;
-    stdplane.putstr_aligned(2, NcAlign::LEFT, " -=+ menu poc. press q to exit +=-")?;
+    stdplane.putstr_aligned(
+        Some(0),
+        NcAlign::RIGHT,
+        " -=+ menu poc. press q to exit +=-",
+    )?;
+    stdplane.putstr_aligned(
+        Some(1),
+        NcAlign::CENTER,
+        " -=+ menu poc. press q to exit +=-",
+    )?;
+    stdplane.putstr_aligned(Some(2), NcAlign::LEFT, " -=+ menu poc. press q to exit +=-")?;
 
     mopts.flags |= NcMenuOptions::BOTTOM;
-    let menu_bottom = NcMenu::new(stdplane, mopts)?;
+    let menu_bottom = NcMenu::new(stdplane, &mopts)?;
 
     run_menu(&mut nc, menu_bottom)?;
 
@@ -77,7 +85,7 @@ fn run_menu(nc: &mut Nc, menu: &mut NcMenu) -> NcResult<()> {
     // yellow rectangle
     let planeopts = NcPlaneOptions::new_aligned(10, NcAlign::CENTER, 10, 40);
     let stdplane = nc.stdplane();
-    let selplane = NcPlane::with_options_bound(stdplane, planeopts)?;
+    let selplane = NcPlane::with_options_bound(stdplane, &planeopts)?;
     selplane.set_fg_rgb(0);
     selplane.set_bg_rgb(0xdddddd);
     let mut channels = 0;
@@ -88,41 +96,47 @@ fn run_menu(nc: &mut Nc, menu: &mut NcMenu) -> NcResult<()> {
     selplane.set_scrolling(true);
 
     let mut ni = NcInput::new_empty();
-    let mut keypress: char;
+    let mut rec: NcReceived;
     nc.render()?;
 
     loop {
         stdplane.erase();
         selplane.erase();
 
-        keypress = nc.get_blocking(Some(&mut ni))?;
+        rec = nc.get_blocking(Some(&mut ni))?;
 
-        // DEBUG
-        stdplane.putstr_yx(2, 0, &format!["{:?}", ni])?;
+        // DEBUG: FIXME
+        stdplane.putstr_yx(Some(2), Some(0), &format!["{:?}", ni])?;
         nc.render()?;
 
         // BUG FIXME: always returns false:
         if !menu.offer_input(ni) {
-            match keypress {
-                'q' => {
-                    menu.destroy()?;
-                    selplane.destroy()?;
-                    nc.stop()?;
-                    return Ok(());
-                }
-                NcKey::ENTER => {
-                    if let Some(selection) = menu.selected(Some(&mut ni)) {
-                        match selection.as_ref() {
-                            "Quit" => {
-                                menu.destroy()?;
-                                selplane.destroy()?;
-                                nc.stop()?;
-                                return Ok(());
+            match rec {
+                NcReceived::Char(ch) => match ch {
+                    'q' => {
+                        menu.destroy();
+                        selplane.destroy()?;
+                        nc.stop()?;
+                        return Ok(());
+                    }
+                    _ => (),
+                },
+                NcReceived::Event(ev) => match ev {
+                    NcKey::ENTER => {
+                        if let Some(selection) = menu.selected(Some(&mut ni)) {
+                            match selection.as_ref() {
+                                "Quit" => {
+                                    menu.destroy();
+                                    selplane.destroy()?;
+                                    nc.stop()?;
+                                    return Ok(());
+                                }
+                                _ => (),
                             }
-                            _ => (),
                         }
                     }
-                }
+                    _ => (),
+                },
                 _ => (),
             }
         }

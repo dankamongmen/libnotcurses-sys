@@ -9,27 +9,29 @@
 use libnotcurses_sys::{
     // Core
     Nc,
-    NcResult,
-    NcError,
-    // Plane
-    NcPlane,
-    NcPlaneOptions,
-    // Visual
-    NcVisual,
-    NcVisualOptions,
-    NcScale,
-    NcScaleApi,
     NcBlitter,
     NcBlitterApi,
+    NcError,
     // Input
     NcInput,
     NcKey,
+    // Plane
+    NcPlane,
+    NcPlaneOptions,
+    NcReceived,
+    NcResult,
+    NcScale,
+    NcScaleApi,
+    // Visual
+    NcVisual,
+    NcVisualOptions,
 };
-
 
 fn main() -> NcResult<()> {
     // Parse argument in
-    let filepath: String = std::env::args().nth(1).expect("Error: Must pass image file path as first argument. Usage: pixel image.png");
+    let filepath: String = std::env::args()
+        .nth(1)
+        .expect("Error: Must pass image file path as first argument. Usage: pixel image.png");
 
     // Init notcurses context
     let nc: &mut Nc = Nc::new()?;
@@ -37,7 +39,10 @@ fn main() -> NcResult<()> {
     // Clause: Pixel must be supported
     if 0 == nc.check_pixel_support() {
         nc.stop()?;
-        return Err(NcError::with_msg(1, "Error: This program requires pixel graphics support"));
+        return Err(NcError::with_msg(
+            1,
+            "Error: This program requires pixel graphics support",
+        ));
     }
 
     // Obtain reference to visual (something like an image)
@@ -48,22 +53,23 @@ fn main() -> NcResult<()> {
     let stdplane: &mut NcPlane = nc.stdplane();
     let (row, col) = stdplane.dim_yx();
     let planeopts: NcPlaneOptions = NcPlaneOptions::new(0, 0, row, col);
-    let pixelplane: &mut NcPlane = NcPlane::with_options_bound(stdplane, planeopts)?;
+    let pixelplane: &mut NcPlane = NcPlane::with_options_bound(stdplane, &planeopts)?;
 
     // Craft some visual options (here full screen)
-    let opts: NcVisualOptions = NcVisualOptions::with_plane(
-        pixelplane,
+    let opts: NcVisualOptions = NcVisualOptions::new(
+        Some(pixelplane),
         NcScale::SCALE,
-        0, 0,  // x,y offset relative to plane
-        0, 0,  // begx, begy offset of the rendered section
-        0, 0,  // sizex, sizey: (0,0) => full plane
-        NcBlitter::PIXEL,  // Glyph set to use
-        0,  // bitmask over NCVISUAL_OPTION_*
-        0,  // transparent color
+        0,
+        0, // x,y offset relative to plane
+        None, // begx, begy, lenx, leny offset of the rendered section
+        None, // pixel cell offset
+        NcBlitter::PIXEL, // Glyph set to use
+        0,                // bitmask over NCVISUAL_OPTION_*
+        0,                // transparent color
     );
-        
+
     // Render the visual in the virtual space
-    visual.render(nc, &opts)?;
+    visual.blit(nc, Some(&opts))?;
 
     // Render the virtual space in the real terminal space
     nc.render()?;
@@ -73,13 +79,22 @@ fn main() -> NcResult<()> {
 
     loop {
         // Wait until keypress (instead of sleeping at each loop)
-        let keypress: char = nc.get_blocking(Some(&mut ni))?;
+        let keypress: NcReceived = nc.get_blocking(Some(&mut ni))?;
 
         // Discriminate key pressed to take action
         match keypress {
-            // Q => quit
-            'q' | 'Q' | NcKey::ENTER => {
-                break;
+            NcReceived::Char(ch) => {
+                match ch {
+                    // Q => quit
+                    'q' | 'Q' => {
+                        break;
+                    }
+                    _ => (),
+                }
+            }
+            NcReceived::Event(ev) => match ev {
+                NcKey::ENTER => break,
+                _ => (),
             },
             _ => (),
         }

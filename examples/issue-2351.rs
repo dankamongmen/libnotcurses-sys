@@ -13,7 +13,17 @@ fn main() -> NcResult<()> {
     // When providing NcBlitter::DEFAULT it always picks NcBlitter::HALF
     // even if NcBlitter::QUADRANT is supported
 
-    let vo = NcVisualOptions::without_plane(0, 0, 0, 0, 0, 0, NcBlitter::DEFAULT, 0, 0);
+    let vo = NcVisualOptions::new(
+        None,
+        NcScale::NONE_HIRES,
+        0,
+        0,
+        None,
+        None,
+        NcBlitter::DEFAULT,
+        0,
+        0,
+    );
 
     // let vg = nc.visual_geom(None, Some(&vo))?;
     let mut vg = NcVGeom::new();
@@ -25,7 +35,17 @@ fn main() -> NcResult<()> {
     let (y, x) = (h * vg.scaley, w * vg.scalex);
     let buffer: Vec<u8> = vec![200; (y * x) as usize * 3];
 
-    let vo = NcVisualOptions::without_plane(0, 0, 0, 0, 0, 0, NcBlitter::PIXEL, 0, 0);
+    let vo = NcVisualOptions::new(
+        None,
+        NcScale::NOSCALE,
+        0,
+        0,
+        None,
+        None,
+        NcBlitter::PIXEL,
+        0,
+        0,
+    );
     let visual = NcVisual::from_rgb_packed(buffer.as_slice(), y, x * 3, x, 255)?;
 
     // # ISSUE 2

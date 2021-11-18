@@ -19,8 +19,8 @@ impl NcMenu {
     /// [`NcPlane`]s kept atop other NcPlanes.
     ///
     /// *C style function: [ncmenu_create()][c_api::ncmenu_create].*
-    pub fn new<'a>(plane: &mut NcPlane, options: NcMenuOptions) -> NcResult<&'a mut Self> {
-        error_ref_mut![unsafe { ncmenu_create(plane, &options) }, "Creating NcMenu"]
+    pub fn new<'a>(plane: &mut NcPlane, options: &NcMenuOptions) -> NcResult<&'a mut Self> {
+        error_ref_mut![unsafe { ncmenu_create(plane, options) }, "Creating NcMenu"]
     }
 
     /// Destroys an `NcMenu` created with [`new`][NcMenu#method.new].

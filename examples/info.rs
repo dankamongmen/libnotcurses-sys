@@ -22,7 +22,7 @@ Can display quadrant characters: {3}
 Can display half block characters: {4}
 Can open images: {5}
 Can open videos: {6}
-Supports Pixels: {7:?}
+Supports Pixels: {7}
 Supports True Color: {8}
 Supports fading: {9}
 Supports changing the palette: {10}
@@ -35,7 +35,7 @@ Palette size: {11:?}
         nc.canhalfblock(),
         nc.canopen_images(),
         nc.canopen_videos(),
-        nc.check_pixel_support(),
+        nc.canpixel(),
         nc.cantruecolor(),
         nc.canfade(),
         nc.canchangecolor(),
@@ -53,9 +53,35 @@ Palette size: {11:?}
     let pgeom = nc.stdplane().pixel_geom();
     putstrln!(splane, "{:#?}.", pgeom)?;
 
-    let vg = nc.visual_geom(None, None)?;
+    // Ask for an `NcVisualGeometry` without an `NcVisual`.
+    //
+    // TODO:WIP (use for unit tests)
+
+    // let _vopts = NcVisualOptions::default();
+    let _vopts = NcVisualOptions::new(
+        None,
+        0,
+        1,
+        1,
+        Some((4, 4, 8, 8)),
+        None,
+        NcBlitter::ASCII,
+        0,
+        0,
+    );
+
+    let vg = nc.visual_geom(None, None)?; // no visual, no visualoptions
+                                          // let vg = nc.visual_geom(None, &vopts)?; // no visualoptions (same response)
     putstrln!(splane, "{:#?}.", vg)?;
-    putstrln!(splane, "(blitter `{}` = {:?})", vg.blitter, vg.blitter_name())?;
+    putstrln!(
+        splane,
+        "(blitter `{}` = {:?})",
+        vg.blitter,
+        vg.blitter_name()
+    )?;
+
+    // Ask for an NcVisualGeometry without Notcurses (from an ncvisual)
+    // ...
 
     nc.render()?;
     nc.stop()?;

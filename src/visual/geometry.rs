@@ -35,16 +35,20 @@ pub struct NcVisualGeometry {
     /// [`pixx`]: crate::c_api::ffi::ncvgeom#structfield.pixx
     pub pix_yx: Option<(NcDim, NcDim)>,
 
-    /// *Terminal* **cell** geometry at the time of the call.
+    /// *Terminal* **cell** geometry at the time of the call. This is the size
+    /// of a cell in pixels.
     ///
     /// This can change with a font change, in which case all field values
     /// are invalidated (except for [`pix_yx`]).
     ///
-    /// *Corresponds to the `NcVGeom` fields ([`cdimy`], [`cdimx`]).*
+    /// *Corresponds to the `NcVGeom` fields ([`cdimy`], [`cdimx`]), and to the
+    /// `NcPixelGeometry` fields ([`cell_y`], [`cell_x`])*
     ///
     /// [`pix_yx`]: Self#structfield.pix_yx
     /// [`cdimy`]: crate::c_api::ffi::ncvgeom#structfield.cdimy
     /// [`cdimx`]: crate::c_api::ffi::ncvgeom#structfield.cdimx
+    /// [`cell_y`]: crate::NcPixelGeometry#structfield.cell_y
+    /// [`cell_x`]: crate::NcPixelGeometry#structfield.cell_x
     pub cdim_yx: Option<(NcDim, NcDim)>,
 
     /// Rendered **pixel** geometry, per `NcVisualOptions`.

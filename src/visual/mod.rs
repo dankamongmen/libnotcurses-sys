@@ -65,6 +65,80 @@ pub type NcVisual = crate::bindings::ffi::ncvisual;
 ///
 /// A subregion of the visual can be rendered using `beg_y`, `beg_x`, `len_y`,
 /// and `len_x`.
+///
+/// # Fields
+///
+/// * [`n`] - an optional mutable pointer to an [`NcPlane`].
+/// * [`scaling`] - how the source will be stretched/scaled relative to the
+///   provided `NcPlane`.
+/// * [`y`] - if an `NcPlane` is provided in `n` then this specifies where the
+///   `NcVisual` will be on that plane.
+///
+///   Otherwise it specifies where the created `NcPlane` will be placed relative
+///   to the standard plane's origin.
+///
+///   If [`VERALIGNED`] is set, this will be interpreted as an [`NcAlign`] value.
+///
+/// * [`x`] - if an `NcPlane` is provided in `n` then this specifies where the
+///   `NcVisual` will be on that plane.
+///
+///   Otherwise it specifies where the created `NcPlane` will be placed relative
+///   to the standard plane's origin.
+///
+///   If [`HORALIGNED`] is set, this will be interpreted as an [`NcAlign`] value.
+///
+/// * [`begy`] - origin of rendered section.
+/// * [`begx`] - origin of rendered section.
+/// * [`leny`] - size of rendered section.
+/// * [`lenx`] - size of rendered section.
+///
+/// * [`blitter`] - [`NcBlitter`] glyph set to use for blitting.
+/// * [`flags`] - bitmask of options: ([`ADDALPHA`], [`BLEND`], [`CHILDPLANE`],
+///   [`NODEGRADE`], [`VERALIGNED`], [`HORALIGNED`], [`NOINTERPOLATE`]).
+/// * [`transcolor`] - treats this color as transparent when the [`ADDALPHA`] flag
+///   is active.
+/// * [`pxoffy`] - `y` pixel offset within the cell. If [`NcBlitter::PIXEL`] is
+///   used the bitmap will be drawn offset from the upper-left cell’s origin by
+///   these amounts, otherwise this will be ignored.
+///
+///   It is an error if either number exceeds the cell-pixel geometry in any
+///   dimension (see [`NcPixelGeometry.cell_y`], [`NcVisualGeometry.cdim_yx`]).
+///
+/// * [`pxoffx`] - `x` pixel offset within the cell. If [`NcBlitter::PIXEL`] is
+///   used, the bitmap will be drawn offset from the upper-left cell’s origin by
+///   these amounts, otherwise this will be ignored.
+///
+///   It is an error if either number exceeds the cell-pixel geometry in any
+///   dimension (see [`NcPixelGeometry.cell_x`], [`NcVisualGeometry.cdim_yx`]).
+///
+/// [`NcPlane`]: crate::NcPlane
+/// [`NcAlign`]: crate::NcAlign
+/// [`NcBlitter`]: crate::NcBlitter
+/// [`NcBlitter::PIXEL`]: crate::NcBlitter#associatedconstant.PIXEL
+/// [`NcPixelGeometry.cell_y`]: crate::NcPixelGeometry#structfield.cell_y
+/// [`NcPixelGeometry.cell_x`]: crate::NcPixelGeometry#structfield.cell_x
+/// [`NcVisualGeometry.cdim_yx`]: crate::NcVisualGeometry#structfield.cdim_yx
+/// [`n`]: crate::c_api::ffi::ncvisual_options#structfield.n
+/// [`scaling`]: crate::c_api::ffi::ncvisual_options#structfield.scaling
+/// [`y`]: crate::c_api::ffi::ncvisual_options#structfield.y
+/// [`x`]: crate::c_api::ffi::ncvisual_options#structfield.x
+/// [`begy`]: crate::c_api::ffi::ncvisual_options#structfield.begy
+/// [`begx`]: crate::c_api::ffi::ncvisual_options#structfield.begx
+/// [`leny`]: crate::c_api::ffi::ncvisual_options#structfield.leny
+/// [`lenx`]: crate::c_api::ffi::ncvisual_options#structfield.lenx
+/// [`blitter`]: crate::c_api::ffi::ncvisual_options#structfield.blitter
+/// [`flags`]: crate::c_api::ffi::ncvisual_options#structfield.flags
+/// [`transcolor`]: crate::c_api::ffi::ncvisual_options#structfield.transcolor
+/// [`pxoffy`]: crate::c_api::ffi::ncvisual_options#structfield.pxoffy
+/// [`pxoffx`]: crate::c_api::ffi::ncvisual_options#structfield.pxoffx
+/// [`ADDALPHA`]: NcVisualOptions#associatedconstant.ADDALPHA
+/// [`BLEND`]: NcVisualOptions#associatedconstant.BLEND
+/// [`CHILDPLANE`]: NcVisualOptions#associatedconstant.CHILDPLANE
+/// [`NODEGRADE`]: NcVisualOptions#associatedconstant.NODEGADE
+/// [`VERALIGNED`]:NcVisualOptions#associatedconstant.VERALIGNED
+/// [`HORALIGNED`]: NcVisualOptions#associatedconstant.HORALIGNED
+/// [`NOINTERPOLATE`]: NcVisualOptions#associatedconstant.NOINTERPOLATE
+///
 pub type NcVisualOptions = crate::bindings::ffi::ncvisual_options;
 
 // NcRgba

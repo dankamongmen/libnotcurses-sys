@@ -55,7 +55,7 @@ pub fn ncvisualplane_create<'a>(
     if let Some(vo) = vopts {
         vopts2_ref = vo;
     } else {
-        _vopts2 = NcVisualOptions::new();
+        _vopts2 = NcVisualOptions::default();
         vopts2_ref = &_vopts2;
     }
 
