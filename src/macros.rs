@@ -34,26 +34,6 @@ macro_rules! sleep {
     };
 }
 
-#[doc(hidden)]
-#[macro_export]
-#[deprecated]
-#[allow(unused_macros)]
-macro_rules! nrs {
-    ($($rest:tt)*) => {
-        nc_render_sleep!($($rest)*)
-    }
-}
-
-#[doc(hidden)]
-#[macro_export]
-#[deprecated]
-#[allow(unused_macros)]
-macro_rules! prs {
-    ($($rest:tt)*) => {
-        pile_render_sleep!($($rest)*)
-    }
-}
-
 /// [`Nc::render`][Nc#method.render]\(`$nc`\)? + [`sleep!`]`[$sleep_args]`.
 ///
 /// Renders the `$nc` [`Nc`]'s standard pile, and then,
@@ -108,53 +88,6 @@ macro_rules! visual_render_sleep {
     };
     ($nc:expr, $( $sleep_args:expr),+ ,) => {
         rsleep![$nc, $( $sleep_args ),* ]
-    };
-}
-
-/// [`NcDirect::flush`][NcDirect#method.flush]\(`$ncd`\)? + [`sleep!`]`[$sleep_args]`.
-///
-/// Flushes the `$ncd` [NcDirect] object and, if there's no error,
-/// calls the sleep macro with the rest of the arguments.
-///
-/// Returns [NcResult].
-#[macro_export]
-#[deprecated]
-#[doc(hidden)]
-macro_rules! fsleep {
-    ($ncd:expr, $( $sleep_args:expr),+ ) => {
-        // Rust style, with methods & NcResult
-        crate::NcDirect::flush($ncd)?;
-        sleep![$( $sleep_args ),+];
-    };
-    ($ncd:expr, $( $sleep_args:expr),+ ,) => {
-        rsleep![$ncd, $( $sleep_args ),* ]
-    };
-}
-
-#[deprecated]
-#[doc(hidden)]
-#[allow(unused_macros)]
-macro_rules! prsleep {
-    ($p:expr, $( $sleep_args:expr),+ ) => {
-        prs![$p, $( $sleep_args ),+];
-    };
-}
-
-#[deprecated]
-#[doc(hidden)]
-#[allow(unused_macros)]
-macro_rules! psleep {
-    ($p:expr, $( $sleep_args:expr),+ ) => {
-        prs![$p, $( $sleep_args ),+];
-    };
-}
-
-#[deprecated]
-#[doc(hidden)]
-#[allow(unused_macros)]
-macro_rules! rsleep {
-    ($nc:expr, $( $sleep_args:expr),+ ) => {
-        nrs![$nc, $( $sleep_args ),+];
     };
 }
 
