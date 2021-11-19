@@ -69,8 +69,11 @@ pub type NcVisual = crate::bindings::ffi::ncvisual;
 /// # Fields
 ///
 /// * [`n`] - an optional mutable pointer to an [`NcPlane`].
+///
 /// * [`scaling`] - how the source will be stretched/scaled relative to the
-///   provided `NcPlane`.
+///   `NcPlane` ([`NOSCALE`], [`SCALE`], [`STRETCH`], [`NONE_HIRES`],
+///   [`SCALE_HIRES`]).
+///
 /// * [`y`] - if an `NcPlane` is provided in `n` then this specifies where the
 ///   `NcVisual` will be on that plane.
 ///
@@ -87,26 +90,31 @@ pub type NcVisual = crate::bindings::ffi::ncvisual;
 ///
 ///   If [`HORALIGNED`] is set, this will be interpreted as an [`NcAlign`] value.
 ///
-/// * [`begy`] - origin of rendered section.
-/// * [`begx`] - origin of rendered section.
-/// * [`leny`] - size of rendered section.
-/// * [`lenx`] - size of rendered section.
+/// * [`begy`] - origin of rendered section in the *y* axis.
+/// * [`begx`] - origin of rendered section in the *x* axis.
+/// * [`leny`] - length of rendered section in the *y* axis.
+/// * [`lenx`] - length of rendered section in the *x* axis.
 ///
 /// * [`blitter`] - [`NcBlitter`] glyph set to use for blitting.
+///
 /// * [`flags`] - bitmask of options: ([`ADDALPHA`], [`BLEND`], [`CHILDPLANE`],
 ///   [`NODEGRADE`], [`VERALIGNED`], [`HORALIGNED`], [`NOINTERPOLATE`]).
+///
 /// * [`transcolor`] - treats this color as transparent when the [`ADDALPHA`] flag
 ///   is active.
-/// * [`pxoffy`] - `y` pixel offset within the cell. If [`NcBlitter::PIXEL`] is
-///   used the bitmap will be drawn offset from the upper-left cell’s origin by
-///   these amounts, otherwise this will be ignored.
+///
+/// * [`pxoffy`] - pixel offset within the cell in the *y* axis.
+///
+///   If [`NcBlitter::PIXEL`] is used the bitmap will be drawn offset from the
+///   upper-left cell’s origin by these amounts, otherwise this will be ignored.
 ///
 ///   It is an error if either number exceeds the cell-pixel geometry in any
 ///   dimension (see [`NcPixelGeometry.cell_y`], [`NcVisualGeometry.cdim_yx`]).
 ///
-/// * [`pxoffx`] - `x` pixel offset within the cell. If [`NcBlitter::PIXEL`] is
-///   used, the bitmap will be drawn offset from the upper-left cell’s origin by
-///   these amounts, otherwise this will be ignored.
+/// * [`pxoffx`] - pixel offset within the cell in the *x* axis.
+///
+///   If [`NcBlitter::PIXEL`] is used, the bitmap will be drawn offset from the
+///   upper-left cell’s origin by these amounts, otherwise this will be ignored.
 ///
 ///   It is an error if either number exceeds the cell-pixel geometry in any
 ///   dimension (see [`NcPixelGeometry.cell_x`], [`NcVisualGeometry.cdim_yx`]).
@@ -131,6 +139,11 @@ pub type NcVisual = crate::bindings::ffi::ncvisual;
 /// [`transcolor`]: crate::c_api::ffi::ncvisual_options#structfield.transcolor
 /// [`pxoffy`]: crate::c_api::ffi::ncvisual_options#structfield.pxoffy
 /// [`pxoffx`]: crate::c_api::ffi::ncvisual_options#structfield.pxoffx
+/// [`NOSCALE`]: crate::NcScale#associatedconstant.NOSCALE
+/// [`SCALE`]: crate::NcScale#associatedconstant.SCALE
+/// [`STRETCH`]: crate::NcScale#associatedconstant.STRETCH
+/// [`NONE_HIRES`]: crate::NcScale#associatedconstant.NONE_HIRES
+/// [`SCALE_HIRES`]: crate::NcScale#associatedconstant.SCALE_HIRES
 /// [`ADDALPHA`]: NcVisualOptions#associatedconstant.ADDALPHA
 /// [`BLEND`]: NcVisualOptions#associatedconstant.BLEND
 /// [`CHILDPLANE`]: NcVisualOptions#associatedconstant.CHILDPLANE
