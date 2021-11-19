@@ -7,7 +7,7 @@ use libnotcurses_sys::*;
 use widgets::*;
 
 fn main() -> NcResult<()> {
-    let mut nc = Nc::new()?;
+    let mut nc = unsafe { Nc::new()? };
     nc.mice_enable(NcMiceEvents::ALL_EVENTS)?;
 
     let mut demo_items = [
@@ -116,7 +116,7 @@ fn run_menu(nc: &mut Nc, menu: &mut NcMenu) -> NcResult<()> {
                     'q' => {
                         menu.destroy();
                         selplane.destroy()?;
-                        nc.stop()?;
+                        unsafe { nc.stop()? };
                         return Ok(());
                     }
                     _ => (),
@@ -128,7 +128,7 @@ fn run_menu(nc: &mut Nc, menu: &mut NcMenu) -> NcResult<()> {
                                 "Quit" => {
                                     menu.destroy();
                                     selplane.destroy()?;
-                                    nc.stop()?;
+                                    unsafe { nc.stop()? };
                                     return Ok(());
                                 }
                                 _ => (),

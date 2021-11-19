@@ -1,7 +1,7 @@
 use libnotcurses_sys::*;
 
 fn main() -> NcResult<()> {
-    let ncd = NcDirect::new()?;
+    let ncd = unsafe { NcDirect::new()? };
 
     let (t_rows, t_cols) = ncd.dim_yx();
     println!("Terminal rows={0}, cols={1}", t_rows, t_cols);
@@ -18,6 +18,6 @@ Palette size: {3:?}
         ncd.palette_size(),
     );
 
-    ncd.stop()?;
+    unsafe { ncd.stop()? };
     Ok(())
 }

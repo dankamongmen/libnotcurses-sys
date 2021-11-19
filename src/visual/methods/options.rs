@@ -30,7 +30,7 @@ impl NcVisualOptions {
     ///
     /// If the [`NcVisualOptions::CHILDPLANE`] flag is used then the `plane` is
     /// interpreted as the parent `NcPlane` of the new plane created for this
-    /// [`NcVisual`].
+    /// [`NcVisual`][crate::NcVisual].
     ///
     /// [`NcPixelGeometry.cell_y`]: crate::NcPixelGeometry#structfield.cell_y
     /// [`NcPixelGeometry.cell_x`]: crate::NcPixelGeometry#structfield.cell_x

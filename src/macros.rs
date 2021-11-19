@@ -167,7 +167,7 @@ macro_rules! printf {
 /// ```
 /// # use libnotcurses_sys::*;
 /// # fn main() -> NcResult<()> {
-/// let nc = Nc::new_cli()?;
+/// let nc = unsafe { Nc::new_cli()? };
 /// let splane = nc.stdplane();
 /// splane.set_scrolling(true);
 /// putstr!(splane, "hello ")?;
@@ -207,7 +207,7 @@ macro_rules! putstr {
 /// ```ignore
 /// # use libnotcurses_sys::*;
 /// # fn main() -> NcResult<()> {
-/// let nc = Nc::new_cli()?;
+/// let nc = unsafe { Nc::new_cli()? };
 /// let splane = nc.stdplane();
 /// splane.set_scrolling(true);
 /// putstrln!(splane, "hello world")?;

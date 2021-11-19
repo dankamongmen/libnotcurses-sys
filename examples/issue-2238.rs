@@ -2,7 +2,7 @@
 use libnotcurses_sys::*;
 
 fn main() -> NcResult<()> {
-    let nc = Nc::with_flags(NcOptions::NO_ALTERNATE_SCREEN)?;
-    nc.stop()?;
+    let nc = unsafe { Nc::with_flags(NcOptions::NO_ALTERNATE_SCREEN)? };
+    unsafe { nc.stop()? };
     Ok(())
 }

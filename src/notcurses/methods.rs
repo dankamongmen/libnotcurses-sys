@@ -70,12 +70,17 @@ impl NcOptions {
     }
 }
 
-/// # `Nc` Constructors
+/// # `Nc` Constructors and destructors
 //
 // TODO: rethink constructors
 impl Nc {
     /// New notcurses context (without banners).
-    pub fn new<'a>() -> NcResult<&'a mut Nc> {
+    ///
+    /// # Safety
+    /// You must not create multiple `Nc` instances at the same time, on
+    /// the same thread. You must [`stop`][Nc#method.stop] the current one
+    /// before creating a new one.
+    pub unsafe fn new<'a>() -> NcResult<&'a mut Nc> {
         Self::with_flags(NcOptions::SUPPRESS_BANNERS)
     }
 
@@ -86,7 +91,12 @@ impl Nc {
     /// - [`NcOptions::NO_ALTERNATE_SCREEN`][NcOptions#associatedconstant.NO_ALTERNATE_SCREEN]
     /// - [`NcOptions::NO_CLEAR_BITMAPS`][NcOptions#associatedconstant.NO_CLEAR_BITMAPS]
     /// - [`NcOptions::PRESERVE_CURSOR`][NcOptions#associatedconstant.PRESERVE_CURSOR]
-    pub fn new_cli<'a>() -> NcResult<&'a mut Nc> {
+    ///
+    /// # Safety
+    /// You must not create multiple `Nc` instances at the same time, on
+    /// the same thread. You must [`stop`][Nc#method.stop] the current one
+    /// before creating a new one.
+    pub unsafe fn new_cli<'a>() -> NcResult<&'a mut Nc> {
         Self::with_flags(
             NcOptions::SUPPRESS_BANNERS
                 | NcOptions::NO_ALTERNATE_SCREEN
@@ -98,31 +108,62 @@ impl Nc {
     /// New notcurses context, with banners.
     ///
     /// This is the default in the C library.
-    pub fn with_banners<'a>() -> NcResult<&'a mut Nc> {
+    ///
+    /// # Safety
+    /// You must not create multiple `Nc` instances at the same time, on
+    /// the same thread. You must [`stop`][Nc#method.stop] the current one
+    /// before creating a new one.
+    pub unsafe fn with_banners<'a>() -> NcResult<&'a mut Nc> {
         Self::with_flags(0)
     }
 
     /// New notcurses context, without an alternate screen (nor banners).
+    ///
     #[deprecated]
     #[doc(hidden)]
-    pub fn without_altscreen<'a>() -> NcResult<&'a mut Nc> {
+    pub unsafe fn without_altscreen<'a>() -> NcResult<&'a mut Nc> {
         Self::with_flags(NcOptions::NO_ALTERNATE_SCREEN | NcOptions::SUPPRESS_BANNERS)
     }
 
     /// New notcurses context, expects `NcOptions::*` flags.
-    pub fn with_flags<'a>(flags: u64) -> NcResult<&'a mut Nc> {
+    ///
+    /// # Safety
+    /// You must not create multiple `Nc` instances at the same time, on
+    /// the same thread. You must [`stop`][Nc#method.stop] the current one
+    /// before creating a new one.
+    pub unsafe fn with_flags<'a>(flags: u64) -> NcResult<&'a mut Nc> {
         Self::with_options(NcOptions::with_flags(flags))
     }
 
     /// New notcurses context, expects [NcOptions].
-    pub fn with_options<'a>(options: NcOptions) -> NcResult<&'a mut Nc> {
-        let res = unsafe { notcurses_init(&options, null_mut()) };
+    ///
+    /// # Safety
+    /// You must not create multiple `Nc` instances at the same time, on
+    /// the same thread. You must [`stop`][Nc#method.stop] the current one
+    /// before creating a new one.
+    pub unsafe fn with_options<'a>(options: NcOptions) -> NcResult<&'a mut Nc> {
+        let res = notcurses_init(&options, null_mut());
         error_ref_mut![res, "Nc.with_options()"]
     }
 
     /// New notcurses context, expects [NcLogLevel] and flags.
-    pub fn with_debug<'a>(loglevel: NcLogLevel, flags: u64) -> NcResult<&'a mut Nc> {
+    ///
+    /// # Safety
+    /// You must not create multiple `Nc` instances at the same time, on
+    /// the same thread. You must [`stop`][Nc#method.stop] the current one
+    /// before creating a new one.
+    pub unsafe fn with_debug<'a>(loglevel: NcLogLevel, flags: u64) -> NcResult<&'a mut Nc> {
         Self::with_options(NcOptions::with_all_options(loglevel, 0, 0, 0, 0, flags))
+    }
+
+    /// Destroys the notcurses context.
+    ///
+    /// # Safety
+    /// You must not call this method repeatedly on the same `Nc` instance.
+    ///
+    /// *C style function: [notcurses_stop()][c_api::notcurses_stop].*
+    pub unsafe fn stop(&mut self) -> NcResult<()> {
+        error![c_api::notcurses_stop(self)]
     }
 }
 
@@ -142,7 +183,7 @@ impl Nc {
         error![c_api::notcurses_align(availcols, align, cols)]
     }
 
-    /// Retrieves the current contents of the specified [NcCell][crate::NcCell]
+    /// Retrieves the current contents of the specified [`NcCell`][crate::NcCell]
     /// as last rendered, returning the `EGC` (or None on error) and writing
     /// out the [`NcStyle`] and the [`NcChannels`].
     ///
@@ -705,13 +746,6 @@ impl Nc {
     /// *C style function: [notcurses_stdplane_const()][c_api::notcurses_stdplane_const].*
     pub fn stdplane_const<'a>(&self) -> &'a NcPlane {
         unsafe { &*c_api::notcurses_stdplane_const(self) }
-    }
-
-    /// Destroys the notcurses context.
-    ///
-    /// *C style function: [notcurses_stop()][c_api::notcurses_stop].*
-    pub fn stop(&mut self) -> NcResult<()> {
-        error![unsafe { c_api::notcurses_stop(self) }]
     }
 
     /// Gets the name of an [`NcBlitter`] blitter.

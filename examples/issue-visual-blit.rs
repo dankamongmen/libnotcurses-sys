@@ -1,7 +1,7 @@
 use libnotcurses_sys::*;
 
 fn main() -> NcResult<()> {
-    let mut nc = Nc::new()?;
+    let mut nc = unsafe { Nc::new()? };
 
     let width = 32;
     let height = 32;
@@ -30,7 +30,7 @@ fn main() -> NcResult<()> {
 
     plane.destroy()?;
     visual.destroy();
-    nc.stop()?;
+    unsafe { nc.stop()? };
 
     Ok(())
 }

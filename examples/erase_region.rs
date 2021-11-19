@@ -15,7 +15,7 @@ impl<'nc, 'p> State<'nc, 'p> {
         self.showcase.destroy()?;
         self.info.destroy()?;
         self.cursor.destroy()?;
-        self.nc.stop()?;
+        unsafe { self.nc.stop()? };
         std::process::exit(exit_code);
     }
 }
@@ -24,7 +24,7 @@ static LOREM_IPSUM: &str = "Lorem ipsum dolor sit amet, consectetur adipiscing e
 
 #[rustfmt::skip]
 fn main() -> NcResult<()> {
-    let mut _nc = Nc::new()?;
+    let mut _nc = unsafe { Nc::new()? };
     let mut _showcase = NcPlane::new_bound(_nc.stdplane(), 1, 10, 10, 20)?;
     let mut _info = NcPlane::new_bound(_nc.stdplane(), 12, 1, 3, 54)?;
     let mut _cursor = NcPlane::new_bound(_nc.stdplane(), 12, 1, 1, 1)?;

@@ -7,7 +7,7 @@ use serial_test::serial;
 #[test]
 #[serial]
 fn constructors() -> crate::NcResult<()> {
-    let nc = Nc::new()?;
+    let nc = unsafe { Nc::new()? };
     let plane = NcPlane::new(nc, 0, 0, 10, 10)?;
 
     // new empty cell
@@ -68,6 +68,6 @@ fn constructors() -> crate::NcResult<()> {
     // cleanup
     cell.release(plane);
     plane.destroy()?;
-    nc.stop()?;
+    unsafe { nc.stop()? };
     Ok(())
 }

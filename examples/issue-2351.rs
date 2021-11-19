@@ -4,7 +4,7 @@ use libnotcurses_sys::*;
 use std::ptr::null_mut;
 
 fn main() -> NcResult<()> {
-    let nc = Nc::new_cli()?;
+    let nc = unsafe { Nc::new_cli()? };
 
     let stdp = nc.stdplane();
     stdp.set_scrolling(true);
@@ -59,6 +59,6 @@ fn main() -> NcResult<()> {
     putstrln!(stdp, "{:?}", vg)?;
 
     visual.destroy();
-    nc.stop()?;
+    unsafe { nc.stop()? };
     Ok(())
 }

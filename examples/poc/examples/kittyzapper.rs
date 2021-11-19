@@ -3,7 +3,7 @@
 use libnotcurses_sys::*;
 
 fn main() -> NcResult<()> {
-    let ncd = NcDirect::new()?;
+    let ncd = unsafe { NcDirect::new()? };
 
     ncd.set_fg_rgb8(100, 100, 100)?;
     ncd.set_bg_rgb8(0xff, 0xff, 0xff)?;
@@ -20,6 +20,6 @@ fn main() -> NcResult<()> {
     printf!("d");
     printf!("\n");
 
-    ncd.stop()?;
+    unsafe { ncd.stop()? };
     Ok(())
 }

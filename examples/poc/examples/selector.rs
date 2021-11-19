@@ -24,7 +24,7 @@ use libnotcurses_sys::{widgets::*, *};
 
 fn main() -> NcResult<()> {
     // Init context
-    let nc: &mut Nc = Nc::new()?;
+    let nc: &mut Nc = unsafe { Nc::new()? };
 
     // Enable mouse
     nc.mice_enable(NcMiceEvents::ALL_EVENTS)?;
@@ -93,7 +93,7 @@ fn main() -> NcResult<()> {
     selector.destroy()?;
 
     // Restore context, TERM status like cursor
-    nc.stop()?;
+    unsafe { nc.stop()? };
 
     // Print solution, now the TERM is normal stdio
     println!("You chose language: {}", &selected);

@@ -5,7 +5,7 @@
 //! NOTE: This example uses the C style with functions.
 
 use core::ptr::{null, null_mut};
-use libnotcurses_sys::{*, c_api::*};
+use libnotcurses_sys::{c_api::*, *};
 
 mod shared;
 
@@ -31,7 +31,8 @@ fn render_image(ncd: &mut NcDirect, blit: NcBlitter) {
             NCALIGN_CENTER,
             blit,
             NCSCALE_NONE,
-        ) != 0 {
+        ) != 0
+        {
             panic!("ERROR: ncdirect_render_image().");
         }
     }

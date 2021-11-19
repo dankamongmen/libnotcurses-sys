@@ -6,10 +6,10 @@ use rand::{distributions::Uniform, Rng};
 use libnotcurses_sys::*;
 
 fn main() -> NcResult<()> {
-    let mut nc = Nc::new()?;
+    let mut nc = unsafe { Nc::new()? };
 
     if nc.check_pixel_support() == NcPixelImpl::NOPIXEL {
-        nc.stop()?;
+        unsafe { nc.stop()? };
         return Err(NcError::new_msg("Current terminal doesn't support pixels."));
     }
 
@@ -136,6 +136,6 @@ fn main() -> NcResult<()> {
 
     v1.destroy();
     v5.destroy();
-    nc.stop()?;
+    unsafe { nc.stop()? };
     Ok(())
 }

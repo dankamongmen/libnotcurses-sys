@@ -9,13 +9,13 @@ use libnotcurses_sys::*;
 mod shared;
 
 fn main() -> NcResult<()> {
-    let mut ncd = NcDirect::new()?;
+    let mut ncd = unsafe { NcDirect::new()? };
 
     render_image(&mut ncd, NcBlitter::_1x1)?;
     render_image(&mut ncd, NcBlitter::_2x1)?;
     render_image(&mut ncd, NcBlitter::BRAILLE)?;
 
-    ncd.stop()?;
+    unsafe { ncd.stop()? };
     Ok(())
 }
 

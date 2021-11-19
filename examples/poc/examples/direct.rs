@@ -4,7 +4,7 @@ use core::convert::TryInto;
 use libnotcurses_sys::*;
 
 fn main() -> NcResult<()> {
-    let ncd = NcDirect::new()?;
+    let ncd = unsafe { NcDirect::new()? };
 
     let dimy = ncd.dim_y() as i32;
     let dimx = ncd.dim_x() as i32;
@@ -57,6 +57,6 @@ fn main() -> NcResult<()> {
         return Err(NcError::with_msg(-10, "Couldn't read cursor position."));
     }
 
-    ncd.stop()?;
+    unsafe { ncd.stop()? };
     Ok(())
 }

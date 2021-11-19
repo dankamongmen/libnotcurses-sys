@@ -29,7 +29,7 @@ and error handling with the `NcResult` enum:
 use libnotcurses_sys::*;
 
 fn main() -> NcResult<()> {
-    let mut nc = Nc::new_cli()?;
+    let mut nc = unsafe { Nc::new_cli()? };
     let plane = nc.stdplane();
     plane.putstr("hello world")?;
     nc.render()?;

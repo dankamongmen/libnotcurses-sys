@@ -10,7 +10,7 @@ use libnotcurses_sys::*;
 fn main() -> NcResult<()> {
     let mut rng = thread_rng();
 
-    let ncd = NcDirect::new()?;
+    let ncd = unsafe { NcDirect::new()? };
 
     let cols = ncd.dim_x();
     let rows = ncd.dim_y();
@@ -57,6 +57,6 @@ fn main() -> NcResult<()> {
     ncd.flush()?;
     sleep![0, 600];
     ncd.clear()?;
-    ncd.stop()?;
+    unsafe { ncd.stop()? };
     Ok(())
 }

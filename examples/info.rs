@@ -1,7 +1,7 @@
 use libnotcurses_sys::*;
 
 fn main() -> NcResult<()> {
-    let nc = Nc::new_cli()?;
+    let nc = unsafe { Nc::new_cli()? };
     let splane = nc.stdplane();
     splane.set_scrolling(true);
 
@@ -84,6 +84,6 @@ Palette size: {11:?}
     // ...
 
     nc.render()?;
-    nc.stop()?;
+    unsafe { nc.stop()? };
     Ok(())
 }

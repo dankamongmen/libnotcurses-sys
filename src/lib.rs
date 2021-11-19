@@ -45,8 +45,7 @@
 //! You can access the imported, or reimplemented C API functions directly,
 //! and use it in a very similar way as the C library is used.
 //!
-//! It requires the use of unsafe, since most functions are wrapped directly
-//! by `bindgen` marked as such.
+//! It requires more use of unsafe, since it has less safer abstractions.
 //!
 //! Error handling is done this way by checking the returned `NcIntResult`,
 //! or in case of receiving a pointer, by comparing it to `null_mut()`.

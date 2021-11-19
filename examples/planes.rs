@@ -3,7 +3,7 @@
 use libnotcurses_sys::*;
 
 fn main() -> NcResult<()> {
-    let mut nc = Nc::new()?;
+    let mut nc = unsafe { Nc::new()? };
 
     // get the terminal size in character rows & columns
     let (t_rows, t_cols) = nc.term_dim_yx();
@@ -95,6 +95,6 @@ fn exit(ecode: i32, nc: &mut Nc, planes: Vec<&mut NcPlane>) -> NcResult<()> {
     for p in planes {
         p.destroy()?;
     }
-    nc.stop()?;
+    unsafe { nc.stop()? };
     std::process::exit(ecode);
 }

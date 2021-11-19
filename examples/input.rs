@@ -5,7 +5,8 @@
 use libnotcurses_sys::*;
 
 fn main() -> NcResult<()> {
-    let nc = Nc::with_flags(NcOptions::SUPPRESS_BANNERS | NcOptions::NO_WINCH_SIGHANDLER)?;
+    let nc =
+        unsafe { Nc::with_flags(NcOptions::SUPPRESS_BANNERS | NcOptions::NO_WINCH_SIGHANDLER)? };
     nc.stdplane().set_scrolling(true);
     let splane = nc.stdplane();
 
@@ -46,6 +47,6 @@ fn main() -> NcResult<()> {
         }
     }
 
-    nc.stop()?;
+    unsafe { nc.stop()? };
     Ok(())
 }

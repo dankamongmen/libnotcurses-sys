@@ -19,24 +19,37 @@ impl NcDirect {
     /// [notcurses_render()][c_api::notcurses_render]. This can be used to add
     /// color and styling to text in the standard output paradigm.
     ///
+    /// # Safety
+    /// You must not create multiple `NcDirect` instances at the same time, on
+    /// the same thread. You must [`stop`][NcDirect#method.stop] the current one
+    /// before creating a new one.
+    ///
     /// *C style function: [ncdirect_init()][c_api::ncdirect_init].*
-    pub fn new<'a>() -> NcResult<&'a mut NcDirect> {
+    pub unsafe fn new<'a>() -> NcResult<&'a mut NcDirect> {
         Self::with_flags(0)
     }
 
     /// New NcDirect with optional flags.
     ///
+    /// # Safety
+    /// You must not create multiple `NcDirect` instances at the same time, on
+    /// the same thread. You must [`stop`][NcDirect#method.stop] the current one
+    /// before creating a new one.
+    ///
     /// *C style function: [ncdirect_init()][c_api::ncdirect_init].*
-    pub fn with_flags<'a>(flags: NcDirectFlags) -> NcResult<&'a mut NcDirect> {
-        let res = unsafe { c_api::ncdirect_init(null(), null_mut(), flags) };
+    pub unsafe fn with_flags<'a>(flags: NcDirectFlags) -> NcResult<&'a mut NcDirect> {
+        let res = c_api::ncdirect_init(null(), null_mut(), flags);
         error_ref_mut![res, "Initializing NcDirect"]
     }
 
     /// Releases this NcDirect and any associated resources.
     ///
+    /// # Safety
+    /// You must not call this method repeatedly on the same `NcDirect` instance.
+    ///
     /// *C style function: [ncdirect_stop()][c_api::ncdirect_stop].*
-    pub fn stop(&mut self) -> NcResult<()> {
-        error![unsafe { c_api::ncdirect_stop(self) }, "NcDirect.stop()"]
+    pub unsafe fn stop(&mut self) -> NcResult<()> {
+        error![c_api::ncdirect_stop(self), "NcDirect.stop()"]
     }
 }
 

@@ -6,7 +6,7 @@ const W_CELLS: u32 = 20;
 const CELLS_MOVEMENT: u32 = 40;
 
 fn main() -> NcResult<()> {
-    let mut nc = Nc::new()?;
+    let mut nc = unsafe { Nc::new()? };
     // nc.stdplane().set_scrolling(true); // doesn't seem to affect
 
     // firstly we move a text plane
@@ -47,7 +47,7 @@ fn main() -> NcResult<()> {
 
     visual1plane.destroy()?;
     visual1.destroy();
-    nc.stop()?;
+    unsafe { nc.stop()? };
 
     Ok(())
 }

@@ -1,6 +1,9 @@
 //! shared module
 
-use std::{env, fs, io, path::{PathBuf, Path}};
+use std::{
+    env, fs, io,
+    path::{Path, PathBuf},
+};
 
 #[allow(dead_code)]
 fn main() {
@@ -32,6 +35,5 @@ pub fn project_root_path(path: &Path) -> io::Result<PathBuf> {
 ///
 /// In case of an error the returned string will be empty.
 pub fn project_root_path_string(path: &str) -> String {
-    project_root_path(Path::new(path)).map_or("".into(), |p|p.to_str().unwrap().to_owned()
-)
+    project_root_path(Path::new(path)).map_or("".into(), |p| p.to_str().unwrap().to_owned())
 }

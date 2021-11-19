@@ -34,11 +34,11 @@ fn main() -> NcResult<()> {
         .expect("Error: Must pass image file path as first argument. Usage: pixel image.png");
 
     // Init notcurses context
-    let nc: &mut Nc = Nc::new()?;
+    let nc: &mut Nc = unsafe { Nc::new()? };
 
     // Clause: Pixel must be supported
     if 0 == nc.check_pixel_support() {
-        nc.stop()?;
+        unsafe { nc.stop()? };
         return Err(NcError::with_msg(
             1,
             "Error: This program requires pixel graphics support",
@@ -60,9 +60,9 @@ fn main() -> NcResult<()> {
         Some(pixelplane),
         NcScale::SCALE,
         0,
-        0, // x,y offset relative to plane
-        None, // begx, begy, lenx, leny offset of the rendered section
-        None, // pixel cell offset
+        0,                // x,y offset relative to plane
+        None,             // begx, begy, lenx, leny offset of the rendered section
+        None,             // pixel cell offset
         NcBlitter::PIXEL, // Glyph set to use
         0,                // bitmask over NCVISUAL_OPTION_*
         0,                // transparent color
@@ -107,7 +107,7 @@ fn main() -> NcResult<()> {
     visual.destroy();
 
     // Restore the terminal context
-    nc.stop()?;
+    unsafe { nc.stop()? };
 
     // Say goodbye
     println!("Goodbye from notcurses pixel rendered poc (rust binding)");
