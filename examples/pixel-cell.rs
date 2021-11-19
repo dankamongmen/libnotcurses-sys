@@ -13,7 +13,7 @@ fn main() -> NcResult<()> {
         return Err(NcError::new_msg("Current terminal doesn't support pixels."));
     }
 
-    let mut splane = nc.stdplane();
+    let mut splane = unsafe { nc.stdplane() };
     splane.set_scrolling(true);
 
     let pg = splane.pixel_geom();

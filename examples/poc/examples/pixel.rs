@@ -50,7 +50,7 @@ fn main() -> NcResult<()> {
 
     // Create full screen plane
     // -- Notcurses report an error if image is draw on the stdplane
-    let stdplane: &mut NcPlane = nc.stdplane();
+    let stdplane: &mut NcPlane = unsafe { nc.stdplane() };
     let (row, col) = stdplane.dim_yx();
     let planeopts: NcPlaneOptions = NcPlaneOptions::new(0, 0, row, col);
     let pixelplane: &mut NcPlane = NcPlane::with_options_bound(stdplane, &planeopts)?;

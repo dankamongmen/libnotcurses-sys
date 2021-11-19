@@ -8,7 +8,7 @@ fn main() -> NcResult<()> {
     // get the terminal size in character rows & columns
     let (t_rows, t_cols) = nc.term_dim_yx();
     // the standard plane should have the same size
-    let mut stdplane = nc.stdplane();
+    let mut stdplane = unsafe { nc.stdplane() };
     assert_eq![(t_rows, t_cols), stdplane.dim_yx()];
 
     // set the style of stdplane's base cell, make it blue

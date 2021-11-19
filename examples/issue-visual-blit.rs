@@ -24,7 +24,7 @@ fn main() -> NcResult<()> {
 
     // the new function renders to a root plane if the options don't specify a plane
     let plane = visual.blit(&mut nc, Some(&vopt))?;
-    plane.reparent(nc.stdplane())?;
+    plane.reparent(unsafe { nc.stdplane() })?;
 
     nc_render_sleep![nc, 2];
 

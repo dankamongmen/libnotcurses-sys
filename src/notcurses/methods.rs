@@ -733,9 +733,14 @@ impl Nc {
     /// The standard plane always exists, and its origin is always at the
     /// uppermost, leftmost cell.
     ///
+    /// # Safety
+    /// You must be careful not ending up with multiple exclusive references
+    /// to the standard plane, or with one exclusive reference and one or more
+    /// shared references.
+    ///
     /// *C style function: [notcurses_stdplane()][c_api::notcurses_stdplane].*
-    pub fn stdplane<'a>(&mut self) -> &'a mut NcPlane {
-        unsafe { &mut *c_api::notcurses_stdplane(self) }
+    pub unsafe fn stdplane<'a>(&mut self) -> &'a mut NcPlane {
+        &mut *c_api::notcurses_stdplane(self)
     }
 
     /// Returns a reference to the standard [`NcPlane`] for this terminal.
@@ -743,9 +748,13 @@ impl Nc {
     /// The standard plane always exists, and its origin is always at the
     /// uppermost, leftmost cell.
     ///
+    /// # Safety
+    /// You must be careful not ending up with a mix of exclusive references
+    /// and shared references to the standard plane.
+    ///
     /// *C style function: [notcurses_stdplane_const()][c_api::notcurses_stdplane_const].*
-    pub fn stdplane_const<'a>(&self) -> &'a NcPlane {
-        unsafe { &*c_api::notcurses_stdplane_const(self) }
+    pub unsafe fn stdplane_const<'a>(&self) -> &'a NcPlane {
+        &*c_api::notcurses_stdplane_const(self)
     }
 
     /// Gets the name of an [`NcBlitter`] blitter.

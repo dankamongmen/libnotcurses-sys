@@ -2,7 +2,7 @@ use libnotcurses_sys::*;
 
 fn main() -> NcResult<()> {
     let nc = unsafe { Nc::new_cli()? };
-    let splane = nc.stdplane();
+    let splane = unsafe { nc.stdplane() };
     splane.set_scrolling(true);
 
     putstrln!(splane, "ENVIRONMENT\n-----------")?;
@@ -50,7 +50,7 @@ Palette size: {11:?}
         t_rows,
         t_cols
     )?;
-    let pgeom = nc.stdplane().pixel_geom();
+    let pgeom = splane.pixel_geom();
     putstrln!(splane, "{:#?}.", pgeom)?;
 
     // Ask for an `NcVisualGeometry` without an `NcVisual`.

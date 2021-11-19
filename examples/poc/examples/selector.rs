@@ -29,8 +29,8 @@ fn main() -> NcResult<()> {
     // Enable mouse
     nc.mice_enable(NcMiceEvents::ALL_EVENTS)?;
 
-    // Create first plane (full screen)
-    let stdplane: &mut NcPlane = nc.stdplane();
+    // Get a reference to the standard plane (full screen)
+    let stdplane: &mut NcPlane = unsafe { nc.stdplane() };
 
     // Set font color (green)
     stdplane.set_fg_rgb(0x40f040);

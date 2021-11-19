@@ -5,8 +5,7 @@ use std::ptr::null_mut;
 
 fn main() -> NcResult<()> {
     let nc = unsafe { Nc::new_cli()? };
-
-    let stdp = nc.stdplane();
+    let stdp = unsafe { nc.stdplane() };
     stdp.set_scrolling(true);
 
     // # ISSUE 1

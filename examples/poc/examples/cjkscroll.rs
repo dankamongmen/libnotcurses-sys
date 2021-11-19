@@ -5,7 +5,7 @@ use libnotcurses_sys::*;
 fn main() -> NcResult<()> {
     let mut nc = unsafe { Nc::new()? };
 
-    let plane = nc.stdplane();
+    let plane = unsafe { nc.stdplane() };
     plane.set_scrolling(true);
 
     let mut wc = '\u{4e00}'; // 一

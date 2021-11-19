@@ -7,8 +7,8 @@ use libnotcurses_sys::*;
 fn main() -> NcResult<()> {
     let nc =
         unsafe { Nc::with_flags(NcOptions::SUPPRESS_BANNERS | NcOptions::NO_WINCH_SIGHANDLER)? };
-    nc.stdplane().set_scrolling(true);
-    let splane = nc.stdplane();
+    let splane = unsafe { nc.stdplane() };
+    splane.set_scrolling(true);
 
     putstrln!(splane, "Input example.\nPress any key to continue:")?;
     nc.render()?;

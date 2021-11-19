@@ -168,12 +168,12 @@ macro_rules! printf {
 /// # use libnotcurses_sys::*;
 /// # fn main() -> NcResult<()> {
 /// let nc = unsafe { Nc::new_cli()? };
-/// let splane = nc.stdplane();
+/// let splane = unsafe { nc.stdplane() };
 /// splane.set_scrolling(true);
 /// putstr!(splane, "hello ")?;
 /// putstr!(splane, " world\n")?;
 /// putstr!(splane, "formatted text: {:?}\n", (0, 1.0, "two") )?;
-/// # nc.stop()?;
+/// # unsafe { nc.stop()? };
 /// # Ok(())
 /// # }
 /// ```
@@ -212,7 +212,7 @@ macro_rules! putstr {
 /// splane.set_scrolling(true);
 /// putstrln!(splane, "hello world")?;
 /// putstrln!(splane, "formatted text: {:?}", (0, 1.0, "two") )?;
-/// # nc.stop()?;
+/// # unsafe { nc.stop()? };
 /// # Ok(())
 /// # }
 /// ```

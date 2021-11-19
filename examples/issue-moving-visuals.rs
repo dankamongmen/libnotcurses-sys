@@ -7,10 +7,11 @@ const CELLS_MOVEMENT: u32 = 40;
 
 fn main() -> NcResult<()> {
     let mut nc = unsafe { Nc::new()? };
-    // nc.stdplane().set_scrolling(true); // doesn't seem to affect
+    let stp = unsafe { nc.stdplane() };
+    // stp.set_scrolling(true); // doesn't seem to affect
 
     // firstly we move a text plane
-    let plane1 = NcPlane::new_bound(&mut nc.stdplane(), 0, 0, H_CELLS, W_CELLS)?;
+    let plane1 = NcPlane::new_bound(stp, 0, 0, H_CELLS, W_CELLS)?;
     plane1.set_base("p", 0, NcChannels::from_rgb(0x778899, 0xBBBBBB))?;
 
     for _ in 0..CELLS_MOVEMENT {
@@ -20,7 +21,7 @@ fn main() -> NcResult<()> {
     sleep![1];
 
     // secondly we move a visual plane and compare
-    let geo = nc.stdplane().pixel_geom();
+    let geo = stp.pixel_geom();
     let width = W_CELLS * geo.cell_x;
     let height = H_CELLS * geo.cell_y;
     let buffer: Vec<u8> = vec![0xBB; (height * width) as usize * 3];
@@ -37,7 +38,7 @@ fn main() -> NcResult<()> {
         0,
     );
     let visual1plane = visual1.blit(&mut nc, Some(&voptions1))?;
-    visual1plane.reparent(nc.stdplane())?;
+    visual1plane.reparent(stp)?;
 
     for _ in 0..CELLS_MOVEMENT {
         visual1plane.move_rel(1, 1)?;
