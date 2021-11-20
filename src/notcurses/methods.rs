@@ -734,7 +734,7 @@ impl Nc {
     /// uppermost, leftmost cell.
     ///
     /// # Safety
-    /// You must be careful not ending up with multiple exclusive references
+    /// You must be careful not to end up with multiple exclusive references
     /// to the standard plane, or with one exclusive reference and one or more
     /// shared references.
     ///
@@ -749,7 +749,7 @@ impl Nc {
     /// uppermost, leftmost cell.
     ///
     /// # Safety
-    /// You must be careful not ending up with a mix of exclusive references
+    /// You must be careful not to end up with a mix of exclusive references
     /// and shared references to the standard plane.
     ///
     /// *C style function: [notcurses_stdplane_const()][c_api::notcurses_stdplane_const].*

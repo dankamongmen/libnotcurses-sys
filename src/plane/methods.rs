@@ -51,7 +51,7 @@ impl NcPlaneOptions {
     /// New NcPlaneOptions, with flags and horizontal alignment.
     ///
     /// Note: Already includes the
-    /// [NcPlaneOptions::HORALIGNED][NcPlaneOptions#associatedconstant.HORALIGNED]
+    /// [`NcPlaneOptions::HORALIGNED`][NcPlaneOptions#associatedconstant.HORALIGNED]
     /// flag.
     pub fn with_flags_aligned(
         y: NcOffset,
@@ -94,7 +94,7 @@ impl NcPlane {
         Self::with_options(nc, &NcPlaneOptions::new(y, x, rows, cols))
     }
 
-    /// New `NcPlane`, expects an [NcPlaneOptions] struct.
+    /// New `NcPlane`, expects an [`NcPlaneOptions`] struct.
     ///
     /// The returned plane will be the top, bottom, and root of this new pile.
     ///
@@ -119,7 +119,7 @@ impl NcPlane {
         Self::with_options_bound(bound_to, &NcPlaneOptions::new(y, x, rows, cols))
     }
 
-    /// New `NcPlane`, bound to another plane, expects an [NcPlaneOptions] struct.
+    /// New `NcPlane`, bound to another plane, expects an [`NcPlaneOptions`] struct.
     ///
     /// *C style function: [ncplane_create()][c_api::ncplane_create].*
     pub fn with_options_bound<'a>(
@@ -215,7 +215,7 @@ impl NcPlane {
         c_api::ncplane_set_channels(self, channels);
     }
 
-    /// Gets the foreground [`NcChannel`] from an [NcPlane].
+    /// Gets the foreground [`NcChannel`] from an [`NcPlane`].
     ///
     /// *C style function: [ncplane_fchannel()][c_api::ncplane_fchannel].*
     #[inline]
@@ -223,7 +223,7 @@ impl NcPlane {
         c_api::ncchannels_fchannel(c_api::ncplane_channels(self))
     }
 
-    /// Gets the background [`NcChannel`] from an [NcPlane].
+    /// Gets the background [`NcChannel`] from an [`NcPlane`].
     ///
     /// *C style function: [ncplane_bchannel()][c_api::ncplane_bchannel].*
     #[inline]
@@ -553,7 +553,7 @@ impl NcPlane {
         }
     }
 
-    /// Sets this `NcPlane`'s foreground [NcPaletteIndex].
+    /// Sets this `NcPlane`'s foreground [`NcPaletteIndex`].
     ///
     /// Also sets the foreground palette index bit, sets it foreground-opaque,
     /// and clears the foreground default color bit.
@@ -565,7 +565,7 @@ impl NcPlane {
         }
     }
 
-    /// Sets this `NcPlane`'s background [NcPaletteIndex].
+    /// Sets this `NcPlane`'s background [`NcPaletteIndex`].
     ///
     /// Also sets the background palette index bit, sets it background-opaque,
     /// and clears the background default color bit.
@@ -1337,16 +1337,24 @@ impl NcPlane {
 
     /// Returns the topmost `NcPlane` of the current pile.
     ///
+    /// # Safety
+    /// You must be careful not to end up with multiple exclusive references
+    /// to the plane.
+    ///
     /// *C style function: [ncpile_top()][c_api::ncpile_top].*
-    pub fn top(&mut self) -> &mut NcPlane {
-        unsafe { &mut *c_api::ncpile_top(self) }
+    pub unsafe fn top(&mut self) -> &mut NcPlane {
+        &mut *c_api::ncpile_top(self)
     }
 
     /// Returns the bottommost `NcPlane` of the current pile.
     ///
+    /// # Safety
+    /// You must be careful not to end up with multiple exclusive references
+    /// to the plane.
+    ///
     /// *C style function: [ncpile_bottom()][c_api::ncpile_bottom].*
-    pub fn bottom<'a>(&mut self) -> &'a mut NcPlane {
-        unsafe { &mut *c_api::ncpile_bottom(self) }
+    pub unsafe fn bottom<'a>(&mut self) -> &'a mut NcPlane {
+        &mut *c_api::ncpile_bottom(self)
     }
 
     /// Relocates this `NcPlane` at the bottom of the z-buffer.
@@ -1699,22 +1707,25 @@ impl NcPlane {
     }
     /// Gets a mutable reference to the [`Nc`] context of this `NcPlane`.
     ///
+    /// # Safety
+    /// You must be careful not to end up with multiple exclusive references
+    /// to the same `Nc` context, or with one exclusive reference and one
+    /// or more shared references.
+    ///
     /// *C style function: [ncplane_notcurses()][c_api::ncplane_notcurses].*
-    pub fn notcurses<'a>(&self) -> NcResult<&'a mut Nc> {
-        error_ref_mut![
-            unsafe { c_api::ncplane_notcurses(self) },
-            "NcPlane.notcurses()"
-        ]
+    pub unsafe fn notcurses<'a>(&self) -> NcResult<&'a mut Nc> {
+        error_ref_mut![c_api::ncplane_notcurses(self), "NcPlane.notcurses()"]
     }
 
     /// Gets an immutable reference to the [`Nc`] context of this `NcPlane`.
     ///
+    /// # Safety
+    /// You must be careful not to end up with a mix of exclusive references
+    /// and shared references to the standard plane.
+    ///
     /// *C style function: [ncplane_notcurses_const()][c_api::ncplane_notcurses_const].*
-    pub fn notcurses_const<'a>(&self) -> NcResult<&'a Nc> {
-        error_ref![
-            unsafe { c_api::ncplane_notcurses_const(self) },
-            "NcPlane.notcurses()"
-        ]
+    pub unsafe fn notcurses_const<'a>(&self) -> NcResult<&'a Nc> {
+        error_ref![c_api::ncplane_notcurses_const(self), "NcPlane.notcurses()"]
     }
 }
 
@@ -1833,7 +1844,7 @@ impl NcPlane {
     /// aligned according to `align` within this plane.
     ///
     /// Returns `-`[NcIntResult::MAX][crate::NcIntResult::MAX] if
-    /// [NcAlign::UNALIGNED][NcAlign#associatedconstant.UNALIGNED]
+    /// [`NcAlign::UNALIGNED`][NcAlign#associatedconstant.UNALIGNED]
     /// or invalid [`NcAlign`].
     ///
     /// *C style function: [ncplane_halign()][c_api::ncplane_halign].*
@@ -1851,7 +1862,7 @@ impl NcPlane {
     /// aligned according to `align` within this plane.
     ///
     /// Returns `-`[NcIntResult::MAX][crate::NcIntResult::MAX] if
-    /// [NcAlign::UNALIGNED][NcAlign#associatedconstant.UNALIGNED]
+    /// [`NcAlign::UNALIGNED`][NcAlign#associatedconstant.UNALIGNED]
     /// or invalid [`NcAlign`].
     ///
     /// *C style function: [ncplane_valign()][c_api::ncplane_valign].*
@@ -1906,7 +1917,7 @@ impl NcPlane {
 
     /// Return the rows of this `NcPlane`.
     ///
-    /// Alias of [dim_y][NcPlane#method.dim_y]
+    /// Alias of [`dim_y`][NcPlane#method.dim_y]
     ///
     /// *C style function: [ncplane_dim_y()][c_api::ncplane_dim_y].*
     #[inline]
@@ -1916,7 +1927,7 @@ impl NcPlane {
 
     /// Return the cols of this `NcPlane`.
     ///
-    /// Alias of [dim_x][NcPlane#method.dim_x]
+    /// Alias of [`dim_x`][NcPlane#method.dim_x]
     ///
     /// *C style function: [ncplane_dim_x()][c_api::ncplane_dim_x].*
     #[inline]
@@ -2050,7 +2061,7 @@ impl NcPlane {
         ]
     }
 
-    /// Returns an [NcPixelGeometry] structure filled with pixel geometry for
+    /// Returns an [`NcPixelGeometry`] structure filled with pixel geometry for
     /// the display region, each cell, and the maximum displayable bitmap.
     ///
     /// This function calls
@@ -2089,7 +2100,7 @@ impl NcPlane {
     /// Realigns this `NcPlane` against its parent, using the alignment specified
     /// at creation time.
     ///
-    /// Suitable for use as an [NcResizeCb].
+    /// Suitable for use as an [`NcResizeCb`].
     ///
     /// *C style function: [ncplane_resize_realign()][c_api::ncplane_resize_realign].*
     //
@@ -2259,7 +2270,7 @@ impl NcPlane {
     /// The 6 cells provided are used to draw the upper-left, ur, ll, and lr corners,
     /// then the horizontal and vertical lines.
     ///
-    /// See [NcBoxMask] for information about the border and gradient masks,
+    /// See [`NcBoxMask`] for information about the border and gradient masks,
     /// and the drawing of corners.
     ///
     /// If the gradient bit is not set, the style from the hline/vlline cells
@@ -2311,7 +2322,7 @@ impl NcPlane {
         )]
     }
 
-    /// NcPlane.[box()][NcPlane#method.box] with the double box-drawing characters.
+    /// NcPlane.[`box`][NcPlane#method.box] with the double box-drawing characters.
     ///
     /// *C style function: [ncplane_double_box()][c_api::ncplane_double_box].*
     #[inline]
@@ -2364,8 +2375,7 @@ impl NcPlane {
         )]
     }
 
-    /// NcPlane.[perimeter()][NcPlane#method.perimeter] with the double box-drawing characters.
-
+    /// `NcPlane.`[`perimeter`][NcPlane#method.perimeter] with the double box-drawing characters.
     ///
     /// *C style function: [ncplane_perimeter_double()][c_api::ncplane_perimeter_double].*
     #[inline]
@@ -2380,8 +2390,7 @@ impl NcPlane {
         )]
     }
 
-    /// NcPlane.[perimeter()][NcPlane#method.perimeter] with the rounded box-drawing characters.
-    ///
+    /// `NcPlane.`[`perimeter`][NcPlane#method.perimeter] with the rounded box-drawing characters.
     ///
     /// *C style function: [ncplane_perimeter_rounded()][c_api::ncplane_perimeter_rounded].*
     #[inline]
