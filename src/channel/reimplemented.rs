@@ -1,4 +1,4 @@
-//! `channel*_*` reimplemented functions.
+//! `ncchannel*_*` reimplemented functions.
 
 use crate::{
     c_api, NcAlpha, NcAlphaApi, NcChannel, NcChannels, NcComponent, NcPaletteIndex, NcRgb,
@@ -92,7 +92,7 @@ pub const fn ncchannels_fchannel(channels: NcChannels) -> NcChannel {
 /// *Method: NcChannels.[set_bchannel()][NcChannels#method.set_bchannel]*
 #[inline]
 pub fn ncchannels_set_bchannel(channels: &mut NcChannels, bchannel: NcChannel) -> NcChannels {
-    *channels = (*channels & 0xffffffff00000000_u64) | bchannel as u64;
+    *channels = (*channels & 0xffffffff00000000_u64) | bchannel as NcChannels;
     *channels
 }
 
@@ -101,7 +101,7 @@ pub fn ncchannels_set_bchannel(channels: &mut NcChannels, bchannel: NcChannel) -
 /// *Method: NcChannels.[set_fchannel()][NcChannels#method.set_fchannel]*
 #[inline]
 pub fn ncchannels_set_fchannel(channels: &mut NcChannels, fchannel: NcChannel) -> NcChannels {
-    *channels = (*channels & 0xffffffff_u64) | (fchannel as u64) << 32;
+    *channels = (*channels & 0xffffffff_u64) | (fchannel as NcChannels) << 32;
     *channels
 }
 
@@ -114,6 +114,23 @@ pub fn ncchannels_combine(fchannel: NcChannel, bchannel: NcChannel) -> NcChannel
     ncchannels_set_fchannel(&mut channels, fchannel);
     ncchannels_set_bchannel(&mut channels, bchannel);
     channels
+}
+
+/// Returns the `NcChannels` with the color information swapped, but not
+/// alpha, nor other housekeeping bits.
+///
+/// *Method: NcChannels.[reverse()][NcChannels#method.reverse]*
+#[inline]
+pub fn ncchannels_reverse(channels: NcChannels) -> NcChannels {
+    let raw = ((ncchannels_bchannel(channels) as NcChannels) << 32)
+        + ncchannels_fchannel(channels) as NcChannels;
+    let statemask = c_api::NC_NOBACKGROUND_MASK
+        | (c_api::NC_NOBACKGROUND_MASK >> 32)
+        | (c_api::NC_BG_ALPHA_MASK as NcChannels)
+        | (c_api::NC_NOBACKGROUND_MASK >> 32);
+    let mut ret = (raw as NcChannels) & !statemask;
+    ret |= channels & statemask;
+    ret
 }
 
 // NcComponent ---------------------------------------------------------------------
@@ -198,7 +215,9 @@ pub fn ncchannel_rgb8(
 #[inline]
 pub fn ncchannel_set_rgb8(channel: &mut NcChannel, r: NcComponent, g: NcComponent, b: NcComponent) {
     let rgb: NcRgb = (r as NcChannel) << 16 | (g as NcChannel) << 8 | (b as NcChannel);
-    *channel = (*channel & !c_api::NC_BG_RGB_MASK) | c_api::NC_BGDEFAULT_MASK | rgb;
+    *channel = (*channel & !(c_api::NC_BG_RGB_MASK | c_api::NC_BG_PALETTE))
+        | c_api::NC_BGDEFAULT_MASK
+        | rgb;
 }
 
 /// Gets the three foreground RGB [`NcComponent`]s from an [`NcChannels`], and
@@ -244,7 +263,7 @@ pub fn ncchannels_set_fg_rgb8(
 ) -> NcChannels {
     let mut channel = ncchannels_fchannel(*channels);
     ncchannel_set_rgb8(&mut channel, r, g, b);
-    *channels = (channel as u64) << 32 | *channels & 0xffffffff_u64;
+    *channels = (channel as NcChannels) << 32 | *channels & 0xffffffff;
     *channels
 }
 
@@ -303,7 +322,9 @@ pub const fn ncchannel_rgb(channel: NcChannel) -> NcRgb {
 /// *Method: NcChannel.[set()][NcChannel#method.set]*
 #[inline]
 pub fn ncchannel_set(channel: &mut NcChannel, rgb: NcRgb) {
-    *channel = (*channel & !c_api::NC_BG_RGB_MASK) | c_api::NC_BGDEFAULT_MASK | (rgb & 0x00ffffff);
+    *channel = (*channel & !(c_api::NC_BG_RGB_MASK | c_api::NC_BG_PALETTE))
+        | c_api::NC_BGDEFAULT_MASK
+        | (rgb & 0x00ffffff);
 }
 
 /// Sets the foreground [`NcRgb`] of an [`NcChannels`], and marks it as NOT using
@@ -314,7 +335,7 @@ pub fn ncchannel_set(channel: &mut NcChannel, rgb: NcRgb) {
 pub fn ncchannels_set_fg_rgb(channels: &mut NcChannels, rgb: NcRgb) {
     let mut channel = ncchannels_fchannel(*channels);
     ncchannel_set(&mut channel, rgb);
-    *channels = (channel as u64) << 32 | *channels & 0xffffffff_u64;
+    *channels = (channel as NcChannels) << 32 | *channels & 0xffffffff;
 }
 
 /// Sets the foreground [`NcRgb`] of an [`NcChannels`], and marks it as NOT using
@@ -386,7 +407,7 @@ pub fn ncchannels_bg_default_p(channels: NcChannels) -> bool {
 pub fn ncchannels_set_fg_default(channels: &mut NcChannels) -> NcChannels {
     let mut channel = ncchannels_fchannel(*channels);
     ncchannel_set_default(&mut channel);
-    *channels = (channel as u64) << 32 | *channels & 0xffffffff_u64;
+    *channels = (channel as NcChannels) << 32 | *channels & 0xffffffff;
     *channels
 }
 
@@ -400,7 +421,7 @@ pub fn ncchannels_set_fg_default(channels: &mut NcChannels) -> NcChannels {
 pub fn ncchannels_set_fg_not_default(channels: &mut NcChannels) -> NcChannels {
     let mut channel = ncchannels_fchannel(*channels);
     ncchannel_set_not_default(&mut channel);
-    *channels = (channel as u64) << 32 | *channels & 0xffffffff_u64;
+    *channels = (channel as NcChannels) << 32 | *channels & 0xffffffff;
     *channels
 }
 
@@ -454,12 +475,52 @@ pub fn ncchannels_set_not_default(channels: &mut NcChannels) -> NcChannels {
 
 // Palette ---------------------------------------------------------------------
 
+/// Extracts the [`NcPaletteIndex`] from the [`NcChannel`].
+///
+/// The channel must be palette-indexed, or the return value is meaningless.
+/// Verify palette indexing with [`ncchannel_palindex_p`].
+///
+/// *Method: NcChannel.[palindex()][NcChannel#method.palindex]*
+pub const fn ncchannel_palindex(channel: NcChannel) -> NcPaletteIndex {
+    (channel & 0xFF) as NcPaletteIndex
+}
+
+/// Sets the [`NcPaletteIndex`] of the [`NcChannel`], and the channel into
+/// palette indexed mode.
+///
+/// Note: Unlike the original C function, this one can't fail.
+///
+/// *Method: NcChannel.[set_palindex()][NcChannel#method.set_palindex]*
+pub fn ncchannel_set_palindex(channel: &mut NcChannel, index: NcPaletteIndex) {
+    *channel |= c_api::NC_BGDEFAULT_MASK;
+    *channel |= c_api::NC_BG_PALETTE;
+    ncchannel_set_alpha(channel, c_api::NCALPHA_OPAQUE);
+    *channel &= 0xFF000000;
+    *channel |= index as NcChannel;
+}
+
 /// Is this [`NcChannel`] using palette-indexed color rather than RGB?
 ///
 /// *Method: NcChannel.[palindex_p()][NcChannel#method.palindex_p]*
 #[inline]
 pub fn ncchannel_palindex_p(channel: NcChannel) -> bool {
     !(ncchannel_default_p(channel) && (channel & c_api::NC_BG_PALETTE) == 0)
+}
+
+/// Extracts the [`NcPaletteIndex`] from the foreground [`NcChannel`].
+///
+/// *Method: NcChannels.[fg_palindex()][NcChannels#method.fg_palindex]*
+#[inline]
+pub fn ncchannels_fg_palindex(channels: NcChannels) -> NcPaletteIndex {
+    ncchannel_palindex(ncchannels_fchannel(channels))
+}
+
+/// Extracts the [`NcPaletteIndex`] from the background [`NcChannel`].
+///
+/// *Method: NcChannels.[bg_palindex()][NcChannels#method.bg_palindex]*
+#[inline]
+pub fn ncchannels_bg_palindex(channels: NcChannels) -> NcPaletteIndex {
+    ncchannel_palindex(ncchannels_bchannel(channels))
 }
 
 /// Is the foreground of an [`NcChannels`] using an [indexed][`NcPaletteIndex`]
@@ -481,28 +542,28 @@ pub fn ncchannels_bg_palindex_p(channels: NcChannels) -> bool {
 }
 
 /// Sets the foreground of an [`NcChannels`] as using an
-/// [indexed][`NcPaletteIndex`] [`NcPalette`][crate::NcPalette] color.
+/// [*indexed*][`NcPaletteIndex`] [`NcPalette`][crate::NcPalette] color.
+///
+/// Note: Unlike the original C function, this one can't fail.
 ///
 /// *Method: NcChannels.[set_fg_palindex()][NcChannels#method.set_fg_palindex]*
 #[inline]
 #[allow(clippy::unnecessary_cast)]
 pub fn ncchannels_set_fg_palindex(channels: &mut NcChannels, index: NcPaletteIndex) {
-    *channels |= c_api::NC_FGDEFAULT_MASK;
-    *channels |= c_api::NC_FG_PALETTE as NcChannels;
-    ncchannels_set_fg_alpha(channels, NcAlpha::OPAQUE);
-    *channels &= 0xff000000ffffffff as NcChannels;
-    *channels |= (index as NcChannels) << 32;
+    let mut channel = ncchannels_fchannel(*channels);
+    ncchannel_set_palindex(&mut channel, index);
+    *channels = (channel as NcChannels) << 32 | (*channels & 0xffffffff as NcChannels)
 }
 
 /// Sets the background of an [`NcChannels`] as using an
-/// [indexed][`NcPaletteIndex`] [`NcPalette`][crate::NcPalette] color.
+/// [*indexed*][`NcPaletteIndex`] [`NcPalette`][crate::NcPalette] color.
+///
+/// Note: Unlike the original C function, this one can't fail.
 ///
 /// *Method: NcChannels.[set_bg_palindex()][NcChannels#method.set_bg_palindex]*
 #[inline]
 pub fn ncchannels_set_bg_palindex(channels: &mut NcChannels, index: NcPaletteIndex) {
-    *channels |= c_api::NC_BGDEFAULT_MASK as NcChannels;
-    *channels |= c_api::NC_BG_PALETTE as NcChannels;
-    ncchannels_set_bg_alpha(channels, NcAlpha::OPAQUE);
-    *channels &= 0xffffffffff000000;
-    *channels |= index as NcChannels;
+    let mut channel = ncchannels_bchannel(*channels);
+    ncchannel_set_palindex(&mut channel, index);
+    ncchannels_set_bchannel(channels, channel);
 }

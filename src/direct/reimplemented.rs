@@ -108,7 +108,7 @@ pub fn ncdirect_get_nblock(ncd: &mut NcDirect, input: Option<&mut NcInput>) -> N
     }
 }
 
-/// Sets the foreground [NcComponent] components.
+/// Sets the foreground [`NcComponent`] components.
 ///
 /// *Method: NcDirect.[set_fg_rgb8()][NcDirect#method.set_fg_rgb8].*
 #[inline]
@@ -122,7 +122,7 @@ pub fn ncdirect_set_fg_rgb8(
     unsafe { c_api::ncdirect_set_fg_rgb(ncd, rgb) }
 }
 
-/// Sets the background [NcComponent] components.
+/// Sets the background [`NcComponent`] components.
 ///
 /// *Method: NcDirect.[set_bg_rgb8()][NcDirect#method.set_bg_rgb8].*
 #[inline]
@@ -136,7 +136,7 @@ pub fn ncdirect_set_bg_rgb8(
     unsafe { c_api::ncdirect_set_bg_rgb(ncd, rgb) }
 }
 
-/// Draws horizontal lines using the specified [NcChannels]s, interpolating
+/// Draws horizontal lines using the specified [`NcChannels`]s, interpolating
 /// between them as we go.
 ///
 /// The string at `egc` may not use more than one column.
@@ -164,7 +164,7 @@ pub fn ncdirect_hline_interp(
     unsafe { crate::bindings::ffi::ncdirect_hline_interp(ncd, egc_ptr, len, h1, h2) }
 }
 
-/// Draws horizontal lines using the specified [NcChannels]s, interpolating
+/// Draws horizontal lines using the specified [`NcChannels`]s, interpolating
 /// between them as we go.
 ///
 /// The string at `egc` may not use more than one column.

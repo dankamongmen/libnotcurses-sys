@@ -8,8 +8,8 @@ use core::ptr::null_mut;
 
 use crate::{
     c_api::{self, nccell_release},
-    cstring, rstring, NcAlpha, NcAlphaApi, NcCell, NcChannel, NcChannels, NcChannelsApi,
-    NcComponent, NcIntResult, NcIntResultApi, NcPaletteIndex, NcPlane, NcRgb, NcStyle, NcStyleApi,
+    cstring, rstring, NcAlpha, NcCell, NcChannel, NcChannels, NcComponent, NcIntResult,
+    NcIntResultApi, NcPaletteIndex, NcPlane, NcRgb, NcStyle, NcStyleApi,
 };
 
 const NCBOXLIGHT: &str = "┌┐└┘─│";
@@ -236,13 +236,8 @@ pub const fn nccell_bg_palindex(cell: &NcCell) -> NcPaletteIndex {
 ///
 /// *Method: NcCell.[set_fg_palindex()][NcCell#method.set_fg_palindex].*
 #[inline]
-#[allow(clippy::unnecessary_cast)]
 pub fn nccell_set_fg_palindex(cell: &mut NcCell, index: NcPaletteIndex) {
-    cell.channels |= NcChannels::FG_DEFAULT_MASK;
-    cell.channels |= NcChannels::FG_PALETTE_MASK;
-    nccell_set_fg_alpha(cell, NcAlpha::OPAQUE);
-    cell.channels &= 0xff000000ffffffff as NcChannels;
-    cell.channels |= (index as NcChannels) << 32;
+    c_api::ncchannels_set_fg_palindex(&mut cell.channels, index)
 }
 
 /// Sets an [`NcCell`]'s background [`NcPaletteIndex`].
@@ -256,11 +251,7 @@ pub fn nccell_set_fg_palindex(cell: &mut NcCell, index: NcPaletteIndex) {
 /// *Method: NcCell.[set_bg_palindex()][NcCell#method.set_bg_palindex].*
 #[inline]
 pub fn nccell_set_bg_palindex(cell: &mut NcCell, index: NcPaletteIndex) {
-    cell.channels |= NcChannels::BG_DEFAULT_MASK as NcChannels;
-    cell.channels |= NcChannels::BG_PALETTE_MASK as NcChannels;
-    nccell_set_bg_alpha(cell, NcAlpha::OPAQUE);
-    cell.channels &= 0xffffffffff000000;
-    cell.channels |= index as NcChannels;
+    c_api::ncchannels_set_bg_palindex(&mut cell.channels, index)
 }
 
 // Styles ----------------------------------------------------------------------

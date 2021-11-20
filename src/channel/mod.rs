@@ -255,29 +255,6 @@ pub(crate) mod constants {
     /// See the detailed diagram at [`NcChannels`]
     pub const NC_BG_RGB_MASK: u32 = crate::bindings::ffi::NC_BG_RGB_MASK;
 
-    /// If this bit is set, we are *not* using the default foreground color
-    ///
-    /// See the detailed diagram at [`NcChannels`]
-    pub const NC_FGDEFAULT_MASK: u64 = crate::bindings::ffi::NC_FGDEFAULT_MASK;
-
-    /// Extract these bits to get the (background) [`NcAlpha`] mask.
-    ///
-    /// See the detailed diagram at [`NcChannels`]
-    pub const NC_FG_ALPHA_MASK: u64 = crate::bindings::ffi::NC_FG_ALPHA_MASK;
-
-    /// If this bit *and*
-    /// [`NcChannels::FG_DEFAULT_MASK`][NcChannels#associatedconstant.FG_DEFAULT_MASK]
-    /// are set, we're using a
-    /// palette-indexed background color
-    ///
-    /// See the detailed diagram at [`NcChannels`]
-    pub const NC_FG_PALETTE: u64 = crate::bindings::ffi::NC_FG_PALETTE;
-
-    /// Extract these bits to get the foreground [`NcRgb`][crate::NcRgb] value
-    ///
-    /// See the detailed diagram at [`NcChannels`]
-    pub const NC_FG_RGB_MASK: u64 = crate::bindings::ffi::NC_FG_RGB_MASK;
-
     /// Does this glyph completely obscure the background?
     ///
     /// If so, there's no need to emit a background when rasterizing,

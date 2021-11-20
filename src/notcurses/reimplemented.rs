@@ -161,7 +161,7 @@ pub fn notcurses_render(nc: &mut Nc) -> NcIntResult {
     unsafe { c_api::ncpile_rasterize(stdplane) }
 }
 
-/// [notcurses_stdplane()][c_api::notcurses_stdplane], plus free bonus
+/// [*notcurses_stdplane*][c_api::notcurses_stdplane], plus free bonus
 /// dimensions written to non-NULL y/x!
 ///
 /// *Method: Nc.[stddim_yx()][Nc#method.stddim_yx].*
@@ -181,7 +181,7 @@ pub fn notcurses_stddim_yx<'a>(
     Err(NcError::new())
 }
 
-/// [notcurses_stdplane_const()][c_api::notcurses_stdplane_const], plus free
+/// [*notcurses_stdplane_const*][c_api::notcurses_stdplane_const], plus free
 /// bonus dimensions written to non-NULL y/x!
 ///
 /// *Method: Nc.[stddim_yx_const()][Nc#method.stddim_yx_const].*

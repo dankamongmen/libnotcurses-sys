@@ -42,7 +42,9 @@ pub trait NcChannelApi {
     fn set_default(&mut self) -> Self;
     fn set_not_default(&mut self) -> Self;
 
+    fn palindex(&self) -> NcPaletteIndex;
     fn palindex_p(&self) -> bool;
+    fn set_palindex(&mut self, index: NcPaletteIndex) -> Self;
 }
 
 /// Enables the [`NcChannels`] associated methods and constants.
@@ -52,10 +54,6 @@ pub trait NcChannelsApi {
     const BG_ALPHA_MASK: u32 = super::constants::NC_BG_ALPHA_MASK;
     const BG_PALETTE_MASK: u32 = super::constants::NC_BG_PALETTE;
     const BG_RGB_MASK: u32 = super::constants::NC_BG_RGB_MASK;
-    const FG_DEFAULT_MASK: u64 = super::constants::NC_FGDEFAULT_MASK;
-    const FG_ALPHA_MASK: u64 = super::constants::NC_FG_ALPHA_MASK;
-    const FG_PALETTE_MASK: u64 = super::constants::NC_FG_PALETTE;
-    const FG_RGB_MASK: u64 = super::constants::NC_FG_RGB_MASK;
     const NOBACKGROUND_MASK: u64 = super::constants::NC_NOBACKGROUND_MASK;
 
     // constructors
@@ -89,6 +87,7 @@ pub trait NcChannelsApi {
 
     // methods
     fn combine(fchannel: NcChannel, bchannel: NcChannel) -> Self;
+    fn reverse(&mut self) -> Self;
 
     fn fchannel(&self) -> NcChannel;
     fn bchannel(&self) -> NcChannel;
@@ -131,6 +130,8 @@ pub trait NcChannelsApi {
     fn set_default(&mut self) -> Self;
     fn set_not_default(&mut self) -> Self;
 
+    fn fg_palindex(&self) -> NcPaletteIndex;
+    fn bg_palindex(&self) -> NcPaletteIndex;
     fn fg_palindex_p(&self) -> bool;
     fn bg_palindex_p(&self) -> bool;
     fn set_fg_palindex(&mut self, index: NcPaletteIndex) -> Self;
@@ -227,14 +228,14 @@ impl NcChannelApi for NcChannel {
 
     /// Gets the [`NcAlpha`].
     ///
-    /// *C style function: [channel_alpha()][c_api::ncchannel_alpha].*
+    /// *C style function: [ncchannel_alpha()][c_api::ncchannel_alpha].*
     fn alpha(&self) -> NcAlpha {
         c_api::ncchannel_alpha(*self)
     }
 
     /// Sets the [`NcAlpha`].
     ///
-    /// *C style function: [channel_set_alpha()][c_api::ncchannel_set_alpha].*
+    /// *C style function: [ncchannel_set_alpha()][c_api::ncchannel_set_alpha].*
     fn set_alpha(&mut self, alpha: NcAlpha) -> Self {
         c_api::ncchannel_set_alpha(self, alpha);
         *self
@@ -244,7 +245,7 @@ impl NcChannelApi for NcChannel {
 
     /// Gets the [`NcRgb`].
     ///
-    /// *C style function: [channel_rgb()][c_api::ncchannel_rgb].*
+    /// *C style function: [ncchannel_rgb()][c_api::ncchannel_rgb].*
     //
     // Not in the C API
     fn rgb(&self) -> NcRgb {
@@ -254,7 +255,7 @@ impl NcChannelApi for NcChannel {
     /// Sets the [`NcRgb`], and marks the NcChannel as NOT using the
     /// "default color", retaining the other bits unchanged.
     ///
-    /// *C style function: [channel_set()][c_api::ncchannel_set].*
+    /// *C style function: [ncchannel_set()][c_api::ncchannel_set].*
     fn set(&mut self, rgb: NcRgb) -> Self {
         c_api::ncchannel_set(self, rgb);
         *self
@@ -264,7 +265,7 @@ impl NcChannelApi for NcChannel {
 
     /// Gets the three [`NcComponent`]s.
     ///
-    /// *C style function: [channel_rgb8()][c_api::ncchannel_rgb8].*
+    /// *C style function: [ncchannel_rgb8()][c_api::ncchannel_rgb8].*
     fn rgb8(&self) -> (NcComponent, NcComponent, NcComponent) {
         let (mut r, mut g, mut b) = (0, 0, 0);
         c_api::ncchannel_rgb8(*self, &mut r, &mut g, &mut b);
@@ -274,7 +275,7 @@ impl NcChannelApi for NcChannel {
     /// Sets the three [`NcComponent`]s, and
     /// marks the NcChannel as NOT using the "default color".
     ///
-    /// *C style function: [channel_set_rgb8()][c_api::ncchannel_set_rgb8].*
+    /// *C style function: [ncchannel_set_rgb8()][c_api::ncchannel_set_rgb8].*
     fn set_rgb8(&mut self, r: NcComponent, g: NcComponent, b: NcComponent) -> Self {
         c_api::ncchannel_set_rgb8(self, r, g, b);
         *self
@@ -282,28 +283,28 @@ impl NcChannelApi for NcChannel {
 
     /// Gets the red [`NcComponent`].
     ///
-    /// *C style function: [channel_r()][c_api::ncchannel_r].*
+    /// *C style function: [ncchannel_r()][c_api::ncchannel_r].*
     fn r(&self) -> NcComponent {
         c_api::ncchannel_r(*self)
     }
 
     /// Gets the green [`NcComponent`].
     ///
-    /// *C style function: [channel_g()][c_api::ncchannel_g].*
+    /// *C style function: [ncchannel_g()][c_api::ncchannel_g].*
     fn g(&self) -> NcComponent {
         c_api::ncchannel_g(*self)
     }
 
     /// Gets the blue [`NcComponent`].
     ///
-    /// *C style function: [channel_b()][c_api::ncchannel_b].*
+    /// *C style function: [ncchannel_b()][c_api::ncchannel_b].*
     fn b(&self) -> NcComponent {
         c_api::ncchannel_b(*self)
     }
 
     /// Sets the red [`NcComponent`], and returns the new `NcChannel`.
     ///
-    /// *C style function: [channel_set_r()][c_api::ncchannel_set_r].*
+    /// *C style function: [ncchannel_set_r()][c_api::ncchannel_set_r].*
     //
     // Not in the C API
     fn set_r(&mut self, r: NcComponent) -> Self {
@@ -312,7 +313,7 @@ impl NcChannelApi for NcChannel {
 
     /// Sets the green [`NcComponent`], and returns the new `NcChannel`.
     ///
-    /// *C style function: [channel_set_g()][c_api::ncchannel_set_g].*
+    /// *C style function: [ncchannel_set_g()][c_api::ncchannel_set_g].*
     //
     // Not in the C API
     fn set_g(&mut self, g: NcComponent) -> Self {
@@ -321,7 +322,7 @@ impl NcChannelApi for NcChannel {
 
     /// Sets the blue [`NcComponent`], and returns the new `NcChannel`.
     ///
-    /// *C style function: [channel_set_b()][c_api::ncchannel_set_b].*
+    /// *C style function: [ncchannel_set_b()][c_api::ncchannel_set_b].*
     //
     // Not in the C API
     fn set_b(&mut self, b: NcComponent) -> Self {
@@ -332,7 +333,7 @@ impl NcChannelApi for NcChannel {
 
     /// Is this `NcChannel` using the "default color" rather than RGB/palette-indexed?
     ///
-    /// *C style function: [channel_default_p()][c_api::ncchannel_default_p].*
+    /// *C style function: [ncchannel_default_p()][c_api::ncchannel_default_p].*
     fn default_p(&self) -> bool {
         c_api::ncchannel_default_p(*self)
     }
@@ -340,7 +341,7 @@ impl NcChannelApi for NcChannel {
     /// Marks this `NcChannel` as using its "default color",
     /// which also marks it opaque.
     ///
-    /// *C style function: [channel_set_default()][c_api::ncchannel_set_default].*
+    /// *C style function: [ncchannel_set_default()][c_api::ncchannel_set_default].*
     fn set_default(&mut self) -> Self {
         c_api::ncchannel_set_default(self)
     }
@@ -348,11 +349,11 @@ impl NcChannelApi for NcChannel {
     /// Marks this `NcChannel` as *not* using its "default color".
     ///
     /// The following methods also marks the channel as NOT using the "default color":
-    /// - [new()][NcChannel#method.new]
-    /// - [set()][NcChannel#method.set]
-    /// - [set_rgb8()][NcChannel#method.set_rgb8]
+    /// - [`new`][NcChannel#method.new]
+    /// - [`set`][NcChannel#method.set]
+    /// - [`set_rgb8`][NcChannel#method.set_rgb8]
     ///
-    /// *C style function: [channel_set_not_default()][c_api::ncchannel_set_not_default].*
+    /// *C style function: [ncchannel_set_not_default()][c_api::ncchannel_set_not_default].*
     //
     // Not in the C API
     fn set_not_default(&mut self) -> Self {
@@ -361,11 +362,30 @@ impl NcChannelApi for NcChannel {
 
     // NcPaletteIndex
 
+    /// Extracts the [`NcPaletteIndex`] from the [`NcChannel`].
+    ///
+    /// The channel must be palette-indexed, or the return value is meaningless.
+    /// Verify palette indexing with [`palindex_p`][NcChannel#method.palindex_p].
+    ///
+    /// *C style function: [ncchannel_palindex()][c_api::ncchannel_palindex].*
+    fn palindex(&self) -> NcPaletteIndex {
+        c_api::ncchannel_palindex(*self)
+    }
+
     /// Is this NcChannel using palette-indexed color rather than RGB?
     ///
-    /// *C style function: [channel_set_default()][c_api::ncchannel_set_default].*
+    /// *C style function: [ncchannel_palindex_p()][c_api::ncchannel_palindex_p].*
     fn palindex_p(&self) -> bool {
         c_api::ncchannel_palindex_p(*self)
+    }
+
+    /// Sets the [`NcPaletteIndex`] of the [`NcChannel`], and the channel into
+    /// palette-indexed mode.
+    ///
+    /// *C style function: [ncchannel_set_palindex()][c_api::ncchannel_set_palindex].*
+    fn set_palindex(&mut self, index: NcPaletteIndex) -> Self {
+        c_api::ncchannel_set_palindex(self, index);
+        *self
     }
 }
 
@@ -395,27 +415,6 @@ impl NcChannelsApi for NcChannels {
     /// Extract these bits to get the background [`NcRgb`][crate::NcRgb] value.
     const BG_RGB_MASK: u32 = super::constants::NC_BG_RGB_MASK;
 
-    /// If this bit is set, we are *not* using the default foreground color.
-    ///
-    /// See the detailed diagram at [`NcChannels`][crate::NcChannels]
-    const FG_DEFAULT_MASK: u64 = super::constants::NC_FGDEFAULT_MASK;
-
-    /// Extract these bits to get the foreground [`NcAlpha`] mask.
-    ///
-    /// See the detailed diagram at [`NcChannels`][crate::NcChannels]
-    const FG_ALPHA_MASK: u64 = super::constants::NC_FG_ALPHA_MASK;
-
-    /// If this bit *and*
-    /// [`FG_DEFAULT_MASK`][NcChannels#associatedconstant.FG_DEFAULT_MASK]
-    /// are set, we're using a palette-indexed background color.
-    ///
-    /// See the detailed diagram at [`NcChannels`][crate::NcChannels]
-    const FG_PALETTE_MASK: u64 = super::constants::NC_FG_PALETTE;
-
-    /// Extract these bits to get the foreground [`NcRgb`][crate::NcRgb] value.
-    ///
-    /// See the detailed diagram at [`NcChannels`][crate::NcChannels]
-    const FG_RGB_MASK: u64 = super::constants::NC_FG_RGB_MASK;
     // Constructors
 
     /// New `NcChannels`, set to black and NOT using the "default color".
@@ -512,13 +511,21 @@ impl NcChannelsApi for NcChannels {
         Self::combine(channel, channel)
     }
 
-    // Combine
+    // Combine & Reverse
 
     /// Combines two [`NcChannel`]s into an [`NcChannels`].
     ///
     /// *C style function: [channels_combine()][c_api::ncchannels_combine].*
     fn combine(fchannel: NcChannel, bchannel: NcChannel) -> Self {
         c_api::ncchannels_combine(fchannel, bchannel)
+    }
+
+    /// Reverses the [`NcChannel`]s.
+    ///
+    /// *C style function: [channels_reverse()][c_api::ncchannels_reverse].*
+    fn reverse(&mut self) -> Self {
+        *self = c_api::ncchannels_reverse(*self);
+        *self
     }
 
     // NcChannel
@@ -814,16 +821,30 @@ impl NcChannelsApi for NcChannels {
 
     // NcPaletteIndex
 
-    /// Is the foreground of using an [indexed][NcPaletteIndex]
-    /// [NcPalette][crate::NcPalette] color?
+    /// Extracts the [`NcPaletteIndex`] from the foreground [`NcChannel`].
+    ///
+    /// *C style function: [channels_fg_palindex()][c_api::ncchannels_fg_palindex].*
+    fn fg_palindex(&self) -> NcPaletteIndex {
+        c_api::ncchannels_fg_palindex(*self)
+    }
+
+    /// Extracts the [`NcPaletteIndex`] from the background [`NcChannel`].
+    ///
+    /// *C style function: [channels_bg_palindex()][c_api::ncchannels_bg_palindex].*
+    fn bg_palindex(&self) -> NcPaletteIndex {
+        c_api::ncchannels_bg_palindex(*self)
+    }
+
+    /// Is the foreground of using an [*indexed*][NcPaletteIndex]
+    /// [`NcPalette`][crate::NcPalette] color?
     ///
     /// *C style function: [channels_fg_palindex_p()][c_api::ncchannels_fg_palindex_p].*
     fn fg_palindex_p(&self) -> bool {
         c_api::ncchannels_fg_palindex_p(*self)
     }
 
-    /// Is the background of using an [indexed][NcPaletteIndex]
-    /// [NcPalette][crate::NcPalette] color?
+    /// Is the background of using an [*indexed*][NcPaletteIndex]
+    /// [`NcPalette`][crate::NcPalette] color?
     ///
     /// *C style function: [channels_bg_palindex_p()][c_api::ncchannels_bg_palindex_p].*
     fn bg_palindex_p(&self) -> bool {
@@ -831,7 +852,7 @@ impl NcChannelsApi for NcChannels {
     }
 
     /// Sets the foreground of an [`NcChannels`] as using an
-    /// [indexed][NcPaletteIndex] [NcPalette][crate::NcPalette] color.
+    /// [*indexed*][NcPaletteIndex] [`NcPalette`][crate::NcPalette] color.
     ///
     /// *C style function: [channels_set_fg_palindex()][c_api::ncchannels_set_fg_palindex].*
     fn set_fg_palindex(&mut self, index: NcPaletteIndex) -> Self {
@@ -840,7 +861,7 @@ impl NcChannelsApi for NcChannels {
     }
 
     /// Sets the background of an [`NcChannels`] as using an
-    /// [indexed][NcPaletteIndex] [NcPalette][crate::NcPalette] color.
+    /// [*indexed*][NcPaletteIndex] [`NcPalette`][crate::NcPalette] color.
     ///
     /// *C style function: [channels_set_bg_palindex()][c_api::ncchannels_set_bg_palindex].*
     fn set_bg_palindex(&mut self, index: NcPaletteIndex) -> Self {

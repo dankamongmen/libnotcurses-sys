@@ -34,10 +34,6 @@ pub use ffi::{
 // NC_BG_ALPHA_MASK,
 // NC_BG_PALETTE,
 // NC_BG_RGB_MASK,
-// NC_FGDEFAULT_MASK,
-// NC_FG_ALPHA_MASK,
-// NC_FG_PALETTE,
-// NC_FG_RGB_MASK,
 
 #[doc(inline)]
 pub use ffi::{

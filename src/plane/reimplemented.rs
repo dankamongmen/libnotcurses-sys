@@ -12,7 +12,7 @@ use crate::{
 
 // Alpha -----------------------------------------------------------------------
 
-/// Gets the foreground [NcAlpha] from the [NcPlane], shifted to LSBs.
+/// Gets the foreground [`NcAlpha`] from the [`NcPlane`], shifted to LSBs.
 ///
 /// *Method: NcPlane.[fg_alpha()][NcPlane#method.fg_alpha].*
 #[inline]
@@ -20,7 +20,7 @@ pub fn ncplane_fg_alpha(plane: &NcPlane) -> NcAlpha {
     c_api::ncchannels_fg_alpha(ncplane_channels(plane))
 }
 
-/// Gets the background [NcAlpha] from the [NcPlane], shifted to LSBs.
+/// Gets the background [`NcAlpha`] from the [`NcPlane`], shifted to LSBs.
 ///
 /// *Method: NcPlane.[bg_alpha()][NcPlane#method.bg_alpha].*
 #[inline]
@@ -30,7 +30,7 @@ pub fn ncplane_bg_alpha(plane: &NcPlane) -> NcAlpha {
 
 // NcChannel -------------------------------------------------------------------
 
-/// Gets the foreground [NcChannel] from an [NcPlane].
+/// Gets the foreground [`NcChannel`] from an [`NcPlane`].
 ///
 /// *Method: NcPlane.[fchannel()][NcPlane#method.fchannel].*
 #[inline]
@@ -38,7 +38,7 @@ pub fn ncplane_fchannel(plane: &NcPlane) -> NcChannel {
     c_api::ncchannels_fchannel(ncplane_channels(plane))
 }
 
-/// Gets the background [NcChannel] from an [NcPlane].
+/// Gets the background [`NcChannel`] from an [`NcPlane`].
 ///
 /// *Method: NcPlane.[bchannel()][NcPlane#method.bchannel].*
 #[inline]
@@ -46,8 +46,8 @@ pub fn ncplane_bchannel(plane: &NcPlane) -> NcChannel {
     c_api::ncchannels_bchannel(ncplane_channels(plane))
 }
 
-/// Sets the foreground [NcChannel] on an [NcPlane],
-/// and returns the new [NcChannels].
+/// Sets the foreground [`NcChannel`] on an [`NcPlane`],
+/// and returns the new [`NcChannels`].
 ///
 /// *Method: NcPlane.[set_fchannel()][NcPlane#method.set_fchannel].*
 #[inline]
@@ -55,8 +55,8 @@ pub fn ncplane_set_fchannel(plane: &mut NcPlane, channel: NcChannel) -> NcChanne
     unsafe { c_api::ffi::ncplane_set_fchannel(plane, channel) }
 }
 
-/// Sets the background [NcChannel] on an [NcPlane],
-/// and returns the new [NcChannels].
+/// Sets the background [`NcChannel`] on an [`NcPlane`],
+/// and returns the new [`NcChannels`].
 ///
 /// *Method: NcPlane.[set_bchannel()][NcPlane#method.set_bchannel].*
 #[inline]
@@ -64,7 +64,7 @@ pub fn ncplane_set_bchannel(plane: &mut NcPlane, channel: NcChannel) -> NcChanne
     unsafe { c_api::ffi::ncplane_set_bchannel(plane, channel) }
 }
 
-/// Gets the [NcChannels] of an [NcPlane].
+/// Gets the [`NcChannels`] of an [`NcPlane`].
 ///
 /// *Method: NcPlane.[channels()][NcPlane#method.channels].*
 #[inline]
@@ -72,7 +72,7 @@ pub fn ncplane_channels(plane: &NcPlane) -> NcChannels {
     unsafe { c_api::ffi::ncplane_channels(plane) }
 }
 
-/// Sets the [NcChannels] of an [NcPlane].
+/// Sets the [`NcChannels`] of an [`NcPlane`].
 ///
 /// *Method: NcPlane.[set_channels()][NcPlane#method.set_channels].*
 #[inline]
@@ -84,8 +84,8 @@ pub fn ncplane_set_channels(plane: &mut NcPlane, channels: NcChannels) {
 
 // NcComponent ---------------------------------------------------------------------
 
-/// Gets the foreground RGB [NcComponent]s from an [NcPlane].
-/// and returns the background [NcChannel].
+/// Gets the foreground RGB [`NcComponent`]s from an [`NcPlane`].
+/// and returns the background [`NcChannel`].
 ///
 /// *Method: NcPlane.[fg_rgb8()][NcPlane#method.fg_rgb8].*
 #[inline]
@@ -98,8 +98,8 @@ pub fn ncplane_fg_rgb8(
     c_api::ncchannels_fg_rgb8(ncplane_channels(plane), red, green, blue)
 }
 
-/// Gets the background RGB [NcComponent]s from an [NcPlane],
-/// and returns the background [NcChannel].
+/// Gets the background RGB [`NcComponent`]s from an [`NcPlane`],
+/// and returns the background [`NcChannel`].
 ///
 /// *Method: NcPlane.[bg_rgb8()][NcPlane#method.bg_rgb8].*
 #[inline]
@@ -114,7 +114,7 @@ pub fn ncplane_bg_rgb8(
 
 // NcRgb -----------------------------------------------------------------------
 
-/// Gets the foreground [NcRgb] from an [NcPlane], shifted to LSBs.
+/// Gets the foreground [`NcRgb`] from an [`NcPlane`], shifted to LSBs.
 ///
 /// *Method: NcPlane.[fg_rgb()][NcPlane#method.fg_rgb].*
 #[inline]
@@ -122,7 +122,7 @@ pub fn ncplane_fg_rgb(plane: &NcPlane) -> NcRgb {
     c_api::ncchannels_fg_rgb(ncplane_channels(plane))
 }
 
-/// Gets the background [NcRgb] from an [NcPlane], shifted to LSBs.
+/// Gets the background [`NcRgb`] from an [`NcPlane`], shifted to LSBs.
 ///
 /// *Method: NcPlane.[bg_rgb()][NcPlane#method.bg_rgb].*
 #[inline]
@@ -149,7 +149,7 @@ pub fn ncplane_bg_default_p(plane: &NcPlane) -> bool {
 }
 
 /// Marks both the foreground and background as using the "default color",
-/// and returns the new [NcChannels].
+/// and returns the new [`NcChannels`].
 ///
 /// *Method: NcPlane.[set_default()][NcPlane#method.set_default].*
 //
@@ -162,7 +162,7 @@ pub fn ncplane_set_default(plane: &mut NcPlane) -> NcChannels {
 }
 
 /// Marks both the foreground and background as NOT using the "default color",
-/// and returns the new [NcChannels].
+/// and returns the new [`NcChannels`].
 ///
 /// *Method: NcPlane.[set_not_default()][NcPlane#method.set_not_default].*
 //
@@ -175,7 +175,7 @@ pub fn ncplane_set_not_default(plane: &mut NcPlane) -> NcChannels {
 }
 
 /// Marks the foreground as NOT using the "default color",
-/// and returns the new [NcChannels].
+/// and returns the new [`NcChannels`].
 ///
 /// *Method: NcPlane.[set_fg_not_default()][NcPlane#method.set_fg_not_default].*
 //
@@ -186,7 +186,7 @@ pub fn ncplane_set_fg_not_default(plane: &NcPlane) -> NcChannels {
 }
 
 /// Marks the background as NOT using the "default color",
-/// and returns the new [NcChannels].
+/// and returns the new [`NcChannels`].
 ///
 /// *Method: NcPlane.[set_bg_not_default()][NcPlane#method.set_bg_not_default].*
 //
@@ -644,7 +644,7 @@ pub fn ncplane_move_family_bottom(plane: &mut NcPlane) {
     }
 }
 
-/// Gets the columns of the [NcPlane].
+/// Gets the columns of the [`NcPlane`].
 ///
 /// *Method: NcPlane.[dim_x()][NcPlane#method.dim_x].*
 #[inline]
@@ -656,7 +656,7 @@ pub fn ncplane_dim_x(plane: &NcPlane) -> NcDim {
     }
 }
 
-/// Gets the rows of the [NcPlane].
+/// Gets the rows of the [`NcPlane`].
 ///
 /// *Method: NcPlane.[dim_y()][NcPlane#method.dim_y].*
 #[inline]

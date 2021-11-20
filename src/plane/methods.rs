@@ -149,6 +149,7 @@ impl NcPlane {
     /// Destroys this `NcPlane`.
     ///
     /// None of its contents will be visible after the next render call.
+    ///
     /// It is an error to attempt to destroy the standard plane.
     ///
     /// *C style function: [ncplane_destroy()][c_api::ncplane_destroy].*
@@ -861,7 +862,7 @@ impl NcPlane {
     /// If the glyph can not fit in the current line, it is an error, unless
     /// scrolling is enabled.
     ///
-    /// NOTE: unlike the original C function, this one accepts any 4-byte `char`.
+    /// NOTE: Unlike the original C function, this one accepts any 4-byte `char`.
     ///
     /// *C style function: [ncplane_putchar()][c_api::ncplane_putchar].*
     pub fn putchar(&mut self, ch: char) -> NcResult<NcDim> {
@@ -877,7 +878,7 @@ impl NcPlane {
     /// If the glyph can not fit in the current line, it is an error, unless
     /// scrolling is enabled.
     ///
-    /// NOTE: unlike the original C function, this one accepts any 4-byte `char`.
+    /// NOTE: Unlike the original C function, this one accepts any 4-byte `char`.
     ///
     /// *C style function: [ncplane_putchar_stained()][c_api::ncplane_putchar_stained].*
     // WIP
@@ -898,7 +899,7 @@ impl NcPlane {
     /// If the glyph can not fit in the current line, it is an error, unless
     /// scrolling is enabled.
     ///
-    /// NOTE: unlike the original C function, this one accepts any 4-byte `char`.
+    /// NOTE: Unlike the original C function, this one accepts any 4-byte `char`.
     ///
     /// *C style function: [ncplane_putchar_yx()][c_api::ncplane_putchar_yx].*
     pub fn putchar_yx(&mut self, y: NcDim, x: NcDim, ch: char) -> NcResult<NcDim> {
@@ -922,7 +923,7 @@ impl NcPlane {
     /// If the glyph can not fit in the current line, it is an error, unless
     /// scrolling is enabled.
     ///
-    /// NOTE: unlike the original C function, this one accepts any 4-byte `char`.
+    /// NOTE: Unlike the original C function, this one accepts any 4-byte `char`.
     ///
     /// *C style function: [ncplane_putegc()][c_api::ncplane_putegc].*
     pub fn putegc(&mut self, egc: &str, sbytes: Option<&mut usize>) -> NcResult<NcDim> {
@@ -942,7 +943,7 @@ impl NcPlane {
     /// If the glyph can not fit in the current line, it is an error, unless
     /// scrolling is enabled.
     ///
-    /// NOTE: unlike the original C function, this one accepts any 4-byte `char`.
+    /// NOTE: Unlike the original C function, this one accepts any 4-byte `char`.
     ///
     /// *C style function: [ncplane_putegc_yx()][c_api::ncplane_putegc_yx].*
     pub fn putegc_yx(
@@ -972,7 +973,7 @@ impl NcPlane {
     /// If the glyph can not fit in the current line, it is an error, unless
     /// scrolling is enabled.
     ///
-    /// NOTE: unlike the original C function, this one accepts any 4-byte `char`.
+    /// NOTE: Unlike the original C function, this one accepts any 4-byte `char`.
     ///
     /// *C style function: [ncplane_putegc_stained()][c_api::ncplane_putegc_stained].*
     pub fn putegc_stained(&mut self, egc: &str, sbytes: Option<&mut usize>) -> NcResult<NcDim> {

@@ -29,10 +29,9 @@ mod methods;
 pub(crate) mod reimplemented;
 pub use methods::*;
 
-/// NcPalette structure consisting of an array of 256
-/// [`NcChannel`][crate::NcChannel]s.
+/// An array of 256 [`NcChannel`][crate::NcChannel]s.
 ///
-/// See also [NcPaletteIndex].
+/// See also [`NcPaletteIndex`].
 ///
 /// Some terminals only support 256 colors, but allow the full
 /// palette to be specified with arbitrary RGB colors. In all cases, it's more
@@ -40,11 +39,9 @@ pub use methods::*;
 /// terminal. If you can limit yourself to 256 colors, that's probably best.
 ///
 /// `type in C: ncncpalette (struct)`
-///
 pub type NcPalette = crate::bindings::ffi::ncpalette;
 
-/// 8-bit value used for indexing into a [`NcPalette`] (alias of `u8`).
-///
+/// Used for indexing into a [`NcPalette`] (alias of `u8`).
 pub type NcPaletteIndex = u8;
 
 impl NcPalette {
