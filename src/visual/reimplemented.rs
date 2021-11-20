@@ -69,7 +69,7 @@ pub fn ncvisualplane_create<'a>(
     // }
     // return newn;
 
-    ncv.blit(nc, Some(vopts2_ref))?;
+    unsafe { ncv.blit(nc, Some(vopts2_ref))? };
 
     Ok(newn)
 }

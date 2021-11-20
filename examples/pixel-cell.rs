@@ -56,7 +56,7 @@ fn main() -> NcResult<()> {
         0,
         0,
     );
-    let p1 = v1.blit(&mut nc, Some(&voptions))?;
+    let p1 = unsafe { v1.blit(&mut nc, Some(&voptions))? };
     p1.reparent(splane)?;
 
     nc_render_sleep![&mut nc, 1];
@@ -74,7 +74,7 @@ fn main() -> NcResult<()> {
         0,
         0,
     );
-    v1.blit(&mut nc, Some(&voptions2))?;
+    unsafe { v1.blit(&mut nc, Some(&voptions2))? };
     nc_render_sleep![&mut nc, 0, 250];
 
     // show the ncvisual, scaled without using interpolation
@@ -90,7 +90,7 @@ fn main() -> NcResult<()> {
         NcVisualOptions::NOINTERPOLATE,
         0,
     );
-    v1.blit(&mut nc, Some(&voptions3))?;
+    unsafe { v1.blit(&mut nc, Some(&voptions3))? };
     nc_render_sleep![&mut nc, 0, 250];
 
     // resize the ncvisual (doesn't use interpolation)
@@ -106,7 +106,7 @@ fn main() -> NcResult<()> {
         0,
     );
     v1.resize_noninterpolative(pg.cell_y * 4, pg.cell_x * 4)?;
-    let p4 = v1.blit(&mut nc, Some(&voptions4))?;
+    let p4 = unsafe { v1.blit(&mut nc, Some(&voptions4))? };
     p4.reparent(splane)?;
     nc_render_sleep![&mut nc, 0, 250];
 
@@ -124,7 +124,7 @@ fn main() -> NcResult<()> {
         0,
     );
     v5.resize(pg.cell_y * 4, pg.cell_x * 4)?;
-    let p5 = v5.blit(&mut nc, Some(&voptions5))?;
+    let p5 = unsafe { v5.blit(&mut nc, Some(&voptions5))? };
     p5.reparent(splane)?;
     nc_render_sleep![&mut nc, 0, 250];
 

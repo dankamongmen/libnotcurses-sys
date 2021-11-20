@@ -37,7 +37,7 @@ fn main() -> NcResult<()> {
         0,
         0,
     );
-    let visual1plane = visual1.blit(&mut nc, Some(&voptions1))?;
+    let visual1plane = unsafe { visual1.blit(&mut nc, Some(&voptions1))? };
     visual1plane.reparent(stp)?;
 
     for _ in 0..CELLS_MOVEMENT {

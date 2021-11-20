@@ -82,7 +82,7 @@ macro_rules! pile_render_sleep {
 #[macro_export]
 macro_rules! visual_render_sleep {
     ($v: expr, $vo: expr, $nc:expr, $( $sleep_args:expr),+ ) => {
-        crate::NcVisual::blit($v, $nc, Some($vo))?;
+        unsafe { crate::NcVisual::blit($v, $nc, Some($vo))? };
         crate::Nc::render($nc)?;
         sleep![$( $sleep_args ),+];
     };

@@ -59,7 +59,7 @@ impl NcVisual {
     /// transformations.
     ///
     /// If possible, it's better to create the `NcVisual` from memory using
-    /// [from_rgba][NcVisual#method.from_rgba].
+    /// [`from_rgba`][NcVisual#method.from_rgba].
     ///
     /// Use `None` for either or both of `beg_y` and `beg_x` in order to
     /// use the current cursor position along that axis.
@@ -152,12 +152,12 @@ impl NcVisual {
         ]
     }
 
-    /// Prepares an NcVisual, and its underlying NcPlane, based off RGBA content
-    /// in memory at `rgba`.
+    /// Prepares an `NcVisual`, and its underlying `NcPlane`,
+    /// based off RGBA content in memory at `rgba`.
     ///
-    /// `rgba` is laid out as `rows` lines, each of which is `rowstride` bytes in length.
-    /// Each line has `cols` 32-bit 8bpc RGBA pixels followed by possible padding
-    /// (there will be rowstride - cols * 4 bytes of padding).
+    /// `rgba` is laid out as `rows` lines, each of which is `rowstride` bytes
+    /// in length. Each line has `cols` 32-bit 8bpc RGBA pixels followed by
+    /// possible padding (there will be rowstride - cols * 4 bytes of padding).
     ///
     /// The total size of `rgba` is thus (rows * rowstride) bytes, of which
     /// (rows * cols * 4) bytes are actual non-padding data.
@@ -452,17 +452,19 @@ impl NcVisual {
     ///
     /// Pixels may not be blitted to the standard plane.
     ///
+    /// # Safety
+    /// You must be careful not to end up with multiple exclusive references
+    /// to the returned `NcPlane`, or with one exclusive reference
+    /// and one or more shared references.
+    ///
     /// *C style function: [ncvisual_blit()][c_api::ncvisual_blit].*
-    pub fn blit(
+    pub unsafe fn blit(
         &mut self,
         nc: &mut Nc,
         options: Option<&NcVisualOptions>,
     ) -> NcResult<&mut NcPlane> {
         let options_ptr = if let Some(o) = options { o } else { null() };
-        error_ref_mut![
-            unsafe { c_api::ncvisual_blit(nc, self, options_ptr) },
-            "NcVisual.blit"
-        ]
+        error_ref_mut![c_api::ncvisual_blit(nc, self, options_ptr), "NcVisual.blit"]
     }
 
     /// Resizes the visual to `cols` X `rows` pixels.

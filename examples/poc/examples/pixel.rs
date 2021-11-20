@@ -69,7 +69,7 @@ fn main() -> NcResult<()> {
     );
 
     // Render the visual in the virtual space
-    visual.blit(nc, Some(&opts))?;
+    unsafe { visual.blit(nc, Some(&opts))? };
 
     // Render the virtual space in the real terminal space
     nc.render()?;

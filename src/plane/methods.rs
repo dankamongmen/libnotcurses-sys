@@ -8,7 +8,7 @@ use crate::{
     c_api, cstring, error, error_ref, error_ref_mut, rstring_free, Nc, NcAlign, NcAlpha, NcBlitter,
     NcBoxMask, NcCell, NcChannel, NcChannels, NcComponent, NcDim, NcError, NcFadeCb, NcFile,
     NcIntResult, NcIntResultApi, NcOffset, NcPaletteIndex, NcPixelGeometry, NcPlane,
-    NcPlaneOptions, NcResizeCb, NcResult, NcRgb, NcStyle, NcTime,
+    NcPlaneOptions, NcResizeCb, NcResult, NcRgb, NcRgba, NcStyle, NcTime,
 };
 
 /// # NcPlaneOptions Constructors
@@ -2033,7 +2033,7 @@ impl NcPlane {
         beg_x: Option<NcDim>,
         len_y: Option<NcDim>,
         len_x: Option<NcDim>,
-    ) -> NcResult<&mut [u32]> {
+    ) -> NcResult<&mut [NcRgba]> {
         // pixel geometry
         let mut pxdim_y = 0;
         let mut pxdim_x = 0;

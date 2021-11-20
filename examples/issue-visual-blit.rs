@@ -23,7 +23,7 @@ fn main() -> NcResult<()> {
     // let plane = visual.render(&mut nc, &vopt)?; // deprecated function
 
     // the new function renders to a root plane if the options don't specify a plane
-    let plane = visual.blit(&mut nc, Some(&vopt))?;
+    let plane = unsafe { visual.blit(&mut nc, Some(&vopt))? };
     plane.reparent(unsafe { nc.stdplane() })?;
 
     nc_render_sleep![nc, 2];
