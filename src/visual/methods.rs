@@ -246,15 +246,6 @@ impl NcVisual {
 
 /// # NcVisual Methods
 impl NcVisual {
-    /// Gets the specified pixel from this NcVisual.
-    ///
-    /// *C style function: [ncvisual_at_yx()][c_api::ncvisual_at_yx].*
-    pub fn at_yx(&self, y: NcDim, x: NcDim) -> NcResult<NcPixel> {
-        let mut pixel = 0;
-        let res = unsafe { c_api::ncvisual_at_yx(self, y, x, &mut pixel) };
-        error![res, "NcVisual.at_yx()", pixel]
-    }
-
     /// Extracts the next frame from the NcVisual.
     ///
     /// Returns 0 for normal frames, and 1 to indicate EOF.
@@ -504,6 +495,15 @@ impl NcVisual {
             unsafe { c_api::ncvisual_rotate(self, rads) },
             &format!["NcVisual.rotate({})", rads]
         ]
+    }
+
+    /// Gets the specified pixel from this NcVisual.
+    ///
+    /// *C style function: [ncvisual_at_yx()][c_api::ncvisual_at_yx].*
+    pub fn at_yx(&self, y: NcDim, x: NcDim) -> NcResult<NcPixel> {
+        let mut pixel = 0;
+        let res = unsafe { c_api::ncvisual_at_yx(self, y, x, &mut pixel) };
+        error![res, "NcVisual.at_yx()", pixel]
     }
 
     /// Sets the specified pixel.

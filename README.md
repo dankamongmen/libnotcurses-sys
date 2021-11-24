@@ -11,16 +11,23 @@ over the C functions and pointers accessed through FFI.
 It adds greater safety and type correctness over the underlying C library API,
 while trying to remain very close to it.
 
-It offers the choice of using it [**more like Rust**](#like-rust)
-and/or [**more like C**](#like-C).
-
 ```
 notcurses           : C library
 libnotcurses-sys  ← : C⇄Rust bridge library *(you are here)*
 notcurses-rs        : Rust library
 ```
 
-## like Rust
+## Versioning & compatibility
+
+Current major version 2 is not following semver.
+
+Major next version 3 will follow semver with the caveat of being considered a
+development version similar as if it were a major version 0.
+
+Each release will indicate the compatibility with a specific version of the
+notcurses C API library.
+
+## Example
 
 Where you use the more safely wrapped types, with its methods and constructors,
 and error handling with the `NcResult` enum:
@@ -33,7 +40,7 @@ fn main() -> NcResult<()> {
     let plane = nc.stdplane();
     plane.putstr("hello world")?;
     nc.render()?;
-    nc.stop()?;
+    unsafe { nc.stop()? };
     Ok(())
 }
 ```
@@ -42,7 +49,7 @@ The `Drop` trait is not implemented for any wrapping type in this library.
 
 This means you still have to manually call the `stop()` method for `Nc`
 and `NcDirect` objects, and the `destroy()` method for the rest of types that
-allocate, (like `NcPlane`, `NcMenu`…) at the end of their scope, since the
+allocate, (like `NcPlane`, `NcMenu`…) at the end of their scope.
 
 But they do implement methods and use `NcResult` as the return type,
 for handling errors in the way we are used to in Rust.
@@ -53,66 +60,7 @@ For the types that don't allocate, most are based on primitives like `i32`,
 leverage type checking, and they implement methods through traits
 (e.g. `NcChannelMethods` must be in scope to use the `NcChannel` methods.
 
-### even more like Rust
-
-The *WIP* sister crate
-[`notcurses`](https://github.com/dankamongmen/notcurses-rs) will eventually
-offer a *closer to Rust*, higher-level, safer, and simpler API, and make it
-easier to interoperate with the rest of the Rust ecosystem.
-
-## like C
-
-You can access the imported, or reimplemented C API functions directly,
-and use it in a very similar way as the C library is used.
-
-It requires the use of unsafe, since most functions are wrapped directly
-by `bindgen` marked as such.
-
-Error handling is done this way by checking the returned `NcIntResult`,
-or in case of receiving a pointer, by comparing it to `null_mut()`.
-
-### Example
-
-```rust
-use core::ptr::{null, null_mut};
-use std::process::exit;
-
-use libnotcurses_sys::c_api::*;
-
-fn main() {
-    let options = ffi::notcurses_options {
-        termtype: null(),
-        loglevel: 0,
-        margin_t: 0,
-        margin_r: 0,
-        margin_b: 0,
-        margin_l: 0,
-        flags: NCOPTION_NO_ALTERNATE_SCREEN
-            | NCOPTION_PRESERVE_CURSOR
-            | NCOPTION_SUPPRESS_BANNERS
-    };
-    unsafe {
-        let nc = notcurses_init(&options, null_mut());
-        if nc == null_mut() {
-            exit(1);
-        }
-        let plane = notcurses_stdplane(nc);
-        let cols = ncplane_putstr(&mut *plane, "hello world");
-        if cols < NCRESULT_OK {
-            notcurses_stop(nc);
-            exit(cols.abs());
-        }
-        if notcurses_render(nc) < NCRESULT_OK {
-            exit(2);
-        }
-        if notcurses_stop(nc) < NCRESULT_OK {
-            exit(3);
-        }
-    }
-}
-```
-
-### Official C API docs
+## Official C API docs
 
 - [API reference (man pages)](https://notcurses.com/)
 - [Wiki Page](https://nick-black.com/dankwiki/index.php/Notcurses)

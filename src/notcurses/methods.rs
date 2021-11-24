@@ -411,12 +411,7 @@ impl Nc {
         }
     }
 
-    /// Reads a [`char`] representing a single unicode point, from input.
-    ///
-    /// If an event is processed, the return value is the `id` field from that
-    /// event.
-    ///
-    /// Returns `0` on a timeout.
+    /// Gets an [`NcReceived`] from input.
     ///
     /// Provide `None` in `time` to block at length, and otherwise
     /// `Some(`[`NcTime`]`)` to bound blocking.
@@ -452,29 +447,6 @@ impl Nc {
         }
     }
 
-    /// Acquire up to 'vcount' [`NcInput`]s at the vector 'ni'.
-    ///
-    /// The number read will be returned, or 0 on timeout.
-    ///
-    /// *C style function: [notcurses_getvec()][c_api::notcurses_getvec].*
-    pub fn getvec(
-        &mut self,
-        time: Option<NcTime>,
-        ni: &mut Vec<NcInput>,
-        vcount: u32,
-    ) -> NcResult<u32> {
-        let ntime;
-        if let Some(time) = time {
-            ntime = &time as *const _;
-        } else {
-            ntime = null();
-        }
-        let nivec = ni.as_mut_ptr() as *mut NcInput;
-
-        let res = unsafe { c_api::notcurses_getvec(self, ntime, nivec, vcount as i32) };
-        error![res, "", res as u32]
-    }
-
     /// Reads input blocking until an event is processed or a signal is received.
     ///
     /// Will optionally write the event details in `input`.
@@ -505,6 +477,29 @@ impl Nc {
         } else {
             Ok(NcReceived::new(res as u32))
         }
+    }
+
+    /// Acquire up to 'vcount' [`NcInput`]s at the vector 'ni'.
+    ///
+    /// The number read will be returned, or 0 on timeout.
+    ///
+    /// *C style function: [notcurses_getvec()][c_api::notcurses_getvec].*
+    pub fn getvec(
+        &mut self,
+        time: Option<NcTime>,
+        ni: &mut Vec<NcInput>,
+        vcount: u32,
+    ) -> NcResult<u32> {
+        let ntime;
+        if let Some(time) = time {
+            ntime = &time as *const _;
+        } else {
+            ntime = null();
+        }
+        let nivec = ni.as_mut_ptr() as *mut NcInput;
+
+        let res = unsafe { c_api::notcurses_getvec(self, ntime, nivec, vcount as i32) };
+        error![res, "", res as u32]
     }
 
     /// Gets a file descriptor suitable for input event poll()ing.

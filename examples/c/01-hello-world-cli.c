@@ -7,7 +7,7 @@
 #include <notcurses/notcurses.h>
 
 int main(void){
-	// set the notcurses options
+	// initialize notcurses with custom options
 	struct notcurses_options nopts = {
 		.flags =
 			NCOPTION_NO_ALTERNATE_SCREEN // don't use the alternate screen
@@ -16,8 +16,8 @@ int main(void){
 			| NCOPTION_NO_CLEAR_BITMAPS // don't clear preexisting bitmaps
 			| NCOPTION_DRAIN_INPUT // don't handle input
 	};
-	// initialize notcurses, checking for errors
 	struct notcurses* nc = notcurses_core_init(&nopts, NULL);
+	// check for initialization errors
 	if(nc == NULL){
 		return EXIT_FAILURE;
 	}
