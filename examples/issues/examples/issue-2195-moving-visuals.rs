@@ -1,3 +1,7 @@
+// moving visuals outside of window boundaries doesn't work well
+//
+// https://github.com/dankamongmen/notcurses/issues/2195
+
 use libnotcurses_sys::*;
 
 // height and width of the visual, in cells

@@ -1,7 +1,9 @@
 # libnotcurses-sys examples
 
+Apart from the examples in the current directory there are:
 
-- `direct/`: direct-mode examples
-- `poc/`: proof-of-concept examples ported from original source
+- `direct/`: examples that employ direct-mode
+- `poc/`: proof-of-concept examples ported from C
+- `issues/`: issue-tracking examples
+- `c/`: WIP didactic examples in C
 
-the rest of the examples make use of full mode
