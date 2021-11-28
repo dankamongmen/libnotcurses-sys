@@ -9,22 +9,28 @@ use core::ffi::c_void;
 /// We never blit full blocks, but instead spaces (more efficient) with the
 /// background set to the desired foreground.
 ///
+/// # Degradation
+///
 /// There is a mechanism of graceful degradation, that works as follows:
-/// - without braille support, [`NcBlitter::BRAILLE`] decays to [`NcBlitter::_3x2`].
-/// - without bitmap support, [`NcBlitter::PIXEL`] decays to [`NcBlitter::_3x2`].
-/// - without sextant support, [`NcBlitter::_3x2`] decays to [`NcBlitter::_2x2`].
-/// - without quadrant support, [`NcBlitter::_2x2`] decays to [`NcBlitter::_2x1`].
-/// - the only viable blitters in ASCII are [`NCBlitter::_1x1`] and [`NcBlitter::PIXEL`].
+/// - without braille support, [`NcBlitter::BRAILLE`] decays to [`NcBlitter::SEXTANT`].
+/// - without bitmap support, [`NcBlitter::PIXEL`] decays to [`NcBlitter::SEXTANT`].
+/// - without sextant support, [`NcBlitter::SEXTANT`] decays to [`NcBlitter::QUADRANT`].
+/// - without quadrant support, [`NcBlitter::QUADRANT`] decays to [`NcBlitter::HALF`].
+/// - the only viable blitters in ASCII are [`NCBlitter::ASCII`] and [`NcBlitter::PIXEL`].
+///
+/// If you don't want this behaviour you have to set the
+/// *[`NcVisualOptions::NODEGRADE`]* flag on [`NcVisualOptions`] or call
+/// *[`degrade(false)`]* on [`NcVisualOptionsBuilder`].
 ///
 /// [`NCBlitter::BRAILLE`]: NcBlitter#associatedconstant.BRAILLE
 /// [`NCBlitter::PIXEL`]: NcBlitter#associatedconstant.PIXEL
-/// [`NCBlitter::_1x1`]: NcBlitter#associatedconstant._1x1
-/// [`NCBlitter::_2x1`]: NcBlitter#associatedconstant._2x1
-/// [`NCBlitter::_2x2`]: NcBlitter#associatedconstant._2x2
-/// [`NCBlitter::_3x2`]: NcBlitter#associatedconstant._3x2
-///
-/// If you don't want this behaviour you have to use
-/// [`NcVisualOptions::NODEGRADE`][crate::NcVisualOptions#associatedconstant.NODEGRADE]
+/// [`NCBlitter::ASCII`]: NcBlitter#associatedconstant.ASCII
+/// [`NCBlitter::HALF`]: NcBlitter#associatedconstant.HALF
+/// [`NCBlitter::QUADRANT`]: NcBlitter#associatedconstant.QUADRANT
+/// [`NCBlitter::SEXTANT`]: NcBlitter#associatedconstant.SEXTANT
+/// [`NcVisualOptions::NODEGRADE`]: crate::NcVisualOptions#associatedconstant.NODEGRADE
+/// [`degrade(false)`]: crate::NcVisualOptionsBuilder#method.degrade
+/// [`NcVisualOptionsBuilder`]: crate::NcVisualOptionsBuilder
 pub type NcBlitter = u32;
 
 crate::impl_api![
@@ -64,8 +70,9 @@ crate::impl_api![
     /// [`NcBlitter`] mode using: eight vertical levels.
     /// █▇▆▅▄▃▂▁
     const _8x1: NcBlitter = constants::NCBLIT_8x1;,
-    /// Blit a flat array `data` of RGBA 32-bit values to the plane configured
-    /// in `vopts`, which mustn’t be NULL.
+
+    /// Blits a flat array `data` of [`NcRgba`] values to the [`NcPlane`] that
+    /// must be configured in `vopts`.
     ///
     /// The blit begins at `vopts.y` and `vopts.x` relative to the plane.
     ///
@@ -78,6 +85,9 @@ crate::impl_api![
     /// Returns the number of pixels blitted on success.
     ///
     /// *C style function: [ncblit_rgba()][c_api::ncblit_rgba].*
+    ///
+    /// [`NcRgba`]: crate::NcRgba
+    /// [`NcPlane`]: crate::NcPlane
     fn blit_rgba(data: &[u8], line_size: usize, vopts: &NcVisualOptions) -> NcResult<usize> {
         let data_ptr: *const c_void = data as *const _ as *const c_void;
         let res = unsafe { c_api::ncblit_rgba(data_ptr, line_size as i32, vopts) };

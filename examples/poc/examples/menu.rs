@@ -3,8 +3,7 @@
 // FIXME: has bugs, doesn't work well
 // probably related to the arrays or the strings...
 
-use libnotcurses_sys::*;
-use widgets::*;
+use libnotcurses_sys::{widgets::*, *};
 
 fn main() -> NcResult<()> {
     let mut nc = unsafe { Nc::new()? };

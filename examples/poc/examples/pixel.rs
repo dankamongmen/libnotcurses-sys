@@ -6,26 +6,7 @@
 //!
 //! All types must be declared explicitely
 
-use libnotcurses_sys::{
-    // Core
-    Nc,
-    NcBlitter,
-    NcBlitterApi,
-    NcError,
-    // Input
-    NcInput,
-    NcKey,
-    // Plane
-    NcPlane,
-    NcPlaneOptions,
-    NcReceived,
-    NcResult,
-    NcScale,
-    NcScaleApi,
-    // Visual
-    NcVisual,
-    NcVisualOptions,
-};
+use libnotcurses_sys::*;
 
 fn main() -> NcResult<()> {
     // Parse argument in

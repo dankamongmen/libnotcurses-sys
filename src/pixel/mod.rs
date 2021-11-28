@@ -55,6 +55,14 @@ pub use methods::NcPixelApi;
 /// The `NcPixel` API facilitates direct management of the pixels within an
 /// [`NcVisual`] (`NcVisuals` keep a backing store of 32-bit RGBA pixels,
 /// and render them down to terminal graphics in `NcVisual.render`).
+///
+/// Per libav, we "store as BGRA on little-endian, and ARGB on big-endian".
+/// This is an RGBA *byte-order* scheme. libav emits bytes, not words. Those
+/// bytes are R-G-B-A. When read as words, on little endian this will be ABGR,
+/// and on big-endian this will be RGBA. force everything to LE ABGR, a no-op
+/// on (and thus favoring) little-endian, which is the dominant ordering for
+/// processor architectures (x86, most ARM implementations, base RISC-V
+/// implementations) and their associated memory.
 pub type NcPixel = u32;
 
 /// Pixel blitting implementations, informative only (alias of `u32`).

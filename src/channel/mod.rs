@@ -193,7 +193,8 @@ pub type NcChannels = u64;
 //
 /// 24 bits broken into 3x 8bpp channels (alias of `u32`).
 ///
-/// Unlike with [`NcChannel`], operations involving `NcRgb` ignores the last 4th byte
+/// Unlike with [`NcChannel`], operations involving [`NcRgb`] ignores the last
+/// 4th byte (the alpha component).
 ///
 /// ## Diagram
 ///
@@ -202,7 +203,7 @@ pub type NcChannels = u64;
 /// ```
 /// `type in C: no data type`
 ///
-/// See also: [NcRgba] and [NcChannel] types.
+/// See also: [`NcRgba`] and [`NcChannel`] types.
 pub type NcRgb = u32;
 
 // NcComponent

@@ -30,17 +30,10 @@ fn main() -> NcResult<()> {
     let height = H_CELLS * geo.cell_y;
     let buffer: Vec<u8> = vec![0xBB; (height * width) as usize * 3];
     let visual1 = NcVisual::from_rgb_packed(buffer.as_slice(), height, width * 3, width, 255)?;
-    let voptions1 = NcVisualOptions::new(
-        None,
-        NcScale::NOSCALE,
-        1,
-        2,
-        None,
-        None,
-        NcBlitter::PIXEL,
-        0,
-        0,
-    );
+    let voptions1 = NcVisualOptions::builder()
+        .yx(1, 2)
+        .blitter(NcBlitter::PIXEL)
+        .build();
     let visual1plane = unsafe { visual1.blit(&mut nc, Some(&voptions1))? };
     visual1plane.reparent(stp)?;
 

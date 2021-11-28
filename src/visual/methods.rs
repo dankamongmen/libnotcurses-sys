@@ -2,6 +2,7 @@
 
 mod geom;
 mod options;
+mod options_builder;
 
 use core::ptr::{null, null_mut};
 use libc::c_void;
@@ -39,7 +40,7 @@ impl NcVisual {
         ]
     }
 
-    /// Opens a visual at `file`, extracts the codec and parameters and
+    /// Opens an `NcVisual` at `file`, extracts the codec and parameters and
     /// decodes the first image to memory.
     ///
     /// *C style function: [ncvisual_from_file()][c_api::ncvisual_from_file].*
@@ -402,14 +403,25 @@ impl NcVisual {
     /// the specified scaling method.
     ///
     /// Currently, this means:
-    /// - if lacking UTF-8, `NcBlitter::BLIT_1x1`.
-    /// - otherwise, if not [`NcScale::STRETCH`][NcScale#associatedconstant.STRETCH], `BLIT_2x1`.
-    /// - otherwise, if sextants are not known to be good, `NcBlitter::BLIT_2x2`.
-    /// - otherwise `NCBLIT_3x2`, `NCBLIT_2x2` and `NcBlitter::BLIT_3x2` both
-    ///   distort the original aspect ratio, thus `NCBLIT_2x1` is used
-    ///   outside of [`NcScale::STRETCH`][NcScale#associatedconstant.STRETCH].
+    /// - if lacking UTF-8, [`NcBlitter::ASCII`].
+    /// - otherwise, if not using *[`NcScale::STRETCH`]* then [`NcBlitter::HALF`].
+    /// - otherwise, if sextants are not known to be good, [`NcBlitter::QUADRANT`].
+    /// - otherwise [`NcBlitter::SEXTANT`]
+    ///
+    /// [`QUADRANT`] and [`SEXTANT`] both distort the original aspect ratio,
+    /// thus they are only used alongside *[`NcScale::STRETCH`]*, while [`HALF`]
+    /// is used otherwise.
     ///
     /// *C style function: [ncvisual_media_defblitter()][c_api::ncvisual_media_defblitter].*
+    ///
+    /// [`NcBlitter::ASCII`]: NcBlitter#associatedconstant.ASCII
+    /// [`NcScale::STRETCH`]: NcScale#associatedconstant.STRETCH
+    /// [`NcBlitter::HALF`]: NcBlitter#associatedconstant.HALF
+    /// [`NcBlitter::QUADRANT`]: NcBlitter#associatedconstant.QUADRANT
+    /// [`NcBlitter::SEXTANT`]: NcBlitter#associatedconstant.SEXTANT
+    /// [`HALF`]: NcBlitter#associatedconstant.HALF
+    /// [`QUADRANT`]: NcBlitter#associatedconstant.QUADRANT
+    /// [`SEXTANT`]: NcBlitter#associatedconstant.SEXTANT
     pub fn media_defblitter(nc: &Nc, scale: NcScale) -> NcBlitter {
         unsafe { c_api::ncvisual_media_defblitter(nc, scale) }
     }
@@ -566,8 +578,8 @@ impl NcVisual {
     // /// abort from within streamer().
     // ///
     // /// `timescale` allows the frame duration time to be scaled.
-    // /// For a visual naturally running at 30FPS, a 'timescale' of 0.1 will result
-    // /// in 300 FPS, and a `timescale` of 10 will result in 3 FPS.
+    // /// For an NcVisual naturally running at 30FPS, a 'timescale' of 0.1
+    // /// will result in 300 FPS, and a `timescale` of 10 will result in 3 FPS.
     // /// It is an error to supply `timescale` less than or equal to 0.
     // ///
     // /// *C style function: [ncvisual_streamer()][c_api::ncvisual_streamer].*

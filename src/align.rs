@@ -1,6 +1,16 @@
 /// Alignment within a plane or terminal (alias of `u32`).
 ///
-/// Left/right-justified, or centered.
+/// [`LEFT`]/[`RIGHT`] justified (horizontally), [`TOP`]/[`DOWN`] justified
+/// (vertically), or [`CENTERED`] (both). Also [`UNALIGNED`] for invalid state.
+///
+/// Default: *`LEFT`/`TOP` (`==0`)*.
+///
+/// [`LEFT`]: NcAlign#associatedconstant.LEFT
+/// [`RIGHT`]: NcAlign#associatedconstant.RIGHT
+/// [`TOP`]: NcAlign#associatedconstant.TOP
+/// [`DOWN`]: NcAlign#associatedconstant.DOWN
+/// [`CENTERED`]: NcAlign#associatedconstant.CENTERED
+/// [`UNALIGNED`]: NcAlign#associatedconstant.UNALIGNED
 pub type NcAlign = u32; // crate::bindings::ffi::ncalign_e;
 
 #[allow(unused_imports)] // for doc comments

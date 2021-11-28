@@ -37,7 +37,7 @@
 //W+ ncvisualplane_create
 
 #[allow(unused_imports)] // for doc comments
-use crate::{NcChannel, NcRgb};
+use crate::{NcBlitter, NcChannel, NcDim, NcOffset, NcPlane, NcRgb, NcScale};
 
 mod methods;
 mod reimplemented;
@@ -55,13 +55,14 @@ pub use geometry::{NcVGeom, NcVisualGeometry};
 /// - [`simple_streamer`][NcVisual#method.simple_streamer]
 pub type NcVisual = crate::bindings::ffi::ncvisual;
 
-/// Options struct for [`NcVisual`]
+/// Options struct for [`NcVisual`].
+///
+/// It is recommended to use the [`NcVisualOptions::builder()`] method.
 ///
 /// If a plane is not provided, one will be created, having the exact size
 /// necessary to display the visual (this might be smaller or larger than
-/// the rendering area). if
-/// [`NcVisualOptions::CHILDPLANE`][NcVisualOptions#associatedconstant.CHILDPLANE]
-/// is provided, this will be interpreted as the parent.
+/// the rendering area). if [`NcVisualOptions::CHILDPLANE`] is provided,
+/// this will be interpreted as the parent.
 ///
 /// A subregion of the visual can be rendered using `beg_y`, `beg_x`, `len_y`,
 /// and `len_x`.
@@ -119,9 +120,8 @@ pub type NcVisual = crate::bindings::ffi::ncvisual;
 ///   It is an error if either number exceeds the cell-pixel geometry in any
 ///   dimension (see [`NcPixelGeometry.cell_x`], [`NcVisualGeometry.cdim_yx`]).
 ///
-/// [`NcPlane`]: crate::NcPlane
+/// [`NcVisualOptions::builder()`]: NcVisualOptions#method.builder
 /// [`NcAlign`]: crate::NcAlign
-/// [`NcBlitter`]: crate::NcBlitter
 /// [`NcBlitter::PIXEL`]: crate::NcBlitter#associatedconstant.PIXEL
 /// [`NcPixelGeometry.cell_y`]: crate::NcPixelGeometry#structfield.cell_y
 /// [`NcPixelGeometry.cell_x`]: crate::NcPixelGeometry#structfield.cell_x
@@ -147,18 +147,34 @@ pub type NcVisual = crate::bindings::ffi::ncvisual;
 /// [`ADDALPHA`]: NcVisualOptions#associatedconstant.ADDALPHA
 /// [`BLEND`]: NcVisualOptions#associatedconstant.BLEND
 /// [`CHILDPLANE`]: NcVisualOptions#associatedconstant.CHILDPLANE
-/// [`NODEGRADE`]: NcVisualOptions#associatedconstant.NODEGADE
+/// [`NcVisualOptions::CHILDPLANE`]: NcVisualOptions#associatedconstant.CHILDPLANE
+/// [`NODEGRADE`]: NcVisualOptions#associatedconstant.NODEGRADE
 /// [`VERALIGNED`]:NcVisualOptions#associatedconstant.VERALIGNED
 /// [`HORALIGNED`]: NcVisualOptions#associatedconstant.HORALIGNED
 /// [`NOINTERPOLATE`]: NcVisualOptions#associatedconstant.NOINTERPOLATE
-///
 pub type NcVisualOptions = crate::bindings::ffi::ncvisual_options;
+
+/// Builder for [`NcVisualOptions`].
+///
+/// Can be constructed calling [`NcVisualOptions::builder()`].
+///
+/// [`NcVisualOptions::builder()`]: NcVisualOptions#method.builder
+#[derive(Debug, Default)]
+pub struct NcVisualOptionsBuilder<'ncplane> {
+    plane: Option<&'ncplane mut NcPlane>,
+    scale: NcScale,
+    y: NcOffset,
+    x: NcOffset,
+    section_yx_lenyx: Option<(NcDim, NcDim, NcDim, NcDim)>,
+    cell_offset_yx: Option<(NcDim, NcDim)>,
+    blitter: NcBlitter,
+    flags: u32,
+    transcolor: NcRgba,
+}
 
 // NcRgba
 //
-/// 32 bits broken into 3x 8bpp RGB channels + 8ppp alpha (alias of `u32`).
-///
-/// Unlike with [`NcChannel`], operations involving `NcRgb` ignores the last 4th byte
+/// Three RGB [`NcComponent`]s plus one alpha [`NcComponent`] (alias of `u32`).
 ///
 /// ## Diagram
 ///
@@ -168,6 +184,8 @@ pub type NcVisualOptions = crate::bindings::ffi::ncvisual_options;
 /// `type in C: no data type`
 ///
 /// See also: [`NcRgb`] and [`NcChannel`] types.
+///
+/// [`NcComponent`]: crate::NcComponent
 pub type NcRgba = u32;
 
 // // NcBgra
@@ -189,7 +207,8 @@ impl NcVisualOptions {
     /// Treats as transparent the color specified in the `transcolor` field.
     pub const ADDALPHA: u32 = constants::NCVISUAL_OPTION_ADDALPHA;
 
-    /// Uses [`NcAlpha::Blend`][crate::NcAlpha#associatedconstant.BLEND] with visual.
+    /// Uses [`NcAlpha::Blend`][crate::NcAlpha#associatedconstant.BLEND] with
+    /// the `NcVisual`.
     pub const BLEND: u32 = constants::NCVISUAL_OPTION_BLEND;
 
     /// allows you to indicate that the n field of ncvisual_options refers not to
@@ -200,7 +219,7 @@ impl NcVisualOptions {
     /// a sprixel relative to the standard plane can be done in one step.
     pub const CHILDPLANE: u32 = constants::NCVISUAL_OPTION_CHILDPLANE;
 
-    /// Fails rather than gracefully degrade. See [`NcBlitter`][crate::NcBlitter].
+    /// Fails rather than gracefully degrade. See [`NcBlitter`].
     pub const NODEGRADE: u32 = constants::NCVISUAL_OPTION_NODEGRADE;
 
     /// Y is an alignment, not absolute.
@@ -217,7 +236,8 @@ pub(crate) mod constants {
     /// Treats as transparent the color specified in the `transcolor` field.
     pub const NCVISUAL_OPTION_ADDALPHA: u32 = crate::bindings::ffi::NCVISUAL_OPTION_ADDALPHA;
 
-    /// Uses [`NcAlpha::Blend`][crate::NcAlpha#associatedconstant.BLEND] with visual.
+    /// Uses [`NcAlpha::Blend`][crate::NcAlpha#associatedconstant.BLEND] with
+    /// the `NcVisual`.
     pub const NCVISUAL_OPTION_BLEND: u32 = crate::bindings::ffi::NCVISUAL_OPTION_BLEND;
 
     /// allows you to indicate that the n field of ncvisual_options refers not to

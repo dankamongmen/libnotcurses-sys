@@ -2,10 +2,12 @@
 
 use core::ptr::null_mut;
 
-use crate::{NcBlitter, NcDim, NcOffset, NcPlane, NcRgba, NcScale, NcVisualOptions};
+use crate::{
+    NcBlitter, NcDim, NcOffset, NcPlane, NcRgba, NcScale, NcVisualOptions, NcVisualOptionsBuilder,
+};
 
 /// # NcisualOptions Constructors
-impl NcVisualOptions {
+impl<'ncplane> NcVisualOptions {
     /// New `NcVisualOptions`.
     ///
     /// # Arguments
@@ -76,7 +78,7 @@ impl NcVisualOptions {
     /// [`ADDALPHA`]: NcVisualOptions#associatedconstant.ADDALPHA
     /// [`BLEND`]: NcVisualOptions#associatedconstant.BLEND
     /// [`CHILDPLANE`]: NcVisualOptions#associatedconstant.CHILDPLANE
-    /// [`NODEGRADE`]: NcVisualOptions#associatedconstant.NODEGADE
+    /// [`NODEGRADE`]: NcVisualOptions#associatedconstant.NODEGRADE
     /// [`VERALIGNED`]:NcVisualOptions#associatedconstant.VERALIGNED
     /// [`HORALIGNED`]: NcVisualOptions#associatedconstant.HORALIGNED
     /// [`NOINTERPOLATE`]: NcVisualOptions#associatedconstant.NOINTERPOLATE
@@ -124,5 +126,10 @@ impl NcVisualOptions {
             pxoffy,
             pxoffx,
         }
+    }
+
+    /// Returns a builder object for `NcVisualOptions`.
+    pub fn builder() -> NcVisualOptionsBuilder<'ncplane> {
+        NcVisualOptionsBuilder::default()
     }
 }

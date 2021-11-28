@@ -57,18 +57,11 @@ Palette size: {11:?}
     //
     // TODO:WIP (use for unit tests)
 
-    // let _vopts = NcVisualOptions::default();
-    let _vopts = NcVisualOptions::new(
-        None,
-        0,
-        1,
-        1,
-        Some((4, 4, 8, 8)),
-        None,
-        NcBlitter::ASCII,
-        0,
-        0,
-    );
+    // let _vopts = NcVisualOptions::builder()
+    //     .yx(1, 1)
+    //     .section((4, 4, 8, 8))
+    //     .blitter(NcBlitter::ASCII)
+    //     .build();
 
     let vg = nc.visual_geom(None, None)?; // no visual, no visualoptions
                                           // let vg = nc.visual_geom(None, &vopts)?; // no visualoptions (same response)
