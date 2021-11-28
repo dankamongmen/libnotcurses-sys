@@ -64,7 +64,6 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
         self
     }
 
-
     /// Unsets the `NcPlane`.
     ///
     /// Effect: unsets the plane & the [`CHILDPLANE`] flag.

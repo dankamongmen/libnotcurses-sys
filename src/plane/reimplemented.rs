@@ -455,7 +455,7 @@ pub fn ncplane_putstr_aligned(
 
     // we'll want to do the partial write if there's an error somewhere within
     unsafe {
-        c_api::ncstrwidth_valid(cstring![string], &mut validbytes, &mut validwidth);
+        c_api::ncstrwidth(cstring![string], &mut validbytes, &mut validwidth);
     }
 
     let xpos = ncplane_halign(plane, align, validwidth as NcDim);

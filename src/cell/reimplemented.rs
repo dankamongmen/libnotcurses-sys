@@ -4,8 +4,6 @@
 
 use libc::strcmp;
 
-use core::ptr::null_mut;
-
 use crate::{
     c_api::{self, nccell_release},
     cstring, rstring, NcAlpha, NcCell, NcChannel, NcChannels, NcComponent, NcIntResult,
@@ -302,12 +300,6 @@ pub const fn nccell_cols(cell: &NcCell) -> u8 {
     } else {
         1
     }
-}
-
-/// Returns the number of columns occupied by a string, or -1 if a
-/// non-printable/illegal character is encountered.
-pub fn ncstrwidth(string: &str) -> NcIntResult {
-    unsafe { c_api::ncstrwidth_valid(cstring![string], null_mut(), null_mut()) }
 }
 
 /// Does the [`NcCell`] contain an East Asian Wide codepoint?

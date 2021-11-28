@@ -20,7 +20,7 @@ pub(crate) mod ffi {
 #[doc(inline)]
 pub use ffi::{
     // functions
-    ncstrwidth_valid,
+    ncstrwidth,
 };
 
 // cell ------------------------------------------------------------------------

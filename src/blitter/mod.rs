@@ -70,7 +70,6 @@ crate::impl_api![
     /// [`NcBlitter`] mode using: eight vertical levels.
     /// █▇▆▅▄▃▂▁
     const _8x1: NcBlitter = constants::NCBLIT_8x1;,
-
     /// Blits a flat array `data` of [`NcRgba`] values to the [`NcPlane`] that
     /// must be configured in `vopts`.
     ///
