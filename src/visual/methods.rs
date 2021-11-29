@@ -1,9 +1,5 @@
 //! `NcVisual*` methods and associated functions.
 
-mod geom;
-mod options;
-mod options_builder;
-
 use core::ptr::{null, null_mut};
 use libc::c_void;
 

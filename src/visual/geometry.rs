@@ -1,3 +1,5 @@
+//!
+
 use crate::{NcBlitter, NcBlitterApi, NcDim};
 
 /// Describes all the geometries of an [`NcVisual`], in a more Rust-friendly
@@ -203,6 +205,32 @@ impl NcVisualGeometry {
 /// [`ncdirectf_geom`]: crate::c_api::ncdirectf_geom
 /// [`ncvisual_geom`]: crate::c_api::ncvisual_geom
 pub type NcVGeom = crate::bindings::ffi::ncvgeom;
+
+/// # Constructors
+impl NcVGeom {
+    /// Returns a new `NcVGeom` with zeroed fields.
+    pub fn new() -> Self {
+        Self {
+            pixy: 0,
+            pixx: 0,
+            cdimy: 0,
+            cdimx: 0,
+            rpixy: 0,
+            rpixx: 0,
+            rcelly: 0,
+            rcellx: 0,
+            scaley: 0,
+            scalex: 0,
+            maxpixely: 0,
+            maxpixelx: 0,
+            begy: 0,
+            begx: 0,
+            leny: 0,
+            lenx: 0,
+            blitter: NcBlitter::DEFAULT,
+        }
+    }
+}
 
 impl From<NcVGeom> for NcVisualGeometry {
     /// Since we don't know the origin of the `NcVGeom` struct, when some fields

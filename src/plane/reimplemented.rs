@@ -768,7 +768,7 @@ pub fn ncplane_vline(plane: &mut NcPlane, cell: &NcCell, len: NcDim) -> NcIntRes
 
 // perimeter -------------------------------------------------------------------
 
-///
+/// Draws the perimeter around `plane`.
 ///
 /// *Method: NcPlane.[perimeter()][NcPlane#method.perimeter].*
 #[inline]
@@ -801,7 +801,7 @@ pub fn ncplane_perimeter(
     }
 }
 
-///
+/// Like [`ncplane_perimeter`] with the double box-drawing characters.
 ///
 /// *Method: NcPlane.[perimeter_double()][NcPlane#method.perimeter_double].*
 #[inline]
@@ -853,7 +853,7 @@ pub fn ncplane_perimeter_double(
     ret
 }
 
-///
+/// Like [`ncplane_perimeter`] with the rounded box-drawing characters.
 ///
 /// *Method: NcPlane.[perimeter_rounded()][NcPlane#method.perimeter_rounded].*
 #[inline]
@@ -946,7 +946,8 @@ pub fn ncplane_box_sized(
     }
 }
 
-///
+/// Like [`ncplane_box`][c_api::ncplane_box] with the double box-drawing
+/// characters.
 ///
 /// *Method: NcPlane.[double_box()][NcPlane#method.double_box].*
 #[inline]
@@ -986,7 +987,7 @@ pub fn ncplane_double_box(
     ret
 }
 
-///
+/// Like [`ncplane_box_sized`] with the double box-drawing characters.
 ///
 /// *Method: NcPlane.[double_box_sized()][NcPlane#method.double_box_sized].*
 #[inline]
@@ -1012,7 +1013,8 @@ pub fn ncplane_double_box_sized(
     )
 }
 
-///
+/// Like [`ncplane_box`][c_api::ncplane_box] with the rounded box-drawing
+/// characters.
 ///
 /// *Method: NcPlane.[rounded_box()][NcPlane#method.rounded_box].*
 #[inline]
@@ -1051,7 +1053,7 @@ pub fn ncplane_rounded_box(
     ret
 }
 
-///
+/// Like [`ncplane_box_sized`] with the rounded box-drawing characters.
 ///
 /// *Method: NcPlane.[rounded_box_sized()][NcPlane#method.rounded_box_sized].*
 #[inline]

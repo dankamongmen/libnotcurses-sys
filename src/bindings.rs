@@ -324,6 +324,7 @@ pub use ffi::{
 // ncplane_set_fchannel,
 //
 // // constants
+// NCPLANE_OPTION_FIXED,
 // NCPLANE_OPTION_HORALIGNED,
 // NCPLANE_OPTION_MARGINALIZED,
 // NCPLANE_OPTION_VERALIGNED,

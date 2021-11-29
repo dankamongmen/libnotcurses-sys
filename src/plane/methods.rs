@@ -1,8 +1,5 @@
 //! `NcPlane*` methods and associated functions.
-use core::{
-    ptr::{null, null_mut},
-    slice::from_raw_parts_mut,
-};
+use core::{ptr::null_mut, slice::from_raw_parts_mut};
 
 use crate::{
     c_api, cstring, error, error_ref, error_ref_mut, rstring_free, Nc, NcAlign, NcAlpha, NcBlitter,
@@ -10,72 +7,6 @@ use crate::{
     NcIntResult, NcIntResultApi, NcOffset, NcPaletteIndex, NcPixelGeometry, NcPlane,
     NcPlaneOptions, NcResizeCb, NcResult, NcRgb, NcRgba, NcStyle, NcTime,
 };
-
-/// # NcPlaneOptions Constructors
-impl NcPlaneOptions {
-    /// New NcPlaneOptions using the horizontal x.
-    pub fn new(y: NcOffset, x: NcOffset, rows: NcDim, cols: NcDim) -> Self {
-        Self::with_flags(y, x, rows, cols, None, 0, 0, 0)
-    }
-
-    /// New NcPlaneOptions with horizontal alignment.
-    pub fn new_aligned(y: NcOffset, align: NcAlign, rows: NcDim, cols: NcDim) -> Self {
-        Self::with_flags_aligned(y, align, rows, cols, None, NcPlaneOptions::HORALIGNED)
-    }
-
-    /// New NcPlaneOptions, with flags.
-    pub fn with_flags(
-        y: NcOffset,
-        x: NcOffset,
-        rows: NcDim,
-        cols: NcDim,
-        resizecb: Option<NcResizeCb>,
-        flags: u64,
-        margin_b: NcOffset,
-        margin_r: NcOffset,
-    ) -> Self {
-        NcPlaneOptions {
-            y: y as i32,
-            x: x as i32,
-            rows,
-            cols,
-            userptr: null_mut(),
-            name: null(),
-            resizecb: c_api::ncresizecb_to_c(resizecb),
-            flags,
-            margin_b: margin_b as i32,
-            margin_r: margin_r as i32,
-        }
-    }
-
-    /// New NcPlaneOptions, with flags and horizontal alignment.
-    ///
-    /// Note: Already includes the
-    /// [`NcPlaneOptions::HORALIGNED`][NcPlaneOptions#associatedconstant.HORALIGNED]
-    /// flag.
-    pub fn with_flags_aligned(
-        y: NcOffset,
-        align: NcAlign,
-        rows: NcDim,
-        cols: NcDim,
-        resizecb: Option<NcResizeCb>,
-        flags: u64,
-    ) -> Self {
-        let flags = NcPlaneOptions::HORALIGNED | flags;
-        NcPlaneOptions {
-            y: y as i32,
-            x: align as i32,
-            rows,
-            cols,
-            userptr: null_mut(),
-            name: null(),
-            resizecb: c_api::ncresizecb_to_c(resizecb),
-            flags,
-            margin_b: 0,
-            margin_r: 0,
-        }
-    }
-}
 
 /// # NcPlane constructors & destructors
 impl NcPlane {

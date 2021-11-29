@@ -1,7 +1,24 @@
-use crate::{
-    NcAlign, NcBlitter, NcDim, NcOffset, NcPlane, NcRgba, NcScale, NcVisualOptions,
-    NcVisualOptionsBuilder,
-};
+//!
+
+use crate::{NcAlign, NcBlitter, NcDim, NcOffset, NcPlane, NcRgba, NcScale, NcVisualOptions};
+
+/// Builder object for [`NcVisualOptions`].
+///
+/// Can be constructed by calling [`NcVisualOptions::builder()`].
+///
+/// [`NcVisualOptions::builder()`]: NcVisualOptions#method.builder
+#[derive(Debug, Default)]
+pub struct NcVisualOptionsBuilder<'ncplane> {
+    plane: Option<&'ncplane mut NcPlane>,
+    scale: NcScale,
+    y: NcOffset,
+    x: NcOffset,
+    section_yx_lenyx: Option<(NcDim, NcDim, NcDim, NcDim)>,
+    cell_offset_yx: Option<(NcDim, NcDim)>,
+    blitter: NcBlitter,
+    flags: u32,
+    transcolor: NcRgba,
+}
 
 impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
     /// Sets the `NcPlane` where the blitting will be done.
@@ -85,28 +102,41 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
         self
     }
 
-    /// Sets the *y* coordinate, and unsets the `VERALIGNED` flag.
+    /// Sets the vertical placement.
     ///
     /// Default: *`0`*.
+    ///
+    /// Effect: Sets the *y* coordinate, and unsets the [`VERALIGNED`] flag.
+    ///
+    /// [`VERALIGNED`]: NcVisualOptions#associatedconstant.VERALIGNED
     pub fn y(mut self, y: NcOffset) -> Self {
         self.y = y;
         self.flags &= !NcVisualOptions::VERALIGNED;
         self
     }
 
-    /// Sets the *x* coordinate, and unsets the `HORALIGNED` flag.
+    /// Sets the horizontal placement.
     ///
     /// Default: *`0`*.
+    ///
+    /// Effect: Sets the *x* coordinate, and unsets the [`HORALIGNED`] flag.
+    ///
+    /// [`HORALIGNED`]: NcVisualOptions#associatedconstant.HORALIGNED
     pub fn x(mut self, x: NcOffset) -> Self {
         self.x = x;
         self.flags &= !NcVisualOptions::HORALIGNED;
         self
     }
 
-    /// Sets the *y,x* coordinates, and unsets the `VERALIGNED` & `HORALIGNED`
-    /// flags.
+    /// Sets the vertical & horizontal placement.
     ///
     /// Default: *`(0, 0)`*.
+    ///
+    /// Effect: Sets the *`y` & `x`* coordinates and unsets the [`VERALIGNED`]
+    /// & [`HORALIGNED`] flags.
+    ///
+    /// [`VERALIGNED`]: NcVisualOptions#associatedconstant.VERALIGNED
+    /// [`HORALIGNED`]: NcVisualOptions#associatedconstant.HORALIGNED
     pub fn yx(mut self, y: NcOffset, x: NcOffset) -> Self {
         self.y = y;
         self.x = x;
@@ -115,35 +145,43 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
         self
     }
 
-    /// Sets the vertical alignment, and the `VERALIGNED` flag.
+    /// Sets the vertical alignment.
     ///
     /// Default: *[`NcAlign::TOP`]*.
     ///
+    /// Effect: Sets the *y* alignment and the [`VERALIGNED`] flag.
+    ///
     /// [`NcAlign::TOP`]: crate::NcAlign#associatedconstant.TOP
+    /// [`VERALIGNED`]: NcVisualOptions#associatedconstant.VERALIGNED
     pub fn valign(mut self, valign: NcAlign) -> Self {
         self.y = valign as NcOffset;
         self.flags |= NcVisualOptions::VERALIGNED;
         self
     }
 
-    /// Sets the horizontal alignment, and the `HORALIGNED` flag.
+    /// Sets the horizontal alignment.
     ///
-    /// Default: *[`NcAlign::TOP`]*.
+    /// Default: *[`NcAlign::LEFT`]*.
     ///
-    /// [`NcAlign::TOP`]: crate::NcAlign#associatedconstant.TOP
+    /// Effect: Sets the *`x`* alignment and the [`VERALIGNED`] flag.
+    ///
+    /// [`NcAlign::LEFT`]: crate::NcAlign#associatedconstant.TOP
+    /// [`VERALIGNED`]: NcVisualOptions#associatedconstant.VERALIGNED
     pub fn halign(mut self, halign: NcAlign) -> Self {
         self.x = halign as NcOffset;
         self.flags |= NcVisualOptions::HORALIGNED;
         self
     }
 
-    /// Sets the vertical & horizontal alignments, and the `HORALIGNED` &
-    /// `VERALIGNED` flags.
+    /// Sets the vertical & horizontal alignments.
     ///
     /// Default: *`(`[`NcAlign::TOP`]*`, `*[`NcAlign::LEFT`]`)`*.
     ///
+    /// Effect: Sets the *`y` & `x`* alignments and the [`VERALIGNED`] flag.
+    ///
     /// [`NcAlign::TOP`]: crate::NcAlign#associatedconstant.TOP
     /// [`NcAlign::LEFT`]: crate::NcAlign#associatedconstant.LEFT
+    /// [`VERALIGNED`]: NcVisualOptions#associatedconstant.VERALIGNED
     pub fn align(mut self, valign: NcAlign, halign: NcAlign) -> Self {
         self.y = valign as NcOffset;
         self.x = halign as NcOffset;
