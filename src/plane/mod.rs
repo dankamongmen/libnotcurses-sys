@@ -1,9 +1,9 @@
 //! `NcPlane`
 
-// functions already exported by bindgen : 97
+// functions already exported by bindgen : 98
 // -------------------------------------------
 // (#) test: 9
-// (W) wrap: 89
+// (W) wrap: 90
 // -------------------------------------------
 //W  ncpile_bottom
 //W# ncpile_create
@@ -70,6 +70,7 @@
 //W# ncplane_resize
 //W  ncplane_resize_marginalized
 //W  ncplane_resize_maximize
+//W  ncplane_resize_placewithin
 //W  ncplane_resize_realign
 //W  ncplane_resizecb
 //W  ncplane_rotate_ccw
@@ -272,6 +273,7 @@ pub(crate) mod test;
 /// - [boxes & perimeters](#ncplane-methods-boxes--perimeters)
 /// - [Size, position & alignment](#ncplane-methods-size-position--alignment)
 /// - [fading, gradients & greyscale](#ncplane-methods-fading-gradients--greyscale)
+/// - [*other*](#ncplane-methods-other)
 ///
 pub type NcPlane = crate::bindings::ffi::ncplane;
 

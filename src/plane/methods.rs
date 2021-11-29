@@ -1935,83 +1935,6 @@ impl NcPlane {
         self.dim_yx().1
     }
 
-    /// Resizes this `NcPlane`.
-    ///
-    /// The four parameters `keep_y`, `keep_x`, `keep_len_y`, and `keep_len_x`
-    /// defines a subset of this `NcPlane` to keep unchanged. This may be a section
-    /// of size 0.
-    ///
-    /// `keep_x` and `keep_y` are relative to this `NcPlane`. They must specify a
-    /// coordinate within the ncplane's totality. If either of `keep_len_y` or
-    /// `keep_len_x` is non-zero, both must be non-zero.
-    ///
-    /// `y_off` and `x_off` are relative to `keep_y` and `keep_x`, and place the
-    /// upper-left corner of the resized NcPlane.
-    ///
-    /// `len_y` and `len_x` are the dimensions of this `NcPlane` after resizing.
-    /// `len_y` must be greater than or equal to `keep_len_y`,
-    /// and `len_x` must be greater than or equal to `keeplenx`.
-    ///
-    /// It is an error to attempt to resize the standard plane.
-    ///
-    /// *C style function: [ncplane_resize()][c_api::ncplane_resize].*
-    pub fn resize(
-        &mut self,
-        keep_y: NcDim,
-        keep_x: NcDim,
-        keep_len_y: NcDim,
-        keep_len_x: NcDim,
-        off_y: NcOffset,
-        off_x: NcOffset,
-        len_y: NcDim,
-        len_x: NcDim,
-    ) -> NcResult<()> {
-        error![
-            unsafe {
-                c_api::ncplane_resize(
-                    self,
-                    keep_y as i32,
-                    keep_x as i32,
-                    keep_len_y,
-                    keep_len_x,
-                    off_y as i32,
-                    off_x as i32,
-                    len_y,
-                    len_x,
-                )
-            },
-            &format!(
-                "NcPlane.resize({}, {}, {}, {}, {}, {}, {}, {})",
-                keep_y, keep_x, keep_len_y, keep_len_x, off_y, off_x, len_y, len_x
-            )
-        ]
-    }
-
-    /// Suitable for use as a 'resizecb' with planes created with
-    /// [`NcPlaneOptions::MARGINALIZED`][NcPlaneOptions#associatedconstant.MARGINALIZED].
-    ///
-    /// This will resize this plane against its parent, attempting to enforce
-    /// the supplied margins.
-    ///
-    /// *C style function: [ncplane_resize_marginalized()][c_api::ncplane_resize_marginalized].*
-    pub fn resize_marginalized(&mut self) -> NcResult<()> {
-        error![
-            unsafe { c_api::ncplane_resize_marginalized(self) },
-            "NcPlane.resize_marginalized()"
-        ]
-    }
-
-    /// Suitable for use as a 'resizecb', this will resize the plane
-    /// to the visual region's size. It is used for the standard plane.
-    ///
-    /// *C style function: [ncplane_resize_maximize()][c_api::ncplane_resize_maximize].*
-    pub fn resize_maximize(&mut self) -> NcResult<()> {
-        error![
-            unsafe { c_api::ncplane_resize_maximize(self) },
-            "NcPlane.resize_maximize()"
-        ]
-    }
-
     /// Creates an RGBA flat array from the selected region of the plane.
     ///
     /// Begins at the plane's `beg_y`x`beg_x` coordinate (which must lie on the
@@ -2095,6 +2018,94 @@ impl NcPlane {
             max_bitmap_y: maxbmapy as NcDim,
             max_bitmap_x: maxbmapx as NcDim,
         }
+    }
+
+    /// Resizes this `NcPlane`.
+    ///
+    /// The four parameters `keep_y`, `keep_x`, `keep_len_y`, and `keep_len_x`
+    /// defines a subset of this `NcPlane` to keep unchanged. This may be a section
+    /// of size 0.
+    ///
+    /// `keep_x` and `keep_y` are relative to this `NcPlane`. They must specify a
+    /// coordinate within the ncplane's totality. If either of `keep_len_y` or
+    /// `keep_len_x` is non-zero, both must be non-zero.
+    ///
+    /// `y_off` and `x_off` are relative to `keep_y` and `keep_x`, and place the
+    /// upper-left corner of the resized NcPlane.
+    ///
+    /// `len_y` and `len_x` are the dimensions of this `NcPlane` after resizing.
+    /// `len_y` must be greater than or equal to `keep_len_y`,
+    /// and `len_x` must be greater than or equal to `keeplenx`.
+    ///
+    /// It is an error to attempt to resize the standard plane.
+    ///
+    /// *C style function: [ncplane_resize()][c_api::ncplane_resize].*
+    pub fn resize(
+        &mut self,
+        keep_y: NcDim,
+        keep_x: NcDim,
+        keep_len_y: NcDim,
+        keep_len_x: NcDim,
+        off_y: NcOffset,
+        off_x: NcOffset,
+        len_y: NcDim,
+        len_x: NcDim,
+    ) -> NcResult<()> {
+        error![
+            unsafe {
+                c_api::ncplane_resize(
+                    self,
+                    keep_y as i32,
+                    keep_x as i32,
+                    keep_len_y,
+                    keep_len_x,
+                    off_y as i32,
+                    off_x as i32,
+                    len_y,
+                    len_x,
+                )
+            },
+            &format!(
+                "NcPlane.resize({}, {}, {}, {}, {}, {}, {}, {})",
+                keep_y, keep_x, keep_len_y, keep_len_x, off_y, off_x, len_y, len_x
+            )
+        ]
+    }
+
+    /// Suitable for use as a 'resizecb' with planes created with
+    /// [`NcPlaneOptions::MARGINALIZED`][NcPlaneOptions#associatedconstant.MARGINALIZED].
+    ///
+    /// This will resize this plane against its parent, attempting to enforce
+    /// the supplied margins.
+    ///
+    /// *C style function: [ncplane_resize_marginalized()][c_api::ncplane_resize_marginalized].*
+    pub fn resize_marginalized(&mut self) -> NcResult<()> {
+        error![
+            unsafe { c_api::ncplane_resize_marginalized(self) },
+            "NcPlane.resize_marginalized()"
+        ]
+    }
+
+    /// Suitable for use as a 'resizecb', this will resize the plane
+    /// to the visual region's size. It is used for the standard plane.
+    ///
+    /// *C style function: [ncplane_resize_maximize()][c_api::ncplane_resize_maximize].*
+    pub fn resize_maximize(&mut self) -> NcResult<()> {
+        error![
+            unsafe { c_api::ncplane_resize_maximize(self) },
+            "NcPlane.resize_maximize()"
+        ]
+    }
+
+    /// Moves the plane such that it is entirely within its parent, if possible.
+    /// no resizing is performed.
+    ///
+    /// *C style function: [ncplane_resize_placewithin()][c_api::ncplane_resize_placewithin].*
+    pub fn resize_placewithin(&mut self) -> NcResult<()> {
+        error![
+            unsafe { c_api::ncplane_resize_placewithin(self) },
+            "NcPlane.resize_placewithin()"
+        ]
     }
 
     /// Realigns this `NcPlane` against its parent, using the alignment specified
@@ -2339,7 +2350,8 @@ impl NcPlane {
         )]
     }
 
-    ///
+    /// NcPlane.[`box_sized`][NcPlane#method.box_sized] with the double
+    /// box-drawing characters.
     ///
     /// *C style function: [ncplane_double_box_sized()][c_api::ncplane_double_box_sized].*
     #[inline]
@@ -2561,5 +2573,32 @@ impl NcPlane {
         unsafe {
             c_api::ncplane_greyscale(self);
         }
+    }
+}
+
+// -----------------------------------------------------------------------------
+/// ## NcPlane methods: other
+impl NcPlane {
+    /// Draws a QR code at the current position on the plane.
+    ///
+    /// A tuple of 3 elements will be returned: `(version, max_y, max_x)`.
+    ///
+    /// - The QR code size is (`version` * 4 + 17) columns wide, and
+    /// ⌈`version` * 4 + 17⌉ rows tall.
+    /// - The properly-scaled values are returned as `max_y` and `max_x`.
+    ///
+    /// It is an error not to have sufficient room to draw the qrcode.
+    ///
+    /// *C style function: [ncplane_qrcode()][c_api::ncplane_qrcode].*
+    pub fn qrcode(&mut self, data: &mut [u8]) -> NcResult<(NcDim, NcDim, NcDim)> {
+        let (mut max_y, mut max_x) = (0, 0);
+        let len = data.len();
+        let data_ptr = data.as_ptr() as *const std::ffi::c_void;
+        let res = unsafe { c_api::ncplane_qrcode(self, &mut max_y, &mut max_x, data_ptr, len) };
+        error![
+            res,
+            &format!("NcPlane.qrcode(data:{:?})", data),
+            (res as u32, max_y, max_x)
+        ]
     }
 }
