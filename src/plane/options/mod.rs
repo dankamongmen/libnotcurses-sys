@@ -39,8 +39,8 @@ impl NcPlaneOptions {
         cols: NcDim,
         resizecb: Option<NcResizeCb>,
         flags: u64,
-        margin_b: NcOffset,
-        margin_r: NcOffset,
+        margin_b: NcDim,
+        margin_r: NcDim,
     ) -> Self {
         NcPlaneOptions {
             y: y as i32,
@@ -51,8 +51,8 @@ impl NcPlaneOptions {
             name: null(),
             resizecb: c_api::ncresizecb_to_c(resizecb),
             flags,
-            margin_b: margin_b as i32,
-            margin_r: margin_r as i32,
+            margin_b,
+            margin_r,
         }
     }
 

@@ -233,8 +233,8 @@ impl NcPlaneOptionsBuilder {
             name: null(),        // TODO
             resizecb: c_api::ncresizecb_to_c(self.resizecb),
             flags: self.flags,
-            margin_b: self.margin_b as i32,
-            margin_r: self.margin_r as i32,
+            margin_b: self.margin_b,
+            margin_r: self.margin_r,
         }
     }
 }

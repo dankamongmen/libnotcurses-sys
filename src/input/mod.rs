@@ -10,11 +10,13 @@
 // + nckey_mouse_p
 // + nckey_supppuab_p
 
+use std::ffi::CStr;
+
 use crate::{NcDim, NcKey};
 
 pub(crate) mod reimplemented;
 
-/// A received char or event.
+/// A received character or event.
 #[non_exhaustive]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum NcReceived {
@@ -76,14 +78,15 @@ impl From<NcReceived> for u32 {
 /// For all events, modifiers (e.g. "Alt") are carried as bools in this struct.
 pub type NcInput = crate::bindings::ffi::ncinput;
 
-/// New NcInput.
+/// # Constructors
 impl NcInput {
-    /// New empty NcInput.
+    /// New empty `NcInput`.
     pub const fn new_empty() -> NcInput {
         NcInput {
             id: 0,
             y: 0,
             x: 0,
+            utf8: [0; 5],
             alt: false,
             shift: false,
             ctrl: false,
@@ -93,27 +96,27 @@ impl NcInput {
         }
     }
 
-    /// New NcInput.
+    /// New `NcInput`.
     pub const fn new(id: char) -> NcInput {
         Self::with_all_args(id, None, None, false, false, false, 0)
     }
 
-    /// New NcInput with alt key.
+    /// New `NcInput` with `alt` key.
     pub const fn with_alt(id: char) -> NcInput {
         Self::with_all_args(id, None, None, true, false, false, 0)
     }
 
-    /// New NcInput with shift key.
+    /// New `NcInput` with `shift` key.
     pub const fn with_shift(id: char) -> NcInput {
         Self::with_all_args(id, None, None, false, true, false, 0)
     }
 
-    /// New NcInput with ctrl key.
+    /// New `NcInput` with `ctrl` key.
     pub const fn with_ctrl(id: char) -> NcInput {
         Self::with_all_args(id, None, None, false, false, true, 0)
     }
 
-    /// New NcInput, expecting all the arguments.
+    /// New `NcInput`, expecting all the arguments (except utf8).
     pub const fn with_all_args(
         id: char,
         x: Option<NcDim>,
@@ -139,12 +142,32 @@ impl NcInput {
             id: id as u32,
             y: ix,
             x: iy,
+            utf8: [0; 5],
             alt,
             shift,
             ctrl,
             evtype,
             ypx: -1,
             xpx: -1,
+        }
+    }
+}
+
+/// # Methods
+impl NcInput {
+    /// Returns the `char` from the utf8 representation of the input.
+    pub fn char(&self) -> Option<char> {
+        let cstr = unsafe { CStr::from_ptr(self.utf8.as_ptr()) };
+        let string = cstr.to_string_lossy();
+        let raw_char = string.chars().next();
+        if let Some(ch) = raw_char {
+            if ch.is_ascii_control() {
+                None
+            } else {
+                Some(ch)
+            }
+        } else {
+            None
         }
     }
 }
