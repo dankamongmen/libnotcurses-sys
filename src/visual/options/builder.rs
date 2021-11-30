@@ -1,6 +1,8 @@
 //!
 
-use crate::{NcAlign, NcBlitter, NcDim, NcOffset, NcPlane, NcRgba, NcScale, NcVisualOptions};
+use crate::{
+    NcAlign, NcBlitter, NcBlitterApi, NcDim, NcOffset, NcPlane, NcRgba, NcScale, NcVisualOptions,
+};
 
 /// Builder object for [`NcVisualOptions`].
 ///
@@ -13,7 +15,7 @@ pub struct NcVisualOptionsBuilder<'ncplane> {
     scale: NcScale,
     y: NcOffset,
     x: NcOffset,
-    section_yx_lenyx: Option<(NcDim, NcDim, NcDim, NcDim)>,
+    region_yx_lenyx: Option<(NcDim, NcDim, NcDim, NcDim)>,
     cell_offset_yx: Option<(NcDim, NcDim)>,
     blitter: NcBlitter,
     flags: u32,
@@ -200,6 +202,14 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
         self
     }
 
+    /// Choose `NcBlitter::PIXEL` for the blitter.
+    ///
+    /// [`NcBlitter::PIXEL`]: crate::NcBlitter#associatedconstant.PIXEL
+    pub fn pixel(mut self) -> Self {
+        self.blitter = NcBlitter::PIXEL;
+        self
+    }
+
     /// Choose the color to be considered transparent, or `None`.
     ///
     /// Default: *none*.
@@ -270,11 +280,11 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
         self
     }
 
-    /// Sets the section to be rendered.
+    /// Sets the region to be rendered.
     ///
     /// (start_y, start_x, len_y, len_x)
-    pub fn section(mut self, beg_y: NcDim, beg_x: NcDim, len_y: NcDim, len_x: NcDim) -> Self {
-        self.section_yx_lenyx = Some((beg_y, beg_x, len_y, len_x));
+    pub fn region(mut self, beg_y: NcDim, beg_x: NcDim, len_y: NcDim, len_x: NcDim) -> Self {
+        self.region_yx_lenyx = Some((beg_y, beg_x, len_y, len_x));
         self
     }
 
@@ -293,7 +303,7 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
             self.scale,
             self.y,
             self.x,
-            self.section_yx_lenyx,
+            self.region_yx_lenyx,
             self.cell_offset_yx,
             self.blitter,
             self.flags,

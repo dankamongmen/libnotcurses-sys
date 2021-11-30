@@ -45,10 +45,7 @@ fn main() -> NcResult<()> {
 
     // show the newly created ncvisual delimited with the box drawing characters
     let v1 = NcVisual::from_rgba(buffer.as_slice(), pg.cell_y, pg.cell_x * 4, pg.cell_x)?;
-    let voptions = NcVisualOptions::builder()
-        .yx(1, 2)
-        .blitter(NcBlitter::PIXEL)
-        .build();
+    let voptions = NcVisualOptions::builder().yx(1, 2).pixel().build();
     let p1 = unsafe { v1.blit(&mut nc, Some(&voptions))? };
     p1.reparent(splane)?;
 
@@ -59,7 +56,7 @@ fn main() -> NcResult<()> {
     let voptions2 = NcVisualOptions::builder()
         .plane(vplane2)
         .scale(NcScale::SCALE)
-        .blitter(NcBlitter::PIXEL)
+        .pixel()
         .build();
     unsafe { v1.blit(&mut nc, Some(&voptions2))? };
     nc_render_sleep![&mut nc, 0, 250];
@@ -69,17 +66,14 @@ fn main() -> NcResult<()> {
     let voptions3 = NcVisualOptions::builder()
         .plane(vplane3)
         .scale(NcScale::SCALE)
-        .blitter(NcBlitter::PIXEL)
+        .pixel()
         .interpolate(false)
         .build();
     unsafe { v1.blit(&mut nc, Some(&voptions3))? };
     nc_render_sleep![&mut nc, 0, 250];
 
     // resize the ncvisual (doesn't use interpolation)
-    let voptions4 = NcVisualOptions::builder()
-        .yx(7, 39)
-        .blitter(NcBlitter::PIXEL)
-        .build();
+    let voptions4 = NcVisualOptions::builder().yx(7, 39).pixel().build();
     v1.resize_noninterpolative(pg.cell_y * 4, pg.cell_x * 4)?;
     let p4 = unsafe { v1.blit(&mut nc, Some(&voptions4))? };
     p4.reparent(splane)?;
@@ -87,10 +81,7 @@ fn main() -> NcResult<()> {
 
     // resize the ncvisual (uses interpolation)
     let v5 = NcVisual::from_rgba(buffer.as_slice(), pg.cell_y, pg.cell_x * 4, pg.cell_x)?;
-    let voptions5 = NcVisualOptions::builder()
-        .yx(7, 56)
-        .blitter(NcBlitter::PIXEL)
-        .build();
+    let voptions5 = NcVisualOptions::builder().yx(7, 56).pixel().build();
     v5.resize(pg.cell_y * 4, pg.cell_x * 4)?;
     let p5 = unsafe { v5.blit(&mut nc, Some(&voptions5))? };
     p5.reparent(splane)?;

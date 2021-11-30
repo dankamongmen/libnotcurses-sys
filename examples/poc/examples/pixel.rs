@@ -37,17 +37,11 @@ fn main() -> NcResult<()> {
     let pixelplane: &mut NcPlane = NcPlane::with_options_bound(stdplane, &planeopts)?;
 
     // Craft some visual options (here full screen)
-    let opts: NcVisualOptions = NcVisualOptions::new(
-        Some(pixelplane),
-        NcScale::SCALE,
-        0,
-        0,                // x,y offset relative to plane
-        None,             // begx, begy, lenx, leny offset of the rendered section
-        None,             // pixel cell offset
-        NcBlitter::PIXEL, // Glyph set to use
-        0,                // bitmask over NCVISUAL_OPTION_*
-        0,                // transparent color
-    );
+    let opts: NcVisualOptions = NcVisualOptions::builder()
+        .plane(pixelplane)
+        .scale(NcScale::SCALE)
+        .pixel()
+        .build();
 
     // Render the visual in the virtual space
     unsafe { visual.blit(nc, Some(&opts))? };
