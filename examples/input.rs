@@ -5,8 +5,7 @@
 use libnotcurses_sys::*;
 
 fn main() -> NcResult<()> {
-    let nc =
-        unsafe { Nc::with_flags(NcOptions::SUPPRESS_BANNERS | NcOptions::NO_WINCH_SIGHANDLER)? };
+    let nc = unsafe { Nc::with_flags(NcOptions::SUPPRESS_BANNERS)? };
     let splane = unsafe { nc.stdplane() };
     splane.set_scrolling(true);
 
@@ -25,11 +24,22 @@ fn main() -> NcResult<()> {
         let rec = nc.get_nblock(Some(&mut input))?;
         match rec {
             NcReceived::Char(ch) => {
-                putstrln!(splane, "char: '{0}' \n{1:?}\n", ch, input)?;
+                putstrln!(
+                    splane,
+                    "char: '{0}' \n{1:?} {2:?}\n",
+                    ch,
+                    input,
+                    input.char()
+                )?;
             }
             NcReceived::Event(ev) => {
-                putstrln!(splane, "event: {0:?} \n{1:?}\n", ev.name(), input)?;
-
+                putstrln!(
+                    splane,
+                    "event: {0:?}\n  {1:?} {2:?}\n",
+                    ev.name(),
+                    input,
+                    input.char()
+                )?;
                 match ev {
                     NcKey::F01 => break,
                     _ => (),

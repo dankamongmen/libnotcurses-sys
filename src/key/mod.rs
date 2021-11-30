@@ -29,7 +29,7 @@ impl From<NcKey> for u32 {
 impl NcKey {
     /// Checks whether a number falls in the range of synthesized events.
     pub fn is(num: u32) -> bool {
-        c_api::nckey_synthesized_p(num)
+        c_api::nckey_synthesized_p(num) || num == NcKey::ESC.0 || num == NcKey::TAB.0
     }
 
     /// Returns a new `NcKey` if the provided number falls in the correct range.
@@ -191,6 +191,7 @@ impl NcKey {
                 Self::BUTTON11 => "BUTTON11",
                 Self::EOF => "EOF",
 
+                Self::TAB => "TAB",
                 Self::ESC => "ESC",
                 Self::SPACE => "SPACE",
                 _ => "",
@@ -214,7 +215,7 @@ impl NcKey {
     pub const PRETERUNICODEBASE: u32 = 1115000;
 
     pub const INVALID: NcKey = NcKey(constants::NCKEY_INVALID);
-    /// generated internally in response to SIGWINCH
+    /// we received SIGWINCH
     pub const RESIZE: NcKey = NcKey(constants::NCKEY_RESIZE);
     pub const UP: NcKey = NcKey(constants::NCKEY_UP);
     pub const RIGHT: NcKey = NcKey(constants::NCKEY_RIGHT);
@@ -370,6 +371,10 @@ impl NcKey {
     pub const BUTTON9: NcKey = NcKey(constants::NCKEY_BUTTON9);
     pub const BUTTON10: NcKey = NcKey(constants::NCKEY_BUTTON10);
     pub const BUTTON11: NcKey = NcKey(constants::NCKEY_BUTTON11);
+
+    /// we received SIGCONT
+    pub const SIGNAL: NcKey = NcKey(constants::NCKEY_SIGNAL);
+
     /// Will be returned upon reaching the end of input.
     pub const EOF: NcKey = NcKey(constants::NCKEY_EOF);
 
@@ -381,6 +386,7 @@ impl NcKey {
 
     // Aliases, from the 128 characters common to ASCII+UTF8:
 
+    pub const TAB: NcKey = NcKey(constants::NCKEY_TAB);
     pub const ESC: NcKey = NcKey(constants::NCKEY_ESC);
     pub const SPACE: NcKey = NcKey(constants::NCKEY_SPACE);
 }
@@ -401,7 +407,7 @@ pub(crate) mod constants {
     }
 
     pub const NCKEY_INVALID: u32 = preterunicode(0);
-    /// generated interally in response to SIGWINCH
+    /// we received SIGWINCH
     pub const NCKEY_RESIZE: u32 = preterunicode(1);
     pub const NCKEY_UP: u32 = preterunicode(2);
     pub const NCKEY_RIGHT: u32 = preterunicode(3);
@@ -558,8 +564,13 @@ pub(crate) mod constants {
     pub const NCKEY_BUTTON9: u32 = preterunicode(209);
     pub const NCKEY_BUTTON10: u32 = preterunicode(210);
     pub const NCKEY_BUTTON11: u32 = preterunicode(211);
-    /// Will be returned upon reaching the end of input.
-    pub const NCKEY_EOF: u32 = preterunicode(300);
+
+    /// we received SIGCONT
+    pub const NCKEY_SIGNAL: u32 = preterunicode(400);
+
+    /// Indicates that we have reached the end of input. Any further calls
+    /// will continute to return this immediately.
+    pub const NCKEY_EOF: u32 = preterunicode(500);
 
     // Synonyms (so far as we're concerned):
 
@@ -569,6 +580,7 @@ pub(crate) mod constants {
 
     // Aliases, from the 128 characters common to ASCII+UTF8:
 
+    pub const NCKEY_TAB: u32 = 0x09;
     pub const NCKEY_ESC: u32 = 0x1b;
     pub const NCKEY_SPACE: u32 = 0x20;
 }

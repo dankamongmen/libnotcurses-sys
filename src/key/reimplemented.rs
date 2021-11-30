@@ -1,4 +1,7 @@
-use crate::{c_api::PRETERUNICODEBASE, NcInput, NcKey};
+use crate::{
+    c_api::{NCKEY_EOF, PRETERUNICODEBASE},
+    NcInput, NcKey,
+};
 
 /// Is the event a synthesized mouse event?
 #[inline]
@@ -29,5 +32,5 @@ pub const fn ncinput_equal_p(n1: NcInput, n2: NcInput) -> bool {
 ///
 /// Includes the 300 numbers from [`NcKey::PRETERUNICODEBASE`] on up and `ESC`.
 pub const fn nckey_synthesized_p(num: u32) -> bool {
-    (num >= PRETERUNICODEBASE && num <= (PRETERUNICODEBASE + 300)) || num == NcKey::ESC.0
+    num >= PRETERUNICODEBASE && num <= NCKEY_EOF
 }
