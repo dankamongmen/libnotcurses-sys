@@ -232,7 +232,7 @@ impl NcPlaneOptionsBuilder {
     /// [`HORALIGNED`]: NcPlaneOptions#associatedconstant.HORALIGNED
     pub fn halign(mut self, halign: NcAlign) -> Self {
         self.y = halign as NcOffset;
-        self.flags |= NcPlaneOptions::VERALIGNED;
+        self.flags |= NcPlaneOptions::HORALIGNED;
         self
     }
 
