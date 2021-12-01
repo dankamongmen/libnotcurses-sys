@@ -11,25 +11,67 @@ use std::{
 ///
 /// Can be constructed by calling [`NcPlaneOptions::builder()`].
 ///
-/// By default it already has the [`MARGINALIZED`] flag set, alongside `(0, 0)`
+/// By [*default*] it has the [`MARGINALIZED`] flag already set, alongside `(0, 0)`
 /// margins, so that it automatically fills the parent plane.
 ///
+/// [*default*]: NcPlaneOptionsBuilder#method.default
 /// [`NcPlaneOptions::builder()`]: NcPlaneOptions#method.builder
 /// [`MARGINALIZED`]: NcPlaneOptions#associatedconstant.MARGINALIZED
+#[derive(Clone)]
 pub struct NcPlaneOptionsBuilder {
-    y: NcOffset,
-    x: NcOffset,
-    rows: NcDim,
-    cols: NcDim,
-    // userptr: , // TODO
-    // name: String, // TODO
-    resizecb: Option<NcResizeCb>,
-    flags: u64,
-    margin_b: NcDim,
-    margin_r: NcDim,
+    pub(crate) y: NcOffset,
+    pub(crate) x: NcOffset,
+    pub(crate) rows: NcDim,
+    pub(crate) cols: NcDim,
+    // TODO:
+    // The void* ‘userptr’ can be retrieved (and reset) later.
+    // pub(crate) userptr: mut* c_void,
+    //
+    // A ‘name’ can be set, used in debugging.
+    // pub(crate) name: String,
+    pub(crate) resizecb: Option<NcResizeCb>,
+    pub(crate) flags: u64,
+    pub(crate) margin_b: NcDim,
+    pub(crate) margin_r: NcDim,
+}
+
+//
+impl From<NcPlaneOptionsBuilder> for NcPlaneOptions {
+    fn from(builder: NcPlaneOptionsBuilder) -> NcPlaneOptions {
+        builder.build()
+    }
+}
+impl From<&NcPlaneOptionsBuilder> for NcPlaneOptions {
+    fn from(builder: &NcPlaneOptionsBuilder) -> Self {
+        builder.clone().build()
+    }
+}
+impl From<&mut NcPlaneOptionsBuilder> for NcPlaneOptions {
+    fn from(builder: &mut NcPlaneOptionsBuilder) -> Self {
+        builder.clone().build()
+    }
+}
+//
+impl From<NcPlaneOptions> for NcPlaneOptionsBuilder {
+    fn from(options: NcPlaneOptions) -> NcPlaneOptionsBuilder {
+        Self::from_options(&options)
+    }
+}
+impl From<&NcPlaneOptions> for NcPlaneOptionsBuilder {
+    fn from(options: &NcPlaneOptions) -> Self {
+        Self::from_options(options)
+    }
+}
+impl From<&mut NcPlaneOptions> for NcPlaneOptionsBuilder {
+    fn from(options: &mut NcPlaneOptions) -> Self {
+        Self::from_options(options)
+    }
 }
 
 impl Default for NcPlaneOptionsBuilder {
+    /// New `NcPlaneOptionsBuilder` with the [`MARGINALIZED`] flag set.
+    ///
+    /// [`MARGINALIZED`]: NcPlaneOptions#associatedconstant.MARGINALIZED
     fn default() -> Self {
         Self {
             y: 0,
@@ -64,6 +106,64 @@ impl fmt::Debug for NcPlaneOptionsBuilder {
     }
 }
 
+/// # Constructors
+impl NcPlaneOptionsBuilder {
+    /// New builder from pre-existing options.
+    pub fn from_options(options: &NcPlaneOptions) -> Self {
+        let mut builder = Self::default(); // MARGINALIZED by default
+
+        // y,x
+        if options.is_veraligned() {
+            builder = builder.valign(options.y as NcAlign);
+        } else {
+            builder = builder.y(options.y);
+        }
+        if options.is_horaligned() {
+            builder = builder.halign(options.x as NcAlign);
+        } else {
+            builder = builder.x(options.x);
+        }
+
+        // margins || rows,cols
+        if options.is_marginalized() {
+            builder = builder.margins(options.margin_b, options.margin_r);
+        } else {
+            builder = builder.rows_cols(options.rows, options.cols);
+        }
+
+        // fixed
+        if options.is_fixed() {
+            builder = builder.fixed(true);
+        }
+
+        // resizecb
+        if options.resizecb.is_some() {
+            builder = builder.resizecb(c_api::ncresizecb_to_rust(options.resizecb));
+        }
+
+        // TODO: name, userptr
+
+        builder
+    }
+
+    /// Finishes the building and returns [`NcPlaneOptions`].
+    pub fn build(self) -> NcPlaneOptions {
+        NcPlaneOptions {
+            y: self.y,
+            x: self.x,
+            rows: self.rows,
+            cols: self.cols,
+            userptr: null_mut(), // TODO
+            name: null(),        // TODO
+            resizecb: c_api::ncresizecb_to_c(self.resizecb),
+            flags: self.flags,
+            margin_b: self.margin_b,
+            margin_r: self.margin_r,
+        }
+    }
+}
+
+/// # Methods
 impl NcPlaneOptionsBuilder {
     /// Sets the vertical placement relative to parent plane.
     ///
@@ -152,20 +252,6 @@ impl NcPlaneOptionsBuilder {
         self.flags |= NcPlaneOptions::VERALIGNED;
         self
     }
-    /// Sets the bottom & right margins.
-    ///
-    /// Default: *`(0, 0)`*.
-    ///
-    /// Effect: sets the `margin_b` & `margin_r` fields and the [`MARGINALIZED`]
-    /// flag.
-    ///
-    /// [`MARGINALIZED`]: NcPlaneOptions#associatedconstant.MARGINALIZED
-    pub fn margins(mut self, bottom: NcDim, right: NcDim) -> Self {
-        self.margin_b = bottom;
-        self.margin_r = right;
-        self.flags &= !NcPlaneOptions::MARGINALIZED;
-        self
-    }
 
     /// Sets the number of rows for the plane.
     ///
@@ -214,27 +300,42 @@ impl NcPlaneOptionsBuilder {
         self
     }
 
-    /// (Un)Sets the [`NcResizeCb`].
+    /// Sets the bottom & right margins.
     ///
-    /// Default: *none*.
-    pub fn resizecb(mut self, callback: Option<NcResizeCb>) -> Self {
-        self.resizecb = callback;
+    /// Default: *`(0, 0)`*.
+    ///
+    /// Effect: sets the `margin_b` & `margin_r` fields and the [`MARGINALIZED`]
+    /// flag.
+    ///
+    /// [`MARGINALIZED`]: NcPlaneOptions#associatedconstant.MARGINALIZED
+    pub fn margins(mut self, bottom: NcDim, right: NcDim) -> Self {
+        self.margin_b = bottom;
+        self.margin_r = right;
+        self.flags |= NcPlaneOptions::MARGINALIZED;
         self
     }
 
-    /// Finishes the building and returns [`NcPlaneOptions`].
-    pub fn build(self) -> NcPlaneOptions {
-        NcPlaneOptions {
-            y: self.y,
-            x: self.x,
-            rows: self.rows,
-            cols: self.cols,
-            userptr: null_mut(), // TODO
-            name: null(),        // TODO
-            resizecb: c_api::ncresizecb_to_c(self.resizecb),
-            flags: self.flags,
-            margin_b: self.margin_b,
-            margin_r: self.margin_r,
+    /// If `true`, the plane will **not** scroll with the parent.
+    ///
+    /// Default: *false* (scrolls with the parent).
+    ///
+    /// Effect: (un)sets the [`FIXED`] flag.
+    ///
+    /// [`FIXED`]: NcPlaneOptions#associatedconstant.FIXED
+    pub fn fixed(mut self, fixed: bool) -> Self {
+        if fixed {
+            self.flags |= NcPlaneOptions::FIXED;
+        } else {
+            self.flags &= !NcPlaneOptions::FIXED;
         }
+        self
+    }
+
+    /// (Un)Sets the resize callback.
+    ///
+    /// Default: *None*.
+    pub fn resizecb(mut self, callback: Option<NcResizeCb>) -> Self {
+        self.resizecb = callback;
+        self
     }
 }

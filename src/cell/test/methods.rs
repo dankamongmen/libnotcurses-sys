@@ -8,7 +8,7 @@ use serial_test::serial;
 #[serial]
 fn constructors() -> crate::NcResult<()> {
     let nc = unsafe { Nc::new()? };
-    let plane = NcPlane::new(nc, 0, 0, 10, 10)?;
+    let plane = NcPlane::new_pile_sized(nc, 0, 0, 10, 10)?;
 
     // new empty cell
     let mut cell = NcCell::new();

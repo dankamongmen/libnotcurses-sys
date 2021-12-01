@@ -5,76 +5,88 @@ use crate::{
     c_api, cstring, error, error_ref, error_ref_mut, rstring_free, Nc, NcAlign, NcAlpha, NcBlitter,
     NcBoxMask, NcCell, NcChannel, NcChannels, NcComponent, NcDim, NcError, NcFadeCb, NcFile,
     NcIntResult, NcIntResultApi, NcOffset, NcPaletteIndex, NcPixelGeometry, NcPlane,
-    NcPlaneOptions, NcResizeCb, NcResult, NcRgb, NcRgba, NcStyle, NcTime,
+    NcPlaneBuilder, NcPlaneOptions, NcResizeCb, NcResult, NcRgb, NcRgba, NcStyle, NcTime,
 };
 
 /// # NcPlane constructors & destructors
 impl NcPlane {
-    /// New `NcPlane`.
-    ///
-    /// The returned plane will be the top, bottom, and root of this new pile.
-    ///
-    /// *C style function: [ncpile_create()][c_api::ncpile_create].*
-    pub fn new<'a>(
-        nc: &mut Nc,
-        y: NcOffset,
-        x: NcOffset,
-        rows: NcDim,
-        cols: NcDim,
-    ) -> NcResult<&'a mut NcPlane> {
-        Self::with_options(nc, &NcPlaneOptions::new(y, x, rows, cols))
+    /// Returns a builder object for `NcPlane`.
+    pub fn builder<'nc, 'parent>() -> NcPlaneBuilder<'nc, 'parent> {
+        NcPlaneBuilder::default()
     }
 
-    /// New `NcPlane`, expects an [`NcPlaneOptions`] struct.
+    /// Creates a new `NcPlane` child of `parent` plane.
     ///
-    /// The returned plane will be the top, bottom, and root of this new pile.
+    /// Will be placed at the offset `y`×`x` (relative to the origin of `parent`)
+    /// and with the specified size.
+    ///
+    /// The number of `rows` and `cols` must both be positive.
+    ///
+    /// This plane is initially at the top of the z-buffer, as if [`move_top`]
+    /// had been called on it.
+    ///
+    /// *C style function: [ncplane_create()][c_api::ncplane_create].*
+    ///
+    /// [`move_top`]: NcPlane#method.move_top
+    pub fn new_child<'parent, 'plane, 'opts>(
+        parent: &'parent mut NcPlane,
+        options: &'opts NcPlaneOptions,
+    ) -> NcResult<&'plane mut NcPlane> {
+        error_ref_mut![
+            unsafe { c_api::ncplane_create(parent, options) },
+            &format!["NcPlane::new_plane(NcPlane, {:?})", options] // TODO: show name
+        ]
+    }
+
+    /// Same as [`new_plane`] but creates a new pile.
+    ///
+    /// The returned `NcPlane` will be the top, bottom, and root of the new pile.
     ///
     /// *C style function: [ncpile_create()][c_api::ncpile_create].*
-    pub fn with_options<'a>(nc: &mut Nc, options: &NcPlaneOptions) -> NcResult<&'a mut NcPlane> {
+    ///
+    /// [`new_plane`]: NcPlane#method.new_plane
+    pub fn new_pile<'nc, 'plane, 'opts>(
+        nc: &'nc mut Nc,
+        options: &'opts NcPlaneOptions,
+    ) -> NcResult<&'plane mut NcPlane> {
         error_ref_mut![
             unsafe { c_api::ncpile_create(nc, options) },
             &format!["NcPlane::with_options(Nc, {:?})", options]
         ]
     }
 
-    /// New `NcPlane`, bound to another NcPlane.
+    /// Creates a new `NcPlane` child of `parent` plane.
+    ///
+    /// Will be placed at the offset `y`×`x` (relative to the origin of `parent`)
+    /// and with the specified size.
+    ///
+    /// The number of `rows` and `cols` must both be positive.
     ///
     /// *C style function: [ncplane_create()][c_api::ncplane_create].*
-    pub fn new_bound<'a>(
-        bound_to: &mut NcPlane,
+    pub fn new_child_sized<'plane>(
+        parent: &mut NcPlane,
         y: NcOffset,
         x: NcOffset,
         rows: NcDim,
         cols: NcDim,
-    ) -> NcResult<&'a mut NcPlane> {
-        Self::with_options_bound(bound_to, &NcPlaneOptions::new(y, x, rows, cols))
+    ) -> NcResult<&'plane mut NcPlane> {
+        Self::new_child(parent, &NcPlaneOptions::new(y, x, rows, cols))
     }
 
-    /// New `NcPlane`, bound to another plane, expects an [`NcPlaneOptions`] struct.
+    /// Same as [`new_plane_sized`] but creates a new pile.
     ///
-    /// *C style function: [ncplane_create()][c_api::ncplane_create].*
-    pub fn with_options_bound<'a>(
-        bound_to: &mut NcPlane,
-        options: &NcPlaneOptions,
-    ) -> NcResult<&'a mut NcPlane> {
-        error_ref_mut![
-            unsafe { c_api::ncplane_create(bound_to, options) },
-            &format!("NcPlane::with_options_bound(NcPlane, {:?})", options)
-        ]
-    }
-
-    /// New `NcPlane`, with the same dimensions of the terminal.
+    /// The returned `NcPlane` will be the top, bottom, and root of the new pile.
+    /// Creates a new `NcPlane` child of `parent` plane.
     ///
-    /// The returned plane will be the top, bottom, and root of this new pile.
-    ///
-    /// *(No equivalent C style function)*
-    pub fn with_termsize<'a>(nc: &mut Nc) -> NcResult<&'a mut NcPlane> {
-        let (trows, tcols) = c_api::notcurses_term_dim_yx(nc);
-        assert![(trows > 0) & (tcols > 0)];
-        Self::with_options(
-            nc,
-            &NcPlaneOptions::new(0, 0, trows as NcDim, tcols as NcDim),
-        )
+    /// *C style function: [ncpile_create()][c_api::ncpile_create].*
+    pub fn new_pile_sized<'nc, 'plane>(
+        nc: &'nc mut Nc,
+        y: NcOffset,
+        x: NcOffset,
+        rows: NcDim,
+        cols: NcDim,
+    ) -> NcResult<&'plane mut NcPlane> {
+        Self::new_pile(nc, &NcPlaneOptions::new(y, x, rows, cols))
     }
 
     /// Destroys this `NcPlane`.

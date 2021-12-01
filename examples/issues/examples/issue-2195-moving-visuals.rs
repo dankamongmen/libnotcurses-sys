@@ -15,7 +15,7 @@ fn main() -> NcResult<()> {
     // stp.set_scrolling(true); // doesn't seem to affect
 
     // firstly we move a text plane
-    let plane1 = NcPlane::new_bound(stp, 0, 0, H_CELLS, W_CELLS)?;
+    let plane1 = NcPlane::new_child_sized(stp, 0, 0, H_CELLS, W_CELLS)?;
     plane1.set_base("p", 0, NcChannels::from_rgb(0x778899, 0xBBBBBB))?;
 
     for _ in 0..CELLS_MOVEMENT {

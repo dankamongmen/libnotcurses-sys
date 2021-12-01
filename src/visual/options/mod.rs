@@ -25,13 +25,13 @@ use crate::{NcBlitter, NcDim, NcOffset, NcPlane, NcRgba, NcScale};
 ///
 /// # Fields
 ///
-/// * [`n`] - an optional mutable pointer to an [`NcPlane`].
+/// * [`n`]: an optional mutable pointer to an [`NcPlane`].
 ///
-/// * [`scaling`] - how the source will be stretched/scaled relative to the
+/// * [`scaling`]: how the source will be stretched/scaled relative to the
 ///   `NcPlane` ([`NOSCALE`], [`SCALE`], [`STRETCH`], [`NONE_HIRES`],
 ///   [`SCALE_HIRES`]).
 ///
-/// * [`y`] - if an `NcPlane` is provided in `n` then this specifies where the
+/// * [`y`]: if an `NcPlane` is provided in `n` then this specifies where the
 ///   `NcVisual` will be on that plane.
 ///
 ///   Otherwise it specifies where the created `NcPlane` will be placed relative
@@ -39,7 +39,7 @@ use crate::{NcBlitter, NcDim, NcOffset, NcPlane, NcRgba, NcScale};
 ///
 ///   If [`VERALIGNED`] is set, this will be interpreted as an [`NcAlign`] value.
 ///
-/// * [`x`] - if an `NcPlane` is provided in `n` then this specifies where the
+/// * [`x`]: if an `NcPlane` is provided in `n` then this specifies where the
 ///   `NcVisual` will be on that plane.
 ///
 ///   Otherwise it specifies where the created `NcPlane` will be placed relative
@@ -47,20 +47,20 @@ use crate::{NcBlitter, NcDim, NcOffset, NcPlane, NcRgba, NcScale};
 ///
 ///   If [`HORALIGNED`] is set, this will be interpreted as an [`NcAlign`] value.
 ///
-/// * [`begy`] - origin of rendered section in the *y* axis.
-/// * [`begx`] - origin of rendered section in the *x* axis.
-/// * [`leny`] - length of rendered section in the *y* axis.
-/// * [`lenx`] - length of rendered section in the *x* axis.
+/// * [`begy`]: origin of rendered section in the *y* axis.
+/// * [`begx`]: origin of rendered section in the *x* axis.
+/// * [`leny`]: length of rendered section in the *y* axis.
+/// * [`lenx`]: length of rendered section in the *x* axis.
 ///
-/// * [`blitter`] - [`NcBlitter`] glyph set to use for blitting.
+/// * [`blitter`]: [`NcBlitter`] glyph set to use for blitting.
 ///
-/// * [`flags`] - bitmask of options: ([`ADDALPHA`], [`BLEND`], [`CHILDPLANE`],
-///   [`NODEGRADE`], [`VERALIGNED`], [`HORALIGNED`], [`NOINTERPOLATE`]).
+/// * [`flags`]: bitmask of options: [`ADDALPHA`], [`BLEND`], [`CHILDPLANE`],
+///   [`NODEGRADE`], [`VERALIGNED`], [`HORALIGNED`], [`NOINTERPOLATE`].
 ///
-/// * [`transcolor`] - treats this color as transparent when the [`ADDALPHA`] flag
+/// * [`transcolor`]: treats this color as transparent when the [`ADDALPHA`] flag
 ///   is active.
 ///
-/// * [`pxoffy`] - pixel offset within the cell in the *y* axis.
+/// * [`pxoffy`]: pixel offset within the cell in the *y* axis.
 ///
 ///   If [`NcBlitter::PIXEL`] is used the bitmap will be drawn offset from the
 ///   upper-left cell’s origin by these amounts, otherwise this will be ignored.
@@ -68,7 +68,7 @@ use crate::{NcBlitter, NcDim, NcOffset, NcPlane, NcRgba, NcScale};
 ///   It is an error if either number exceeds the cell-pixel geometry in any
 ///   dimension (see [`NcPixelGeometry.cell_y`], [`NcVisualGeometry.cdim_yx`]).
 ///
-/// * [`pxoffx`] - pixel offset within the cell in the *x* axis.
+/// * [`pxoffx`]: pixel offset within the cell in the *x* axis.
 ///
 ///   If [`NcBlitter::PIXEL`] is used, the bitmap will be drawn offset from the
 ///   upper-left cell’s origin by these amounts, otherwise this will be ignored.

@@ -17,30 +17,30 @@ pub fn ncvisualplane_create<'a>(
     ncv: &mut NcVisual,
     vopts: Option<&NcVisualOptions>,
 ) -> NcResult<&'a mut NcPlane> {
-    // struct ncplane* newn;
+    // struct ncplane* plane;
     // if (vopts && vopts->n) {
     //     if(vopts->flags & NCVISUAL_OPTION_CHILDPLANE){
     //         return NULL; // the whole point is to create a new plane
     //     }
-    //     newn = ncplane_create(vopts->n, opts);
+    //     plane = ncplane_create(vopts->n, opts);
     // } else {
-    //     newn = ncpile_create(nc, opts);
+    //     plane = ncpile_create(nc, opts);
     // }
-    // if(newn == NULL){
+    // if(plane == NULL){
     //     return NULL;
     // }
 
-    let newn: &mut NcPlane;
+    let plane: &mut NcPlane;
     if let Some(vo) = vopts {
         if vo.n.is_null() {
-            newn = NcPlane::with_options(nc, opts)?; // ncpile_create
+            plane = NcPlane::new_pile(nc, opts)?;
         } else if vo.flags & NcVisualOptions::CHILDPLANE as u64 != 0 {
             return Err(NcError::new_msg("ncvisualplane_create() ERR"));
         } else {
-            newn = NcPlane::with_options_bound(unsafe { &mut *vo.n }, opts)?; // ncplane_create
+            plane = NcPlane::new_child(unsafe { &mut *vo.n }, opts)?;
         }
     } else {
-        newn = NcPlane::with_options(nc, opts)?; // ncpile_create
+        plane = NcPlane::new_pile(nc, opts)?;
     }
 
     // struct ncvisual_options v;
@@ -61,15 +61,15 @@ pub fn ncvisualplane_create<'a>(
 
     // WIP:
 
-    // vopts->n = newn;
+    // vopts->n = plane;
     // if(ncvisual_blit(nc, ncv, vopts) == NULL){
-    //     ncplane_destroy(newn);
+    //     ncplane_destroy(plane);
     //     vopts->n = NULL;
     //     return NULL;
     // }
-    // return newn;
+    // return plane;
 
     unsafe { ncv.blit(nc, Some(vopts2_ref))? };
 
-    Ok(newn)
+    Ok(plane)
 }

@@ -32,7 +32,7 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
     /// necessary to render the source with perfect fidelity (this might be
     /// smaller or larger than the rendering area).
     ///
-    /// Default: *none* (no plane).
+    /// Default: *`None`* (no plane).
     ///
     /// See also: *[`parent`]*, *[`child`]*, *[`no_plane`]*.
     ///
@@ -87,7 +87,7 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
     ///
     /// Effect: unsets the plane & the [`CHILDPLANE`] flag.
     ///
-    /// Default: yes.
+    /// Default: *`None`* (no plane).
     ///
     /// [`CHILDPLANE`]: NcVisualOptions#associatedconstant.CHILDPLANE
     pub fn no_plane(mut self) -> Self {

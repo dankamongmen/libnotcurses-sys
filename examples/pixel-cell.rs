@@ -52,7 +52,8 @@ fn main() -> NcResult<()> {
     nc_render_sleep![&mut nc, 1];
 
     // show the ncvisual, scaled with interpolated values
-    let vplane2 = NcPlane::new_bound(&mut splane, 7, 4, 5, 4)?;
+    let vplane2opts = NcPlaneOptions::builder().yx(7, 4).rows_cols(5, 4).build();
+    let vplane2 = NcPlane::new_child(&mut splane, &vplane2opts)?;
     let voptions2 = NcVisualOptions::builder()
         .plane(vplane2)
         .scale(NcScale::SCALE)
@@ -62,7 +63,8 @@ fn main() -> NcResult<()> {
     nc_render_sleep![&mut nc, 0, 250];
 
     // show the ncvisual, scaled without using interpolation
-    let vplane3 = NcPlane::new_bound(&mut splane, 7, 19, 5, 4)?;
+    let vplane3opts = vplane2opts.to_builder().x(19).build();
+    let vplane3 = NcPlane::new_child(&mut splane, &vplane3opts)?;
     let voptions3 = NcVisualOptions::builder()
         .plane(vplane3)
         .scale(NcScale::SCALE)

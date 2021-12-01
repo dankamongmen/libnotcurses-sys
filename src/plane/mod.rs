@@ -182,13 +182,12 @@
 //   ncplane_putwstr_yx
 //   ncplane_vprintf
 
-#[cfg(test)]
-pub(crate) mod test;
-
 pub(crate) mod helpers;
 mod methods;
 pub(crate) mod options;
 pub(crate) mod reimplemented;
+#[cfg(test)]
+pub(crate) mod test;
 
 pub use options::{NcPlaneOptions, NcPlaneOptionsBuilder};
 

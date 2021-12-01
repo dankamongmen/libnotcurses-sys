@@ -16,11 +16,11 @@ fn main() -> NcResult<()> {
     nc_render_sleep![&mut nc, 1];
 
     // add a green plane to the stdplane's pile, displaced right
-    let plane_green = NcPlane::new_bound(&mut stdplane, 8, 0, 16, 30)?;
+    let plane_green = NcPlane::new_child_sized(&mut stdplane, 8, 0, 16, 30)?;
     plane_green.set_base("·", 0, NcChannels::from_rgb(0x224411, 0x229922))?;
 
     // and add a smaller red plane, displaced down
-    let plane_red = NcPlane::new_bound(&mut stdplane, 0, 18, 12, 22)?;
+    let plane_red = NcPlane::new_child_sized(&mut stdplane, 0, 18, 12, 22)?;
     plane_red.set_base("~", 0, NcChannels::from_rgb(0xaadd2b, 0x882222))?;
     nc_render_sleep![&mut nc, 0, 500];
 
