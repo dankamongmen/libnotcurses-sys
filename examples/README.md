@@ -5,5 +5,5 @@ Apart from the examples in the current directory there are:
 - `direct/`: examples that employ direct-mode
 - `poc/`: proof-of-concept examples ported from C
 - `issues/`: issue-tracking examples
-- `c/`: WIP didactic examples in C
+- `C/`: WIP didactic examples in C
 
