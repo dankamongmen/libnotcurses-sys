@@ -968,4 +968,17 @@ impl Nc {
         };
         Ok(vgeometry)
     }
+
+    /// Like [`visual_geom`] but auto-fills the `NcVisualOptions` with
+    /// `NcBlitter::PIXEL` in order to get the maximum available resolution
+    /// for `scale_yx`, which determines the minimum dot-size for an `NcVisual`.
+    ///
+    /// [`visual_geom`]: Nc#method.visual_geom
+    pub fn visual_geom_with_pixel(&self, visual: Option<&NcVisual>) -> NcResult<NcVisualGeometry> {
+        Self::visual_geom(
+            self,
+            visual,
+            Some(&NcVisualOptions::builder().pixel().build()),
+        )
+    }
 }

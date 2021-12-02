@@ -10,9 +10,9 @@ int main(void){
 	// initialize notcurses with custom options
 	struct notcurses_options nopts = {
 		.flags =
-			NCOPTION_NO_ALTERNATE_SCREEN // don't use the alternate screen
-			| NCOPTION_SUPPRESS_BANNERS // don't show version & performance info
+			NCOPTION_SUPPRESS_BANNERS // don't show version & performance info
 			| NCOPTION_PRESERVE_CURSOR // preserve the terminal cursor location
+			| NCOPTION_NO_ALTERNATE_SCREEN // don't use the alternate screen
 			| NCOPTION_NO_CLEAR_BITMAPS // don't clear preexisting bitmaps
 			| NCOPTION_DRAIN_INPUT // don't handle input
 	};

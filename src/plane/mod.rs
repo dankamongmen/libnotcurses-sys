@@ -104,12 +104,13 @@
 //W  ncplane_y
 //W  ncplane_yx
 
-// functions manually reimplemented: 48
+// functions manually reimplemented: 49
 // ------------------------------------------
-// (+) done: 48
-// (W) wrap: 44
+// (+) done: 49
+// (W) wrap: 45
 // (#) test:  9
 // ------------------------------------------
+//W+ ncplane_ascii_box WIP
 //W+ ncplane_bchannel
 //W+ ncplane_bg_alpha
 //W# ncplane_bg_default_p

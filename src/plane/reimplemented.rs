@@ -907,6 +907,46 @@ pub fn ncplane_perimeter_rounded(
 
 // box -------------------------------------------------------------------------
 
+/// Like [`ncplane_box`][c_api::ncplane_box] using only ASCII characters.
+///
+/// *Method: NcPlane.[ascii_box()][NcPlane#method.ascii_box].*
+#[inline]
+pub fn ncplane_ascii_box(
+    plane: &mut NcPlane,
+    stylemask: NcStyle,
+    channels: NcChannels,
+    end_y: NcDim,
+    end_x: NcDim,
+    boxmask: NcBoxMask,
+) -> NcIntResult {
+    #[allow(unused_assignments)]
+    let mut ret = NcIntResult::OK;
+
+    let mut ul = NcCell::new();
+    let mut ur = NcCell::new();
+    let mut ll = NcCell::new();
+    let mut lr = NcCell::new();
+    let mut hl = NcCell::new();
+    let mut vl = NcCell::new();
+
+    unsafe {
+        ret = c_api::nccells_ascii_box(
+            plane, stylemask, channels, &mut ul, &mut ur, &mut ll, &mut lr, &mut hl, &mut vl,
+        );
+        if ret == NcIntResult::OK {
+            ret = c_api::ncplane_box(plane, &ul, &ur, &ll, &lr, &hl, &vl, end_y, end_x, boxmask);
+        }
+
+        nccell_release(plane, &mut ul);
+        nccell_release(plane, &mut ur);
+        nccell_release(plane, &mut ll);
+        nccell_release(plane, &mut lr);
+        nccell_release(plane, &mut hl);
+        nccell_release(plane, &mut vl);
+    }
+    ret
+}
+
 /// Draws a box with its upper-left corner at the current cursor position,
 /// having dimensions `len_y` * `len_x`.
 ///

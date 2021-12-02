@@ -38,13 +38,13 @@ impl NcPlane {
         ]
     }
 
-    /// Same as [`new_plane`] but creates a new pile.
+    /// Same as [`new_child`] but creates a new pile.
     ///
     /// The returned `NcPlane` will be the top, bottom, and root of the new pile.
     ///
     /// *C style function: [ncpile_create()][c_api::ncpile_create].*
     ///
-    /// [`new_plane`]: NcPlane#method.new_plane
+    /// [`new_child`]: NcPlane#method.new_child
     pub fn new_pile<'nc, 'plane, 'opts>(
         nc: &'nc mut Nc,
         options: &'opts NcPlaneOptions,
@@ -73,12 +73,14 @@ impl NcPlane {
         Self::new_child(parent, &NcPlaneOptions::new(y, x, rows, cols))
     }
 
-    /// Same as [`new_plane_sized`] but creates a new pile.
+    /// Same as [`new_child_sized`] but creates a new pile.
     ///
     /// The returned `NcPlane` will be the top, bottom, and root of the new pile.
     /// Creates a new `NcPlane` child of `parent` plane.
     ///
     /// *C style function: [ncpile_create()][c_api::ncpile_create].*
+    ///
+    /// [`new_child_sized`]: NcPlane#method.new_child_sized
     pub fn new_pile_sized<'nc, 'plane>(
         nc: &'nc mut Nc,
         y: NcOffset,
@@ -2273,6 +2275,23 @@ impl NcPlane {
     ) -> NcResult<()> {
         error![c_api::ncplane_box_sized(
             self, ul, ur, ll, lr, hline, vline, len_y, len_x, boxmask
+        )]
+    }
+
+    /// NcPlane.[`box`][NcPlane#method.box] with ASCII characters.
+    ///
+    /// *C style function: [ncplane_ascii_box()][c_api::ncplane_ascii_box].*
+    #[inline]
+    pub fn ascii_box(
+        &mut self,
+        stylemask: NcStyle,
+        channels: NcChannels,
+        stop_y: NcDim,
+        stop_x: NcDim,
+        boxmask: NcBoxMask,
+    ) -> NcResult<()> {
+        error![c_api::ncplane_ascii_box(
+            self, stylemask, channels, stop_y, stop_x, boxmask
         )]
     }
 

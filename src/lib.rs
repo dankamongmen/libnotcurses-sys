@@ -125,7 +125,7 @@ pub use log_level::{NcLogLevel, NcLogLevelApi};
 pub use macros::*;
 pub use notcurses::{Nc, NcOptions};
 pub use palette::{NcPalette, NcPaletteIndex};
-pub use pixel::{NcPixel, NcPixelGeometry, NcPixelImpl, NcPixelImplApi};
+pub use pixel::{NcPixel, NcPixelApi, NcPixelGeometry, NcPixelImpl, NcPixelImplApi};
 pub use plane::{NcPlane, NcPlaneBuilder, NcPlaneOptions, NcPlaneOptionsBuilder};
 pub use r#box::{NcBoxMask, NcBoxMaskApi};
 pub use resizecb::{NcResizeCb, NcResizeCbApi, NcResizeCbUnsafe};
