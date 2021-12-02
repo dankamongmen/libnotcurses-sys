@@ -5,16 +5,11 @@ use crate::{
     c_api, cstring, error, error_ref, error_ref_mut, rstring_free, Nc, NcAlign, NcAlpha, NcBlitter,
     NcBoxMask, NcCell, NcChannel, NcChannels, NcComponent, NcDim, NcError, NcFadeCb, NcFile,
     NcIntResult, NcIntResultApi, NcOffset, NcPaletteIndex, NcPixelGeometry, NcPlane,
-    NcPlaneBuilder, NcPlaneOptions, NcResizeCb, NcResult, NcRgb, NcRgba, NcStyle, NcTime,
+    NcPlaneOptions, NcResizeCb, NcResult, NcRgb, NcRgba, NcStyle, NcTime,
 };
 
 /// # NcPlane constructors & destructors
 impl NcPlane {
-    /// Returns a builder object for `NcPlane`.
-    pub fn builder<'nc, 'parent>() -> NcPlaneBuilder<'nc, 'parent> {
-        NcPlaneBuilder::default()
-    }
-
     /// Creates a new `NcPlane` child of `parent` plane.
     ///
     /// Will be placed at the offset `y`×`x` (relative to the origin of `parent`)

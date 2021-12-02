@@ -6,26 +6,23 @@
 [notcurses C library](https://www.github.com/dankamongmen/notcurses/)
 
 It is built with several layers of zero-overhead abstractions
-over the C functions and pointers accessed through FFI.
+over the C functions and pointers, accessed through FFI.
 
 It adds greater safety and type correctness over the underlying C library API,
 while trying to remain very close to it.
 
-```
-notcurses           : C library
-libnotcurses-sys  ← : C⇄Rust bridge library *(you are here)*
-notcurses-rs        : Rust library
-```
+## Versioning
 
-## Versioning & compatibility
+Current libnotcurses-sys **`3.0.0`** is compatible with notcurses API **`3.0.0`**.
 
-Current major version 2 is not following semver.
+Both project's version number are independent from each other. Historically,
+version *1* and *2* of this library didn't follow semver, but was tied to the
+API version, never enjoying a major version *0* for exploratory development.
 
-Major next version 3 will follow semver with the caveat of being considered a
-development version similar as if it were a major version 0.
+This is why version **3** is following semver as if it were major version *0*.
 
-Each release will indicate the compatibility with a specific version of the
-notcurses C API library.
+This means a rapid pace of development of the API, while any breaking changes
+happening wont be reflected by a major version bump.
 
 ## Example
 
@@ -58,7 +55,7 @@ For the types that don't allocate, most are based on primitives like `i32`,
 `u32`, `u64`… without a name in the C library. In Rust they are type aliased
 (e.g.: `NcChannel`, `NcChannelPair`, `NcRgb`, `NcColor`…), to
 leverage type checking, and they implement methods through traits
-(e.g. `NcChannelMethods` must be in scope to use the `NcChannel` methods.
+(e.g. `NcChannelApi` must be in scope to use the `NcChannel` methods.
 
 ## Official C API docs
 

@@ -126,7 +126,7 @@ pub use macros::*;
 pub use notcurses::{Nc, NcOptions};
 pub use palette::{NcPalette, NcPaletteIndex};
 pub use pixel::{NcPixel, NcPixelApi, NcPixelGeometry, NcPixelImpl, NcPixelImplApi};
-pub use plane::{NcPlane, NcPlaneBuilder, NcPlaneOptions, NcPlaneOptionsBuilder};
+pub use plane::{NcPlane, NcPlaneOptions, NcPlaneOptionsBuilder};
 pub use r#box::{NcBoxMask, NcBoxMaskApi};
 pub use resizecb::{NcResizeCb, NcResizeCbApi, NcResizeCbUnsafe};
 pub use scale::{NcScale, NcScaleApi};
