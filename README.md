@@ -34,13 +34,14 @@ use libnotcurses_sys::*;
 
 fn main() -> NcResult<()> {
     let mut nc = unsafe { Nc::new_cli()? };
-    let plane = nc.stdplane();
-    plane.putstr("hello world")?;
+    nc.stdplane().putstr("hello world")?;
     nc.render()?;
     unsafe { nc.stop()? };
     Ok(())
 }
 ```
+
+## Misc. Notes
 
 The `Drop` trait is not implemented for any wrapping type in this library.
 
@@ -48,14 +49,16 @@ This means you still have to manually call the `stop()` method for `Nc`
 and `NcDirect` objects, and the `destroy()` method for the rest of types that
 allocate, (like `NcPlane`, `NcMenu`…) at the end of their scope.
 
-But they do implement methods and use `NcResult` as the return type,
-for handling errors in the way we are used to in Rust.
+Errors are handled with `NcResult` type, which wraps and extends `NcIntResult`.
 
 For the types that don't allocate, most are based on primitives like `i32`,
 `u32`, `u64`… without a name in the C library. In Rust they are type aliased
 (e.g.: `NcChannel`, `NcChannelPair`, `NcRgb`, `NcColor`…), to
 leverage type checking, and they implement methods through traits
 (e.g. `NcChannelApi` must be in scope to use the `NcChannel` methods.
+
+Several methods are declared unsafe when they have addittional contracts to
+manually upheld in order to avoid *UB*.
 
 ## Official C API docs
 
