@@ -11,23 +11,7 @@ over the C functions and pointers, accessed through FFI.
 It adds greater safety and type correctness over the underlying C library API,
 while trying to remain very close to it.
 
-## Versioning
-
-Current libnotcurses-sys **`3.0.0`** is compatible with notcurses API **`3.0.0`**.
-
-Both project's version number are independent from each other. Historically,
-version *1* and *2* of this library didn't follow semver, but was tied to the
-API version, never enjoying a major version *0* for exploratory development.
-
-This is why version **3** is following semver as if it were major version *0*.
-
-This means a rapid pace of development of the API, while any breaking changes
-happening wont be reflected by a major version bump.
-
 ## Example
-
-Where you use the more safely wrapped types, with its methods and constructors,
-and error handling with the `NcResult` enum:
 
 ```rust
 use libnotcurses_sys::*;
@@ -41,31 +25,20 @@ fn main() -> NcResult<()> {
 }
 ```
 
-## Misc. Notes
+## Versioning Notes
 
-The `Drop` trait is not implemented for any wrapping type in this library.
+Current libnotcurses-sys **`3.0.0`** is compatible with notcurses API **`3.0.0`**.
 
-This means you still have to manually call the `stop()` method for `Nc`
-and `NcDirect` objects, and the `destroy()` method for the rest of types that
-allocate, (like `NcPlane`, `NcMenu`…) at the end of their scope.
+Both project's version number are independent from each other. Historically,
+version *1* and *2* of this library didn't follow semver, but was tied to the
+API version, never enjoying a major version *0* for exploratory development.
 
-Errors are handled with `NcResult` type, which wraps and extends `NcIntResult`.
+This is why version **3** is following semver as if it were major version *0*.
 
-For the types that don't allocate, most are based on primitives like `i32`,
-`u32`, `u64`… without a name in the C library. In Rust they are type aliased
-(e.g.: `NcChannel`, `NcChannelPair`, `NcRgb`, `NcColor`…), to
-leverage type checking, and they implement methods through traits
-(e.g. `NcChannelApi` must be in scope to use the `NcChannel` methods.
+This means a rapid pace of development of the API, while any breaking changes
+happening wont be reflected by a major version bump.
 
-Several methods are declared unsafe when they have addittional contracts to
-manually upheld in order to avoid *UB*.
+## Status Notes
 
-## Official C API docs
-
-- [API reference (man pages)](https://notcurses.com/)
-- [Wiki Page](https://nick-black.com/dankwiki/index.php/Notcurses)
-- [The Book Guide (pdf)](https://nick-black.com/htp-notcurses.pdf)
-- [USAGE.md](https://github.com/dankamongmen/notcurses/blob/master/USAGE.md)
-- [HACKING.md](https://github.com/dankamongmen/notcurses/blob/master/doc/HACKING.md)
-- [Doxygen Documentation](https://nick-black.com/notcurses/html/index.html)
-- [FOSDEM 2021 presentation](https://fosdem.org/2021/schedule/event/notcurses/)
+- the library is very much functional, although the API is somewhat unstable.
+- the documentation is very extensive, but fails to build in docs.rs (see #4).

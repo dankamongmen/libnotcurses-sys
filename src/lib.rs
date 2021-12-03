@@ -18,6 +18,8 @@
 //! ### Example
 #![doc = concat!["```\n", include_str!("../examples/hello-world-rust.rs"), "\n```" ]]
 //!
+//! ### Notes on the Rust API
+//!
 //! The `Drop` trait is not implemented for any wrapping type in this library.
 //!
 //! This means you still have to manually call the `stop()` method for `Nc`
@@ -32,6 +34,9 @@
 //! (e.g.: `NcChannel`, `NcChannelPair`, `NcRgb`, `NcColor`…), to
 //! leverage type checking, and they implement methods through traits
 //! (e.g. `NcChannelApi` must be in scope to use the `NcChannel` methods.
+//!
+//! Several methods are declared unsafe when they have addittional contracts to
+//! manually upheld in order to avoid *UB*.
 //!
 //! ### even more like Rust
 //!
