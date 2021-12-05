@@ -1,4 +1,4 @@
-//! All the notcurses widgets.
+//! The notcurses widgets.
 
 pub(crate) mod menu;
 pub(crate) mod multiselector;

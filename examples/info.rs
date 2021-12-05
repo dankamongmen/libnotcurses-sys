@@ -1,3 +1,8 @@
+//! `info.rs` example.
+
+#[cfg(any(test, doc))]
+use crate::*;
+#[cfg(not(any(test, doc)))]
 use libnotcurses_sys::*;
 
 fn main() -> NcResult<()> {

@@ -29,6 +29,7 @@ pub use methods::NcBlitterApi;
 /// [`NCBlitter::QUADRANT`]: NcBlitter#associatedconstant.QUADRANT
 /// [`NCBlitter::SEXTANT`]: NcBlitter#associatedconstant.SEXTANT
 /// [`NcVisualOptions::NODEGRADE`]: crate::NcVisualOptions#associatedconstant.NODEGRADE
+/// [`NcVisualOptions`]: crate::NcVisualOptions
 /// [`degrade(false)`]: crate::NcVisualOptionsBuilder#method.degrade
 /// [`NcVisualOptionsBuilder`]: crate::NcVisualOptionsBuilder
 pub type NcBlitter = u32;

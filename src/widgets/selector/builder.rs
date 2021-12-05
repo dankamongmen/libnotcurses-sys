@@ -5,7 +5,7 @@ use crate::{
 
 /// A handy builder for [`NcSelector`].
 ///
-#[derive(Debug)]
+#[derive(Default, Debug)]
 pub struct NcSelectorBuilder {
     title: Option<NcString>,
     secondary: Option<NcString>,
@@ -15,21 +15,6 @@ pub struct NcSelectorBuilder {
     max_display: u32,
     channels: [NcChannels; 5],
     flags: u64,
-}
-
-impl Default for NcSelectorBuilder {
-    fn default() -> Self {
-        Self {
-            title: None,
-            secondary: None,
-            footer: None,
-            items: vec![],
-            default_item: 0,
-            max_display: 0,
-            channels: [0, 0, 0, 0, 0],
-            flags: 0,
-        }
-    }
 }
 
 impl NcSelectorBuilder {

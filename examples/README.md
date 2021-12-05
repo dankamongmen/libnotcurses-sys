@@ -7,3 +7,5 @@ Apart from the examples in the current directory there are:
 - `issues/`: issue-tracking examples
 - `C/`: WIP didactic examples in C
 
+Note that the examples are also browsable from the documentation, under the
+`examples` module.

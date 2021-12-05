@@ -1,5 +1,12 @@
-//! shows the result of calling `NcPlane.erase_region` with different parameters
+//! `erase_region` example.
+//!
+//! Shows the result of calling `NcPlane.erase_region` with different parameters.
+//!
+//! press 'q' to quit at any moment.
 
+#[cfg(any(test, doc))]
+use crate::*;
+#[cfg(not(any(test, doc)))]
 use libnotcurses_sys::*;
 
 /// contains the state of the program
