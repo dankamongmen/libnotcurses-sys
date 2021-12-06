@@ -9,37 +9,29 @@ use std::{env::var, path::PathBuf};
 #[cfg(feature = "compile_nc")]
 extern crate cc;
 #[cfg(feature = "compile_nc")]
-extern crate reqwest;
-#[cfg(feature = "compile_nc")]
-extern crate zip;
-#[cfg(feature = "compile_nc")]
-use {
-    reqwest::blocking::get,
-    std::{
-        env::set_var,
-        fs::{create_dir_all, File},
-        io,
-        path::Path,
-        process::Command,
-    },
-    zip::ZipArchive,
+use std::{
+    env::set_var,
+    fs::create_dir_all,
+    path::Path,
+    process::Command,
 };
 
 const VERSION: &str = "3.0.0";
 
 fn main() {
     let build_out_path = PathBuf::from(var("OUT_DIR").unwrap());
-    println!("cargo:warning=OUT_DIR: {:?}", build_out_path);
+    // println!("cargo:warning=OUT_DIR: {:?}", build_out_path);
 
+    // compile notcurses
     #[cfg(feature = "compile_nc")]
     let nc_src_path = { compile_nc(&build_out_path) };
     #[cfg(feature = "compile_nc")]
     let nc_include_path = nc_src_path.join("include");
-
+    // tell bindgen where are the headers
     #[cfg(feature = "compile_nc")]
-    let clang_include_headers = format!["-I{}", nc_include_path.to_string_lossy()];
+    let nc_headers_path = format!["-I{}", nc_include_path.to_string_lossy()];
     #[cfg(not(feature = "compile_nc"))]
-    let clang_include_headers = "".to_owned();
+    let nc_headers_path = "".to_owned();
 
     let plib = pkg_config::Config::new()
         .atleast_version(VERSION)
@@ -56,7 +48,7 @@ fn main() {
         .use_core()
         .ctypes_prefix("cty")
         .clang_arg("-D_XOPEN_SOURCE")
-        .clang_arg(clang_include_headers)
+        .clang_arg(nc_headers_path)
         // The input header we would like to generate builder for.
         .header("build/wrapper.h")
         // generate comments, also from headers and not just doc comments (///)
@@ -151,31 +143,23 @@ fn main() {
 /// This is mainly created for <docs.rs>, running on Ubuntu.
 #[cfg(feature = "compile_nc")]
 fn compile_nc(build_out_path: &Path) -> PathBuf {
-    const URL: &str = "https://github.com/dankamongmen/notcurses/archive/refs/tags/";
-    let filename = format!["v{}.zip", VERSION];
+    // clone notcurses repository with git
 
-    // the path to the source code directory
+    // the path to the source directory
     let src_path = build_out_path.join(&format!["notcurses-{}", VERSION]);
     // println!("cargo:warning=src_path: {:?}", src_path);
 
-    let url_zipfile = format!["{}{}", URL, filename];
-    // println!("cargo:warning=url_zipfile: {:?}", url_zipfile);
-    let local_zipfile = build_out_path.join(&filename);
+    run(Command::new("git")
+        .arg("clone")
+        .arg("https://github.com/dankamongmen/notcurses")
+        .arg(&src_path)
+        .current_dir(&build_out_path));
 
-    // download notcurses
-    download(&url_zipfile, &local_zipfile);
-
-    // unzip
-    if !src_path.exists() {
-        println!("cargo:warning=extracting {:?}...", local_zipfile);
-        let file = File::open(&local_zipfile).expect("failed to create `file` file");
-        let mut zip = ZipArchive::new(file).expect("failed to create `zip`");
-
-        zip.extract(&build_out_path)
-            .expect("couldn't extract the zip file");
-    } else {
-        println!("cargo:warning=already extracted!...");
-    }
+    // switch to the desired tag
+    run(Command::new("git")
+        .arg("checkout")
+        .arg(&format!["v{}", VERSION])
+        .current_dir(&src_path));
 
     // install notcurses dependencies
     //
@@ -195,7 +179,7 @@ fn compile_nc(build_out_path: &Path) -> PathBuf {
     create_dir_all(&src_build_path).expect("couldn't create 'build/' directory");
 
     set_var("PKG_CONFIG_PATH", &src_build_path);
-    set_var("CPATH", &src_build_path.join("include/notcurses")); // FIXME
+    set_var("CPATH", &src_build_path.join("include/notcurses"));
 
     // compile notcurses
     run(Command::new("cmake")
@@ -218,6 +202,7 @@ fn compile_nc(build_out_path: &Path) -> PathBuf {
     src_path.clone()
 }
 
+/*
 /// Downloads a file.
 #[cfg(feature = "compile_nc")]
 fn download(url_zipfile: &str, local_file: &Path) {
@@ -230,6 +215,7 @@ fn download(url_zipfile: &str, local_file: &Path) {
         println!("cargo:warning=already downloaded!...");
     }
 }
+*/
 
 /// Runs a `Command`.
 #[cfg(feature = "compile_nc")]
