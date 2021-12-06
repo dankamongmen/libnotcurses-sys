@@ -1,6 +1,6 @@
 [package]
 name = "libnotcurses-sys"
-version = "3.0.0"
+version = "3.0.1"
 authors = [
 	"nick black <dankamongmen@gmail.com>",
 	"José Luis Cruz <joseluis@andamira.net>"
@@ -9,7 +9,7 @@ license = "MIT OR Apache-2.0"
 edition = "2021"
 rust-version = "1.56"
 description = "Low-level Rust bindings for the notcurses C library."
-documentation = "https://dankamongmen.github.io/notcurses/rustdoc/libnotcurses_sys/"
+documentation = "https://docs.rs/libnotcurses-sys/"
 repository = "https://github.com/dankamongmen/notcurses"
 homepage = "https://nick-black.com/dankwiki/index.php/Notcurses"
 readme = "./README.md"

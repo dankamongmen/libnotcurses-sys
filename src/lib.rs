@@ -218,9 +218,7 @@ pub mod c_api {
 /// The library `examples/`.
 ///
 /// Here you can see and navigate the examples as individual modules,
-/// as well as the common utility objects re-exported from [`utils`].
-///
-/// [`utils`]: examples::utils
+/// as well as the common utility objects from [`utils`][examples::utils].
 ///
 // Note that `cargo doc` doesn't detect changes made inside the `/examples/`
 // directory, unless something about the `examples` module has been modified,

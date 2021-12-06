@@ -1,12 +1,6 @@
 // Docs:
 // - https://rust-lang.github.io/rust-bindgen/tutorial-3.html
 // - https://docs.rs/bindgen/*/bindgen/struct.Builder.html
-//
-// TODO:
-// - improve notcurses compilation:
-//   - detect apt
-//   - support other package installers…
-//   - customize notcurses installation path
 
 extern crate bindgen;
 extern crate pkg_config;
@@ -35,7 +29,7 @@ const VERSION: &str = "3.0.0";
 
 fn main() {
     let build_out_path = PathBuf::from(var("OUT_DIR").unwrap());
-    // println!("cargo:warning=build_out_path: {:?}", build_out_path);
+    println!("cargo:warning=OUT_DIR: {:?}", build_out_path);
 
     #[cfg(feature = "compile_nc")]
     let nc_src_path = { compile_nc(&build_out_path) };
@@ -154,20 +148,14 @@ fn main() {
 
 /// Downloads, compiles, and installs the `notcurses` C library.
 ///
-/// This is mainly created for <docs.rs>, under Ubuntu.
+/// This is mainly created for <docs.rs>, running on Ubuntu.
 #[cfg(feature = "compile_nc")]
 fn compile_nc(build_out_path: &Path) -> PathBuf {
     const URL: &str = "https://github.com/dankamongmen/notcurses/archive/refs/tags/";
     let filename = format!["v{}.zip", VERSION];
 
-    // the path where to extract the source code
-    let mut extract_path = PathBuf::from(var("CARGO_MANIFEST_DIR").unwrap());
-    extract_path.push("build");
-    extract_path.push("downloads");
-    create_dir_all(&extract_path).expect("couldn't create directory");
-
     // the path to the source code directory
-    let src_path = extract_path.join(&format!["notcurses-{}", VERSION]);
+    let src_path = build_out_path.join(&format!["notcurses-{}", VERSION]);
     // println!("cargo:warning=src_path: {:?}", src_path);
 
     let url_zipfile = format!["{}{}", URL, filename];
@@ -183,7 +171,7 @@ fn compile_nc(build_out_path: &Path) -> PathBuf {
         let file = File::open(&local_zipfile).expect("failed to create `file` file");
         let mut zip = ZipArchive::new(file).expect("failed to create `zip`");
 
-        zip.extract(&extract_path)
+        zip.extract(&build_out_path)
             .expect("couldn't extract the zip file");
     } else {
         println!("cargo:warning=already extracted!...");

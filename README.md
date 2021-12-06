@@ -17,7 +17,7 @@ while trying to remain very close to it.
 use libnotcurses_sys::*;
 
 fn main() -> NcResult<()> {
-    let mut nc = unsafe { Nc::new_cli()? };
+    let nc = unsafe { Nc::new_cli()? };
     nc.stdplane().putstr("hello world")?;
     nc.render()?;
     unsafe { nc.stop()? };
@@ -30,7 +30,7 @@ fn main() -> NcResult<()> {
 Current libnotcurses-sys **`3.0.0`** is compatible with notcurses API **`3.0.0`**.
 
 Both project's version number are independent from each other. Historically,
-version *1* and *2* of this library didn't follow semver, but was tied to the
+version *1* and *2* of this library didn't follow semver, being tied to the
 API version, never enjoying a major version *0* for exploratory development.
 
 This is why version **3** is following semver as if it were major version *0*.
@@ -41,4 +41,3 @@ happening wont be reflected by a major version bump.
 ## Status Notes
 
 - the library is very much functional, although the API is somewhat unstable.
-- the documentation is very extensive, but fails to build in docs.rs (see #4).
