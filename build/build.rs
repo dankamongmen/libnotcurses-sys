@@ -1,16 +1,54 @@
 // Docs:
 // - https://rust-lang.github.io/rust-bindgen/tutorial-3.html
 // - https://docs.rs/bindgen/*/bindgen/struct.Builder.html
+//
+// TODO:
+// - improve notcurses compilation:
+//   - detect apt
+//   - support other package installers…
+//   - customize notcurses installation path
 
 extern crate bindgen;
 extern crate pkg_config;
+use std::{env::var, path::PathBuf};
 
-use std::env;
-use std::path::PathBuf;
+#[cfg(feature = "compile_nc")]
+extern crate cc;
+#[cfg(feature = "compile_nc")]
+extern crate reqwest;
+#[cfg(feature = "compile_nc")]
+extern crate zip;
+#[cfg(feature = "compile_nc")]
+use {
+    reqwest::blocking::get,
+    std::{
+        env::set_var,
+        fs::{create_dir_all, File},
+        io,
+        path::Path,
+        process::Command,
+    },
+    zip::ZipArchive,
+};
+
+const VERSION: &str = "3.0.0";
 
 fn main() {
+    let build_out_path = PathBuf::from(var("OUT_DIR").unwrap());
+    // println!("cargo:warning=build_out_path: {:?}", build_out_path);
+
+    #[cfg(feature = "compile_nc")]
+    let nc_src_path = { compile_nc(&build_out_path) };
+    #[cfg(feature = "compile_nc")]
+    let nc_include_path = nc_src_path.join("include");
+
+    #[cfg(feature = "compile_nc")]
+    let clang_include_headers = format!["-I{}", nc_include_path.to_string_lossy()];
+    #[cfg(not(feature = "compile_nc"))]
+    let clang_include_headers = "".to_owned();
+
     let plib = pkg_config::Config::new()
-        .atleast_version("3.0.0")
+        .atleast_version(VERSION)
         .probe("notcurses")
         .unwrap();
 
@@ -24,6 +62,7 @@ fn main() {
         .use_core()
         .ctypes_prefix("cty")
         .clang_arg("-D_XOPEN_SOURCE")
+        .clang_arg(clang_include_headers)
         // The input header we would like to generate builder for.
         .header("build/wrapper.h")
         // generate comments, also from headers and not just doc comments (///)
@@ -108,8 +147,114 @@ fn main() {
     let bindings = builder.generate().expect("Unable to generate bindings");
 
     // Write the bindings to the $OUT_DIR/bindings.rs file.
-    let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());
     bindings
-        .write_to_file(out_path.join("bindings.rs"))
+        .write_to_file(build_out_path.join("bindings.rs"))
         .expect("Couldn't write bindings!");
+}
+
+/// Downloads, compiles, and installs the `notcurses` C library.
+///
+/// This is mainly created for <docs.rs>, under Ubuntu.
+#[cfg(feature = "compile_nc")]
+fn compile_nc(build_out_path: &Path) -> PathBuf {
+    const URL: &str = "https://github.com/dankamongmen/notcurses/archive/refs/tags/";
+    let filename = format!["v{}.zip", VERSION];
+
+    // the path where to extract the source code
+    let mut extract_path = PathBuf::from(var("CARGO_MANIFEST_DIR").unwrap());
+    extract_path.push("build");
+    extract_path.push("downloads");
+    create_dir_all(&extract_path).expect("couldn't create directory");
+
+    // the path to the source code directory
+    let src_path = extract_path.join(&format!["notcurses-{}", VERSION]);
+    // println!("cargo:warning=src_path: {:?}", src_path);
+
+    let url_zipfile = format!["{}{}", URL, filename];
+    // println!("cargo:warning=url_zipfile: {:?}", url_zipfile);
+    let local_zipfile = build_out_path.join(&filename);
+
+    // download notcurses
+    download(&url_zipfile, &local_zipfile);
+
+    // unzip
+    if !src_path.exists() {
+        println!("cargo:warning=extracting {:?}...", local_zipfile);
+        let file = File::open(&local_zipfile).expect("failed to create `file` file");
+        let mut zip = ZipArchive::new(file).expect("failed to create `zip`");
+
+        zip.extract(&extract_path)
+            .expect("couldn't extract the zip file");
+    } else {
+        println!("cargo:warning=already extracted!...");
+    }
+
+    // install notcurses dependencies
+    //
+    // NOTE: for now it assumes "apt" is available (debian/ubuntu based distro).
+    // This works well for docs.rs but it may ask for password in other systems.
+    run(
+        Command::new("apt")
+            .arg("install")
+            .arg("-y")
+            .arg("libunistring-dev")
+            .arg("libdeflate-dev")
+            .arg("doctest-dev"), // .arg("pandoc") // not needed
+    );
+
+    // prepare the building directory
+    let src_build_path = &src_path.join("build");
+    create_dir_all(&src_build_path).expect("couldn't create 'build/' directory");
+
+    set_var("PKG_CONFIG_PATH", &src_build_path);
+    set_var("CPATH", &src_build_path.join("include/notcurses")); // FIXME
+
+    // compile notcurses
+    run(Command::new("cmake")
+        // .arg("-DCMAKE_INSTALL_PREFIX=/usr/local/") // (disabled install)
+        .arg("-DUSE_DOCTEST=off")
+        .arg("-DUSE_PANDOC=off")
+        .arg("..")
+        .current_dir(&src_build_path));
+
+    run(Command::new("make")
+        .arg(format!("-j{}", var("NUM_JOBS").unwrap()))
+        .current_dir(&src_build_path));
+
+    // (disabled) install notcurses
+    //
+    // run(Command::new("make")
+    //     .arg("install")
+    //     .current_dir(&src_build_path));
+
+    src_path.clone()
+}
+
+/// Downloads a file.
+#[cfg(feature = "compile_nc")]
+fn download(url_zipfile: &str, local_file: &Path) {
+    if !local_file.exists() {
+        println!("cargo:warning=downloading...");
+        let mut resp = get(url_zipfile).expect("request failed");
+        let mut out = File::create(&local_file).expect("failed to create `out` file");
+        io::copy(&mut resp, &mut out).expect("failed to copy content");
+    } else {
+        println!("cargo:warning=already downloaded!...");
+    }
+}
+
+/// Runs a `Command`.
+#[cfg(feature = "compile_nc")]
+fn run(command: &mut Command) {
+    println!("cargo:warning=Running: {:?}", command);
+    match command.status() {
+        Ok(status) => {
+            if !status.success() {
+                panic!("`{:?}` failed: {}", command, status);
+            }
+        }
+        Err(error) => {
+            panic!("failed to execute `{:?}`: {}", command, error);
+        }
+    }
 }
