@@ -25,6 +25,14 @@ categories = [
 keywords = ["tui", "cli", "terminal", "ncurses", "ffi"]
 include = [
 	"/examples/hello-world-*.rs",
+	"/examples/erase_region.rs",
+	"/examples/info.rs",
+	"/examples/input.rs",
+	"/examples/pixel-cell.rs",
+	"/examples/planes.rs",
+	"/examples/utils/mod.rs",
+	"/examples/utils/canvas.rs",
+	"/examples/utils/counter.rs",
 	"/build/build.rs",
 	"/build/wrapper.h",
 	"/src/",
