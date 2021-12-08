@@ -19,9 +19,6 @@ fn main() {
         nc_src.dont_vendor();
     }
 
-    // detect whether we are in docs.rs
-    // let docs_rs = std::env::var("DOCS_RS").unwrap_or_else(|_| "".to_string()) == "1";
-
     // compile nc?
     if cfg!(feature = "nc_compile") {
         nc_src.compile();
@@ -34,14 +31,11 @@ fn main() {
     let plib = pkg_config::Config::new()
         .atleast_version(NC_VERSION)
         .probe("notcurses")
-        .unwrap();
+        .expect("pkg-config couldn't find the notcurses library");
 
     // tell cargo to invalidate the built crate whenever the wrapper changes.
     println!("cargo:rerun-if-changed=build/wrapper.h");
 
-    // ALLOW: `.bl**a**cklist_` instead of `.bl**o**cklist_`, at least until
-    // we can update bindgen to 0.59.
-    #[allow(deprecated)]
     let mut builder = bindgen::Builder::default()
         .use_core()
         .ctypes_prefix("cty")
@@ -56,27 +50,27 @@ fn main() {
         // https://github.com/dankamongmen/notcurses/pull/2331#issuecomment-966211120
         .size_t_is_usize(true)
         // Remove warnings about improper_ctypes
-        .blacklist_function("strtold")
-        .blacklist_function("wcstold")
-        .blacklist_function("socketpair")
+        .blocklist_function("strtold")
+        .blocklist_function("wcstold")
+        .blocklist_function("socketpair")
         // only import functions from notcurses public API
-        .blacklist_function("[^ns].*")
-        .blacklist_function("n[^co].*")
-        .blacklist_function("s[^i].*") // allow sig*
+        .blocklist_function("[^ns].*")
+        .blocklist_function("n[^co].*")
+        .blocklist_function("s[^i].*") // allow sig*
         // clean more unneeded types
-        .blacklist_item("B[0-9]+")
-        .blacklist_item("_BITS.*")
-        .blacklist_item("_POSIX.*")
-        .blacklist_item("__[A-Z].*")
-        .blacklist_item("[ADHJ-MQ-Z].*")
-        .blacklist_item("IN.*")
-        .blacklist_item("IP[^R].*")
-        .blacklist_item("ip.*")
-        .blacklist_item("m.*")
-        .blacklist_item("PF.*")
-        .blacklist_item("MSG_.*")
-        .blacklist_item("N[^C].*")
-        .blacklist_type("_bindgen.*")
+        .blocklist_item("B[0-9]+")
+        .blocklist_item("_BITS.*")
+        .blocklist_item("_POSIX.*")
+        .blocklist_item("__[A-Z].*")
+        .blocklist_item("[ADHJ-MQ-Z].*")
+        .blocklist_item("IN.*")
+        .blocklist_item("IP[^R].*")
+        .blocklist_item("ip.*")
+        .blocklist_item("m.*")
+        .blocklist_item("PF.*")
+        .blocklist_item("MSG_.*")
+        .blocklist_item("N[^C].*")
+        .blocklist_type("_bindgen.*")
         // https://github.com/dankamongmen/notcurses/pull/1937
         // https://github.com/rust-lang/rust-bindgen/issues/1651
         .layout_tests(false)
