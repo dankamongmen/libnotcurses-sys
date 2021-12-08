@@ -27,17 +27,9 @@ fn main() -> NcResult<()> {
 
 ## Versioning Notes
 
-Current libnotcurses-sys **`3.0.0`** is compatible with notcurses API **`3.0.0`**.
-
-Both project's version number are independent from each other. Historically,
-version *1* and *2* of this library didn't follow semver, being tied to the
-API version, never enjoying a major version *0* for exploratory development.
-
-This is why version **3** is following semver as if it were major version *0*.
+Current version **3** follows *semver* as if it were major version *0*.
 
 This means a rapid pace of development of the API, while any breaking changes
 happening wont be reflected by a major version bump.
 
-## Status Notes
-
-- the library is very much functional, although the API is somewhat unstable.
+The library is very much functional, although the API is somewhat unstable.

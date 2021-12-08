@@ -111,11 +111,21 @@ impl NcCSource {
         set_var("CPATH", &self.build_path.join("include/notcurses"));
 
         // compile notcurses
+
+        // TEMP: don't use libdeflate for now, if we are in docs.rs
+        let docs_rs = std::env::var("DOCS_RS").unwrap_or_else(|_| "".to_string()) == "1";
+        let use_libdeflate = if docs_rs {
+            "-DUSE_DEFLATE=off"
+        } else {
+            ""
+        };
+
         Self::run(
             Command::new("cmake")
                 // .arg("-DCMAKE_INSTALL_PREFIX=/usr/local/") // (disabled install)
                 .arg("-DUSE_DOCTEST=off")
                 .arg("-DUSE_PANDOC=off")
+                .arg(use_libdeflate)
                 .arg("..")
                 .current_dir(&self.build_path),
         );

@@ -5,8 +5,6 @@ extern crate pkg_config;
 
 mod nc_csource;
 
-use std::env::var;
-
 /// The notcurses version that we are aiming to support in the current release.
 const NC_VERSION: &str = "3.0.0";
 
@@ -22,14 +20,10 @@ fn main() {
     }
 
     // detect whether we are in docs.rs
-    let docs_rs = var("DOCS_RS").unwrap_or_else(|_| "".to_string()) == "1";
+    // let docs_rs = std::env::var("DOCS_RS").unwrap_or_else(|_| "".to_string()) == "1";
 
     // compile nc?
     if cfg!(feature = "nc_compile") {
-        // only bother installing dependencies if we are in docs.rs
-        if docs_rs {
-            nc_src.install_dependencies();
-        }
         nc_src.compile();
     }
 
