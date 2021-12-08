@@ -1,9 +1,9 @@
 //! `NcPlane`
 
-// functions already exported by bindgen : 98
+// functions already exported by bindgen : 100
 // -------------------------------------------
 // (#) test: 9
-// (W) wrap: 91
+// (W) wrap: 93
 // -------------------------------------------
 //W  ncpile_bottom
 //W# ncpile_create
@@ -21,6 +21,7 @@
 //W  ncplane_at_cursor_cell
 //W  ncplane_at_yx
 //W  ncplane_at_yx_cell
+//W  ncplane_autogrow_p
 //W  ncplane_base
 //W  ncplane_below
 //W  ncplane_box
@@ -78,6 +79,7 @@
 //W  ncplane_scrolling_p
 //W  ncplane_scrollup,
 //W  ncplane_scrollup_child,
+//W  ncplane_set_autogrow
 //W  ncplane_set_base
 //W  ncplane_set_base_cell
 //W  ncplane_set_bg_alpha

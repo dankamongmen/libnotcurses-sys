@@ -2167,6 +2167,8 @@ impl NcPlane {
     }
 
     /// Returns `true` if this `NcPlane` has scrolling enabled, or `false` otherwise.
+    ///
+    /// *C style function: [ncplane_scrolling_p()][c_api::ncplane_scrolling_p].*
     pub fn scrolling_p(&self) -> bool {
         unsafe { c_api::ncplane_scrolling_p(self) }
     }
@@ -2184,7 +2186,7 @@ impl NcPlane {
     ///
     /// *C style function: [ncplane_set_scrolling()][c_api::ncplane_set_scrolling].*
     pub fn set_scrolling(&mut self, scroll: bool) -> bool {
-        unsafe { c_api::ncplane_set_scrolling(self, scroll) }
+        unsafe { c_api::ncplane_set_scrolling(self, scroll.into()) }
     }
 
     /// Scrolls down the current plane `r` times.
@@ -2209,6 +2211,37 @@ impl NcPlane {
     pub fn scrollup_child(&mut self, child: &NcPlane) -> NcResult<NcDim> {
         let res = unsafe { c_api::ncplane_scrollup_child(self, child) };
         error![res, "", res as NcDim]
+    }
+
+    /// Returns `true` if this `NcPlane` has autogrow enabled, or `false` otherwise.
+    ///
+    /// *C style function: [ncplane_autogrow_p()][c_api::ncplane_autogrow_p].*
+    pub fn autogrow_p(&self) -> bool {
+        unsafe { c_api::ncplane_autogrow_p(self) }
+    }
+
+    /// (Un)Sets the automatic growth of the plane to accommodate output.
+    ///
+    /// Returns true if autogrow was previously enabled, or false otherwise.
+    ///
+    /// By default, planes are created with autogrow disabled.
+    ///
+    /// Normally, once output reaches the right boundary of a plane, it is
+    /// impossible to place more output unless the cursor is first moved.
+    ///
+    /// If scrolling is enabled, the cursor will automatically move down and to
+    /// the left in this case, but upon reaching the bottom right corner of the
+    /// plane, it is impossible to place more output without a scrolling event.
+    ///
+    /// If autogrow is in play, the plane will automatically be enlarged to
+    /// accommodate output. If scrolling is disabled, growth takes place to the
+    /// right; it otherwise takes place at the bottom.
+    ///
+    /// The plane only grows in one dimension.
+    ///
+    /// *C style function: [ncplane_set_autogrow()][c_api::ncplane_set_autogrow].*
+    pub fn set_autogrow(&mut self, autogrow: bool) -> bool {
+        unsafe { c_api::ncplane_set_autogrow(self, autogrow.into()) }
     }
 }
 

@@ -8,7 +8,7 @@
 //! API, while trying to remain very close to it.
 //!
 //! It offers the choice of using it [*more like Rust*](#like-rust)
-//! and/or [*more like C*](#like-C).
+//! and/or [*more like C*](#like-c).
 //!
 //! ## Like Rust
 //!
