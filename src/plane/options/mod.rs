@@ -23,7 +23,7 @@ use std::ptr::{null, null_mut};
 /// - [`name`]: optional string identifier for debugging.
 /// - [`resizecb`]: callback when parent is resized.
 /// - [`flags`]: bitmask of options: [`HORALIGNED`], [`VERALIGNED`], [`FIXED`],
-///   [`MARGINALIZED`].
+///   [`MARGINALIZED`], [`AUTOGROW`], [`VSCROLL`].
 /// - [`margin_b`]: bottom margin (requires the [`MARGINALIZED`] flag).
 /// - [`margin_r`]: right margin (requires the [`MARGINALIZED`]).
 ///
@@ -41,6 +41,8 @@ use std::ptr::{null, null_mut};
 /// [`HORALIGNED`]: NcPlaneOptions#associatedconstant.HORALIGNED
 /// [`MARGINALIZED`]: NcPlaneOptions#associatedconstant.MARGINALIZED
 /// [`FIXED`]: NcPlaneOptions#associatedconstant.FIXED
+/// [`AUTOGROW`]: NcPlaneOptions#associatedconstant.AUTOGROW
+/// [`VSCROLL`]: NcPlaneOptions#associatedconstant.VSCROLL
 pub type NcPlaneOptions = crate::bindings::ffi::ncplane_options;
 
 /// # Constructors
@@ -147,5 +149,19 @@ impl NcPlaneOptions {
     /// [`FIXED`]: NcPlaneOptions#associatedconstant.FIXED
     pub const fn is_fixed(&self) -> bool {
         self.flags & NcPlaneOptions::FIXED != 0
+    }
+
+    /// Returns `true` if it has the [`AUTOGROW`] flag set.
+    ///
+    /// [`AUTOGROW`]: NcPlaneOptions#associatedconstant.AUTOGROW
+    pub const fn is_autogrow(&self) -> bool {
+        self.flags & NcPlaneOptions::AUTOGROW != 0
+    }
+
+    /// Returns `true` if it has the [`VSCROLL`] flag set.
+    ///
+    /// [`VSCROLL`]: NcPlaneOptions#associatedconstant.VSCROLL
+    pub const fn is_vscroll(&self) -> bool {
+        self.flags & NcPlaneOptions::VSCROLL != 0
     }
 }

@@ -324,10 +324,12 @@ pub use ffi::{
 // ncplane_set_fchannel,
 //
 // // constants
+// NCPLANE_OPTION_AUTOGROW,
 // NCPLANE_OPTION_FIXED,
 // NCPLANE_OPTION_HORALIGNED,
 // NCPLANE_OPTION_MARGINALIZED,
 // NCPLANE_OPTION_VERALIGNED,
+// NCPLANE_OPTION_VSCROLL,
 //
 // // type alias
 // ncdirectv,

@@ -19,10 +19,10 @@ use std::{
 extern crate cc;
 
 /// The URL of the repository of the notcurses C source.
-pub const C_SRC_REPO: &'static str = "https://github.com/dankamongmen/notcurses";
+pub const C_SRC_REPO: &str = "https://github.com/dankamongmen/notcurses";
 
 /// The base name for the local notcurses C source directory & compressed file.
-pub const C_SRC_BASENAME: &'static str = "notcurses4libnotcurses-sys";
+pub const C_SRC_BASENAME: &str = "notcurses4libnotcurses-sys";
 
 /// An abstraction over the original source of notcurses, in C.
 ///
@@ -93,7 +93,8 @@ impl NcCSource {
     ///
     /// Will be called if the "nc_vendor" feature is NOT enabled.
     pub fn dont_vendor(&self) {
-        Self::rm(&self.vendored_path).expect(&format!["rm -rf vendored: {:?}", self.vendored_path]);
+        Self::rm(&self.vendored_path)
+            .unwrap_or_else(|_| panic!["rm -rf vendored: {:?}", self.vendored_path]);
     }
 
     /// Intended for compiling the `notcurses` C library in of docs.rs.
@@ -114,11 +115,7 @@ impl NcCSource {
 
         // TEMP: don't use libdeflate for now, if we are in docs.rs
         let docs_rs = std::env::var("DOCS_RS").unwrap_or_else(|_| "".to_string()) == "1";
-        let use_libdeflate = if docs_rs {
-            "-DUSE_DEFLATE=off"
-        } else {
-            ""
-        };
+        let use_libdeflate = if docs_rs { "-DUSE_DEFLATE=off" } else { "" };
 
         Self::run(
             Command::new("cmake")
@@ -150,8 +147,10 @@ impl NcCSource {
     ///
     /// By default it uses the $root_path path as the base path.
     pub fn new(version: &str) -> Self {
-        let mut self0 = Self::default();
-        self0.compressed_source_file = format!["{}.tar.xz", C_SRC_BASENAME];
+        let mut self0 = NcCSource {
+            compressed_source_file: format!["{}.tar.xz", C_SRC_BASENAME],
+            ..Default::default()
+        };
         self0.set_root_path(PathBuf::from(var("OUT_DIR").expect("ERR: OUT_DIR")));
 
         let vendored_path =
@@ -184,7 +183,7 @@ impl NcCSource {
 
     /// Sets the base path, and recalculates the derivated paths.
     pub fn set_root_path(&mut self, root_path: PathBuf) {
-        println!("cargo:warning=Setting root_path={:?}", root_path);
+        // println!("cargo:warning=Setting root_path={:?}", root_path);
         self.root_path = root_path;
         self.source_path = self.root_path.join(C_SRC_BASENAME);
         self.compressed_source_path = self.root_path.join(&self.compressed_source_file);
@@ -210,7 +209,8 @@ impl NcCSource {
         }
 
         // make sure the target path doesn't already exist.
-        Self::rm(&self.source_path).expect(&format!["rm -rf source_path: {:?}", self.source_path]);
+        Self::rm(&self.source_path)
+            .unwrap_or_else(|_| panic!["rm -rf source_path: {:?}", self.source_path]);
 
         // clone the branch we want from the repo.
         let mut git_cmd = Command::new("git");
@@ -241,8 +241,7 @@ impl NcCSource {
             println!("cargo:warning=deleting files: {:?}...", &delete_files);
             for file in delete_files {
                 let file_path = self.source_path.join(file);
-                // println!("cargo:warning=deleting {:?}...", &file_path);
-                Self::rm(&file_path).expect(&format!["rm -rf {:?}", file_path]);
+                Self::rm(&file_path).unwrap_or_else(|_| panic!["rm -rf {:?}", file_path]);
             }
         }
     }
