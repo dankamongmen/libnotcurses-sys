@@ -614,14 +614,14 @@ impl NcChannelsApi for NcChannels {
 
     /// Returns true if the foreground channel is set to RGB color.
     ///
-    /// *C style function: [ncchannel_fg_rgb_p()][c_api::ncchannel_fg_rgb_p].*
+    /// *C style function: [ncchannels_fg_rgb_p()][c_api::ncchannels_fg_rgb_p].*
     fn fg_rgb_p(&self) -> bool {
         c_api::ncchannels_fg_rgb_p(*self)
     }
 
     /// Returns true if the background channel is set to RGB color.
     ///
-    /// *C style function: [ncchannel_bg_rgb_p()][c_api::ncchannel_bg_rgb_p].*
+    /// *C style function: [ncchannels_bg_rgb_p()][c_api::ncchannels_bg_rgb_p].*
     fn bg_rgb_p(&self) -> bool {
         c_api::ncchannels_bg_rgb_p(*self)
     }

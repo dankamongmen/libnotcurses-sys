@@ -9,6 +9,8 @@ use crate::{
 
 /// Gets the [`NcAlpha`] from an [`NcChannel`].
 ///
+/// It is not shifted down, and can be directly compared to `NCALPHA_*` values.
+///
 /// *Method: NcChannel.[alpha()][NcChannel#method.alpha]*
 #[inline]
 pub const fn ncchannel_alpha(channel: NcChannel) -> NcAlpha {
@@ -155,6 +157,8 @@ pub fn ncchannels_reverse(channels: NcChannels) -> NcChannels {
 
 /// Gets the red [`NcComponent`] from an [`NcChannel`].
 ///
+/// Only valid if `ncchannel_rgb_p` would return true for the channel.
+///
 /// *Method: NcChannel.[r()][NcChannel#method.r]*
 #[inline]
 pub const fn ncchannel_r(channel: NcChannel) -> NcComponent {
@@ -163,6 +167,8 @@ pub const fn ncchannel_r(channel: NcChannel) -> NcComponent {
 
 /// Gets the green [`NcComponent`] from an [`NcChannel`].
 ///
+/// Only valid if `ncchannel_rgb_p` would return true for the channel.
+///
 /// *Method: NcChannel.[g()][NcChannel#method.g]*
 #[inline]
 pub const fn ncchannel_g(channel: NcChannel) -> NcComponent {
@@ -170,6 +176,8 @@ pub const fn ncchannel_g(channel: NcChannel) -> NcComponent {
 }
 
 /// Gets the blue [`NcComponent`] from an [`NcChannel`].
+///
+/// Only valid if `ncchannel_rgb_p` would return true for the channel.
 ///
 /// *Method: NcChannel.[b()][NcChannel#method.b]*
 #[inline]
@@ -212,6 +220,8 @@ pub fn ncchannel_set_b(channel: &mut NcChannel, b: NcComponent) -> NcChannel {
 
 /// Gets the three RGB [`NcComponent`]s from an [`NcChannel`], and returns it.
 ///
+/// Only valid if `ncchannel_rgb_p` would return true for the channel.
+///
 /// *Method: NcChannel.[rgb8()][NcChannel#method.rgb8]*
 #[inline]
 pub fn ncchannel_rgb8(
@@ -228,6 +238,8 @@ pub fn ncchannel_rgb8(
 
 /// Sets the three RGB [`NcComponent`]s an [`NcChannel`], and marks it as NOT using the
 /// "default color", retaining the other bits unchanged.
+///
+/// Note: Unlike the original C function, this one can't fail.
 ///
 /// *Method: NcChannel.[set_rgb8()][NcChannel#method.set_rgb8]*
 #[inline]
@@ -269,7 +281,7 @@ pub fn ncchannels_bg_rgb8(
 /// Sets the three foreground RGB [`NcComponent`]s of an [`NcChannels`], and
 /// marks it as NOT using the "default color", retaining the other bits unchanged.
 ///
-/// NOTE: Unlike the original C function, this one returns the new `NcChannels`.
+/// Note: Unlike the original C function, this one returns the new `NcChannels`.
 ///
 /// *Method: NcChannels.[set_fg_rgb8()][NcChannels#method.set_fg_rgb8]*
 #[inline]
@@ -288,7 +300,7 @@ pub fn ncchannels_set_fg_rgb8(
 /// Sets the three background RGB [`NcComponent`]s of an [`NcChannels`], and
 /// marks it as NOT using the "default color", retaining the other bits unchanged.
 ///
-/// NOTE: Unlike the original C function, this one returns the new `NcChannels`.
+/// Note: Unlike the original C function, this one returns the new `NcChannels`.
 ///
 /// *Method: NcChannels.[set_bg_rgb8()][NcChannels#method.set_bg_rgb8]*
 #[inline]
@@ -362,6 +374,8 @@ pub const fn ncchannel_rgb_p(channel: NcChannel) -> bool {
 /// Sets the [`NcRgb`] of an [`NcChannel`], and marks it as NOT using the
 /// "default color", retaining the other bits unchanged.
 ///
+/// Note: Unlike the original C function, this one can't fail.
+///
 /// *Method: NcChannel.[set()][NcChannel#method.set]*
 #[inline]
 pub fn ncchannel_set(channel: &mut NcChannel, rgb: NcRgb) {
@@ -402,12 +416,13 @@ pub const fn ncchannel_default_p(channel: NcChannel) -> bool {
     (channel & c_api::NC_BGDEFAULT_MASK) == 0
 }
 
-/// Marks an [`NcChannel`] as using its "default color", which also marks it opaque.
+/// Marks an [`NcChannel`] as using its "default color". Sets alpha as `OPAQUE`.
 ///
 /// *Method: NcChannel.[set_default()][NcChannel#method.set_default]*
 #[inline]
 pub fn ncchannel_set_default(channel: &mut NcChannel) -> NcChannel {
-    *channel &= !(c_api::NC_BGDEFAULT_MASK | NcAlpha::HIGHCONTRAST);
+    *channel &= !c_api::NC_BGDEFAULT_MASK; // turn off not-default bit
+    ncchannel_set_alpha(channel, NcAlpha::OPAQUE);
     *channel
 }
 
@@ -535,11 +550,9 @@ pub const fn ncchannel_palindex(channel: NcChannel) -> NcPaletteIndex {
 ///
 /// *Method: NcChannel.[set_palindex()][NcChannel#method.set_palindex]*
 pub fn ncchannel_set_palindex(channel: &mut NcChannel, index: NcPaletteIndex) {
-    *channel |= c_api::NC_BGDEFAULT_MASK;
-    *channel |= c_api::NC_BG_PALETTE;
     ncchannel_set_alpha(channel, c_api::NCALPHA_OPAQUE);
     *channel &= 0xFF000000;
-    *channel |= index as NcChannel;
+    *channel |= c_api::NC_BGDEFAULT_MASK | c_api::NC_BG_PALETTE | index as NcChannel;
 }
 
 /// Is this [`NcChannel`] using palette-indexed color rather than RGB?
