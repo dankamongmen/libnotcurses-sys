@@ -1,7 +1,9 @@
 //! `NcChannel*` methods and associated functions.
 #![allow(clippy::unnecessary_cast)]
 
-use crate::{c_api, NcAlpha, NcChannel, NcChannels, NcComponent, NcPaletteIndex, NcRgb};
+use crate::{
+    c_api, error, NcAlpha, NcChannel, NcChannels, NcComponent, NcPaletteIndex, NcResult, NcRgb,
+};
 
 /// Enables the [`NcChannel`] associated methods and constants.
 pub trait NcChannelApi {
@@ -26,6 +28,7 @@ pub trait NcChannelApi {
     fn alpha(&self) -> NcAlpha;
     fn set_alpha(&mut self, alpha: NcAlpha) -> Self;
 
+    fn rgb_p(&self) -> bool;
     fn rgb(&self) -> NcRgb;
     fn set(&mut self, rgb: NcRgb) -> Self;
 
@@ -96,9 +99,11 @@ pub trait NcChannelsApi {
 
     fn fg_alpha(&self) -> NcAlpha;
     fn bg_alpha(&self) -> NcAlpha;
-    fn set_fg_alpha(&mut self, alpha: NcAlpha);
-    fn set_bg_alpha(&mut self, alpha: NcAlpha);
+    fn set_fg_alpha(&mut self, alpha: NcAlpha) -> NcResult<()>;
+    fn set_bg_alpha(&mut self, alpha: NcAlpha) -> NcResult<()>;
 
+    fn fg_rgb_p(&self) -> bool;
+    fn bg_rgb_p(&self) -> bool;
     fn fg_rgb(&self) -> NcRgb;
     fn bg_rgb(&self) -> NcRgb;
     fn set_fg_rgb(&mut self, alpha: NcAlpha) -> Self;
@@ -242,6 +247,13 @@ impl NcChannelApi for NcChannel {
     }
 
     // NcRgb
+
+    /// Returns true if the channel is set to RGB color.
+    ///
+    /// *C style function: [ncchannel_rgb_p()][c_api::ncchannel_rgb_p].*
+    fn rgb_p(&self) -> bool {
+        c_api::ncchannel_rgb_p(*self)
+    }
 
     /// Gets the [`NcRgb`].
     ///
@@ -520,9 +532,19 @@ impl NcChannelsApi for NcChannels {
         c_api::ncchannels_combine(fchannel, bchannel)
     }
 
-    /// Reverses the [`NcChannel`]s.
+    /// Returns the `NcChannels` with the fore- and background's color
+    /// information swapped, but without touching housekeeping bits.
     ///
-    /// *C style function: [channels_reverse()][c_api::ncchannels_reverse].*
+    /// Alpha is retained unless it would lead to an illegal state:
+    /// `HIGHCONTRAST`, `TRANSPARENT` and `BLEND` are taken to `OPAQUE`
+    /// unless the new value is RGB.
+    ///
+    /// [`HIGHCONTRAST`][NcAlpha#associatedconstant.HIGHCONTRAST]
+    /// [`TRANSPARENT`][NcAlpha#associatedconstant.TRANSPARENT]
+    /// [`BLEND`][NcAlpha#associatedconstant.BLEND]
+    /// [`OPAQUE`][NcAlpha#associatedconstant.OPAQUE]
+    ///
+    /// *C style function: [ncchannels_reverse()][c_api::ncchannels_reverse].*
     fn reverse(&mut self) -> Self {
         *self = c_api::ncchannels_reverse(*self);
         *self
@@ -532,28 +554,28 @@ impl NcChannelsApi for NcChannels {
 
     /// Extracts the foreground [`NcChannel`].
     ///
-    /// *C style function: [channels_fchannel()][c_api::ncchannels_fchannel].*
+    /// *C style function: [ncchannels_fchannel()][c_api::ncchannels_fchannel].*
     fn fchannel(&self) -> NcChannel {
         c_api::ncchannels_fchannel(*self)
     }
 
     /// Extracts the background [`NcChannel`].
     ///
-    /// *C style function: [channels_bchannel()][c_api::ncchannels_bchannel].*
+    /// *C style function: [ncchannels_bchannel()][c_api::ncchannels_bchannel].*
     fn bchannel(&self) -> NcChannel {
         c_api::ncchannels_bchannel(*self)
     }
 
     /// Sets the foreground [`NcChannel`].
     ///
-    /// *C style function: [channels_set_fchannel()][c_api::ncchannels_set_fchannel].*
+    /// *C style function: [ncchannels_set_fchannel()][c_api::ncchannels_set_fchannel].*
     fn set_fchannel(&mut self, fchannel: NcChannel) -> Self {
         c_api::ncchannels_set_fchannel(self, fchannel)
     }
 
     /// Sets the background [`NcChannel`].
     ///
-    /// *C style function: [channels_set_bchannel()][c_api::ncchannels_set_bchannel].*
+    /// *C style function: [ncchannels_set_bchannel()][c_api::ncchannels_set_bchannel].*
     fn set_bchannel(&mut self, bchannel: NcChannel) -> Self {
         c_api::ncchannels_set_bchannel(self, bchannel)
     }
@@ -562,44 +584,58 @@ impl NcChannelsApi for NcChannels {
 
     /// Gets the foreground [`NcAlpha`].
     ///
-    /// *C style function: [channels_fg_alpha()][c_api::ncchannels_fg_alpha].*
+    /// *C style function: [ncchannels_fg_alpha()][c_api::ncchannels_fg_alpha].*
     fn fg_alpha(&self) -> NcAlpha {
         c_api::ncchannels_fg_alpha(*self)
     }
 
     /// Gets the background [`NcAlpha`].
     ///
-    /// *C style function: [channels_bg_alpha()][c_api::ncchannels_bg_alpha].*
+    /// *C style function: [ncchannels_bg_alpha()][c_api::ncchannels_bg_alpha].*
     fn bg_alpha(&self) -> NcAlpha {
         c_api::ncchannels_bg_alpha(*self)
     }
 
     /// Sets the foreground [`NcAlpha`].
     ///
-    /// *C style function: [channels_set_fg_alpha()][c_api::ncchannels_set_fg_alpha].*
-    fn set_fg_alpha(&mut self, alpha: NcAlpha) {
-        c_api::ncchannels_set_fg_alpha(self, alpha)
+    /// *C style function: [ncchannels_set_fg_alpha()][c_api::ncchannels_set_fg_alpha].*
+    fn set_fg_alpha(&mut self, alpha: NcAlpha) -> NcResult<()> {
+        error![c_api::ncchannels_set_fg_alpha(self, alpha)]
     }
 
     /// Sets the background [`NcAlpha`].
     ///
-    /// *C style function: [channels_set_bg_alpha()][c_api::ncchannels_set_bg_alpha].*
-    fn set_bg_alpha(&mut self, alpha: NcAlpha) {
-        c_api::ncchannels_set_bg_alpha(self, alpha)
+    /// *C style function: [ncchannels_set_bg_alpha()][c_api::ncchannels_set_bg_alpha].*
+    fn set_bg_alpha(&mut self, alpha: NcAlpha) -> NcResult<()> {
+        error![c_api::ncchannels_set_bg_alpha(self, alpha)]
     }
 
     // NcRgb
 
+    /// Returns true if the foreground channel is set to RGB color.
+    ///
+    /// *C style function: [ncchannel_fg_rgb_p()][c_api::ncchannel_fg_rgb_p].*
+    fn fg_rgb_p(&self) -> bool {
+        c_api::ncchannels_fg_rgb_p(*self)
+    }
+
+    /// Returns true if the background channel is set to RGB color.
+    ///
+    /// *C style function: [ncchannel_bg_rgb_p()][c_api::ncchannel_bg_rgb_p].*
+    fn bg_rgb_p(&self) -> bool {
+        c_api::ncchannels_bg_rgb_p(*self)
+    }
+
     /// Gets the foreground [`NcRgb`].
     ///
-    /// *C style function: [channels_fg_rgb()][c_api::ncchannels_fg_rgb].*
+    /// *C style function: [ncchannels_fg_rgb()][c_api::ncchannels_fg_rgb].*
     fn fg_rgb(&self) -> NcRgb {
         c_api::ncchannels_fg_rgb(*self)
     }
 
     /// Gets the background [`NcRgb`].
     ///
-    /// *C style function: [channels_bg_rgb()][c_api::ncchannels_bg_rgb].*
+    /// *C style function: [ncchannels_bg_rgb()][c_api::ncchannels_bg_rgb].*
     fn bg_rgb(&self) -> NcRgb {
         c_api::ncchannels_bg_rgb(*self)
     }
