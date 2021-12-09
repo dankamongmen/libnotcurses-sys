@@ -141,6 +141,16 @@ impl NcPlaneOptionsBuilder {
             builder = builder.resizecb(c_api::ncresizecb_to_rust(options.resizecb));
         }
 
+        // autogrow
+        if options.is_autogrow() {
+            builder = builder.autogrow(true);
+        }
+
+        // vscroll
+        if options.is_vscroll() {
+            builder = builder.vscroll(true);
+        }
+
         // TODO: name, userptr
 
         builder
@@ -327,6 +337,49 @@ impl NcPlaneOptionsBuilder {
             self.flags |= NcPlaneOptions::FIXED;
         } else {
             self.flags &= !NcPlaneOptions::FIXED;
+        }
+        self
+    }
+
+    /// If `true`, the plane will scroll vertically to accommodate output.
+    ///
+    /// Setting this flag is equivalent to immediately calling
+    /// [`set_scrolling(true)`] following `NcPlane` creation.
+    ///
+    /// Default: *false*.
+    ///
+    /// Effect: (un)sets the [`VSCROLL`] flag.
+    ///
+    /// See also: [`AUTOGROW`].
+    ///
+    /// [`set_scrolling(true)`]: crate::NcPlane#method.set_scrolling
+    /// [`AUTOGROW`]: NcPlaneOptions#associatedconstant.AUTOGROW
+    /// [`VSCROLL`]: NcPlaneOptions#associatedconstant.VSCROLL
+    pub fn vscroll(mut self, vscroll: bool) -> Self {
+        if vscroll {
+            self.flags |= NcPlaneOptions::VSCROLL;
+        } else {
+            self.flags &= !NcPlaneOptions::VSCROLL;
+        }
+        self
+    }
+
+    /// If `true`, the plane will grow automatically.
+    ///
+    /// Default: *false*.
+    ///
+    /// Effect: (un)sets the [`AUTOGROW`] flag.
+    ///
+    /// Note that just setting `AUTOGROW` makes the `NcPlane` grow to the right,
+    /// and setting `AUTOGROW` + [`VSCROLL`] makes the `NcPlane` grow down.
+    ///
+    /// [`AUTOGROW`]: NcPlaneOptions#associatedconstant.AUTOGROW
+    /// [`VSCROLL`]: NcPlaneOptions#associatedconstant.VSCROLL
+    pub fn autogrow(mut self, autogrow: bool) -> Self {
+        if autogrow {
+            self.flags |= NcPlaneOptions::AUTOGROW;
+        } else {
+            self.flags &= !NcPlaneOptions::AUTOGROW;
         }
         self
     }

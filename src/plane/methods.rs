@@ -2184,6 +2184,9 @@ impl NcPlane {
     /// fail at the eleventh character. In either case, the cursor will be left
     /// at location 0x10; it must be moved before further printing can take place. I
     ///
+    /// See also
+    /// `NcPlaneOptions::`[`VSCROLL`][NcPlaneOptions#associatedconstant.VSCROLL]
+    ///
     /// *C style function: [ncplane_set_scrolling()][c_api::ncplane_set_scrolling].*
     pub fn set_scrolling(&mut self, scroll: bool) -> bool {
         unsafe { c_api::ncplane_set_scrolling(self, scroll.into()) }

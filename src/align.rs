@@ -1,4 +1,4 @@
-/// Alignment within a plane or terminal (alias of `u32`).
+/// Alignment within an `NcPlane` or terminal (alias of `u32`).
 ///
 /// [`LEFT`]/[`RIGHT`] justified (horizontally), [`TOP`]/[`DOWN`] justified
 /// (vertically), or [`CENTERED`] (both). Also [`UNALIGNED`] for invalid state.
