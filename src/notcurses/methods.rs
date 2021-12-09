@@ -6,8 +6,8 @@ use crate::{
     c_api::{self, notcurses_init},
     cstring, error, error_ref_mut, rstring, rstring_free, Nc, NcAlign, NcBlitter, NcCapabilities,
     NcChannels, NcDim, NcError, NcFile, NcInput, NcLogLevel, NcMiceEvents, NcMiceEventsApi,
-    NcOptions, NcPixelImpl, NcPlane, NcReceived, NcResult, NcScale, NcStats, NcStyle, NcStyleApi,
-    NcTime, NcVGeom, NcVisual, NcVisualGeometry, NcVisualOptions,
+    NcOptions, NcPixelImpl, NcPlane, NcReceived, NcResult, NcRgb, NcScale, NcStats, NcStyle,
+    NcStyleApi, NcTime, NcVGeom, NcVisual, NcVisualGeometry, NcVisualOptions,
 };
 
 /// # `NcOptions` Constructors
@@ -319,6 +319,28 @@ impl Nc {
     #[allow(clippy::wildcard_in_or_patterns)]
     pub fn check_pixel_support(&self) -> NcPixelImpl {
         unsafe { c_api::notcurses_check_pixel_support(self) }
+    }
+
+    /// Returns the default foreground color, if it is known.
+    pub fn default_forekground(&self) -> Option<NcRgb> {
+        let mut fg: NcRgb = 0;
+        let res = unsafe { c_api::notcurses_default_foreground(self, &mut fg) };
+        if res == c_api::NCRESULT_ERR {
+            None
+        } else {
+            Some(fg)
+        }
+    }
+
+    /// Returns the default background color, if it is known.
+    pub fn default_background(&self) -> Option<NcRgb> {
+        let mut bg: NcRgb = 0;
+        let res = unsafe { c_api::notcurses_default_background(self, &mut bg) };
+        if res == c_api::NCRESULT_ERR {
+            None
+        } else {
+            Some(bg)
+        }
     }
 
     /// Disables the terminal's cursor, if supported.

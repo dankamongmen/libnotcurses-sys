@@ -1,5 +1,15 @@
 //! `NcBlitter`
 
+// functions already exported by bindgen: 4
+// ------------------------------------------
+// (#) test:  0
+// (W) wrap: 4
+// ------------------------------------------
+//W+ ncblit_bgrx
+//W+ ncblit_rgb_loose
+//W+ ncblit_rgb_packed
+//W+ ncblit_rgba
+
 use std::fmt;
 
 mod methods;
@@ -147,7 +157,8 @@ pub(crate) mod c_api {
     ///
     /// It's recommended to use [`NcBlitter`][crate::NcBlitter] instead.
     ///
-    /// Associated `c_api` constants:
+    /// # Associated `c_api` constants:
+    ///
     /// - [`NCBLIT_DEFAULT`]
     /// - [`NCBLIT_1x1`]
     /// - [`NCBLIT_2x1`]

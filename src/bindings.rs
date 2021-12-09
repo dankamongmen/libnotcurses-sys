@@ -80,10 +80,10 @@ pub use ffi::{
 
 #[doc(inline)]
 pub use ffi::{
+    // functions
     ncblit_bgrx,
     ncblit_rgb_loose,
     ncblit_rgb_packed,
-    // functions
     ncblit_rgba,
 };
 
@@ -754,6 +754,8 @@ pub use ffi::{
     notcurses_cursor_enable,
     notcurses_cursor_yx,
     notcurses_debug,
+    notcurses_default_background,
+    notcurses_default_foreground,
     notcurses_detected_terminal,
     notcurses_drop_planes,
     notcurses_enter_alternate_screen,

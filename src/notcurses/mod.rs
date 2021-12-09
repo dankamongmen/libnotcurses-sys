@@ -1,15 +1,15 @@
 //! `Nc`
 
-// total: 53
+// total: 55
 // ---------------------------------------------------
 // (X)  1 : wont do
 // (…)  4 : TODO / WIP
 //
-// (f) 34 : unsafe ffi function exported by bindgen
+// (f) 36 : unsafe ffi function exported by bindgen
 // (w)  0 : safely wrapped ffi function
 // (r) 15 : static function manually reimplemented
 //
-// (m) 40 : method implemented
+// (m) 42 : method implemented
 //
 // (t) 13 : unit test done for the function
 // (T)  0 : unit test done also for the method
@@ -30,6 +30,8 @@
 // fm  notcurses_cursor_enable
 // f   notcurses_cursor_yx
 // fmt notcurses_debug
+// fm  notcurses_default_background
+// fm  notcurses_default_foreground
 //~f   notcurses_detected_terminal
 // fmt notcurses_drop_planes
 // fm  notcurses_get
