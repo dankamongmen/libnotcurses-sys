@@ -164,7 +164,7 @@ macro_rules! printf {
 /// without including newlines.
 ///
 /// # Example
-/// ```
+/// ```ignore
 /// # use libnotcurses_sys::*;
 /// # fn main() -> NcResult<()> {
 /// let nc = unsafe { Nc::new_cli()? };
