@@ -32,7 +32,7 @@ fn main() -> NcResult<()> {
     let visual1 = NcVisual::from_rgb_packed(buffer.as_slice(), height, width * 3, width, 255)?;
     let voptions1 = NcVisualOptions::builder()
         .yx(1, 2)
-        .blitter(NcBlitter::PIXEL)
+        .blitter(NcBlitter::Pixel)
         .build();
     let visual1plane = unsafe { visual1.blit(&mut nc, Some(&voptions1))? };
     visual1plane.reparent(stp)?;

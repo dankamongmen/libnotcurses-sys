@@ -1,6 +1,6 @@
 //!
 
-use crate::{NcBlitter, NcBlitterApi, NcDim};
+use crate::{NcBlitter, NcDim};
 
 /// Describes all the geometries of an [`NcVisual`], in a more Rust-friendly
 /// struct than [`NcVGeom`] is.
@@ -76,7 +76,7 @@ pub struct NcVisualGeometry {
 
     /// The number of input pixels drawn to a single cell.
     ///
-    /// When using `NcBlitter::PIXEL`, they are equivalent to [`cdim_yx`].
+    /// When using `NcBlitter::Pixel`, they are equivalent to [`cdim_yx`].
     ///
     /// *Corresponds to the `NcVGeom` fields ([`scaley`], [`scalex`]).*
     ///
@@ -87,7 +87,7 @@ pub struct NcVisualGeometry {
 
     /// The largest bitmap geometry that the terminal is willing to accept.
     ///
-    /// It is only defined when using `NcBlitter::PIXEL`.
+    /// It is only defined when using `NcBlitter::Pixel`.
     ///
     /// *Corresponds to the `NcVGeom` fields ([`maxpixely`], [`maxpixelx`]).*
     ///
@@ -227,7 +227,7 @@ impl NcVGeom {
             begx: 0,
             leny: 0,
             lenx: 0,
-            blitter: NcBlitter::DEFAULT,
+            blitter: NcBlitter::Default.into(),
         }
     }
 }
@@ -277,8 +277,8 @@ impl From<NcVGeom> for NcVisualGeometry {
             scale_yx = Some((vg.scaley as NcDim, vg.scalex as NcDim));
         }
 
-        // maxpixel_yx is only defined when using NcBlitter::PIXEL
-        if vg.blitter == NcBlitter::PIXEL {
+        // maxpixel_yx is only defined when using NcBlitter::Pixel
+        if vg.blitter == NcBlitter::Pixel.into() {
             maxpixel_yx = Some((vg.maxpixely as NcDim, vg.maxpixelx as NcDim));
         } else {
             maxpixel_yx = None;
@@ -295,7 +295,7 @@ impl From<NcVGeom> for NcVisualGeometry {
             len_yx: Some((vg.leny as NcDim, vg.lenx as NcDim)),
             beg_yx: Some((vg.begy as NcDim, vg.begx as NcDim)),
 
-            blitter: vg.blitter,
+            blitter: vg.blitter.into(),
         }
     }
 }

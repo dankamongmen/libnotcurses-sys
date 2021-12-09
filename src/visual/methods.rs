@@ -4,9 +4,9 @@ use core::ptr::{null, null_mut};
 use libc::c_void;
 
 use crate::{
-    c_api, cstring, error, error_ref_mut, Nc, NcBlitter, NcBlitterApi, NcChannel, NcComponent,
-    NcDim, NcDirect, NcError, NcIntResult, NcIntResultApi, NcPixel, NcPlane, NcResult, NcRgba,
-    NcScale, NcTime, NcVGeom, NcVisual, NcVisualGeometry, NcVisualOptions,
+    c_api, cstring, error, error_ref_mut, Nc, NcBlitter, NcChannel, NcComponent, NcDim, NcDirect,
+    NcError, NcIntResult, NcIntResultApi, NcPixel, NcPlane, NcResult, NcRgba, NcScale, NcTime,
+    NcVGeom, NcVisual, NcVisualGeometry, NcVisualOptions,
 };
 
 /// # NcVisual Constructors & destructors
@@ -77,7 +77,7 @@ impl NcVisual {
             unsafe {
                 c_api::ncvisual_from_plane(
                     plane,
-                    blitter,
+                    blitter.into(),
                     beg_y.unwrap_or(NcDim::MAX) as i32,
                     beg_x.unwrap_or(NcDim::MAX) as i32,
                     len_y.unwrap_or(0),
@@ -337,7 +337,7 @@ impl NcVisual {
             len_yx = None;
         } else {
             // `maxpixel_yx` only is defined for `Ncblitter::PIXEL`.
-            if vg.blitter == NcBlitter::PIXEL {
+            if vg.blitter == NcBlitter::Pixel.into() {
                 maxpixel_yx = Some((vg.maxpixely as NcDim, vg.maxpixelx as NcDim));
             } else {
                 maxpixel_yx = None;
@@ -390,7 +390,7 @@ impl NcVisual {
             beg_yx,
             len_yx,
 
-            blitter: vg.blitter,
+            blitter: (vg.blitter as crate::c_api::NcBlitter_u32).into(),
         };
         Ok(vgeometry)
     }
@@ -399,27 +399,23 @@ impl NcVisual {
     /// the specified scaling method.
     ///
     /// Currently, this means:
-    /// - if lacking UTF-8, [`NcBlitter::ASCII`].
-    /// - otherwise, if not using *[`NcScale::STRETCH`]* then [`NcBlitter::HALF`].
-    /// - otherwise, if sextants are not known to be good, [`NcBlitter::QUADRANT`].
-    /// - otherwise [`NcBlitter::SEXTANT`]
+    /// - if lacking UTF-8, [`NcBlitter::Ascii`].
+    /// - otherwise, if not using *[`NcScale::STRETCH`]* then [`NcBlitter::Half`].
+    /// - otherwise, if sextants are not known to be good, [`NcBlitter::Quadrant`].
+    /// - otherwise [`NcBlitter::Sextant`]
     ///
     /// [`QUADRANT`] and [`SEXTANT`] both distort the original aspect ratio,
-    /// thus they are only used alongside *[`NcScale::STRETCH`]*, while [`HALF`]
+    /// thus they are only used alongside *[`NcScale::Stretch`]*, while [`Half`]
     /// is used otherwise.
     ///
     /// *C style function: [ncvisual_media_defblitter()][c_api::ncvisual_media_defblitter].*
     ///
-    /// [`NcBlitter::ASCII`]: NcBlitter#associatedconstant.ASCII
     /// [`NcScale::STRETCH`]: NcScale#associatedconstant.STRETCH
-    /// [`NcBlitter::HALF`]: NcBlitter#associatedconstant.HALF
-    /// [`NcBlitter::QUADRANT`]: NcBlitter#associatedconstant.QUADRANT
-    /// [`NcBlitter::SEXTANT`]: NcBlitter#associatedconstant.SEXTANT
-    /// [`HALF`]: NcBlitter#associatedconstant.HALF
-    /// [`QUADRANT`]: NcBlitter#associatedconstant.QUADRANT
-    /// [`SEXTANT`]: NcBlitter#associatedconstant.SEXTANT
+    /// [`Half`]: NcBlitter::Half
+    /// [`Quadrant`]: NcBlitter::Quadrant
+    /// [`Sextant`]: NcBlitter::Sextant
     pub fn media_defblitter(nc: &Nc, scale: NcScale) -> NcBlitter {
-        unsafe { c_api::ncvisual_media_defblitter(nc, scale) }
+        unsafe { c_api::ncvisual_media_defblitter(nc, scale).into() }
     }
 
     /// Polyfills at the specified location using `rgba`.

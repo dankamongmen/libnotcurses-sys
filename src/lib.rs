@@ -114,7 +114,7 @@ pub mod widgets;
 // in which case are both aliases over `u32`.
 pub use align::NcAlign;
 pub use alpha::{NcAlpha, NcAlphaApi};
-pub use blitter::{NcBlitter, NcBlitterApi};
+pub use blitter::NcBlitter;
 pub use capabilities::NcCapabilities;
 pub use cell::NcCell;
 pub use channel::{NcChannel, NcChannelApi, NcChannels, NcChannelsApi, NcComponent, NcRgb};
@@ -182,7 +182,7 @@ pub mod c_api {
     // public re-export of c_api constants & types:
     pub use crate::align::c_api::*;
     pub use crate::alpha::constants::*;
-    pub use crate::blitter::constants::*;
+    pub use crate::blitter::c_api::*;
     pub use crate::channel::constants::*;
     pub use crate::direct::constants::*;
     pub use crate::error::constants::*;

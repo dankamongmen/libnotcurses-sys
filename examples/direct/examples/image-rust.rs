@@ -11,9 +11,9 @@ mod shared;
 fn main() -> NcResult<()> {
     let mut ncd = unsafe { NcDirect::new()? };
 
-    render_image(&mut ncd, NcBlitter::_1x1)?;
-    render_image(&mut ncd, NcBlitter::_2x1)?;
-    render_image(&mut ncd, NcBlitter::BRAILLE)?;
+    render_image(&mut ncd, NcBlitter::Ascii)?;
+    render_image(&mut ncd, NcBlitter::Half)?;
+    render_image(&mut ncd, NcBlitter::Braille)?;
 
     unsafe { ncd.stop()? };
     Ok(())

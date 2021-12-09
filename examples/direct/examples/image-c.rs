@@ -13,9 +13,9 @@ fn main() {
     unsafe {
         let ncd = ncdirect_init(null(), null_mut(), 0);
 
-        render_image(&mut *ncd, NCBLIT_1x1);
-        render_image(&mut *ncd, NCBLIT_2x1);
-        render_image(&mut *ncd, NCBLIT_BRAILLE);
+        render_image(&mut *ncd, NcBlitter::Ascii);
+        render_image(&mut *ncd, NcBlitter::Half);
+        render_image(&mut *ncd, NcBlitter::Braille);
 
         ncdirect_stop(ncd);
     }
@@ -29,7 +29,7 @@ fn render_image(ncd: &mut NcDirect, blit: NcBlitter) {
             ncd,
             cstring![image_path],
             NCALIGN_CENTER,
-            blit,
+            blit.into(),
             NCSCALE_NONE,
         ) != 0
         {

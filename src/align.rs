@@ -9,7 +9,6 @@ use std::fmt;
 ///
 /// Default: *`Left`/`Top`*.
 #[repr(u32)]
-// #[exhaustive] // CHECK with nick
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum NcAlign {
     /// Nothing unaligned should be rendered.
@@ -105,17 +104,18 @@ impl From<NcAlign> for i32 {
 pub(crate) mod c_api {
     use crate::bindings::ffi;
 
-    /// Alignment within an `NcPlane` or terminal (alias of `u32`).
+    /// Alignment within an `NcPlane` or terminal.
     ///
     /// It's recommended to use [`NcAlign`][crate::NcAlign] instead.
     ///
-    /// Associated `c_api` constants:
-    /// - [`LEFT`][crate::c_api::NCALIGN_LEFT]
-    /// - [`RIGHT`][crate::c_api::NCALIGN_RIGHT]
-    /// - [`TOP`][crate::c_api::NCALIGN_TOP]
-    /// - [`BOTTOM`][crate::c_api::NCALIGN_BOTTOM]
-    /// - [`CENTER`][crate::c_api::NCALIGN_CENTER]
-    /// - [`UNALIGNED`][crate::c_api::NCALIGN_UNALIGNED]
+    /// # Associated `c_api` constants
+    ///
+    /// - [`NCALIGN_LEFT`]
+    /// - [`NCALIGN_RIGHT`]
+    /// - [`NCALIGN_TOP`]
+    /// - [`NCALIGN_BOTTOM`]
+    /// - [`NCALIGN_CENTER`]
+    /// - [`NCALIGN_UNALIGNED`]
     pub type NcAlign_u32 = u32; // crate::bindings::ffi::ncalign_e;
 
     /// [`NcAlign_u32`] left alignment.

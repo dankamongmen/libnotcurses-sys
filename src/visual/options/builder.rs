@@ -1,8 +1,6 @@
 //!
 
-use crate::{
-    NcAlign, NcBlitter, NcBlitterApi, NcDim, NcOffset, NcPlane, NcRgba, NcScale, NcVisualOptions,
-};
+use crate::{NcAlign, NcBlitter, NcDim, NcOffset, NcPlane, NcRgba, NcScale, NcVisualOptions};
 
 /// Builder object for [`NcVisualOptions`].
 ///
@@ -190,19 +188,15 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
 
     /// Choose the `NcBlitter`.
     ///
-    /// Default: *[`NcBlitter::DEFAULT`]*.
-    ///
-    /// [`NcBlitter::DEFAULT`]: crate::NcBlitter#associatedconstant.DEFAULT
+    /// Default: *[`NcBlitter::Default`]*.
     pub fn blitter(mut self, blitter: NcBlitter) -> Self {
         self.blitter = blitter;
         self
     }
 
-    /// Choose `NcBlitter::PIXEL` for the blitter.
-    ///
-    /// [`NcBlitter::PIXEL`]: crate::NcBlitter#associatedconstant.PIXEL
+    /// Choose [`NcBlitter::Pixel`] for the blitter.
     pub fn pixel(mut self) -> Self {
-        self.blitter = NcBlitter::PIXEL;
+        self.blitter = NcBlitter::Pixel;
         self
     }
 

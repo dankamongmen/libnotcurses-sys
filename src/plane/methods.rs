@@ -1911,7 +1911,7 @@ impl NcPlane {
         let res_array = unsafe {
             c_api::ncplane_as_rgba(
                 self,
-                blitter,
+                blitter.into(),
                 beg_y.unwrap_or(NcDim::MAX) as i32,
                 beg_x.unwrap_or(NcDim::MAX) as i32,
                 len_y.unwrap_or(0),

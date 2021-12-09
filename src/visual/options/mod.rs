@@ -62,7 +62,7 @@ use crate::{NcBlitter, NcDim, NcOffset, NcPlane, NcRgba, NcScale};
 ///
 /// * [`pxoffy`]: pixel offset within the cell in the *y* axis.
 ///
-///   If [`NcBlitter::PIXEL`] is used the bitmap will be drawn offset from the
+///   If [`NcBlitter::Pixel`] is used the bitmap will be drawn offset from the
 ///   upper-left cell’s origin by these amounts, otherwise this will be ignored.
 ///
 ///   It is an error if either number exceeds the cell-pixel geometry in any
@@ -70,7 +70,7 @@ use crate::{NcBlitter, NcDim, NcOffset, NcPlane, NcRgba, NcScale};
 ///
 /// * [`pxoffx`]: pixel offset within the cell in the *x* axis.
 ///
-///   If [`NcBlitter::PIXEL`] is used, the bitmap will be drawn offset from the
+///   If [`NcBlitter::Pixel`] is used, the bitmap will be drawn offset from the
 ///   upper-left cell’s origin by these amounts, otherwise this will be ignored.
 ///
 ///   It is an error if either number exceeds the cell-pixel geometry in any
@@ -78,7 +78,6 @@ use crate::{NcBlitter, NcDim, NcOffset, NcPlane, NcRgba, NcScale};
 ///
 /// [`NcVisualOptions::builder()`]: NcVisualOptions#method.builder
 /// [`NcAlign`]: crate::NcAlign
-/// [`NcBlitter::PIXEL`]: crate::NcBlitter#associatedconstant.PIXEL
 /// [`NcPixelGeometry.cell_y`]: crate::NcPixelGeometry#structfield.cell_y
 /// [`NcPixelGeometry.cell_x`]: crate::NcPixelGeometry#structfield.cell_x
 /// [`NcVisualGeometry.cdim_yx`]: crate::NcVisualGeometry#structfield.cdim_yx
@@ -153,7 +152,7 @@ impl<'ncplane> NcVisualOptions {
     ///
     /// * `cell_offset_yx` - Pixel offsets within the cell.
     ///
-    ///   If [`NcBlitter::PIXEL`] is used the bitmap will be drawn offset from
+    ///   If [`NcBlitter::Pixel`] is used the bitmap will be drawn offset from
     ///   the upper-left cell’s origin by these amounts, otherwise this will be
     ///   ignored.
     ///
@@ -175,7 +174,6 @@ impl<'ncplane> NcVisualOptions {
     /// [`NcVisual`][crate::NcVisual].
     ///
     /// [`NcAlign`]: crate::NcAlign
-    /// [`NcBlitter::PIXEL`]: crate::NcBlitter#associatedconstant.PIXEL
     /// [`NcPixelGeometry.cell_y`]: crate::NcPixelGeometry#structfield.cell_y
     /// [`NcPixelGeometry.cell_x`]: crate::NcPixelGeometry#structfield.cell_x
     /// [`NcVisualGeometry.cdim_yx`]: crate::NcVisualGeometry#structfield.cdim_yx
@@ -226,7 +224,7 @@ impl<'ncplane> NcVisualOptions {
             leny,
             lenx,
 
-            blitter,
+            blitter: blitter.into(),
 
             flags: flags as u64,
 

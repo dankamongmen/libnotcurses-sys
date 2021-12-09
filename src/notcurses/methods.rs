@@ -4,10 +4,10 @@ use core::ptr::{null, null_mut};
 
 use crate::{
     c_api::{self, notcurses_init},
-    cstring, error, error_ref_mut, rstring, rstring_free, Nc, NcAlign, NcBlitter, NcBlitterApi,
-    NcCapabilities, NcChannels, NcDim, NcError, NcFile, NcInput, NcLogLevel, NcMiceEvents,
-    NcMiceEventsApi, NcOptions, NcPixelImpl, NcPlane, NcReceived, NcResult, NcScale, NcStats,
-    NcStyle, NcStyleApi, NcTime, NcVGeom, NcVisual, NcVisualGeometry, NcVisualOptions,
+    cstring, error, error_ref_mut, rstring, rstring_free, Nc, NcAlign, NcBlitter, NcCapabilities,
+    NcChannels, NcDim, NcError, NcFile, NcInput, NcLogLevel, NcMiceEvents, NcMiceEventsApi,
+    NcOptions, NcPixelImpl, NcPlane, NcReceived, NcResult, NcScale, NcStats, NcStyle, NcStyleApi,
+    NcTime, NcVGeom, NcVisual, NcVisualGeometry, NcVisualOptions,
 };
 
 /// # `NcOptions` Constructors
@@ -213,7 +213,7 @@ impl Nc {
 
     /// Returns true if we can reliably use Unicode Braille.
     ///
-    /// See also [`NcBlitter::BRAILLE`][NcBlitter#BRAILLE].
+    /// See also [`NcBlitter::Braille`].
     ///
     /// *C style function: [notcurses_canbraille()][c_api::notcurses_canbraille].*
     pub fn canbraille(&self) -> bool {
@@ -240,7 +240,7 @@ impl Nc {
 
     /// Returns true if we can reliably use Unicode half blocks.
     ///
-    /// See also [`Blitter::BLIT_2x1`][NcBlitter#associatedconstant.BLIT_2x1].
+    /// See also [`NcBlitter::Half`].
     ///
     /// *C style function: [notcurses_canhalfblock()][c_api::notcurses_canhalfblock].*
     pub fn canhalfblock(&self) -> bool {
@@ -276,7 +276,7 @@ impl Nc {
 
     /// Returns true if we can reliably use Unicode quadrant blocks.
     ///
-    /// See also [`NcBlitter::BLIT_2x2`][NcBlitter#associatedconstant.NCBLIT_2x2].
+    /// See also [`NcBlitter::Quadrant`].
     ///
     /// *C style function: [notcurses_canquadrant()][c_api::notcurses_canquadrant].*
     pub fn canquadrant(&self) -> bool {
@@ -285,7 +285,7 @@ impl Nc {
 
     /// Returns true if we can reliably use Unicode 13 sextants.
     ///
-    /// See also [`NcBlitter::BLIT_3x2`][NcBlitter#associatedconstant.NCBLIT_3x2].
+    /// See also [`NcBlitter::Sextant`].
     ///
     /// *C style function: [notcurses_cansextant()][c_api::notcurses_cansextant].*
     pub fn cansextant(&self) -> bool {
@@ -524,7 +524,8 @@ impl Nc {
         let mut blitter = 0;
         error![
             unsafe { c_api::notcurses_lex_blitter(cstring![blitter_str], &mut blitter) },
-            "Invalid blitter name", blitter
+            "Invalid blitter name",
+            blitter.into()
         ]
     }
 
@@ -758,7 +759,7 @@ impl Nc {
     ///
     /// *C style function: [notcurses_str_blitter()][c_api::notcurses_str_blitter].*
     pub fn str_blitter(blitter: NcBlitter) -> String {
-        rstring![c_api::notcurses_str_blitter(blitter)].to_string()
+        rstring![c_api::notcurses_str_blitter(blitter.into())].to_string()
     }
 
     /// Gets the name of an [`NcScale`] scaling mode.
@@ -851,7 +852,7 @@ impl Nc {
     /// If an [`NcVisualOptions`] is not provided, a default one will be used.
     ///
     /// Additionally `cdim_yx` and `maxpixel_yx` are only ever filled in if we
-    /// know them, and `maxpixel_yx` is only defined for `NcBlitter`::PIXEL.
+    /// know them, and `maxpixel_yx` is only defined for [`NcBlitter::Pixel`].
     ///
     /// # See also
     /// - [`NcVisual.geom`][NcVisual#method.geom]
@@ -900,7 +901,7 @@ impl Nc {
             scale_yx = Some((vg.scaley as NcDim, vg.scalex as NcDim));
 
             // pixel blitter only is defined for Ncblitter::PIXEL
-            if vg.blitter == NcBlitter::PIXEL {
+            if vg.blitter == NcBlitter::Pixel.into() {
                 maxpixel_yx = Some((vg.maxpixely as NcDim, vg.maxpixelx as NcDim));
             } else {
                 maxpixel_yx = None;
@@ -913,7 +914,7 @@ impl Nc {
             len_yx = None;
         } else {
             // `maxpixel_yx` only is defined for `Ncblitter`::PIXEL.
-            if vg.blitter == NcBlitter::PIXEL {
+            if vg.blitter == NcBlitter::Pixel.into() {
                 maxpixel_yx = Some((vg.maxpixely as NcDim, vg.maxpixelx as NcDim));
             } else {
                 maxpixel_yx = None;
@@ -965,14 +966,13 @@ impl Nc {
             maxpixel_yx,
             beg_yx,
             len_yx,
-
-            blitter: vg.blitter,
+            blitter: (vg.blitter as crate::c_api::NcBlitter_u32).into(),
         };
         Ok(vgeometry)
     }
 
     /// Like [`visual_geom`] but auto-fills the `NcVisualOptions` with
-    /// `NcBlitter::PIXEL` in order to get the maximum available resolution
+    /// `NcBlitter::Pixel` in order to get the maximum available resolution
     /// for `scale_yx`, which determines the minimum dot-size for an `NcVisual`.
     ///
     /// [`visual_geom`]: Nc#method.visual_geom

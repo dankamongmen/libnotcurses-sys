@@ -104,7 +104,7 @@ impl NcDirect {
             c_api::ncdirect_render_frame(
                 self,
                 cstring![filename],
-                blitter,
+                blitter.into(),
                 scale,
                 max_y as i32,
                 max_x as i32,
@@ -138,7 +138,13 @@ impl NcDirect {
     ) -> NcResult<()> {
         error![
             unsafe {
-                c_api::ncdirect_render_image(self, cstring![filename], align.into(), blitter, scale)
+                c_api::ncdirect_render_image(
+                    self,
+                    cstring![filename],
+                    align.into(),
+                    blitter.into(),
+                    scale,
+                )
             },
             &format!(
                 "NcDirect.render_image({:?}, {:?}, {:?}, {:?})",
