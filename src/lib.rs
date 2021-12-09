@@ -112,7 +112,7 @@ pub mod widgets;
 // Note that the names of the implemented traits can't coincide for type aliases
 // with the same underlying primitive, like in the case of `NcAlign` & `NcScale`
 // in which case are both aliases over `u32`.
-pub use align::{NcAlign, NcAlignApi};
+pub use align::NcAlign;
 pub use alpha::{NcAlpha, NcAlphaApi};
 pub use blitter::{NcBlitter, NcBlitterApi};
 pub use capabilities::NcCapabilities;
@@ -179,8 +179,8 @@ pub mod c_api {
     pub use crate::plane::reimplemented::*;
     pub use crate::resizecb::reimplemented::*;
 
-    // public re-export of reimplemented constants:
-    pub use crate::align::constants::*;
+    // public re-export of c_api constants & types:
+    pub use crate::align::c_api::*;
     pub use crate::alpha::constants::*;
     pub use crate::blitter::constants::*;
     pub use crate::channel::constants::*;

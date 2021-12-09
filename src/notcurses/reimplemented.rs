@@ -3,27 +3,26 @@
 use core::ptr::{null, null_mut};
 
 use crate::{
-    c_api, Nc, NcAlign, NcAlignApi, NcDim, NcError, NcInput, NcIntResult, NcIntResultApi, NcPlane,
-    NcResult, NcTime,
+    c_api, Nc, NcAlign, NcDim, NcError, NcInput, NcIntResult, NcIntResultApi, NcPlane, NcResult,
+    NcTime,
 };
 
 /// Returns the offset into `avail_u` at which `u` ought be output given
 /// the requirements of `align`.
 ///
 /// Returns `-`[`NcIntResult::MAX`][NcIntResult#associatedconstant.MAX] if
-/// [NcAlign::UNALIGNED][NcAlign#associatedconstant.UNALIGNED]
-/// or invalid [NcAlign].
+/// [NCALIGN_UNALIGNED][c_api::NCALIGN_UNALIGNED] or invalid `align`.
 ///
 /// *Method: Nc.[align()][Nc#method.align].*
 #[inline]
 pub fn notcurses_align(avail_u: NcDim, align: NcAlign, u: NcDim) -> NcIntResult {
-    if align == NcAlign::LEFT || align == NcAlign::TOP {
+    if align == NcAlign::Left || align == NcAlign::Top {
         return 0;
     }
-    if align == NcAlign::CENTER {
+    if align == NcAlign::Center {
         return ((avail_u - u) / 2) as NcIntResult;
     }
-    if align == NcAlign::RIGHT || align == NcAlign::BOTTOM {
+    if align == NcAlign::Right || align == NcAlign::Bottom {
         return (avail_u - u) as NcIntResult;
     }
     -NcIntResult::MAX

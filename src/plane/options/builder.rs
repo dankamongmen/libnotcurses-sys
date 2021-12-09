@@ -114,12 +114,12 @@ impl NcPlaneOptionsBuilder {
 
         // y,x
         if options.is_veraligned() {
-            builder = builder.valign(options.y as NcAlign);
+            builder = builder.valign(options.y.into());
         } else {
             builder = builder.y(options.y);
         }
         if options.is_horaligned() {
-            builder = builder.halign(options.x as NcAlign);
+            builder = builder.halign(options.x.into());
         } else {
             builder = builder.x(options.x);
         }
@@ -220,45 +220,41 @@ impl NcPlaneOptionsBuilder {
 
     /// Sets the vertical alignment.
     ///
-    /// Default: *[`NcAlign::TOP`]*.
+    /// Default: *[`NcAlign::Top`]*.
     ///
     /// Effect: Sets the *`y`* alignment and the [`VERALIGNED`] flag.
     ///
-    /// [`NcAlign::TOP`]: crate::NcAlign#associatedconstant.TOP
     /// [`VERALIGNED`]: NcPlaneOptions#associatedconstant.VERALIGNED
     pub fn valign(mut self, valign: NcAlign) -> Self {
-        self.y = valign as NcOffset;
+        self.y = valign.into();
         self.flags |= NcPlaneOptions::VERALIGNED;
         self
     }
 
     /// Sets the horizontal alignment.
     ///
-    /// Default: *[`NcAlign::LEFT`]*.
+    /// Default: *[`NcAlign::Left`]*.
     ///
     /// Effect: Sets the *`x`* alignment and the [`HORALIGNED`] flag.
     ///
-    /// [`NcAlign::LEFT`]: crate::NcAlign#associatedconstant.LEFT
     /// [`HORALIGNED`]: NcPlaneOptions#associatedconstant.HORALIGNED
     pub fn halign(mut self, halign: NcAlign) -> Self {
-        self.y = halign as NcOffset;
+        self.y = halign.into();
         self.flags |= NcPlaneOptions::HORALIGNED;
         self
     }
 
     /// Sets the vertical & horizontal alignment.
     ///
-    /// Default: *`(`[`NcAlign::TOP`], [`NcAlign::LEFT`]`)`*.
+    /// Default: *`(`[`NcAlign::Top`], [`NcAlign::Left`]`)`*.
     ///
     /// Effect: Sets the *`y` & `x`* alignments and the [`VERALIGNED`]
     /// & [`HORALIGNED`] flags.
     ///
-    /// [`NcAlign::LEFT`]: crate::NcAlign#associatedconstant.LEFT
-    /// [`NcAlign::TOP`]: crate::NcAlign#associatedconstant.TOP
     /// [`VERALIGNED`]: NcPlaneOptions#associatedconstant.VERALIGNED
     /// [`HORALIGNED`]: NcPlaneOptions#associatedconstant.HORALIGNED
     pub fn align(mut self, halign: NcAlign) -> Self {
-        self.y = halign as NcOffset;
+        self.y = halign.into();
         self.flags |= NcPlaneOptions::VERALIGNED;
         self
     }

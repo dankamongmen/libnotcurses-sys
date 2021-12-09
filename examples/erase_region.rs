@@ -57,7 +57,7 @@ fn main() -> NcResult<()> {
         &mut state,
         2,
         Some(NcChannels::from_rgb(0x113355, 0x8899CC)), // blue
-        NcAlign::CENTER,
+        NcAlign::Center,
         "(press 'q' to quit, or any other key to continue)"
     )?;
     render_and_wait_input(&mut state)?;
@@ -68,7 +68,7 @@ fn main() -> NcResult<()> {
     // the last slide
     state.showcase.erase();
     state.info.erase();
-    print_info_row(&mut state, 1, None, NcAlign::CENTER, "that's all, folks! ")?;
+    print_info_row(&mut state, 1, None, NcAlign::Center, "that's all, folks! ")?;
     state
         .showcase
         .set_base(" ", 0, NcChannels::from_rgb(0x224411, 0x992222))?;
@@ -146,7 +146,7 @@ fn erase_region(
         state,
         0,
         Some(NcChannels::from_rgb(0x555555, 0x999999)),
-        NcAlign::RIGHT,
+        NcAlign::Right,
         &format!["cursor_yx({}, {})", cursor.0, cursor.1],
     )?;
 
@@ -164,7 +164,7 @@ fn erase_region(
         state,
         1,
         None,
-        NcAlign::CENTER,
+        NcAlign::Center,
         &format![
             "erase_region({:?}, {:?}, {}, {})",
             ystart, xstart, ylen_str, xlen_str
@@ -174,7 +174,7 @@ fn erase_region(
         state,
         2,
         Some(NcChannels::from_rgb(0x555577, 0xAAAABB)),
-        NcAlign::CENTER,
+        NcAlign::Center,
         &format!["erases {}", what_is_erased],
     )?;
 

@@ -37,12 +37,12 @@ fn main() -> NcResult<()> {
 
     // Set title
     stdplane.set_scrolling(true);
-    stdplane.putstr_aligned(Some(0), NcAlign::RIGHT, "selector widget demo")?;
+    stdplane.putstr_aligned(Some(0), NcAlign::Right, "selector widget demo")?;
 
     // Create selection plane
     // y: NcOffset, x: NcOffset, rows: NcDim, cols: NcDim
-    let planeopts: NcPlaneOptions = NcPlaneOptions::new_aligned(1, NcAlign::LEFT, 15, 80);
-    let selplane: &mut NcPlane = NcPlane::with_options_bound(stdplane, &planeopts)?;
+    let planeopts: NcPlaneOptions = NcPlaneOptions::new_aligned(1, NcAlign::Left, 15, 80);
+    let selplane: &mut NcPlane = NcPlane::new_child(stdplane, &planeopts)?;
 
     // Create selector
     let selector = NcSelector::builder()
@@ -74,12 +74,12 @@ fn main() -> NcResult<()> {
         .finish(selplane)?;
 
     // Create description plane
-    let planeopts2: NcPlaneOptions = NcPlaneOptions::new_aligned(15, NcAlign::LEFT, 30, 80);
-    let descplane: &mut NcPlane = NcPlane::with_options_bound(stdplane, &planeopts2)?;
+    let planeopts2: NcPlaneOptions = NcPlaneOptions::new_aligned(15, NcAlign::Left, 30, 80);
+    let descplane: &mut NcPlane = NcPlane::new_child(stdplane, &planeopts2)?;
     descplane.set_scrolling(true);
     descplane.puttext(
         0,
-        NcAlign::LEFT,
+        NcAlign::Left,
         "Example of a selector widget:\n\
         -- Use the default mouse or arrow key to change selected line.\n\
         -- Or the customized J, K, TAB, SHIFT-TAB.\n\

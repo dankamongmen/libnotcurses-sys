@@ -1,59 +1,138 @@
-/// Alignment within an `NcPlane` or terminal (alias of `u32`).
+//! `NcAlign`
+
+use std::fmt;
+
+/// Alignment within an [`NcPlane`][crate::NcPlane] or terminal.
 ///
-/// [`LEFT`]/[`RIGHT`] justified (horizontally), [`TOP`]/[`DOWN`] justified
-/// (vertically), or [`CENTERED`] (both). Also [`UNALIGNED`] for invalid state.
+/// `Left`/`Right` justified (horizontally), `Top`/`Down` justified (vertically),
+/// or `Centered` (both). Also `Unaligned` for an invalid state.
 ///
-/// Default: *`LEFT`/`TOP` (`==0`)*.
-///
-/// [`LEFT`]: NcAlign#associatedconstant.LEFT
-/// [`RIGHT`]: NcAlign#associatedconstant.RIGHT
-/// [`TOP`]: NcAlign#associatedconstant.TOP
-/// [`DOWN`]: NcAlign#associatedconstant.DOWN
-/// [`CENTERED`]: NcAlign#associatedconstant.CENTERED
-/// [`UNALIGNED`]: NcAlign#associatedconstant.UNALIGNED
-pub type NcAlign = u32; // crate::bindings::ffi::ncalign_e;
+/// Default: *`Left`/`Top`*.
+#[repr(u32)]
+// #[exhaustive] // CHECK with nick
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum NcAlign {
+    /// Nothing unaligned should be rendered.
+    Unaligned = c_api::NCALIGN_UNALIGNED,
+    /// Left (or Top) alignment.
+    Left = c_api::NCALIGN_LEFT,
+    /// Center alignment.
+    Center = c_api::NCALIGN_CENTER,
+    /// Right (or Bottom) alignment.
+    Right = c_api::NCALIGN_RIGHT,
+}
 
-#[allow(unused_imports)] // for doc comments
-use crate::NcPlane;
+/// # Aliases
+impl NcAlign {
+    /// Top (or Left) alignment.
+    pub const Top: NcAlign = NcAlign::Left;
+    /// Bottom (or Right) alignment.
+    pub const Bottom: NcAlign = NcAlign::Right;
+}
 
-crate::impl_api![
-    NcAlign,
-    NcAlignApi,
-    /// Left alignment within an [`NcPlane`] or terminal.
-    const LEFT: NcAlign = constants::NCALIGN_LEFT;,
-    /// Right alignment within an [`NcPlane`] or terminal.
-    const RIGHT: NcAlign = constants::NCALIGN_RIGHT;,
-    /// Top alignment within an [`NcPlane`] or terminal.
-    const TOP: NcAlign = constants::NCALIGN_LEFT;,
-    /// Bottom alignment within an [`NcPlane`] or terminal.
-    const BOTTOM: NcAlign = constants::NCALIGN_RIGHT;,
-    /// Center alignment within an [`NcPlane`] or terminal.
-    const CENTER: NcAlign = constants::NCALIGN_CENTER;,
-    /// Nothing unaligned should appear.
-    const UNALIGNED: NcAlign = constants::NCALIGN_UNALIGNED;
-];
+impl fmt::Display for NcAlign {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        use NcAlign::*;
+        write!(
+            f,
+            "{}",
+            match self {
+                Left => "Left",
+                Center => "Center",
+                Right => "Right",
+                Unaligned => "Unaligned",
+            }
+        )
+    }
+}
 
-pub(crate) mod constants {
-    use crate::NcAlign;
+impl From<c_api::NcAlign_u32> for NcAlign {
+    fn from(align: c_api::NcAlign_u32) -> Self {
+        use {c_api::*, NcAlign::*};
+        match align {
+            NCALIGN_LEFT => Left,
+            NCALIGN_CENTER => Center,
+            NCALIGN_RIGHT => Right,
+            NCALIGN_UNALIGNED => Unaligned,
+            _ => Unaligned,
+        }
+    }
+}
 
-    #[allow(unused_imports)] // for doc comments
-    use crate::NcPlane;
+impl From<NcAlign> for c_api::NcAlign_u32 {
+    fn from(align: NcAlign) -> Self {
+        use {c_api::*, NcAlign::*};
+        match align {
+            Left => NCALIGN_LEFT,
+            Center => NCALIGN_CENTER,
+            Right => NCALIGN_RIGHT,
+            Unaligned => NCALIGN_UNALIGNED,
+        }
+    }
+}
 
-    /// [`NcAlign`] left alignment within an [`NcPlane`] or terminal.
-    pub const NCALIGN_LEFT: NcAlign = crate::bindings::ffi::ncalign_e_NCALIGN_LEFT;
+impl From<i32> for NcAlign {
+    fn from(align: i32) -> Self {
+        use {c_api::*, NcAlign::*};
 
-    /// [`NcAlign`] Right alignment within an [`NcPlane`] or terminal.
-    pub const NCALIGN_RIGHT: NcAlign = crate::bindings::ffi::ncalign_e_NCALIGN_RIGHT;
+        const NCALIGN_LEFT_i32: i32 = NCALIGN_LEFT as i32;
+        const NCALIGN_CENTER_i32: i32 = NCALIGN_CENTER as i32;
+        const NCALIGN_RIGHT_i32: i32 = NCALIGN_RIGHT as i32;
+        const NCALIGN_UNALIGNED_i32: i32 = NCALIGN_UNALIGNED as i32;
 
-    /// [`NcAlign`] Top alignment within an [`NcPlane`] or terminal.
-    pub const NCALIGN_TOP: NcAlign = NCALIGN_LEFT;
+        match align {
+            NCALIGN_LEFT_i32 => Left,
+            NCALIGN_CENTER_i32 => Center,
+            NCALIGN_RIGHT_i32 => Right,
+            NCALIGN_UNALIGNED_i32 => Unaligned,
+            _ => Unaligned,
+        }
+    }
+}
 
-    /// [`NcAlign`] Bottom alignment within an [`NcPlane`] or terminal.
-    pub const NCALIGN_BOTTOM: NcAlign = NCALIGN_RIGHT;
+impl From<NcAlign> for i32 {
+    fn from(align: NcAlign) -> Self {
+        use {c_api::*, NcAlign::*};
+        match align {
+            Left => NCALIGN_LEFT as i32,
+            Center => NCALIGN_CENTER as i32,
+            Right => NCALIGN_RIGHT as i32,
+            Unaligned => NCALIGN_UNALIGNED as i32,
+        }
+    }
+}
 
-    /// [`NcAlign`] Center alignment within an [`NcPlane`] or terminal.
-    pub const NCALIGN_CENTER: NcAlign = crate::bindings::ffi::ncalign_e_NCALIGN_CENTER;
+pub(crate) mod c_api {
+    use crate::bindings::ffi;
 
-    /// [`NcAlign`] Nothing unaligned should appear.
-    pub const NCALIGN_UNALIGNED: NcAlign = crate::bindings::ffi::ncalign_e_NCALIGN_UNALIGNED;
+    /// Alignment within an `NcPlane` or terminal (alias of `u32`).
+    ///
+    /// It's recommended to use [`NcAlign`][crate::NcAlign] instead.
+    ///
+    /// Associated `c_api` constants:
+    /// - [`LEFT`][crate::c_api::NCALIGN_LEFT]
+    /// - [`RIGHT`][crate::c_api::NCALIGN_RIGHT]
+    /// - [`TOP`][crate::c_api::NCALIGN_TOP]
+    /// - [`BOTTOM`][crate::c_api::NCALIGN_BOTTOM]
+    /// - [`CENTER`][crate::c_api::NCALIGN_CENTER]
+    /// - [`UNALIGNED`][crate::c_api::NCALIGN_UNALIGNED]
+    pub type NcAlign_u32 = u32; // crate::bindings::ffi::ncalign_e;
+
+    /// [`NcAlign_u32`] left alignment.
+    pub const NCALIGN_LEFT: NcAlign_u32 = ffi::ncalign_e_NCALIGN_LEFT;
+
+    /// [`NcAlign_u32`] Right alignment.
+    pub const NCALIGN_RIGHT: NcAlign_u32 = ffi::ncalign_e_NCALIGN_RIGHT;
+
+    /// [`NcAlign_u32`] Top alignment.
+    pub const NCALIGN_TOP: NcAlign_u32 = NCALIGN_LEFT;
+
+    /// [`NcAlign_u32`] Bottom alignment.
+    pub const NCALIGN_BOTTOM: NcAlign_u32 = NCALIGN_RIGHT;
+
+    /// [`NcAlign_u32`] Center alignment.
+    pub const NCALIGN_CENTER: NcAlign_u32 = ffi::ncalign_e_NCALIGN_CENTER;
+
+    /// [`NcAlign_u32`] Nothing unaligned should be rendered.
+    pub const NCALIGN_UNALIGNED: NcAlign_u32 = ffi::ncalign_e_NCALIGN_UNALIGNED;
 }

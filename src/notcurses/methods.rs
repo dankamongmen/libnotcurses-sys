@@ -172,15 +172,17 @@ impl Nc {
     /// Returns the offset into `availcols` at which `cols` ought be output given
     /// the requirements of `align`.
     ///
-    /// Returns `-`[`NcIntResult::MAX`][crate::NcIntResult::MAX] if
-    /// [NcAlign::UNALIGNED][NcAlign#associatedconstant.UNALIGNED]
-    /// or invalid [`NcAlign`].
+    /// Returns `-`[NcIntResult::MAX][crate::NcIntResult::MAX] if
+    /// [`NcAlign::Unaligned`].
     ///
     /// *C style function: [notcurses_align()][c_api::notcurses_align].*
-    //
-    // TODO: handle error rightfully.
-    pub fn align(availcols: NcDim, align: NcAlign, cols: NcDim) -> NcResult<()> {
-        error![c_api::notcurses_align(availcols, align, cols)]
+    pub fn align(availcols: NcDim, align: NcAlign, cols: NcDim) -> NcResult<NcDim> {
+        let res = c_api::notcurses_align(availcols, align, cols);
+        error![
+            res,
+            &format!("NcPlane.valign({:?}, {})", align, cols),
+            res as NcDim
+        ]
     }
 
     /// Retrieves the current contents of the specified [`NcCell`][crate::NcCell]

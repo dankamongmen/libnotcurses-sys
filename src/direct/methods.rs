@@ -75,7 +75,7 @@ impl NcDirect {
     /// *C style function: [ncdirect_raster_frame()][c_api::ncdirect_raster_frame].*
     pub fn raster_frame(&mut self, frame: &mut NcPlane, align: NcAlign) -> NcResult<()> {
         error![
-            unsafe { c_api::ncdirect_raster_frame(self, frame, align) },
+            unsafe { c_api::ncdirect_raster_frame(self, frame, align.into()) },
             "NcDirect.raster_frame()"
         ]
     }
@@ -138,7 +138,7 @@ impl NcDirect {
     ) -> NcResult<()> {
         error![
             unsafe {
-                c_api::ncdirect_render_image(self, cstring![filename], align, blitter, scale)
+                c_api::ncdirect_render_image(self, cstring![filename], align.into(), blitter, scale)
             },
             &format!(
                 "NcDirect.render_image({:?}, {:?}, {:?}, {:?})",

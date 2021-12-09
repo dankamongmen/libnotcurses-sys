@@ -108,7 +108,7 @@ impl NcPlaneOptions {
         let flags = NcPlaneOptions::HORALIGNED | flags;
         NcPlaneOptions {
             y: y as i32,
-            x: align as i32,
+            x: align.into(),
             rows,
             cols,
             userptr: null_mut(),

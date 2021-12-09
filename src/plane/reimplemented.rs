@@ -712,8 +712,7 @@ pub fn ncplane_resize_simple(plane: &mut NcPlane, len_y: NcDim, len_x: NcDim) ->
 /// aligned according to `align` within the `plane`.
 ///
 /// Returns `-`[`NcIntResult::MAX`][crate::NcIntResult::MAX] if
-/// [NcAlign::UNALIGNED][NcAlign#associatedconstant.UNALIGNED]
-/// or invalid [`NcAlign`].
+/// [NcAlign::Unaligned].
 ///
 /// *Method: NcPlane.[halign()][NcPlane#method.halign].*
 #[inline]
@@ -725,8 +724,7 @@ pub fn ncplane_halign(plane: &NcPlane, align: NcAlign, numcols: NcDim) -> NcIntR
 /// according to `align` within this NcPlane.
 ///
 /// Returns `-`[`NcIntResult::MAX`][crate::NcIntResult::MAX] if
-/// [NcAlign::UNALIGNED][NcAlign#associatedconstant.UNALIGNED]
-/// or invalid [`NcAlign`].
+/// [NcAlign::Unaligned].
 ///
 /// *Method: NcPlane.[valign()][NcPlane#method.valign].*
 #[inline]

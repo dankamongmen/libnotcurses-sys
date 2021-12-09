@@ -34,7 +34,7 @@ fn main() -> NcResult<()> {
     let stdplane: &mut NcPlane = unsafe { nc.stdplane() };
     let (row, col) = stdplane.dim_yx();
     let planeopts: NcPlaneOptions = NcPlaneOptions::new(0, 0, row, col);
-    let pixelplane: &mut NcPlane = NcPlane::with_options_bound(stdplane, &planeopts)?;
+    let pixelplane: &mut NcPlane = NcPlane::new_child(stdplane, &planeopts)?;
 
     // Craft some visual options (here full screen)
     let opts: NcVisualOptions = NcVisualOptions::builder()

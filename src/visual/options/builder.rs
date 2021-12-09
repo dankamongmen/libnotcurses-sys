@@ -149,44 +149,40 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
 
     /// Sets the vertical alignment.
     ///
-    /// Default: *[`NcAlign::TOP`]*.
+    /// Default: *[`NcAlign::Top`]*.
     ///
     /// Effect: Sets the *y* alignment and the [`VERALIGNED`] flag.
     ///
-    /// [`NcAlign::TOP`]: crate::NcAlign#associatedconstant.TOP
     /// [`VERALIGNED`]: NcVisualOptions#associatedconstant.VERALIGNED
     pub fn valign(mut self, valign: NcAlign) -> Self {
-        self.y = valign as NcOffset;
+        self.y = valign.into();
         self.flags |= NcVisualOptions::VERALIGNED;
         self
     }
 
     /// Sets the horizontal alignment.
     ///
-    /// Default: *[`NcAlign::LEFT`]*.
+    /// Default: *[`NcAlign::Left`]*.
     ///
     /// Effect: Sets the *`x`* alignment and the [`VERALIGNED`] flag.
     ///
-    /// [`NcAlign::LEFT`]: crate::NcAlign#associatedconstant.TOP
     /// [`VERALIGNED`]: NcVisualOptions#associatedconstant.VERALIGNED
     pub fn halign(mut self, halign: NcAlign) -> Self {
-        self.x = halign as NcOffset;
+        self.x = halign.into();
         self.flags |= NcVisualOptions::HORALIGNED;
         self
     }
 
     /// Sets the vertical & horizontal alignments.
     ///
-    /// Default: *`(`[`NcAlign::TOP`]*`, `*[`NcAlign::LEFT`]`)`*.
+    /// Default: *`(`[`NcAlign::Top`]*`, `*[`NcAlign::Left`]`)`*.
     ///
     /// Effect: Sets the *`y` & `x`* alignments and the [`VERALIGNED`] flag.
     ///
-    /// [`NcAlign::TOP`]: crate::NcAlign#associatedconstant.TOP
-    /// [`NcAlign::LEFT`]: crate::NcAlign#associatedconstant.LEFT
     /// [`VERALIGNED`]: NcVisualOptions#associatedconstant.VERALIGNED
     pub fn align(mut self, valign: NcAlign, halign: NcAlign) -> Self {
-        self.y = valign as NcOffset;
-        self.x = halign as NcOffset;
+        self.y = valign.into();
+        self.x = halign.into();
         self.flags |= NcVisualOptions::VERALIGNED;
         self.flags |= NcVisualOptions::HORALIGNED;
         self

@@ -950,8 +950,9 @@ impl NcPlane {
     ///
     /// *C style function: [ncplane_puttext()][c_api::ncplane_puttext].*
     pub fn puttext(&mut self, y: NcDim, align: NcAlign, string: &str) -> NcResult<NcDim> {
-        let res =
-            unsafe { c_api::ncplane_puttext(self, y as i32, align, cstring![string], null_mut()) };
+        let res = unsafe {
+            c_api::ncplane_puttext(self, y as i32, align.into(), cstring![string], null_mut())
+        };
         error![res, &format!("NcPlane.puttext({:?})", string), res as NcDim]
     }
 
@@ -1169,7 +1170,13 @@ impl NcPlane {
         string: &str,
     ) -> NcResult<NcDim> {
         let res = unsafe {
-            c_api::ncplane_putnstr_aligned(self, y as i32, align, num_bytes, cstring![string])
+            c_api::ncplane_putnstr_aligned(
+                self,
+                y as i32,
+                align.into(),
+                num_bytes,
+                cstring![string],
+            )
         };
         error![
             res,
@@ -1784,8 +1791,7 @@ impl NcPlane {
     /// aligned according to `align` within this plane.
     ///
     /// Returns `-`[NcIntResult::MAX][crate::NcIntResult::MAX] if
-    /// [`NcAlign::UNALIGNED`][NcAlign#associatedconstant.UNALIGNED]
-    /// or invalid [`NcAlign`].
+    /// [`NcAlign::Unaligned`].
     ///
     /// *C style function: [ncplane_halign()][c_api::ncplane_halign].*
     #[inline]
@@ -1802,15 +1808,16 @@ impl NcPlane {
     /// aligned according to `align` within this plane.
     ///
     /// Returns `-`[NcIntResult::MAX][crate::NcIntResult::MAX] if
-    /// [`NcAlign::UNALIGNED`][NcAlign#associatedconstant.UNALIGNED]
-    /// or invalid [`NcAlign`].
+    /// [`NcAlign::Unaligned`].
     ///
     /// *C style function: [ncplane_valign()][c_api::ncplane_valign].*
     #[inline]
-    pub fn valign(&mut self, align: NcAlign, numrows: NcDim) -> NcResult<()> {
+    pub fn valign(&mut self, align: NcAlign, numrows: NcDim) -> NcResult<NcDim> {
+        let res = c_api::ncplane_valign(self, align, numrows);
         error![
-            c_api::ncplane_valign(self, align, numrows),
-            &format!("NcPlane.valign({:?}, {})", align, numrows)
+            res,
+            &format!("NcPlane.valign({:?}, {})", align, numrows),
+            res as NcDim
         ]
     }
 

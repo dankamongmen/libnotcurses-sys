@@ -13,15 +13,15 @@ use crate::NcFile;
 #[test]
 #[serial]
 fn notcurses_align() {
-    use crate::{NcAlign, NcAlignApi};
+    use crate::NcAlign;
     unsafe {
         let nc = notcurses_init_test();
-        assert_eq![0, c_api::notcurses_align(30, NcAlign::LEFT, 20)];
-        assert_eq![5, c_api::notcurses_align(30, NcAlign::CENTER, 20)];
-        assert_eq![10, c_api::notcurses_align(30, NcAlign::RIGHT, 20)];
+        assert_eq![0, c_api::notcurses_align(30, NcAlign::Left, 20)];
+        assert_eq![5, c_api::notcurses_align(30, NcAlign::Center, 20)];
+        assert_eq![10, c_api::notcurses_align(30, NcAlign::Right, 20)];
         assert_eq![
             -NcIntResult::MAX,
-            c_api::notcurses_align(30, NcAlign::UNALIGNED, 20)
+            c_api::notcurses_align(30, NcAlign::Unaligned, 20)
         ];
         notcurses_stop(nc);
     }

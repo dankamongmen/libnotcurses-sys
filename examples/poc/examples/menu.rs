@@ -51,7 +51,7 @@ fn main() -> NcResult<()> {
     stdplane.set_fg_rgb(0x00dddd);
     stdplane.putstr_aligned(
         Some(dim_y - 1),
-        NcAlign::RIGHT,
+        NcAlign::Right,
         " -=+ menu poc. press q to exit +=-",
     )?;
 
@@ -62,15 +62,15 @@ fn main() -> NcResult<()> {
     // BUG FIXME: this doesn't show over the menu (at row 0)
     stdplane.putstr_aligned(
         Some(0),
-        NcAlign::RIGHT,
+        NcAlign::Right,
         " -=+ menu poc. press q to exit +=-",
     )?;
     stdplane.putstr_aligned(
         Some(1),
-        NcAlign::CENTER,
+        NcAlign::Center,
         " -=+ menu poc. press q to exit +=-",
     )?;
-    stdplane.putstr_aligned(Some(2), NcAlign::LEFT, " -=+ menu poc. press q to exit +=-")?;
+    stdplane.putstr_aligned(Some(2), NcAlign::Left, " -=+ menu poc. press q to exit +=-")?;
 
     mopts.flags |= NcMenuOptions::BOTTOM;
     let menu_bottom = NcMenu::new(stdplane, &mopts)?;
@@ -82,9 +82,9 @@ fn main() -> NcResult<()> {
 
 fn run_menu(nc: &mut Nc, menu: &mut NcMenu) -> NcResult<()> {
     // yellow rectangle
-    let planeopts = NcPlaneOptions::new_aligned(10, NcAlign::CENTER, 10, 40);
+    let planeopts = NcPlaneOptions::new_aligned(10, NcAlign::Center, 10, 40);
     let stdplane = unsafe { nc.stdplane() };
-    let selplane = NcPlane::with_options_bound(stdplane, &planeopts)?;
+    let selplane = NcPlane::new_child(stdplane, &planeopts)?;
     selplane.set_fg_rgb(0);
     selplane.set_bg_rgb(0xdddddd);
     let mut channels = 0;
@@ -147,9 +147,9 @@ fn run_menu(nc: &mut Nc, menu: &mut NcMenu) -> NcResult<()> {
             msg.push_str(&selitem);
             msg.push_str("\nInput Id: ");
             msg.push_str(&selni.id.to_string());
-            selplane.puttext(1, NcAlign::LEFT, &msg)?;
+            selplane.puttext(1, NcAlign::Left, &msg)?;
         } else {
-            selplane.puttext(1, NcAlign::CENTER, "No menu item currently selected")?;
+            selplane.puttext(1, NcAlign::Center, "No menu item currently selected")?;
         }
         nc.render()?;
     }
