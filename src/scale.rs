@@ -4,6 +4,8 @@ use std::fmt;
 
 /// Indicates how to scale an [`NcVisual`][crate::NcVisual] during rendering.
 ///
+/// Default: *`None`*.
+///
 /// The scaling preferences are applied only for the context of
 /// [`NcVisual.render`][crate::NcVisual#method.render].
 ///

@@ -106,8 +106,8 @@ pub trait NcChannelsApi {
     fn bg_rgb_p(&self) -> bool;
     fn fg_rgb(&self) -> NcRgb;
     fn bg_rgb(&self) -> NcRgb;
-    fn set_fg_rgb(&mut self, alpha: NcAlpha) -> Self;
-    fn set_bg_rgb(&mut self, alpha: NcAlpha) -> Self;
+    fn set_fg_rgb(&mut self, rgb: NcRgb) -> Self;
+    fn set_bg_rgb(&mut self, rgb: NcRgb) -> Self;
 
     fn fg_rgb8(&self) -> (NcComponent, NcComponent, NcComponent);
     fn bg_rgb8(&self) -> (NcComponent, NcComponent, NcComponent);

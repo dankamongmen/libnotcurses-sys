@@ -1,57 +1,113 @@
+//! NcAlpha
+
+use std::fmt;
+
 #[allow(unused_imports)] // for doc comments
 use crate::NcCell;
 
-/// 2 bits of alpha (surrounded by context dependent bits)
-/// part of an [`NcChannel`][crate::NcChannel], (alias of `u32`).
+/// Default: *`Opaque`*.
 ///
-/// ## Diagram
-///
-/// ```txt
-/// ~~AA~~~~ -------- -------- --------
-/// ```
-/// `type in C: no data type`
-///
-pub type NcAlpha = u32;
+#[repr(u32)]
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum NcAlpha {
+    /// Indicates [`NcCell`]'s foreground or background color will be a
+    /// composite between its color and the `NcCell`s' corresponding colors
+    /// underneath it.
+    Blend = c_api::NCALPHA_BLEND,
 
-crate::impl_api![
-    NcAlpha,
-    NcAlphaApi,
-    /// [`NcAlpha`] bits indicating [`NcCell`]'s foreground or background color
-    /// will be a composite between its color and the `NcCell`s' corresponding
-    /// colors underneath it.
-    const BLEND: u32 = constants::NCALPHA_BLEND;,
-    /// [`NcAlpha`] bits indicating [`NcCell`]'s foreground color will be
-    /// high-contrast (relative to the computed background).
+    /// Indicates [`NcCell`]'s foreground color will be high-contrast
+    /// (relative to the computed background).
+    ///
     /// Background cannot be high-contrast.
-    const HIGHCONTRAST: u32 = constants::NCALPHA_HIGHCONTRAST;,
-    /// [`NcAlpha`] bits indicating [`NcCell`]'s foreground or background color
-    /// is used unchanged.
-    const OPAQUE: u32 = constants::NCALPHA_OPAQUE;,
-    /// [`NcAlpha`] bits indicating [`NcCell`]'s foreground or background color
-    /// is derived entirely from the `NcCell`s underneath it.
-    const TRANSPARENT: u32 = constants::NCALPHA_TRANSPARENT;
-];
+    HighContrast = c_api::NCALPHA_HIGHCONTRAST,
 
-/// Enable the [`NcAlpha`] associated methods and constants.
-pub(crate) mod constants {
+    /// Indicates [`NcCell`]'s foreground or background color is used unchanged.
+    Opaque = c_api::NCALPHA_OPAQUE,
+
+    /// Indicates [`NcCell`]'s foreground or background color is derived
+    /// entirely from the `NcCell`s underneath it.
+    Transparent = c_api::NCALPHA_TRANSPARENT,
+}
+
+impl Default for NcAlpha {
+    fn default() -> Self {
+        Self::Opaque
+    }
+}
+
+impl fmt::Display for NcAlpha {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        use NcAlpha::*;
+        write!(
+            f,
+            "{}",
+            match self {
+                Blend => "Blend",
+                HighContrast => "HighContrast",
+                Opaque => "Opaque",
+                Transparent => "Transparent",
+            }
+        )
+    }
+}
+
+impl From<c_api::NcAlpha_u32> for NcAlpha {
+    fn from(alpha: c_api::NcAlpha_u32) -> Self {
+        use {c_api::*, NcAlpha::*};
+        match alpha {
+            NCALPHA_BLEND => Blend,
+            NCALPHA_HIGHCONTRAST => HighContrast,
+            NCALPHA_OPAQUE => Opaque,
+            NCALPHA_TRANSPARENT => Transparent,
+            _ => Opaque, // invalid values default to `Opaque`
+        }
+    }
+}
+
+impl From<NcAlpha> for c_api::NcAlpha_u32 {
+    fn from(alpha: NcAlpha) -> Self {
+        use {c_api::*, NcAlpha::*};
+        match alpha {
+            Blend => NCALPHA_BLEND,
+            HighContrast => NCALPHA_HIGHCONTRAST,
+            Opaque => NCALPHA_OPAQUE,
+            Transparent => NCALPHA_TRANSPARENT,
+        }
+    }
+}
+
+pub(crate) mod c_api {
+    use crate::bindings::ffi;
+
     #[allow(unused_imports)] // for doc comments
-    use crate::{NcAlpha, NcCell};
+    use crate::NcCell;
 
-    /// [`NcAlpha`] bits indicating [`NcCell`]'s foreground or background color
+    /// 2 bits of alpha (surrounded by context dependent bits)
+    /// part of an [`NcChannel`][crate::NcChannel], (alias of `u32`).
+    ///
+    /// ## Diagram
+    ///
+    /// ```txt
+    /// ~~AA~~~~ -------- -------- --------
+    /// ```
+    /// `type in C: no data type`
+    pub type NcAlpha_u32 = u32;
+
+    /// [`NcAlpha_u32`] bits indicating [`NcCell`]'s foreground or background color
     /// will be a composite between its color and the `NcCell`s' corresponding
     /// colors underneath it.
-    pub const NCALPHA_BLEND: NcAlpha = crate::bindings::ffi::NCALPHA_BLEND;
+    pub const NCALPHA_BLEND: NcAlpha_u32 = ffi::NCALPHA_BLEND;
 
-    /// [`NcAlpha`] bits indicating [`NcCell`]'s foreground color will be
+    /// [`NcAlpha_u32`] bits indicating [`NcCell`]'s foreground color will be
     /// high-contrast (relative to the computed background).
     /// Background cannot be high-contrast.
-    pub const NCALPHA_HIGHCONTRAST: NcAlpha = crate::bindings::ffi::NCALPHA_HIGHCONTRAST;
+    pub const NCALPHA_HIGHCONTRAST: NcAlpha_u32 = ffi::NCALPHA_HIGHCONTRAST;
 
-    /// [`NcAlpha`] bits indicating [`NcCell`]'s foreground or background color
+    /// [`NcAlpha_u32`] bits indicating [`NcCell`]'s foreground or background color
     /// is used unchanged.
-    pub const NCALPHA_OPAQUE: NcAlpha = crate::bindings::ffi::NCALPHA_OPAQUE;
+    pub const NCALPHA_OPAQUE: NcAlpha_u32 = ffi::NCALPHA_OPAQUE;
 
-    /// [`NcAlpha`] bits indicating [`NcCell`]'s foreground or background color
+    /// [`NcAlpha_u32`] bits indicating [`NcCell`]'s foreground or background color
     /// is derived entirely from the `NcCell`s underneath it.
-    pub const NCALPHA_TRANSPARENT: NcAlpha = crate::bindings::ffi::NCALPHA_TRANSPARENT;
+    pub const NCALPHA_TRANSPARENT: NcAlpha_u32 = ffi::NCALPHA_TRANSPARENT;
 }

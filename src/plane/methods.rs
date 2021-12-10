@@ -123,7 +123,7 @@ impl NcPlane {
     pub fn set_fg_alpha(&mut self, alpha: NcAlpha) -> NcResult<()> {
         error![
             unsafe { c_api::ncplane_set_fg_alpha(self, alpha as i32) },
-            &format!("NcPlane.set_fg_alpha({:0X})", alpha)
+            &format!("NcPlane.set_fg_alpha({})", alpha)
         ]
     }
 
@@ -133,7 +133,7 @@ impl NcPlane {
     pub fn set_bg_alpha(&mut self, alpha: NcAlpha) -> NcResult<()> {
         error![
             unsafe { c_api::ncplane_set_bg_alpha(self, alpha as i32) },
-            &format!("NcPlane.set_bg_alpha({:0X})", alpha)
+            &format!("NcPlane.set_bg_alpha({})", alpha)
         ]
     }
 }

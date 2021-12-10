@@ -21,6 +21,12 @@ pub enum NcAlign {
     Right = c_api::NCALIGN_RIGHT,
 }
 
+impl Default for NcAlign {
+    fn default() -> Self {
+        Self::Left
+    }
+}
+
 /// # Aliases
 impl NcAlign {
     /// Top (or Left) alignment.

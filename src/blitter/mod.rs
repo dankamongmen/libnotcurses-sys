@@ -19,6 +19,8 @@ mod methods;
 /// We never blit full blocks, but instead spaces (more efficient) with the
 /// background set to the desired foreground.
 ///
+/// Default: *`Default`*.
+///
 /// # Degradation
 ///
 /// There is a mechanism of graceful degradation, that works as follows:

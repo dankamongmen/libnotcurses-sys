@@ -113,7 +113,7 @@ pub mod widgets;
 // with the same underlying primitive, like in the case of `NcAlign` & `NcScale`
 // in which case are both aliases over `u32`.
 pub use align::NcAlign;
-pub use alpha::{NcAlpha, NcAlphaApi};
+pub use alpha::NcAlpha;
 pub use blitter::NcBlitter;
 pub use capabilities::NcCapabilities;
 pub use cell::NcCell;
@@ -181,7 +181,7 @@ pub mod c_api {
 
     // public re-export of c_api constants & types:
     pub use crate::align::c_api::*;
-    pub use crate::alpha::constants::*;
+    pub use crate::alpha::c_api::*;
     pub use crate::blitter::c_api::*;
     pub use crate::channel::constants::*;
     pub use crate::direct::constants::*;
