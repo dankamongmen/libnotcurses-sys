@@ -112,7 +112,7 @@ pub(crate) mod constants {
 }
 
 /// Contains the pixel geometry information as returned by the
-/// NcPlane.[`pixel_geom`][crate::NcPlane#method.pixel_geom] method.
+/// `NcPlane.`[`pixel_geom`][crate::NcPlane#method.pixel_geom] method.
 ///
 /// If bitmaps are not supported, the fields `max_bitmap_*` will be 0.
 ///

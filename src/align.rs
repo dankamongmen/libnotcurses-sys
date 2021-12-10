@@ -4,20 +4,23 @@ use std::fmt;
 
 /// Alignment within an [`NcPlane`][crate::NcPlane] or terminal.
 ///
-/// `Left`/`Right` justified (horizontally), `Top`/`Down` justified (vertically),
-/// or `Centered` (both). Also `Unaligned` for an invalid state.
+/// - `Left`|`Right` justified (horizontally).
+/// - `Top`|`Down` justified (vertically).
+/// - `Centered` (both horizontally & vertically).
+/// - `Unaligned` for an invalid state.
 ///
-/// Default: *`Left`/`Top`*.
+/// # Default
+/// *[`NcAlign::Left`]/[`Top`][NcAlign::Top]*
 #[repr(u32)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum NcAlign {
     /// Nothing unaligned should be rendered.
     Unaligned = c_api::NCALIGN_UNALIGNED,
-    /// Left (or Top) alignment.
+    /// Left (==[`Top`][NcAlign::Top]) alignment.
     Left = c_api::NCALIGN_LEFT,
     /// Center alignment.
     Center = c_api::NCALIGN_CENTER,
-    /// Right (or Bottom) alignment.
+    /// Right (==[`Bottom`][NcAlign::Bottom]) alignment.
     Right = c_api::NCALIGN_RIGHT,
 }
 
@@ -29,9 +32,9 @@ impl Default for NcAlign {
 
 /// # Aliases
 impl NcAlign {
-    /// Top (or Left) alignment.
+    /// Top (==[`Left`][NcAlign::Left]) alignment.
     pub const Top: NcAlign = NcAlign::Left;
-    /// Bottom (or Right) alignment.
+    /// Bottom (==[`Right`][NcAlign::Right]) alignment.
     pub const Bottom: NcAlign = NcAlign::Right;
 }
 

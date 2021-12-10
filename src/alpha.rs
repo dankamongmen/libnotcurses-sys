@@ -5,8 +5,21 @@ use std::fmt;
 #[allow(unused_imports)] // for doc comments
 use crate::NcCell;
 
-/// Default: *`Opaque`*.
+/// Alpha information, part of an [`NcChannel`], applies to [`NcCell`]'s
+/// foreground or background color.
 ///
+/// # Default:
+/// *[`NcAlpha::Opaque`]*
+///
+/// ## Diagram
+///
+/// Internally it's 2 bits of alpha, surrounded by context dependent bits:
+///
+/// ```txt
+/// ~~AA~~~~ -------- -------- --------
+/// ```
+///
+/// See also: [`NcChannels`][crate::NcChannels] for more context information.
 #[repr(u32)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum NcAlpha {
@@ -15,8 +28,8 @@ pub enum NcAlpha {
     /// underneath it.
     Blend = c_api::NCALPHA_BLEND,
 
-    /// Indicates [`NcCell`]'s foreground color will be high-contrast
-    /// (relative to the computed background).
+    /// Indicates the foreground color will be high-contrast,
+    /// relative to the computed background.
     ///
     /// Background cannot be high-contrast.
     HighContrast = c_api::NCALPHA_HIGHCONTRAST,

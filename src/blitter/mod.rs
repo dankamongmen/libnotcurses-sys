@@ -19,7 +19,8 @@ mod methods;
 /// We never blit full blocks, but instead spaces (more efficient) with the
 /// background set to the desired foreground.
 ///
-/// Default: *`Default`*.
+/// # Default
+/// *[`NcBlitter::Default`]*
 ///
 /// # Degradation
 ///

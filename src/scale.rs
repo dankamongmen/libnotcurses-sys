@@ -4,16 +4,18 @@ use std::fmt;
 
 /// Indicates how to scale an [`NcVisual`][crate::NcVisual] during rendering.
 ///
-/// Default: *`None`*.
+/// # Default
+/// *[`NcScale::None`]*
 ///
+/// # Application
 /// The scaling preferences are applied only for the context of
 /// [`NcVisual.render`][crate::NcVisual#method.render].
 ///
-/// You can think of it as a pipeline:
+/// You can think of it as the following pipeline, where you still have
+/// the original frame:
 /// ```txt
-/// NcVisual::from_file() → frame → NcVisual.render() → scaling → output frame → blit
+/// NcVisual::from_file() → frame → NcVisual.render() → scaling → output_frame → blit
 /// ```
-/// where you still have the original frame.
 ///
 /// Whereas
 /// [`NcVisual.resize`][crate::NcVisual#method.resize] and
