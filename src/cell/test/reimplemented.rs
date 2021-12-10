@@ -2,7 +2,7 @@
 
 use serial_test::serial;
 
-use crate::{c_api, NcAlpha, NcAlphaApi, NcCell};
+use crate::{c_api, NcAlpha, NcCell};
 
 #[test]
 #[serial]
@@ -38,14 +38,14 @@ fn rgb() {
 #[serial]
 fn alpha() {
     let mut c1 = NcCell::new();
-    assert_eq![0, c_api::nccell_fg_alpha(&c1)];
-    assert_eq![0, c_api::nccell_bg_alpha(&c1)];
+    assert_eq![NcAlpha::Opaque, c_api::nccell_fg_alpha(&c1)];
+    assert_eq![NcAlpha::Opaque, c_api::nccell_bg_alpha(&c1)];
 
-    c_api::nccell_set_fg_alpha(&mut c1, NcAlpha::TRANSPARENT);
-    assert_eq![crate::NcAlpha::TRANSPARENT, c_api::nccell_fg_alpha(&c1)];
+    c_api::nccell_set_fg_alpha(&mut c1, NcAlpha::Transparent);
+    assert_eq![crate::NcAlpha::Transparent, c_api::nccell_fg_alpha(&c1)];
 
-    c_api::nccell_set_bg_alpha(&mut c1, crate::NcAlpha::BLEND);
-    assert_eq![crate::NcAlpha::BLEND, c_api::nccell_bg_alpha(&c1)];
+    c_api::nccell_set_bg_alpha(&mut c1, crate::NcAlpha::Blend);
+    assert_eq![crate::NcAlpha::Blend, c_api::nccell_bg_alpha(&c1)];
 }
 
 #[test]
