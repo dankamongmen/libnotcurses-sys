@@ -784,7 +784,7 @@ pub use ffi::{
     notcurses_str_blitter,
     notcurses_str_scalemode,
     notcurses_supported_styles,
-    notcurses_ucs32_to_utf8,
+    // notcurses_ucs32_to_utf8,
     notcurses_version,
     notcurses_version_components,
 };

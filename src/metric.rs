@@ -89,7 +89,4 @@ pub(crate) mod constants {
 
     // Does not include a '\0' (xxxx.xxU)
     pub const NCMETRIC_IPREFIXSTRLEN: u32 = ffi::NCIPREFIXSTRLEN;
-
-    // TODO:?
-    // WCHAR_MAX_UTF8BYTES
 }
