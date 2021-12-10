@@ -109,7 +109,6 @@ impl fmt::Display for NcBlitter {
                 Pixel => "Pixel",
                 _4x1 => "4x1",
                 _8x1 => "8x1",
-                // _ => "?" // WIP
             }
         )
     }
@@ -128,7 +127,7 @@ impl From<c_api::NcBlitter_u32> for NcBlitter {
             NCBLIT_PIXEL => Pixel,
             NCBLIT_4x1 => _4x1,
             NCBLIT_8x1 => _8x1,
-            _ => Ascii, // invalid values default to Ascii
+            _ => Default, // invalid values default to `Default`
         }
     }
 }
@@ -168,7 +167,7 @@ pub(crate) mod c_api {
     /// - [`NCBLIT_8x1`]
     /// - [`NCBLIT_BRAILLE`]
     /// - [`NCBLIT_PIXEL`]
-    pub type NcBlitter_u32 = u32;
+    pub type NcBlitter_u32 = u32; // crate::bindings::ffi::ncblitter_e;
 
     /// [`NcBlitter_u32`] mode where the blitter is automatically chosen.
     pub const NCBLIT_DEFAULT: NcBlitter_u32 = ffi::ncblitter_e_NCBLIT_DEFAULT;

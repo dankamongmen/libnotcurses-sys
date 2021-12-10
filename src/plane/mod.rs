@@ -195,14 +195,13 @@ pub(crate) mod test;
 pub use options::{NcPlaneOptions, NcPlaneOptionsBuilder};
 
 // NcPlane
-/// Fundamental drawing surface.
+//
+/// A drawable [`Nc`][crate::Nc] notcurses surface, composed of [`NcCell`]s.
 ///
-/// Unites a:
-/// - CellMatrix
-/// - EgcPool
+/// Unites a *CellMatrix* with an *EgcPool* (a matrix of `NcCells` with a pool
+/// of extended grapheme characters).
 ///
 /// `type in C: ncplane (struct)`
-///
 ///
 /// # About planes and piles
 ///
@@ -237,30 +236,30 @@ pub use options::{NcPlaneOptions, NcPlaneOptionsBuilder};
 /// planes. The new `NcPlane` is placed immediately atop its new parent on its
 /// new pile's z-axis.
 ///
-/// When [`NcPlane::reparent_family`][NcPlane#method.reparent_family] is used,
-/// all `NcPlanes` bound to the reparented `NcPlane` are moved along with it.
-/// Their relative z-order is maintained.
+/// When [`NcPlane::reparent_family`] is used, all `NcPlanes` bound to the
+/// reparented `NcPlane` are moved along with it. Their relative z-order is
+/// maintained.
 //
 /// Rendering reduces a pile of `NcPlane`s to a single `NcPlane`, proceeding
 /// from the top to the bottom along a pile's z-axis. The result is a matrix of
-/// [`NcCell`][crate::NcCell]s. Rasterizing takes this matrix, together with the
+/// [`NcCell`]s. Rasterizing takes this matrix, together with the
 /// current state of the visual area, and produces a stream of optimized control
 /// sequences and `EGC`s for the terminal. By writing this stream to the
 /// terminal, the physical display is synced to some pile's `NcPlane`s.
 ///
-/// [`NcPlane.render`][crate::NcPlane#method.render] performs the first of these
-/// tasks for the pile of which the plane is a part. The output is maintained
-/// internally; calling `render` again on the same pile will replace this state
-/// with a fresh render. Multiple piles can be concurrently rendered.
-/// [`NcPlane.rasterize`][crate::NcPlane#method.rasterize] performs
-/// rasterization, and writes the result to the terminal. It is a blocking call,
-/// and only one rasterization operation may proceed at a time.
+/// [`NcPlane.render`] performs the first of these tasks for the pile of which
+/// the plane is a part. The output is maintained internally; calling `render`
+/// again on the same pile will replace this state with a fresh render.
+/// Multiple piles can be concurrently rendered.
+///
+/// [`NcPlane.rasterize`] performs rasterization, and writes the result to the
+/// terminal. It is a blocking call, and only one rasterization operation may
+/// proceed at a time.
 ///
 /// It is necessary to call `NcPlane.rasterize` to generate any visible output;
 /// the various *output calls* only draw to the virtual `NcPlane`s. Most of the
 /// notcurses `statistics` are updated as a result of a render, and screen
-/// geometry is refreshed (similarly to
-/// [`Nc.refresh`][crate::Nc#method.refresh]) following the render.
+/// geometry is refreshed (similarly to [`Nc.refresh`]) following the render.
 ///
 /// # Methods & Associated Functions
 ///
@@ -279,4 +278,9 @@ pub use options::{NcPlaneOptions, NcPlaneOptionsBuilder};
 /// - [fading, gradients & greyscale](#ncplane-methods-fading-gradients--greyscale)
 /// - [*other*](#ncplane-methods-other)
 ///
+/// [`NcCell`]: crate::NcCell
+/// [`NcPlane::reparent_family`]: NcPlane#method.reparent_family
+/// [`NcPlane.render`]: crate::NcPlane#method.render
+/// [`NcPlane.rasterize`]: crate::NcPlane#method.render
+/// [`Nc.refresh`]: crate::Nc#method.refresh
 pub type NcPlane = crate::bindings::ffi::ncplane;

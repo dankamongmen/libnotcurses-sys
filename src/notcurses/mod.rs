@@ -78,10 +78,12 @@ pub(crate) mod reimplemented;
 #[cfg(test)]
 mod test;
 
-/// The full **notcurses** context.
+/// Notcurses state for a given terminal, composed of [`NcPlane`]s.
 ///
 /// It's built atop the terminfo abstraction layer to provide reasonably
 /// portable vivid character displays.
+///
+/// [`NcPlane`]: crate::NcPlane
 pub type Nc = crate::bindings::ffi::notcurses;
 
 /// Options struct for [`Nc`]

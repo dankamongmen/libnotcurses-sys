@@ -134,7 +134,7 @@ pub use pixel::{NcPixel, NcPixelApi, NcPixelGeometry, NcPixelImpl, NcPixelImplAp
 pub use plane::{NcPlane, NcPlaneOptions, NcPlaneOptionsBuilder};
 pub use r#box::{NcBoxMask, NcBoxMaskApi};
 pub use resizecb::{NcResizeCb, NcResizeCbApi, NcResizeCbUnsafe};
-pub use scale::{NcScale, NcScaleApi};
+pub use scale::NcScale;
 pub use stats::NcStats;
 pub use string::NcString;
 pub use style::{NcStyle, NcStyleApi};
@@ -195,7 +195,7 @@ pub mod c_api {
     pub use crate::pixel::constants::*;
     pub use crate::plane::options::constants::*;
     pub use crate::r#box::constants::*;
-    pub use crate::scale::constants::*;
+    pub use crate::scale::c_api::*;
     pub use crate::style::constants::*;
     pub use crate::visual::options::constants::*;
     pub use crate::widgets::menu::constants::*;

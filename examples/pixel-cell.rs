@@ -61,7 +61,7 @@ fn main() -> NcResult<()> {
     let vplane2 = NcPlane::new_child(&mut splane, &vplane2opts)?;
     let voptions2 = NcVisualOptions::builder()
         .plane(vplane2)
-        .scale(NcScale::SCALE)
+        .scale(NcScale::Scale)
         .pixel()
         .build();
     unsafe { v1.blit(&mut nc, Some(&voptions2))? };
@@ -75,7 +75,7 @@ fn main() -> NcResult<()> {
     // let vplane3 = NcPlane::builder().parent(splane).yx(7, 19).rows_cols(5, 4).build()?;
     let voptions3 = NcVisualOptions::builder()
         .plane(vplane3)
-        .scale(NcScale::SCALE)
+        .scale(NcScale::Scale)
         .pixel()
         .interpolate(false)
         .build();

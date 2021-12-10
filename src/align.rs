@@ -53,7 +53,7 @@ impl From<c_api::NcAlign_u32> for NcAlign {
             NCALIGN_CENTER => Center,
             NCALIGN_RIGHT => Right,
             NCALIGN_UNALIGNED => Unaligned,
-            _ => Unaligned,
+            _ => Unaligned, // invalid values default to `Unaligned`
         }
     }
 }

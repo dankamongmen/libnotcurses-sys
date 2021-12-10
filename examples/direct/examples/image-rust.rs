@@ -22,7 +22,7 @@ fn main() -> NcResult<()> {
 fn render_image(ncd: &mut NcDirect, blit: NcBlitter) -> NcResult<()> {
     let image_path = shared::project_root_path_string("examples/res/image-16x16.png");
 
-    if let Err(nc_error) = ncd.render_image(&image_path, NcAlign::Center, blit, NcScale::NOSCALE) {
+    if let Err(nc_error) = ncd.render_image(&image_path, NcAlign::Center, blit, NcScale::None) {
         return Err(NcError::with_msg(
             nc_error.int,
             "ERROR: ncdirect_render_image(). Make sure you \

@@ -400,7 +400,7 @@ impl NcVisual {
     ///
     /// Currently, this means:
     /// - if lacking UTF-8, [`NcBlitter::Ascii`].
-    /// - otherwise, if not using *[`NcScale::STRETCH`]* then [`NcBlitter::Half`].
+    /// - otherwise, if not using *[`NcScale::Stretch`]* then [`NcBlitter::Half`].
     /// - otherwise, if sextants are not known to be good, [`NcBlitter::Quadrant`].
     /// - otherwise [`NcBlitter::Sextant`]
     ///
@@ -410,12 +410,11 @@ impl NcVisual {
     ///
     /// *C style function: [ncvisual_media_defblitter()][c_api::ncvisual_media_defblitter].*
     ///
-    /// [`NcScale::STRETCH`]: NcScale#associatedconstant.STRETCH
     /// [`Half`]: NcBlitter::Half
     /// [`Quadrant`]: NcBlitter::Quadrant
     /// [`Sextant`]: NcBlitter::Sextant
     pub fn media_defblitter(nc: &Nc, scale: NcScale) -> NcBlitter {
-        unsafe { c_api::ncvisual_media_defblitter(nc, scale).into() }
+        unsafe { c_api::ncvisual_media_defblitter(nc, scale.into()).into() }
     }
 
     /// Polyfills at the specified location using `rgba`.

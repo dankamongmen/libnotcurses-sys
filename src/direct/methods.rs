@@ -105,7 +105,7 @@ impl NcDirect {
                 self,
                 cstring![filename],
                 blitter.into(),
-                scale,
+                scale.into(),
                 max_y as i32,
                 max_x as i32,
             )
@@ -143,7 +143,7 @@ impl NcDirect {
                     cstring![filename],
                     align.into(),
                     blitter.into(),
-                    scale,
+                    scale.into(),
                 )
             },
             &format!(

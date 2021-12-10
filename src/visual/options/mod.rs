@@ -214,7 +214,7 @@ impl<'ncplane> NcVisualOptions {
 
         Self {
             n: plane_ptr,
-            scaling: scale,
+            scaling: scale.into(),
 
             y,
             x,

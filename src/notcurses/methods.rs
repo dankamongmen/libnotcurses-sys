@@ -564,11 +564,12 @@ impl Nc {
     /// Returns an [`NcScale`] from a string representation.
     ///
     /// *C style function: [notcurses_lex_scalemode()][c_api::notcurses_lex_scalemode].*
-    pub fn lex_scalemode(scalemode_str: &str) -> NcResult<NcScale> {
-        let mut scalemode = 0;
+    pub fn lex_scalemode(scale_str: &str) -> NcResult<NcScale> {
+        let mut scale = 0;
         error![
-            unsafe { c_api::notcurses_lex_scalemode(cstring![scalemode_str], &mut scalemode) },
-            "", scalemode
+            unsafe { c_api::notcurses_lex_scalemode(cstring![scale_str], &mut scale) },
+            "",
+            scale.into()
         ]
     }
 
@@ -787,8 +788,8 @@ impl Nc {
     /// Gets the name of an [`NcScale`] scaling mode.
     ///
     /// *C style function: [notcurses_str_scalemode()][c_api::notcurses_str_scalemode].*
-    pub fn str_scalemode(scalemode: NcScale) -> String {
-        rstring![c_api::notcurses_str_scalemode(scalemode)].to_string()
+    pub fn str_scalemode(scale: NcScale) -> String {
+        rstring![c_api::notcurses_str_scalemode(scale.into())].to_string()
     }
 
     /// Gets the lowercase name (or names) of the styles included in an [`NcStyle`].

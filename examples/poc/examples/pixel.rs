@@ -39,7 +39,7 @@ fn main() -> NcResult<()> {
     // Craft some visual options (here full screen)
     let opts: NcVisualOptions = NcVisualOptions::builder()
         .plane(pixelplane)
-        .scale(NcScale::SCALE)
+        .scale(NcScale::Scale)
         .pixel()
         .build();
 
