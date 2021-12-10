@@ -40,13 +40,22 @@ include = [
 ]
 
 [dependencies]
-libc = { version = "^0.2.80", default-features = false }
+# A dependency's version must be the minium one available in:
+# - Fedora rawhide
+# - Debian Sid
+
+# 0.2.103 in Debian Sid https://tracker.debian.org/pkg/rust-libc
+# 0.2.108 in Fedora Rawhide https://pkgs.org/search/?q=rust-libc-devel
+libc = { version = "^0.2.103", default-features = false }
+
+# 0.2.1 in Debian Sid https://tracker.debian.org/pkg/rust-cty
+# 0.2.1 in Fedora Rawhide https://pkgs.org/download/rust-cty-devel
 cty = "^0.2.1"
 
 [dev-dependencies]
 rand = "^0.8"
-serial_test = "^0.5.0"
-serial_test_derive = "^0.5.0"
+serial_test = "^0.5.1"
+serial_test_derive = "^0.5.1"
 
 [build-dependencies]
 bindgen = "^0.59"
