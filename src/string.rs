@@ -21,9 +21,7 @@ impl NcString {
         // let cstring = CString::new(string).expect("CString::new");
         // let ptr = unsafe { strdup(cstring.as_ptr()) };
         // Self { ptr, deallocate: true }
-        Self {
-            cstring: CString::new(string).expect("CString::new"),
-        }
+        Self { cstring: CString::new(string).expect("CString::new") }
     }
 
     pub fn as_ptr(&self) -> *const c_char {

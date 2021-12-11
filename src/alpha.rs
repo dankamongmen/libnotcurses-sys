@@ -5,8 +5,8 @@ use std::fmt;
 #[allow(unused_imports)] // for doc comments
 use crate::NcCell;
 
-/// Alpha information, part of an [`NcChannel`], applies to [`NcCell`]'s
-/// foreground or background color.
+/// Alpha information, part of an [`NcChannel`][crate::NcChannel],
+/// applies to [`NcCell`]'s foreground or background color.
 ///
 /// # Default:
 /// *[`NcAlpha::Opaque`]*

@@ -104,18 +104,12 @@ impl NcSelector {
 impl NcSelectorItem {
     /// New item
     pub fn new(option: &NcString, desc: &NcString) -> Self {
-        Self {
-            option: option.as_ptr(),
-            desc: desc.as_ptr(),
-        }
+        Self { option: option.as_ptr(), desc: desc.as_ptr() }
     }
 
     /// New empty `NcSelectorItem`.
     pub fn new_empty() -> Self {
-        Self {
-            option: null(),
-            desc: null(),
-        }
+        Self { option: null(), desc: null() }
     }
 }
 
@@ -155,21 +149,9 @@ impl NcSelectorOptions {
     ) -> Self {
         assert![!items.is_empty()]; // DEBUG
 
-        let title_ptr = if let Some(s) = title {
-            s.as_ptr()
-        } else {
-            null()
-        };
-        let secondary_ptr = if let Some(s) = secondary {
-            s.as_ptr()
-        } else {
-            null()
-        };
-        let footer_ptr = if let Some(s) = footer {
-            s.as_ptr()
-        } else {
-            null()
-        };
+        let title_ptr = if let Some(s) = title { s.as_ptr() } else { null() };
+        let secondary_ptr = if let Some(s) = secondary { s.as_ptr() } else { null() };
+        let footer_ptr = if let Some(s) = footer { s.as_ptr() } else { null() };
 
         Self {
             title: title_ptr,

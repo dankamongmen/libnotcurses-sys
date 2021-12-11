@@ -58,15 +58,7 @@ impl NcOptions {
         margin_l: NcDim,
         flags: u64,
     ) -> Self {
-        Self {
-            termtype: null(),
-            loglevel,
-            margin_t,
-            margin_r,
-            margin_b,
-            margin_l,
-            flags,
-        }
+        Self { termtype: null(), loglevel, margin_t, margin_r, margin_b, margin_l, flags }
     }
 }
 

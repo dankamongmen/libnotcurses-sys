@@ -7,13 +7,7 @@ use crate::{c_api, error, NcPlane, NcResult};
 impl NcProgBarOptions {
     /// New NcProgBarOptions for [NcProgBar].
     pub fn new() -> Self {
-        Self {
-            ulchannel: 0,
-            urchannel: 0,
-            blchannel: 0,
-            brchannel: 0,
-            flags: 0,
-        }
+        Self { ulchannel: 0, urchannel: 0, blchannel: 0, brchannel: 0, flags: 0 }
     }
 }
 

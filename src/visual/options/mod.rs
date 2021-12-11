@@ -201,16 +201,9 @@ impl<'ncplane> NcVisualOptions {
         transcolor: NcRgba,
     ) -> Self {
         let plane_ptr = if let Some(p) = plane { p } else { null_mut() };
-        let (begy, begx, leny, lenx) = if let Some(s) = section_yx_lenyx {
-            (s.0, s.1, s.2, s.3)
-        } else {
-            (0, 0, 0, 0)
-        };
-        let (pxoffy, pxoffx) = if let Some(o) = cell_offset_yx {
-            (o.0, o.1)
-        } else {
-            (0, 0)
-        };
+        let (begy, begx, leny, lenx) =
+            if let Some(s) = section_yx_lenyx { (s.0, s.1, s.2, s.3) } else { (0, 0, 0, 0) };
+        let (pxoffy, pxoffx) = if let Some(o) = cell_offset_yx { (o.0, o.1) } else { (0, 0) };
 
         Self {
             n: plane_ptr,

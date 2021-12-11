@@ -2,7 +2,10 @@
 
 use serial_test::serial;
 
-use crate::{c_api::{self, NcAlpha_u32}, NcAlpha, NcChannel, NcChannels};
+use crate::{
+    c_api::{self, NcAlpha_u32},
+    NcAlpha, NcChannel, NcChannels,
+};
 
 // NcChannel tests -------------------------------------------------------------
 

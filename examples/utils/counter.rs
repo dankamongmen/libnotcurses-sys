@@ -41,12 +41,7 @@ impl Counter {
         if let Some(lim) = limit {
             assert![(step < 0) == (lim < 0)];
         }
-        Self {
-            starting: value,
-            current: value,
-            step,
-            limit,
-        }
+        Self { starting: value, current: value, step, limit }
     }
 
     /// If a `limit` value has been set, returns `true` when the counter has
@@ -55,11 +50,7 @@ impl Counter {
     /// If there's no `limit` value, always returns `false` while incrementing
     /// the `current` value.
     pub fn update(&mut self) -> bool {
-        let limit = if let Some(lim) = self.limit {
-            lim.abs()
-        } else {
-            isize::MAX
-        };
+        let limit = if let Some(lim) = self.limit { lim.abs() } else { isize::MAX };
 
         if self.current.abs() >= limit {
             true

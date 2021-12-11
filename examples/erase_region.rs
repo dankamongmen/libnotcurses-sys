@@ -26,7 +26,11 @@ impl<'nc, 'p> State<'nc, 'p> {
         std::process::exit(exit_code);
     }
 }
-
+impl<'nc, 'p> Drop for State<'nc, 'p> {
+    fn drop(&mut self) {
+        let _ = self.exit(0);
+    }
+}
 static LOREM_IPSUM: &str = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat";
 
 #[rustfmt::skip]

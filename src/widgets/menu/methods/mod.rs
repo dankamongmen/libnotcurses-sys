@@ -28,10 +28,7 @@ impl NcMenuItem {
 
     /// New empty NcMenuItem for [`NcMenu`].
     pub fn new_empty() -> Self {
-        Self {
-            desc: null_mut(),
-            shortcut: NcInput::new_empty(),
-        }
+        Self { desc: null_mut(), shortcut: NcInput::new_empty() }
     }
 }
 
@@ -59,11 +56,6 @@ impl NcMenuSection {
     /// New NcMenuSection separator for [`NcMenu`].
     ///
     pub fn new_separator() -> Self {
-        Self {
-            name: null_mut(),
-            items: null_mut(),
-            itemcount: 0,
-            shortcut: NcInput::new_empty(),
-        }
+        Self { name: null_mut(), items: null_mut(), itemcount: 0, shortcut: NcInput::new_empty() }
     }
 }

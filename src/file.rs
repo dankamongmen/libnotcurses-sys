@@ -81,17 +81,13 @@ impl NcFile {
 impl NcFile {
     /// `NcFile` constructor from a file produced by notcurses.
     pub fn from_nc(file: *mut NcFile_nc) -> Self {
-        NcFile {
-            file_ptr: unsafe { NonNull::new_unchecked(NcFile::nc2libc(file)) },
-        }
+        NcFile { file_ptr: unsafe { NonNull::new_unchecked(NcFile::nc2libc(file)) } }
     }
 
     /// `NcFile` constructor from a file produced by the libc crate.
     #[allow(clippy::missing_safety_doc)]
     pub unsafe fn from_libc(file: *mut NcFile_libc) -> Self {
-        NcFile {
-            file_ptr: NonNull::new_unchecked(file),
-        }
+        NcFile { file_ptr: NonNull::new_unchecked(file) }
     }
 }
 

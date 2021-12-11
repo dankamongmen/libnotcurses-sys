@@ -88,11 +88,8 @@ impl Default for NcPlaneOptionsBuilder {
 
 impl fmt::Debug for NcPlaneOptionsBuilder {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let resizecb_str = if self.resizecb.is_some() {
-            String::from("Some")
-        } else {
-            String::from("None")
-        };
+        let resizecb_str =
+            if self.resizecb.is_some() { String::from("Some") } else { String::from("None") };
         f.debug_struct("NcPlaneOptionsBuilder")
             .field("y", &self.y)
             .field("x", &self.x)

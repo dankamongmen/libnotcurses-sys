@@ -52,6 +52,16 @@ impl From<NcInput> for NcReceived {
         Self::new(i.id)
     }
 }
+impl From<&NcInput> for NcReceived {
+    fn from(i: &NcInput) -> Self {
+        Self::new(i.id)
+    }
+}
+impl From<&mut NcInput> for NcReceived {
+    fn from(i: &mut NcInput) -> Self {
+        Self::new(i.id)
+    }
+}
 
 impl From<NcReceived> for u32 {
     fn from(r: NcReceived) -> Self {
