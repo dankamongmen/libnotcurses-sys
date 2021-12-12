@@ -665,15 +665,18 @@ pub use ffi::{
 pub use ffi::{
     // structs
     nctree,
+    nctree_item,
+    nctree_options,
+
     // functions
+    nctree_add,
     nctree_create,
+    nctree_del,
     nctree_destroy,
     nctree_focused,
     nctree_goto,
-    nctree_item,
     nctree_next,
     nctree_offer_input,
-    nctree_options,
     nctree_plane,
     nctree_prev,
     nctree_redraw,

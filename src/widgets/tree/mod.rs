@@ -1,19 +1,21 @@
 //! `NcTree` widget
 
-// functions already exported by bindgen : 13
+// functions already exported by bindgen : 11
 // ------------------------------------------
 // (#) test:  0
-// (W) wrap: 13
+// (W) wrap: 10
 // ------------------------------------------
-//W nctree_create,
-//W nctree_destroy,
-//W nctree_focused,
-//~ nctree_goto,
-//W nctree_next,
-//W nctree_offer_input,
-//W nctree_plane,
-//W nctree_prev,
-//W nctree_redraw,
+//W  nctree_add
+//W  nctree_create
+//W  nctree_destroy
+//W  nctree_del
+//W  nctree_focused
+//~  nctree_goto
+//W  nctree_next
+//W  nctree_offer_input
+//W  nctree_plane
+//W  nctree_prev
+//W  nctree_redraw
 
 use cty::c_int;
 use std::ffi::c_void;

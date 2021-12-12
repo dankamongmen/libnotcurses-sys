@@ -45,6 +45,23 @@ impl NcTree {
     //     }
     // }
 
+    /// Inserts `item` at `spec`.
+    ///
+    /// The path up to the last element must already exist. If an item already
+    /// exists at the path, it will be moved to make room for `item`.
+    ///
+    /// *C style function: [nctree_add()][c_api::nctree_add].*
+    pub fn add(&mut self, spec: &u32, item: &NcTreeItem) -> NcResult<()> {
+        error![unsafe { c_api::nctree_add(self, spec, item) }]
+    }
+
+    /// Deletes the item at `spec`, including any subitems.
+    ///
+    /// *C style function: [nctree_del()][c_api::nctree_del].*
+    pub fn del(&mut self, spec: &u32) -> NcResult<()> {
+        error![unsafe { c_api::nctree_del(self, spec) }]
+    }
+
     /// Returns the focused item, if any items are present.
     ///
     /// This is not a copy; be careful to use it only for the duration of a

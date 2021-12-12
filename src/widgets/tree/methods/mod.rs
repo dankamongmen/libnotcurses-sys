@@ -13,7 +13,7 @@ use super::NcTreeItem;
 
 /// # `NcTreeItem` constructor
 impl NcTreeItem {
-    /// Creates an [NcTreeItem].
+    /// Creates an [`NcTreeItem`].
     pub fn new(curry: &str, subs: Option<&mut [NcTreeItem]>, subcount: usize) -> Self {
         if let Some(subs) = subs {
             Self {
