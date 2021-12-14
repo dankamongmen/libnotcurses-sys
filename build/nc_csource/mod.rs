@@ -3,19 +3,16 @@
 
 #![allow(dead_code)]
 
-// MAYBE
-// - add set_install_path method
-// - add install method
-
 use std::{
     env::{set_var, var},
+    ffi::OsStr,
     fs::{create_dir_all, remove_dir_all},
     io::{ErrorKind, Result as IoResult},
     path::{Path, PathBuf},
     process::{Command, Stdio},
 };
 
-#[cfg(feature = "nc_compile")]
+#[cfg(feature = "compile_csource")]
 extern crate cc;
 
 /// The URL of the repository of the notcurses C source.
@@ -23,6 +20,9 @@ pub const C_SRC_REPO: &str = "https://github.com/dankamongmen/notcurses";
 
 /// The base name for the local notcurses C source directory & compressed file.
 pub const C_SRC_BASENAME: &str = "notcurses4libnotcurses-sys";
+
+/// The base name for the bindgen generated bindings.
+pub const BINDINGS_BASENAME: &str = "bindings.rs";
 
 /// An abstraction over the original source of notcurses, in C.
 ///
@@ -41,6 +41,9 @@ pub struct NcCSource {
     /// `$OUT_DIR` by default.
     root_path: PathBuf,
 
+    /// The path to the vendored directory to be embedded in the crate.
+    vendored_path: PathBuf,
+
     /// The path to the notcurses C source code directory.
     source_path: PathBuf,
 
@@ -48,10 +51,7 @@ pub struct NcCSource {
     compressed_source_file: String,
 
     /// The path to the notcurses C source code compressed file.
-    compressed_source_path: PathBuf,
-
-    /// The path to the vendored directory to be embedded in the crate.
-    vendored_path: PathBuf,
+    compressed_source_filepath: PathBuf,
 
     /// The path to the vendored source file to be embedded in the crate.
     vendored_compressed_source_path: PathBuf,
@@ -61,49 +61,44 @@ pub struct NcCSource {
 
     /// The path to the notcurses C build path.
     build_path: PathBuf,
+
+    /// The path to the deployed bindgen bindings file.
+    deployed_bindings_filepath: PathBuf,
 }
 
 /// Methods directly associated with features.
 impl NcCSource {
     /// Embed the C source in the crate.
     ///
-    /// Will be called if the "nc_vendor" feature is enabled.
-    pub fn vendor(&self) {
-        println!("cargo:warning=Vendoring…");
+    /// Will be called if the "vendor_csource" feature is enabled.
+    pub fn vendor_csource(&self) {
+        println!("cargo:warning=Vendoring C source…");
 
-        // clone the repository optimizing size
+        // clone the repository optimizing for size
         self.clone_repo(true);
 
         // compress the repository into a new file
-        self.compress_source();
-
-        // make sure the vendored directory exists
-        create_dir_all(&self.vendored_path).expect("couldn't create 'vendored/' directory");
+        self.compress_csource();
 
         // copy the compressed file to the vendored directory.
-        Self::run(
-            Command::new("cp")
-                .arg(&self.compressed_source_path)
-                .arg(&self.vendored_path)
-                .current_dir(&self.root_path),
-        );
+        self.vendor_file(&self.compressed_source_filepath)
     }
 
     /// Makes sure the source code will not be vendored.
     ///
-    /// Will be called if the "nc_vendor" feature is NOT enabled.
-    pub fn dont_vendor(&self) {
+    /// Will be called if the "vendor_csource" feature is NOT enabled.
+    pub fn delete_vendored(&self) {
         Self::rm(&self.vendored_path)
             .unwrap_or_else(|_| panic!["rm -rf vendored: {:?}", self.vendored_path]);
     }
 
     /// Intended for compiling the `notcurses` C library in of docs.rs.
-    // WIP
-    pub fn compile(&self) {
+    // WIP NOTES:
+    // - for now it only compiles the vendored source
+    // - it assumes dependencies are installed
+    pub fn compile_csource(&self) {
         println!("cargo:warning=Compiling…");
-        self.decompress_source(&self.vendored_compressed_source_path);
-
-        // NOTE: it assumes dependencies are installed
+        self.decompress_csource(&self.vendored_compressed_source_path);
 
         // prepare the building directory
         create_dir_all(&self.build_path).expect("couldn't create 'build/' directory");
@@ -133,6 +128,34 @@ impl NcCSource {
         );
     }
 
+    /// Deploys the vendored bindgen generated bindings from the crate.
+    pub fn use_vendored_bindings(&self) {
+        Self::run(
+            Command::new("cp")
+                .arg(&self.vendored_path.join(BINDINGS_BASENAME))
+                .arg(&self.root_path)
+                .current_dir(&self.root_path),
+        );
+    }
+
+    /// Embeds the bindgen generated bindings in the crate.
+    pub fn vendor_bindings(&self) {
+        println!("cargo:warning=Vendoring bindings…");
+        self.vendor_file(&self.deployed_bindings_filepath)
+    }
+
+    /// Embeds a file in the crate.
+    pub fn vendor_file<P: AsRef<Path> + AsRef<OsStr>>(&self, file: P) {
+        // make sure the vendored directory exists
+        create_dir_all(&self.vendored_path).expect("couldn't create 'vendored/' directory");
+        Self::run(
+            Command::new("cp")
+                .arg(file)
+                .arg(&self.vendored_path)
+                .current_dir(&self.root_path),
+        );
+    }
+
     // /// MAYBE install notcurses
     // pub fn install(&self) {
     //     Self::run(Command::new("make")
@@ -151,18 +174,14 @@ impl NcCSource {
             ..Default::default()
         };
         self0.set_root_path(PathBuf::from(var("OUT_DIR").expect("ERR: OUT_DIR")));
+        println!("cargo:warning=root_path={:?}", &self0.root_path);
 
         let vendored_path =
             PathBuf::from(var("CARGO_MANIFEST_DIR").expect("ERR: CARGO_MANIFEST_DIR"))
                 .join("build/vendored");
         let vendored_compressed_source_path = vendored_path.join(&self0.compressed_source_file);
 
-        Self {
-            version: version.into(),
-            vendored_path,
-            vendored_compressed_source_path,
-            ..self0
-        }
+        Self { version: version.into(), vendored_path, vendored_compressed_source_path, ..self0 }
     }
 
     /// Gets the version.
@@ -185,14 +204,20 @@ impl NcCSource {
         // println!("cargo:warning=Setting root_path={:?}", root_path);
         self.root_path = root_path;
         self.source_path = self.root_path.join(C_SRC_BASENAME);
-        self.compressed_source_path = self.root_path.join(&self.compressed_source_file);
+        self.compressed_source_filepath = self.root_path.join(&self.compressed_source_file);
         self.headers_path = self.source_path.join("include");
         self.build_path = self.source_path.join("build");
+        self.deployed_bindings_filepath = self.root_path.join(BINDINGS_BASENAME);
     }
 
     /// Returns the path to the headers for inclusing with the format "-I$PATH".
     pub fn headers_include_string(&self) -> String {
         format!["-I{}", self.headers_path.to_string_lossy()]
+    }
+
+    /// Returns the path to the deployed bindgen generated bindings.
+    pub fn deployed_bindings(&self) -> PathBuf {
+        self.deployed_bindings_filepath.clone()
     }
 
     /// Clones the C source repository.
@@ -248,7 +273,7 @@ impl NcCSource {
     /// Compresses the C source directory.
     ///
     /// Uses [xz compression](https://en.wikipedia.org/wiki/XZ_Utils).
-    pub fn compress_source(&self) {
+    pub fn compress_csource(&self) {
         println!("cargo:warning=Compressing…");
 
         set_var("XZ_OPT", "-e9");
@@ -264,7 +289,7 @@ impl NcCSource {
     }
 
     /// Decompresses the vendored C source directory.
-    pub fn decompress_source<P: AsRef<Path>>(&self, file_path: P) {
+    pub fn decompress_csource<P: AsRef<Path>>(&self, file_path: P) {
         println!("cargo:warning=Decompressing…");
         Self::run(
             Command::new("tar")
@@ -329,7 +354,7 @@ impl NcCSource {
         println!("cargo:warning=root_: {:?}", self.root_path);
         println!("cargo:warning=sourc: {:?}", self.source_path);
         println!("cargo:warning=cfile: {:?}", self.compressed_source_file);
-        println!("cargo:warning=cpath: {:?}", self.compressed_source_path);
+        println!("cargo:warning=cpath: {:?}", self.compressed_source_filepath);
         println!("cargo:warning=vpath: {:?}", self.vendored_path);
         println!(
             "cargo:warning=vcomp: {:?}",

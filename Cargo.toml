@@ -1,6 +1,6 @@
 [package]
 name = "libnotcurses-sys"
-version = "3.0.5"
+version = "3.1.0-alpha.0"
 authors = [
 	"nick black <dankamongmen@gmail.com>",
 	"José Luis Cruz <joseluis@andamira.net>"
@@ -65,12 +65,19 @@ cc = { version = "^1.0", optional = true }
 
 [features]
 # enable this feature to compile the notcurses C source code.
-nc_compile = ["cc"]
+compile_csource = ["cc", "keep_vendored"]
 # enable this feature to vendor the C source code into the crate.
-nc_vendor = []
+vendor_csource = ["keep_vendored"]
+# enable this feature to vendor the bindgen generated bindings into the crate.
+vendor_bindings = ["keep_vendored"]
+# enable this feature to use the already vendored bindings to compile the crate.
+# This eliminates the need to embed the C source in the crate just for docs.rs.
+use_vendored_bindings = ["keep_vendored"]
+# enable this feature to keep the vendored files, instead of deleting them.
+keep_vendored = []
 
 [package.metadata.docs.rs]
-features = ["nc_compile"]
+features = ["use_vendored_bindings"]
 
 [badges]
 maintenance = { status = "actively-developed" }
