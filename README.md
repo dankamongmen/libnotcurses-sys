@@ -1,6 +1,7 @@
 [![Crate](https://img.shields.io/crates/v/libnotcurses-sys.svg)](https://crates.io/crates/libnotcurses-sys)
 [![API](https://docs.rs/libnotcurses-sys/badge.svg)](https://docs.rs/libnotcurses-sys/)
 [![MSRV: 1.56.0](https://flat.badgen.net/badge/MSRV/1.56.0/purple)](https://blog.rust-lang.org/2021/10/21/Rust-1.56.0.html)
+[![Lines Of Code](https://tokei.rs/b1/github/dankamongmen/libnotcurses-sys?category=code)](https://github.com/dankamongmen/libnotcurses-sys)
 
 `libnotcurses-sys` is a low-level Rust wrapper for the
 [notcurses C library](https://www.github.com/dankamongmen/notcurses/)
@@ -25,11 +26,12 @@ fn main() -> NcResult<()> {
 }
 ```
 
-## Versioning Notes
+## Status
 
-Current version **3** follows *semver* as if it were major version *0*.
+Current version `3.1.0-alpha.1` is compatible with notcurses `3.0.1` (unreleased).
 
-This means a rapid pace of development of the API, while any breaking changes
-happening wont be reflected by a major version bump.
+The [documentation](https://docs.rs/libnotcurses-sys/3.1.0-alpha.1/) is very comprehensive.
 
-The library is very much functional, although the API is somewhat unstable.
+The library is very much functional, although the API is somewhat unstable,
+and is evolving rapidly. The versioning follows *semver*, with the caveat that
+current major version **3** is treated as if it were a major version **0**.
