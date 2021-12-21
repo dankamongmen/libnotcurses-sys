@@ -18,9 +18,9 @@ fn main() {
 
     // keep the vendored files?
     if cfg!(feature = "keep_vendored") {
-        println!("cargo:warning=Keeping vendored files…");
+        // println!("cargo:warning=Keeping vendored files…");
     } else {
-        println!("cargo:warning=Deleting vendored files…");
+        // println!("cargo:warning=Deleting vendored files…");
         nc_src.delete_vendored();
     }
 

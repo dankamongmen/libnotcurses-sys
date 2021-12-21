@@ -40,7 +40,7 @@ include = [
 ]
 
 [dependencies]
-# A dependency's version must be the minium one available in:
+# A dependency's version number must be the minimum available in all of:
 # - Fedora rawhide
 # - Debian Sid
 
@@ -53,9 +53,11 @@ libc = { version = "^0.2.103", default-features = false }
 cty = "^0.2.1"
 
 [dev-dependencies]
-rand = "^0.8"
 serial_test = "^0.5.1"
 serial_test_derive = "^0.5.1"
+
+# for the examples
+rand = "^0.8"
 
 [build-dependencies]
 bindgen = "^0.59"

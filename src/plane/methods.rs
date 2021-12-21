@@ -501,7 +501,7 @@ impl NcPlane {
     /// *C style function: [ncplane_set_fg_palindex()][c_api::ncplane_set_fg_palindex].*
     pub fn set_fg_palindex(&mut self, palindex: NcPaletteIndex) {
         unsafe {
-            c_api::ncplane_set_fg_palindex(self, palindex as i32);
+            c_api::ncplane_set_fg_palindex(self, palindex as u32);
         }
     }
 
@@ -513,7 +513,7 @@ impl NcPlane {
     /// *C style function: [ncplane_set_bg_palindex()][c_api::ncplane_set_bg_palindex].*
     pub fn set_bg_palindex(&mut self, palindex: NcPaletteIndex) {
         unsafe {
-            c_api::ncplane_set_bg_palindex(self, palindex as i32);
+            c_api::ncplane_set_bg_palindex(self, palindex as u32);
         }
     }
 }

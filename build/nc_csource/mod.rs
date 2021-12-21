@@ -174,7 +174,7 @@ impl NcCSource {
             ..Default::default()
         };
         self0.set_root_path(PathBuf::from(var("OUT_DIR").expect("ERR: OUT_DIR")));
-        println!("cargo:warning=root_path={:?}", &self0.root_path);
+        // println!("cargo:warning=root_path={:?}", &self0.root_path);
 
         let vendored_path =
             PathBuf::from(var("CARGO_MANIFEST_DIR").expect("ERR: CARGO_MANIFEST_DIR"))
