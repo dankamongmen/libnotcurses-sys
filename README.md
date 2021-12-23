@@ -28,9 +28,7 @@ fn main() -> NcResult<()> {
 
 ## Status
 
-Current version `3.1.0-alpha.1` is compatible with notcurses `3.0.1` (unreleased).
-
-The [documentation](https://docs.rs/libnotcurses-sys/3.1.0-alpha.1/) is very comprehensive.
+Current version `3.1.0` is compatible with notcurses `3.0.2`.
 
 The library is very much functional, although the API is somewhat unstable,
 and is evolving rapidly. The versioning follows *semver*, with the caveat that

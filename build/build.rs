@@ -6,7 +6,7 @@ extern crate pkg_config;
 mod nc_csource;
 
 /// The notcurses version that we are aiming to support in the current release.
-const NC_VERSION: &str = "3.0.0";
+const NC_VERSION: &str = "3.0.2";
 
 fn main() {
     let nc_src = nc_csource::NcCSource::new(NC_VERSION);
