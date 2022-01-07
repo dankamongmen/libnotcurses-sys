@@ -9,11 +9,8 @@
 It is built with several layers of zero-overhead abstractions
 over the C functions and pointers, accessed through FFI.
 
-It adds greater safety and type correctness over the underlying C library API,
-while trying to remain very close to it.
 
-## Example
-
+hello world example
 ```rust
 use libnotcurses_sys::*;
 
@@ -26,10 +23,9 @@ fn main() -> NcResult<()> {
 }
 ```
 
-## Status
+## Versioning
 
-Current version `3.1.0` is compatible with notcurses `3.0.2`.
+Current version `3.1.2` is compatible with notcurses `3.0.3`.
 
-The library is very much functional, although the API is somewhat unstable,
-and is evolving rapidly. The versioning follows *semver*, with the caveat that
-current major version **3** is treated as if it were a major version **0**.
+Current major version **`3`** is considered a development version. Just as if it
+it were a semver major version `0`.
