@@ -556,8 +556,20 @@ impl NcPlane {
         ]
     }
 
-    /// Retrieves the current contents of the specified [`NcCell`], returning the
-    /// `EGC` and writing out the [`NcStyle`] and the [`NcChannels`].
+    /// Returns a copy of the current contents of the specified [`NcCell`].
+    ///
+    /// Writes out the [`NcStyle`] and the [`NcChannels`].
+    ///
+    /// # Usage
+    ///
+    /// The return represents how the cell will be used during rendering,
+    /// and thus integrates any base cell where appropriate:
+    ///
+    /// - If called upon the secondary columns of a wide glyph, the EGC will be
+    /// returned (i.e. this function does not distinguish between the primary
+    /// and secondary columns of a wide glyph).
+    /// - If called on a sprixel plane, its control sequence is returned for all
+    /// valid locations.
     ///
     /// *C style function: [ncplane_at_yx()][c_api::ncplane_at_yx].*
     pub fn at_yx(
@@ -1702,16 +1714,16 @@ impl NcPlane {
 
     /// Returns the current row of the cursor within this `NcPlane`.
     ///
-    /// *(No equivalent C style function)*
+    /// *C style function: [ncplane_cursor_y()][c_api::ncplane_cursor_y].*
     pub fn cursor_y(&self) -> NcDim {
-        self.cursor_yx().0
+        c_api::ncplane_cursor_y(self)
     }
 
     /// Returns the current column of the cursor within this `NcPlane`.
     ///
-    /// *(No equivalent C style function)*
+    /// *C style function: [ncplane_cursor_x()][c_api::ncplane_cursor_x].*
     pub fn cursor_x(&self) -> NcDim {
-        self.cursor_yx().1
+        c_api::ncplane_cursor_x(self)
     }
 
     /// Moves the cursor to the specified position within this `NcPlane`.

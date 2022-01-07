@@ -1,5 +1,19 @@
 //! `ncplane_*` reimplemented functions.
 
+// TOC:
+// - Alpha
+// - NcChannel
+// - NcComponent
+// - NcRgb
+// - Default
+// - put & print
+// - movement, size & alignment
+// - line
+// - perimeter
+// - box
+// - gradient
+// - cursor
+
 use core::ptr::null_mut;
 
 use std::ffi::CString;
@@ -1168,7 +1182,7 @@ pub fn ncplane_gradient(
     let egc_ptr = cstring![egc];
 
     unsafe {
-        crate::bindings::ffi::ncplane_gradient(
+        c_api::ffi::ncplane_gradient(
             plane,
             y.unwrap_or(NcDim::MAX) as i32,
             x.unwrap_or(NcDim::MAX) as i32,
@@ -1182,4 +1196,30 @@ pub fn ncplane_gradient(
             lr,
         )
     }
+}
+
+// cursor --------------------------------------------------------------------
+
+/// Returns the current row of the cursor within this `NcPlane`.
+///
+/// *Method: NcPlane.[gradient()][NcPlane#method.gradient].*
+#[inline]
+pub fn ncplane_cursor_y(plane: &NcPlane) -> NcDim {
+    let mut y = 0;
+    unsafe {
+        c_api::ncplane_cursor_yx(plane, &mut y, null_mut());
+    }
+    y
+}
+
+/// Returns the current row of the cursor within this `NcPlane`.
+///
+/// *Method: NcPlane.[gradient()][NcPlane#method.gradient].*
+#[inline]
+pub fn ncplane_cursor_x(plane: &NcPlane) -> NcDim {
+    let mut x = 0;
+    unsafe {
+        c_api::ncplane_cursor_yx(plane, null_mut(), &mut x);
+    }
+    x
 }

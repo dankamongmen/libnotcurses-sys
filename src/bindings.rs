@@ -667,7 +667,10 @@ pub use ffi::{
     nctree,
     nctree_item,
     nctree_options,
+};
 
+#[doc(inline)]
+pub use ffi::{
     // functions
     nctree_add,
     nctree_create,
@@ -715,6 +718,7 @@ pub use ffi::{
     ncvisual_from_rgb_loose,
     ncvisual_from_rgb_packed,
     ncvisual_from_rgba,
+    ncvisual_from_sixel,
     ncvisual_geom,
     ncvisual_media_defblitter,
     ncvisual_options,

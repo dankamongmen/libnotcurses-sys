@@ -91,6 +91,20 @@ impl NcVisual {
         ]
     }
 
+    /// Constructs an `NcVisual` from a nul-terminated Sixel control `sequence`.
+    ///
+    /// *C style function: [ncvisual_from_sixel()][c_api::ncvisual_from_sixel].*
+    pub fn from_sixel<'a>(
+        sequence: &str,
+        len_y: NcDim,
+        len_x: NcDim,
+    ) -> NcResult<&'a mut NcVisual> {
+        error_ref_mut![
+            unsafe { c_api::ncvisual_from_file(cstring![sequence]) },
+            &format!("NcVisual::from_sixel({}, {}, {})", sequence, len_y, len_x)
+        ]
+    }
+
     /// Like [`from_rgba`][NcVisual#method.from_rgba], but the pixels are
     /// 4-byte RGBX. Alpha is filled in throughout using 'alpha'.
     ///

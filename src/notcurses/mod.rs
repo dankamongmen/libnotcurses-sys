@@ -97,7 +97,7 @@ impl NcOptions {
     /// Notcurses from processing terminal messages.
     pub const DRAIN_INPUT: u64 = constants::NCOPTION_DRAIN_INPUT as u64;
 
-    /// Do not call setlocale()
+    /// Do not call setlocale().
     ///
     /// notcurses_init() will call setlocale() to inspect the current locale. If
     /// that locale is "C" or "POSIX", it will call setlocale(LC_ALL, "") to set
@@ -145,7 +145,7 @@ impl NcOptions {
     /// With this flag, the handler will not be installed.
     pub const NO_WINCH_SIGHANDLER: u64 = constants::NCOPTION_NO_WINCH_SIGHANDLER as u64;
 
-    /// Initialize the standard plane's virtual cursor to match the physical cursor
+    /// Initializes the standard plane's virtual cursor to match the physical cursor
     /// at context creation time.
     ///
     /// Together with
@@ -153,6 +153,16 @@ impl NcOptions {
     /// and a scrolling standard plane,
     /// this facilitates easy scrolling-style programs in rendered mode.
     pub const PRESERVE_CURSOR: u64 = constants::NCOPTION_PRESERVE_CURSOR as u64;
+
+    /// Prepares the standard plane in scrolling mode, useful for CLIs. This is
+    /// equivalent to calling ncplane_set_scrolling(notcurses_stdplane(nc), true).
+    pub const SCROLLING: u64 = constants::NCOPTION_SCROLLING as u64;
+
+    /// "CLI mode" is just setting these four options.
+    pub const NCOPTION_CLI_MODE: u64 = Self::NO_ALTERNATE_SCREEN
+        | Self::NO_CLEAR_BITMAPS
+        | Self::PRESERVE_CURSOR
+        | Self::SCROLLING;
 
     /// Do not print banners.
     ///
@@ -169,7 +179,7 @@ pub(crate) mod constants {
     /// Notcurses from processing terminal messages.
     pub const NCOPTION_DRAIN_INPUT: u64 = crate::bindings::ffi::NCOPTION_DRAIN_INPUT as u64;
 
-    /// Do not call setlocale()
+    /// Do not call setlocale().
     ///
     /// notcurses_init() will call setlocale() to inspect the current locale. If
     /// that locale is "C" or "POSIX", it will call setlocale(LC_ALL, "") to set
@@ -220,12 +230,22 @@ pub(crate) mod constants {
     pub const NCOPTION_NO_WINCH_SIGHANDLER: u64 =
         crate::bindings::ffi::NCOPTION_NO_WINCH_SIGHANDLER as u64;
 
-    /// Initialize the standard plane's virtual cursor to match the physical cursor
+    /// Initializes the standard plane's virtual cursor to match the physical cursor
     /// at context creation time.
     ///
     /// Together with [`NCOPTION_NO_ALTERNATE_SCREEN`] and a scrolling standard plane,
     /// this facilitates easy scrolling-style programs in rendered mode.
     pub const NCOPTION_PRESERVE_CURSOR: u64 = crate::bindings::ffi::NCOPTION_PRESERVE_CURSOR as u64;
+
+    /// Prepares the standard plane in scrolling mode, useful for CLIs. This is
+    /// equivalent to calling ncplane_set_scrolling(notcurses_stdplane(nc), true).
+    pub const NCOPTION_SCROLLING: u64 = crate::bindings::ffi::NCOPTION_SCROLLING as u64;
+
+    /// "CLI mode" is just setting these four options.
+    pub const NCOPTION_CLI_MODE: u64 = NCOPTION_NO_ALTERNATE_SCREEN
+        | NCOPTION_NO_CLEAR_BITMAPS
+        | NCOPTION_PRESERVE_CURSOR
+        | NCOPTION_SCROLLING;
 
     /// Do not print banners.
     ///
