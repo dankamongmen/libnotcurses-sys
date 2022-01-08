@@ -159,7 +159,7 @@ impl NcOptions {
     pub const SCROLLING: u64 = constants::NCOPTION_SCROLLING as u64;
 
     /// "CLI mode" is just setting these four options.
-    pub const NCOPTION_CLI_MODE: u64 = Self::NO_ALTERNATE_SCREEN
+    pub const CLI_MODE: u64 = Self::NO_ALTERNATE_SCREEN
         | Self::NO_CLEAR_BITMAPS
         | Self::PRESERVE_CURSOR
         | Self::SCROLLING;

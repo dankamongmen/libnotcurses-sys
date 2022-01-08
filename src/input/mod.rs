@@ -79,6 +79,7 @@ impl From<NcReceived> for u32 {
 ///
 /// Reads from stdin and decodes the input to stdout, including synthesized
 /// events and mouse events. Notcurses provides input from keyboards and mice.
+///
 /// Single Unicode codepoints are received from the keyboard, directly encoded
 /// as `u32`.
 ///
@@ -86,6 +87,15 @@ impl From<NcReceived> for u32 {
 ///
 /// For mouse events, the x and y coordinates are reported within this struct.
 /// For all events, modifiers (e.g. "Alt") are carried as bools in this struct.
+///
+//
+// WIP:
+//
+// An input event. Cell coordinates are currently defined only for mouse
+// events. It is not guaranteed that we can set the modifiers for a given
+// ncinput.
+//
+// We encompass single Unicode codepoints, not complete EGCs.
 pub type NcInput = crate::bindings::ffi::ncinput;
 
 /// # Constructors
@@ -103,6 +113,7 @@ impl NcInput {
             evtype: NcEvType::UNKNOWN,
             ypx: -1,
             xpx: -1,
+            modifiers: 0,
         }
     }
 
@@ -159,6 +170,7 @@ impl NcInput {
             evtype,
             ypx: -1,
             xpx: -1,
+            modifiers: 0,
         }
     }
 }

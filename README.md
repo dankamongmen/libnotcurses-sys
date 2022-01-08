@@ -9,9 +9,9 @@
 It is built with several layers of zero-overhead abstractions
 over the C functions and pointers, accessed through FFI.
 
-
-hello world example
 ```rust
+// hello world example
+
 use libnotcurses_sys::*;
 
 fn main() -> NcResult<()> {
@@ -27,5 +27,5 @@ fn main() -> NcResult<()> {
 
 Current version `3.1.2` is compatible with notcurses `3.0.3`.
 
-Current major version **`3`** is considered a development version. Just as if it
-it were a semver major version `0`.
+Current major version `3` is considered a development version. Just as if it
+were a semver major version `0`.

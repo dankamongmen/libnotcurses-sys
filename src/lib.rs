@@ -226,7 +226,7 @@ pub mod c_api {
 //
 // [0]: https://doc.rust-lang.org/reference/items/modules.html#the-path-attribute
 #[path = "../examples"]
-#[cfg(any(doc, test))]
+#[cfg(any(doc))]
 pub mod examples {
     #![allow(dead_code)]
 
