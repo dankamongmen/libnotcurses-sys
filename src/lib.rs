@@ -125,7 +125,7 @@ pub use fade::{NcFadeCb, NcFadeCtx};
 pub use fd::{NcFdPlane, NcFdPlaneOptions, NcSubproc, NcSubprocOptions};
 pub use file::NcFile;
 pub use input::{NcEvType, NcEvTypeApi, NcInput, NcMiceEvents, NcMiceEventsApi, NcReceived};
-pub use key::NcKey;
+pub use key::{NcKey, NcKeyMod};
 pub use log_level::{NcLogLevel, NcLogLevelApi};
 pub use macros::*;
 pub use notcurses::{Nc, NcOptions};

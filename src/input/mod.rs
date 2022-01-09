@@ -1,18 +1,21 @@
-//! `NcInput` & `NcKey`
+//! `NcInput`
 
-// functions manually reimplemented: 4
+// functions manually reimplemented: 6
 // ------------------------------------------
-// (+) done: 4
+// (+) done: 6
+// (W) wrap: 6
 // (#) test: 0
 // ------------------------------------------
-// + ncinput_equal_p
-// + ncinput_nomod_p
-// + nckey_mouse_p
-// + nckey_supppuab_p
+//W+ ncinput_nomod_p
+//W+ ncinput_shift_p
+//W+ ncinput_ctrl_p
+//W+ ncinput_alt_p
+//W+ ncinput_meta_p
+//W+ ncinput_equal_p
 
 use std::ffi::CStr;
 
-use crate::{NcDim, NcKey};
+use crate::{c_api, NcDim, NcKey};
 
 pub(crate) mod reimplemented;
 
@@ -191,6 +194,48 @@ impl NcInput {
         } else {
             None
         }
+    }
+
+    /// Returns true if there are no modifiers present.
+    ///
+    /// *C style function: [ncinput_nomod_p()][c_api::ncinput_nomod_p].*
+    pub const fn nomod_p(&self) -> bool {
+        c_api::ncinput_nomod_p(self)
+    }
+
+    /// Returns true if the [`Shift`][crate::NcKeyMod::Shift] modifier is present.
+    ///
+    /// *C style function: [ncinput_shift_p()][c_api::ncinput_shift_p].*
+    pub const fn shift_p(&self) -> bool {
+        c_api::ncinput_shift_p(self)
+    }
+
+    /// Returns true if the [`Ctrl`][crate::NcKeyMod::Ctrl] modifier is present.
+    ///
+    /// *C style function: [ncinput_ctrl_p()][c_api::ncinput_ctrl_p].*
+    pub const fn ctrl_p(&self) -> bool {
+        c_api::ncinput_ctrl_p(self)
+    }
+
+    /// Returns true if the [`Alt`][crate::NcKeyMod::Alt] modifier is present.
+    ///
+    /// *C style function: [ncinput_alt_p()][c_api::ncinput_alt_p].*
+    pub const fn alt_p(&self) -> bool {
+        c_api::ncinput_alt_p(self)
+    }
+
+    /// Returns true if the [`Meta`][crate::NcKeyMod::Meta] modifier is present.
+    ///
+    /// *C style function: [ncinput_meta_p()][c_api::ncinput_meta_p].*
+    pub const fn meta_p(&self) -> bool {
+        c_api::ncinput_meta_p(self)
+    }
+
+    /// Returns true if both `NcInput`s are equal.
+    ///
+    /// *C style function: [ncinput_equal_p()][c_api::ncinput_equal_p].*
+    pub const fn equal_p(&self, other: &NcInput) -> bool {
+        c_api::ncinput_equal_p(self, other)
     }
 }
 
