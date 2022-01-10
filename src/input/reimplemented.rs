@@ -6,7 +6,7 @@ use crate::{NcInput, NcKeyMod};
 ///
 /// *Method: NcInput.[nomod_p()][NcInput#method.nomod_p].*
 pub const fn ncinput_nomod_p(input: &NcInput) -> bool {
-    !(input.alt && input.ctrl && input.shift)
+    input.modifiers == NcKeyMod::None as u32
 }
 
 /// Returns true if the `Shift` modifier is present.

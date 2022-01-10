@@ -2,7 +2,7 @@
 
 use super::constants;
 
-/// NcKey modifiers bitmask.
+/// [`NcKey`][crate::NcKey] modifiers bitmask.
 #[repr(u32)]
 #[derive(Clone, Copy, Debug)]
 pub enum NcKeyMod {
