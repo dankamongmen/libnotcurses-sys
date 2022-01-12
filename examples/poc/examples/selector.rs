@@ -115,7 +115,7 @@ fn run_selector(nc: &mut Nc, selector: &mut NcSelector) -> NcResult<String> {
 
         if !selector.offer_input(ni) {
             // Do not consider release key: only press
-            if ni.evtype == NcEvType::RELEASE {
+            if ni.evtype == NcInputType::Release as u32 {
                 continue;
             }
 

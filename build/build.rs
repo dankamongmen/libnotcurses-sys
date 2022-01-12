@@ -113,6 +113,7 @@ fn main() {
             .no_copy("ncvisual_options")
             .no_copy("notcurses")
             .no_copy("notcurses_options")
+            .no_partialeq("ncinput")
             // try to derive more traits
             .derive_default(true)
             .derive_hash(true)

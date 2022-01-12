@@ -124,7 +124,7 @@ pub use error::{NcError, NcIntResult, NcIntResultApi, NcResult};
 pub use fade::{NcFadeCb, NcFadeCtx};
 pub use fd::{NcFdPlane, NcFdPlaneOptions, NcSubproc, NcSubprocOptions};
 pub use file::NcFile;
-pub use input::{NcEvType, NcEvTypeApi, NcInput, NcMiceEvents, NcMiceEventsApi, NcReceived};
+pub use input::{NcInput, NcInputType, NcMiceEvents, NcMiceEventsApi, NcReceived};
 pub use key::{NcKey, NcKeyMod};
 pub use log_level::{NcLogLevel, NcLogLevelApi};
 pub use macros::*;

@@ -13,7 +13,6 @@ pub(crate) mod reimplemented;
 #[allow(clippy::module_inception)]
 mod key;
 mod keymod;
-
 pub use {key::NcKey, keymod::NcKeyMod};
 
 pub(crate) mod constants {
@@ -214,7 +213,11 @@ pub(crate) mod constants {
     // Modifiers bitmask
 
     pub const NCKEY_MOD_SHIFT: u32 = ffi::NCKEY_MOD_SHIFT;
-    pub const NCKEY_MOD_CTRL: u32 = ffi::NCKEY_MOD_CTRL;
     pub const NCKEY_MOD_ALT: u32 = ffi::NCKEY_MOD_ALT;
+    pub const NCKEY_MOD_CTRL: u32 = ffi::NCKEY_MOD_CTRL;
+    pub const NCKEY_MOD_SUPER: u32 = ffi::NCKEY_MOD_SUPER;
+    pub const NCKEY_MOD_HYPER: u32 = ffi::NCKEY_MOD_HYPER;
     pub const NCKEY_MOD_META: u32 = ffi::NCKEY_MOD_META;
+    pub const NCKEY_MOD_CAPSLOCK: u32 = ffi::NCKEY_MOD_CAPSLOCK;
+    pub const NCKEY_MOD_NUMLOCK: u32 = ffi::NCKEY_MOD_NUMLOCK;
 }
