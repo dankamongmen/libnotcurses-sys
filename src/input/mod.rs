@@ -213,70 +213,70 @@ impl NcInput {
     /// Returns true if there are no modifiers present.
     ///
     /// *C style function: [ncinput_nomod_p()][c_api::ncinput_nomod_p].*
-    pub const fn nomod_p(&self) -> bool {
+    pub fn nomod_p(&self) -> bool {
         c_api::ncinput_nomod_p(self)
     }
 
     /// Returns true if the [`Shift`][crate::NcKeyMod::Shift] modifier is present.
     ///
     /// *C style function: [ncinput_shift_p()][c_api::ncinput_shift_p].*
-    pub const fn shift_p(&self) -> bool {
+    pub fn shift_p(&self) -> bool {
         c_api::ncinput_shift_p(self)
     }
 
     /// Returns true if the [`Alt`][crate::NcKeyMod::Alt] modifier is present.
     ///
     /// *C style function: [ncinput_alt_p()][c_api::ncinput_alt_p].*
-    pub const fn alt_p(&self) -> bool {
+    pub fn alt_p(&self) -> bool {
         c_api::ncinput_alt_p(self)
     }
 
     /// Returns true if the [`Ctrl`][crate::NcKeyMod::Ctrl] modifier is present.
     ///
     /// *C style function: [ncinput_ctrl_p()][c_api::ncinput_ctrl_p].*
-    pub const fn ctrl_p(&self) -> bool {
+    pub fn ctrl_p(&self) -> bool {
         c_api::ncinput_ctrl_p(self)
     }
 
     /// Returns true if the [`Meta`][crate::NcKeyMod::Meta] modifier is present.
     ///
     /// *C style function: [ncinput_meta_p()][c_api::ncinput_meta_p].*
-    pub const fn meta_p(&self) -> bool {
+    pub fn meta_p(&self) -> bool {
         c_api::ncinput_meta_p(self)
     }
 
     /// Returns true if the [`Super`][crate::NcKeyMod::Super] modifier is present.
     ///
     /// *C style function: [ncinput_super_p()][c_api::ncinput_super_p].*
-    pub const fn super_p(&self) -> bool {
+    pub fn super_p(&self) -> bool {
         c_api::ncinput_super_p(self)
     }
 
     /// Returns true if the [`Hyper`][crate::NcKeyMod::Hyper] modifier is present.
     ///
     /// *C style function: [ncinput_hyper_p()][c_api::ncinput_hyper_p].*
-    pub const fn hyper_p(&self) -> bool {
+    pub fn hyper_p(&self) -> bool {
         c_api::ncinput_hyper_p(self)
     }
 
     /// Returns true if the [`CapsLock`][crate::NcKeyMod::CapsLock] modifier is present.
     ///
     /// *C style function: [ncinput_capslock_p()][c_api::ncinput_capslock_p].*
-    pub const fn capslock_p(&self) -> bool {
+    pub fn capslock_p(&self) -> bool {
         c_api::ncinput_capslock_p(self)
     }
 
     /// Returns true if the [`NumLock`][crate::NcKeyMod::NumLock] modifier is present.
     ///
     /// *C style function: [ncinput_numlock_p()][c_api::ncinput_numlock_p].*
-    pub const fn numlock_p(&self) -> bool {
+    pub fn numlock_p(&self) -> bool {
         c_api::ncinput_numlock_p(self)
     }
 
     /// Returns true if both `NcInput`s are equal.
     ///
     /// *C style function: [ncinput_equal_p()][c_api::ncinput_equal_p].*
-    pub const fn equal_p(&self, other: &NcInput) -> bool {
+    pub fn equal_p(&self, other: &NcInput) -> bool {
         c_api::ncinput_equal_p(self, other)
     }
 }

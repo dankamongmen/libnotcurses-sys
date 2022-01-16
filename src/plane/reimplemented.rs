@@ -674,7 +674,6 @@ pub fn ncplane_dim_x(plane: &NcPlane) -> NcDim {
 ///
 /// *Method: NcPlane.[dim_y()][NcPlane#method.dim_y].*
 #[inline]
-#[inline]
 pub fn ncplane_dim_y(plane: &NcPlane) -> NcDim {
     unsafe {
         let mut y = 0;

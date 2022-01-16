@@ -2,10 +2,11 @@
 
 use super::constants;
 
-/// The type of the input event.
+/// The type of the [`NcInput`][crate::NcInput] event.
 ///
 /// Note:
 /// *Unknown* and *Press* are considered equivalent for the purposes of `PartialEq`.
+#[repr(u32)]
 #[derive(Clone, Copy, Debug)]
 pub enum NcInputType {
     ///

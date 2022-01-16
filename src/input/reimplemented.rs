@@ -5,78 +5,78 @@ use crate::{NcInput, NcInputType, NcKeyMod};
 /// Is this `NcInput` free of modifiers (alt, control, shift)?
 ///
 /// *Method: NcInput.[nomod_p()][NcInput#method.nomod_p].*
-pub const fn ncinput_nomod_p(input: &NcInput) -> bool {
-    input.modifiers == NcKeyMod::None as u32
+pub fn ncinput_nomod_p(input: &NcInput) -> bool {
+    input.modifiers == NcKeyMod::None.into()
 }
 
 /// Returns true if the `Shift` modifier is present.
 ///
 /// *Method: NcInput.[shift_p()][NcInput#method.shift_p].*
-pub const fn ncinput_shift_p(input: &NcInput) -> bool {
-    (input.modifiers & NcKeyMod::Shift as u32) != 0
+pub fn ncinput_shift_p(input: &NcInput) -> bool {
+    (input.modifiers & NcKeyMod::Shift) != NcKeyMod::None
 }
 
 /// Returns true if the `Alt` modifier is present.
 ///
 /// *Method: NcInput.[alt_p()][NcInput#method.alt_p].*
-pub const fn ncinput_alt_p(input: &NcInput) -> bool {
-    (input.modifiers & NcKeyMod::Alt as u32) != 0
+pub fn ncinput_alt_p(input: &NcInput) -> bool {
+    (input.modifiers & NcKeyMod::Alt) != NcKeyMod::None
 }
 
 /// Returns true if the `Ctrl` modifier is present.
 ///
 /// *Method: NcInput.[ctrl_p()][NcInput#method.ctrl_p].*
-pub const fn ncinput_ctrl_p(input: &NcInput) -> bool {
-    (input.modifiers & NcKeyMod::Ctrl as u32) != 0
+pub fn ncinput_ctrl_p(input: &NcInput) -> bool {
+    (input.modifiers & NcKeyMod::Ctrl) != NcKeyMod::None
 }
 
 /// Returns true if the `Meta` modifier is present.
 ///
 /// *Method: NcInput.[meta_p()][NcInput#method.meta_p].*
-pub const fn ncinput_meta_p(input: &NcInput) -> bool {
-    (input.modifiers & NcKeyMod::Meta as u32) != 0
+pub fn ncinput_meta_p(input: &NcInput) -> bool {
+    (input.modifiers & NcKeyMod::Meta) != NcKeyMod::None
 }
 
 /// Returns true if the `Super` modifier is present.
 ///
 /// *Method: NcInput.[super_p()][NcInput#method.super_p].*
-pub const fn ncinput_super_p(input: &NcInput) -> bool {
-    (input.modifiers & NcKeyMod::Super as u32) != 0
+pub fn ncinput_super_p(input: &NcInput) -> bool {
+    (input.modifiers & NcKeyMod::Super) != NcKeyMod::None
 }
 
 /// Returns true if the `Hyper` modifier is present.
 ///
 /// *Method: NcInput.[hyper_p()][NcInput#method.hyper_p].*
-pub const fn ncinput_hyper_p(input: &NcInput) -> bool {
-    (input.modifiers & NcKeyMod::Hyper as u32) != 0
+pub fn ncinput_hyper_p(input: &NcInput) -> bool {
+    (input.modifiers & NcKeyMod::Hyper) != NcKeyMod::None
 }
 
 /// Returns true if the `CapsLock` modifier is present.
 ///
 /// *Method: NcInput.[capslock_p()][NcInput#method.capslock_p].*
-pub const fn ncinput_capslock_p(input: &NcInput) -> bool {
-    (input.modifiers & NcKeyMod::CapsLock as u32) != 0
+pub fn ncinput_capslock_p(input: &NcInput) -> bool {
+    (input.modifiers & NcKeyMod::CapsLock) != NcKeyMod::None
 }
 
 /// Returns true if the `NumLock` modifier is present.
 ///
 /// *Method: NcInput.[numlock_p()][NcInput#method.numlock_p].*
-pub const fn ncinput_numlock_p(input: &NcInput) -> bool {
-    (input.modifiers & NcKeyMod::NumLock as u32) != 0
+pub fn ncinput_numlock_p(input: &NcInput) -> bool {
+    (input.modifiers & NcKeyMod::NumLock) != NcKeyMod::None
 }
 
 /// Returns true if the two `NcInput` are data-equivalent.
 ///
 /// *Method: NcInput.[equal_p()][NcInput#method.equal_p].*
-pub const fn ncinput_equal_p(n1: &NcInput, n2: &NcInput) -> bool {
+pub fn ncinput_equal_p(n1: &NcInput, n2: &NcInput) -> bool {
     if n1.id != n2.id {
         return false;
     }
     if n1.y != n2.y || n1.x != n2.x {
         return false;
     }
-    if (n1.modifiers & !(NcKeyMod::CapsLock as u32 | NcKeyMod::NumLock as u32))
-        != (n2.modifiers & !(NcKeyMod::CapsLock as u32 | NcKeyMod::NumLock as u32))
+    if (n1.modifiers & !(NcKeyMod::CapsLock | NcKeyMod::NumLock ))
+        != (n2.modifiers & !(NcKeyMod::CapsLock | NcKeyMod::NumLock ))
     {
         return false;
     }
