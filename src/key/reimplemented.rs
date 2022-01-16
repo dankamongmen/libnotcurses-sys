@@ -1,3 +1,5 @@
+//!
+
 use crate::{
     c_api::{NCKEY_EOF, PRETERUNICODEBASE},
     NcKey,

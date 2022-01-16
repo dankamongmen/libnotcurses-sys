@@ -25,18 +25,59 @@ impl NcKeyMod {
     pub const Control: Self = Self::Ctrl;
 }
 
+/// # Methods
+impl NcKeyMod {
+    /// Returns true if no modifiers are present.
+    pub fn none_p(&self) -> bool {
+        *self == NcKeyMod::None
+    }
+
+    /// Returns true if the `Shift` modifier is present.
+    pub fn shift_p(&self) -> bool {
+        *self & NcKeyMod::Shift != NcKeyMod::None
+    }
+
+    /// Returns true if the `Alt` modifier is present.
+    pub fn alt_p(&self) -> bool {
+        *self & NcKeyMod::Alt != NcKeyMod::None
+    }
+
+    /// Returns true if the `Ctrl` modifier is present.
+    pub fn ctrl_p(&self) -> bool {
+        *self & NcKeyMod::Ctrl != NcKeyMod::None
+    }
+
+    /// Returns true if the `Super` modifier is present.
+    pub fn super_p(&self) -> bool {
+        *self & NcKeyMod::Super != NcKeyMod::None
+    }
+
+    /// Returns true if the `Hyper` modifier is present.
+    pub fn hyper_p(&self) -> bool {
+        *self & NcKeyMod::Hyper != NcKeyMod::None
+    }
+
+    /// Returns true if the `Meta` modifier is present.
+    pub fn meta_p(&self) -> bool {
+        *self & NcKeyMod::Meta != NcKeyMod::None
+    }
+
+    /// Returns true if the `CapsLock` modifier is present.
+    pub fn capslock_p(&self) -> bool {
+        *self & NcKeyMod::CapsLock != NcKeyMod::None
+    }
+
+    /// Returns true if the `NumLock` modifier is present.
+    pub fn numlock_p(&self) -> bool {
+        *self & NcKeyMod::NumLock != NcKeyMod::None
+    }
+}
+
 impl Default for NcKeyMod {
     fn default() -> Self {
         Self::None
     }
 }
-
-// WIP
-// impl PartialEq<NcKeyMod> for u32 {
-//     fn eq(&self, other: &NcKeyMod) -> bool {
-//         self == &other.0
-//     }
-// }
 
 impl Not for NcKeyMod {
     type Output = Self;
