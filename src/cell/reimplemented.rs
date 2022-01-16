@@ -5,9 +5,9 @@
 use libc::strcmp;
 
 use crate::{
-    c_api::{self, nccell_release},
+    c_api::{self, nccell_release, NcStyle_u16},
     cstring, rstring, NcAlpha, NcCell, NcChannel, NcChannels, NcComponent, NcIntResult,
-    NcIntResultApi, NcPaletteIndex, NcPlane, NcRgb, NcStyle, NcStyleApi,
+    NcIntResultApi, NcPaletteIndex, NcPlane, NcRgb,
 };
 
 const NCBOXLIGHT: &str = "┌┐└┘─│";
@@ -254,38 +254,38 @@ pub fn nccell_set_bg_palindex(cell: &mut NcCell, index: NcPaletteIndex) {
 
 // Styles ----------------------------------------------------------------------
 
-/// Extracts the [`NcStyle`] bits from an [`NcCell`].
+/// Extracts the [`NcStyle_u16`] bits from an [`NcCell`].
 ///
 /// *Method: NcCell.[cell_styles()][NcCell#method.cell_styles].*
 #[inline]
-pub const fn nccell_styles(cell: &NcCell) -> NcStyle {
+pub const fn nccell_styles(cell: &NcCell) -> NcStyle_u16 {
     cell.stylemask
 }
 
-/// Adds the specified [`NcStyle`] bits to an [`NcCell`]'s existing spec.,
+/// Adds the specified [`NcStyle_u16`] bits to an [`NcCell`]'s existing spec.,
 /// whether they're actively supported or not.
 ///
 /// *Method: NcCell.[styles_on()][NcCell#method.styles_on].*
 #[inline]
-pub fn nccell_on_styles(cell: &mut NcCell, stylebits: NcStyle) {
-    cell.stylemask |= stylebits & NcStyle::MASK as u16;
+pub fn nccell_on_styles(cell: &mut NcCell, stylebits: NcStyle_u16) {
+    cell.stylemask |= stylebits & c_api::NCSTYLE_MASK as u16;
 }
 
-/// Removes the specified [`NcStyle`] bits from an [`NcCell`]'s existing spec.
+/// Removes the specified [`NcStyle_u16`] bits from an [`NcCell`]'s existing spec.
 ///
 /// *Method: NcCell.[styles_off()][NcCell#method.styles_off].*
 #[inline]
-pub fn nccell_off_styles(cell: &mut NcCell, stylebits: NcStyle) {
-    cell.stylemask &= !(stylebits & NcStyle::MASK as u16);
+pub fn nccell_off_styles(cell: &mut NcCell, stylebits: NcStyle_u16) {
+    cell.stylemask &= !(stylebits & c_api::NCSTYLE_MASK as u16);
 }
 
-/// Sets *just* the specified [`NcStyle`] bits for an [`NcCell`],
+/// Sets *just* the specified [`NcStyle_u16`] bits for an [`NcCell`],
 /// whether they're actively supported or not.
 ///
 /// *Method: NcCell.[styles_set()][NcCell#method.styles_set].*
 #[inline]
-pub fn nccell_set_styles(cell: &mut NcCell, stylebits: NcStyle) {
-    cell.stylemask = stylebits & NcStyle::MASK as u16;
+pub fn nccell_set_styles(cell: &mut NcCell, stylebits: NcStyle_u16) {
+    cell.stylemask = stylebits & c_api::NCSTYLE_MASK as u16;
 }
 
 // Chars -----------------------------------------------------------------------
@@ -339,7 +339,7 @@ pub fn nccell_strdup(plane: &NcPlane, cell: &NcCell) -> String {
 
 // Misc. -----------------------------------------------------------------------
 
-/// Saves the [`NcStyle`] and the [`NcChannels`],
+/// Saves the [`NcStyle_u16`] and the [`NcChannels`],
 /// and returns the `EGC`, of an [`NcCell`].
 ///
 /// *Method: NcCell.[extract()][NcCell#method.extract].*
@@ -347,7 +347,7 @@ pub fn nccell_strdup(plane: &NcPlane, cell: &NcCell) -> String {
 pub fn nccell_extract(
     plane: &NcPlane,
     cell: &NcCell,
-    stylemask: &mut NcStyle,
+    stylemask: &mut NcStyle_u16,
     channels: &mut NcChannels,
 ) -> String {
     *stylemask = cell.stylemask;
@@ -401,7 +401,7 @@ pub fn nccell_prime(
     plane: &mut NcPlane,
     cell: &mut NcCell,
     gcluster: &str,
-    style: NcStyle,
+    style: NcStyle_u16,
     channels: NcChannels,
 ) -> NcIntResult {
     cell.stylemask = style;
@@ -421,7 +421,7 @@ pub fn nccell_prime(
 #[inline]
 pub fn nccells_load_box(
     plane: &mut NcPlane,
-    style: NcStyle,
+    style: NcStyle_u16,
     channels: NcChannels,
     ul: &mut NcCell,
     ur: &mut NcCell,
@@ -492,7 +492,7 @@ pub fn nccells_load_box(
 #[inline]
 pub fn nccells_ascii_box(
     plane: &mut NcPlane,
-    style: NcStyle,
+    style: NcStyle_u16,
     channels: NcChannels,
     ul: &mut NcCell,
     ur: &mut NcCell,
@@ -510,7 +510,7 @@ pub fn nccells_ascii_box(
 #[inline]
 pub fn nccells_double_box(
     plane: &mut NcPlane,
-    style: NcStyle,
+    style: NcStyle_u16,
     channels: NcChannels,
     ul: &mut NcCell,
     ur: &mut NcCell,
@@ -528,7 +528,7 @@ pub fn nccells_double_box(
 #[inline]
 pub fn nccells_heavy_box(
     plane: &mut NcPlane,
-    style: NcStyle,
+    style: NcStyle_u16,
     channels: NcChannels,
     ul: &mut NcCell,
     ur: &mut NcCell,
@@ -546,7 +546,7 @@ pub fn nccells_heavy_box(
 #[inline]
 pub fn nccells_light_box(
     plane: &mut NcPlane,
-    style: NcStyle,
+    style: NcStyle_u16,
     channels: NcChannels,
     ul: &mut NcCell,
     ur: &mut NcCell,
@@ -564,7 +564,7 @@ pub fn nccells_light_box(
 #[inline]
 pub fn nccells_rounded_box(
     plane: &mut NcPlane,
-    style: NcStyle,
+    style: NcStyle_u16,
     channels: NcChannels,
     ul: &mut NcCell,
     ur: &mut NcCell,

@@ -9,14 +9,34 @@ pub struct NcKeyMod(u32);
 
 /// # Constants
 impl NcKeyMod {
+    /// None of the modifiers (all bits set to 0).
     pub const None: Self = Self(0);
+
+    /// The modifier mask (all bits set to 1).
+    pub const Mask: Self = Self(u32::MAX);
+
+    ///
     pub const Shift: Self = Self(constants::NCKEY_MOD_SHIFT);
+
+    ///
     pub const Alt: Self = Self(constants::NCKEY_MOD_ALT);
+
+    ///
     pub const Ctrl: Self = Self(constants::NCKEY_MOD_CTRL);
+
+    ///
     pub const Super: Self = Self(constants::NCKEY_MOD_SUPER);
+
+    ///
     pub const Hyper: Self = Self(constants::NCKEY_MOD_HYPER);
+
+    ///
     pub const Meta: Self = Self(constants::NCKEY_MOD_META);
+
+    ///
     pub const CapsLock: Self = Self(constants::NCKEY_MOD_CAPSLOCK);
+
+    ///
     pub const NumLock: Self = Self(constants::NCKEY_MOD_NUMLOCK);
 }
 
@@ -132,16 +152,6 @@ impl From<NcKeyMod> for u32 {
 }
 impl From<u32> for NcKeyMod {
     fn from(value: u32) -> Self {
-        match value {
-            constants::NCKEY_MOD_SHIFT => Self::Shift,
-            constants::NCKEY_MOD_ALT => Self::Alt,
-            constants::NCKEY_MOD_CTRL => Self::Ctrl,
-            constants::NCKEY_MOD_SUPER => Self::Super,
-            constants::NCKEY_MOD_HYPER => Self::Hyper,
-            constants::NCKEY_MOD_META => Self::Meta,
-            constants::NCKEY_MOD_CAPSLOCK => Self::CapsLock,
-            constants::NCKEY_MOD_NUMLOCK => Self::NumLock,
-            _ => Self::None,
-        }
+        Self(value)
     }
 }

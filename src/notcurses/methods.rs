@@ -7,7 +7,7 @@ use crate::{
     cstring, error, error_ref_mut, rstring, rstring_free, Nc, NcAlign, NcBlitter, NcCapabilities,
     NcChannels, NcDim, NcError, NcFile, NcInput, NcLogLevel, NcMiceEvents, NcMiceEventsApi,
     NcOptions, NcPixelImpl, NcPlane, NcReceived, NcResult, NcRgb, NcScale, NcStats, NcStyle,
-    NcStyleApi, NcTime, NcVGeom, NcVisual, NcVisualGeometry, NcVisualOptions,
+    NcTime, NcVGeom, NcVisual, NcVisualGeometry, NcVisualOptions,
 };
 
 /// # `NcOptions` Constructors
@@ -189,7 +189,7 @@ impl Nc {
         stylemask: &mut NcStyle,
         channels: &mut NcChannels,
     ) -> Option<String> {
-        let egc = unsafe { c_api::notcurses_at_yx(self, y, x, stylemask, channels) };
+        let egc = unsafe { c_api::notcurses_at_yx(self, y, x, stylemask.into(), channels) };
         if egc.is_null() {
             return None;
         }
@@ -577,16 +577,16 @@ impl Nc {
     ///
     /// *(No equivalent C style function)*
     pub fn lex_styles(styles_str: &str) -> NcResult<NcStyle> {
-        let mut style = NcStyle::NOSTYLE;
+        let mut style = NcStyle::None;
         let mut errstr = String::new();
 
         for s in styles_str.split(' ') {
             match s.to_lowercase().as_str() {
-                "italic" => style.add(NcStyle::ITALIC),
-                "underline" => style.add(NcStyle::UNDERLINE),
-                "undercurl" => style.add(NcStyle::UNDERCURL),
-                "struck" => style.add(NcStyle::STRUCK),
-                "bold" => style.add(NcStyle::BOLD),
+                "italic" => style.add(NcStyle::Italic),
+                "underline" => style.add(NcStyle::Underline),
+                "undercurl" => style.add(NcStyle::Undercurl),
+                "struck" => style.add(NcStyle::Struck),
+                "bold" => style.add(NcStyle::Bold),
                 "none" => (),
                 _ => {
                     errstr.push_str(s);
@@ -791,13 +791,13 @@ impl Nc {
         let mut string = String::new();
         for s in style.to_vec() {
             string.push_str(match s {
-                NcStyle::ITALIC => "italic",
-                NcStyle::UNDERLINE => "underline",
-                NcStyle::UNDERCURL => "undercurl",
-                NcStyle::STRUCK => "struck",
-                NcStyle::BOLD => "bold",
+                NcStyle::Italic => "italic",
+                NcStyle::Underline => "underline",
+                NcStyle::Undercurl => "undercurl",
+                NcStyle::Struck => "struck",
+                NcStyle::Bold => "bold",
                 #[allow(unreachable_patterns)] // FIXME
-                NcStyle::NOSTYLE => "none",
+                NcStyle::None => "none",
                 _ => "none",
             });
             string.push(' ');
@@ -815,7 +815,7 @@ impl Nc {
     ///
     /// *C style function: [notcurses_supported_styles()][c_api::notcurses_supported_styles].*
     pub fn supported_styles(&self) -> NcStyle {
-        unsafe { c_api::notcurses_supported_styles(self) as NcStyle }
+        unsafe { c_api::notcurses_supported_styles(self).into() }
     }
 
     /// Returns our current idea of the terminal dimensions in rows and cols.

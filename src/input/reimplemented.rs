@@ -75,8 +75,8 @@ pub fn ncinput_equal_p(n1: &NcInput, n2: &NcInput) -> bool {
     if n1.y != n2.y || n1.x != n2.x {
         return false;
     }
-    if (n1.modifiers & !(NcKeyMod::CapsLock | NcKeyMod::NumLock ))
-        != (n2.modifiers & !(NcKeyMod::CapsLock | NcKeyMod::NumLock ))
+    if (n1.modifiers & !(NcKeyMod::CapsLock | NcKeyMod::NumLock))
+        != (n2.modifiers & !(NcKeyMod::CapsLock | NcKeyMod::NumLock))
     {
         return false;
     }

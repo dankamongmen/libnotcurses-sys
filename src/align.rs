@@ -113,7 +113,7 @@ impl From<NcAlign> for i32 {
 pub(crate) mod c_api {
     use crate::bindings::ffi;
 
-    /// Alignment within an `NcPlane` or terminal.
+    /// Alignment within an [`NcPlane`][crate::NcPlane] or terminal.
     ///
     /// It's recommended to use [`NcAlign`][crate::NcAlign] instead.
     ///
@@ -127,7 +127,7 @@ pub(crate) mod c_api {
     /// - [`NCALIGN_UNALIGNED`]
     pub type NcAlign_u32 = u32; // crate::bindings::ffi::ncalign_e;
 
-    /// [`NcAlign_u32`] left alignment.
+    /// [`NcAlign_u32`] Left alignment.
     pub const NCALIGN_LEFT: NcAlign_u32 = ffi::ncalign_e_NCALIGN_LEFT;
 
     /// [`NcAlign_u32`] Right alignment.

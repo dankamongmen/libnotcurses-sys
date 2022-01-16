@@ -1,6 +1,6 @@
 //! Test `NcCell` methods and associated functions.
 
-use crate::{Nc, NcCell, NcChannels, NcChannelsApi, NcPlane, NcStyle, NcStyleApi};
+use crate::{Nc, NcCell, NcChannels, NcChannelsApi, NcPlane, NcStyle};
 
 use serial_test::serial;
 
@@ -58,11 +58,11 @@ fn constructors() -> crate::NcResult<()> {
             plane,
             &mut cell,
             "🚀",
-            NcStyle::UNDERLINE,
+            NcStyle::Underline,
             NcChannels::from_rgb_both(0x112233)
         )?
     ];
-    assert_eq![NcStyle::UNDERLINE, cell.styles()];
+    assert_eq![NcStyle::Underline, cell.styles()];
     assert_eq![NcChannels::from_rgb_both(0x112233), cell.channels(plane)];
 
     // cleanup

@@ -836,7 +836,15 @@ pub fn ncplane_perimeter_double(
     let mut hl = NcCell::new();
     let mut vl = NcCell::new();
     if c_api::nccells_double_box(
-        plane, stylemask, channels, &mut ul, &mut ur, &mut ll, &mut lr, &mut hl, &mut vl,
+        plane,
+        stylemask.into(),
+        channels,
+        &mut ul,
+        &mut ur,
+        &mut ll,
+        &mut lr,
+        &mut hl,
+        &mut vl,
     ) != NcIntResult::OK
     {
         return NcIntResult::ERR;
@@ -888,7 +896,15 @@ pub fn ncplane_perimeter_rounded(
     let mut hl = NcCell::new();
     let mut vl = NcCell::new();
     if c_api::nccells_rounded_box(
-        plane, stylemask, channels, &mut ul, &mut ur, &mut ll, &mut lr, &mut hl, &mut vl,
+        plane,
+        stylemask.into(),
+        channels,
+        &mut ul,
+        &mut ur,
+        &mut ll,
+        &mut lr,
+        &mut hl,
+        &mut vl,
     ) != NcIntResult::OK
     {
         return NcIntResult::ERR;
@@ -942,7 +958,15 @@ pub fn ncplane_ascii_box(
 
     unsafe {
         ret = c_api::nccells_ascii_box(
-            plane, stylemask, channels, &mut ul, &mut ur, &mut ll, &mut lr, &mut hl, &mut vl,
+            plane,
+            stylemask.into(),
+            channels,
+            &mut ul,
+            &mut ur,
+            &mut ll,
+            &mut lr,
+            &mut hl,
+            &mut vl,
         );
         if ret == NcIntResult::OK {
             ret = c_api::ncplane_box(plane, &ul, &ur, &ll, &lr, &hl, &vl, end_y, end_x, boxmask);
@@ -1022,7 +1046,15 @@ pub fn ncplane_double_box(
 
     unsafe {
         ret = c_api::nccells_double_box(
-            plane, stylemask, channels, &mut ul, &mut ur, &mut ll, &mut lr, &mut hl, &mut vl,
+            plane,
+            stylemask.into(),
+            channels,
+            &mut ul,
+            &mut ur,
+            &mut ll,
+            &mut lr,
+            &mut hl,
+            &mut vl,
         );
         if ret == NcIntResult::OK {
             ret = c_api::ncplane_box(plane, &ul, &ur, &ll, &lr, &hl, &vl, end_y, end_x, boxmask);
@@ -1089,7 +1121,15 @@ pub fn ncplane_rounded_box(
 
     unsafe {
         ret = c_api::nccells_rounded_box(
-            plane, stylemask, channels, &mut ul, &mut ur, &mut ll, &mut lr, &mut hl, &mut vl,
+            plane,
+            stylemask.into(),
+            channels,
+            &mut ul,
+            &mut ur,
+            &mut ll,
+            &mut lr,
+            &mut hl,
+            &mut vl,
         );
         if ret == NcIntResult::OK {
             ret = c_api::ncplane_box(plane, &ul, &ur, &ll, &lr, &hl, &vl, end_y, end_x, boxmask);
@@ -1188,7 +1228,7 @@ pub fn ncplane_gradient(
             len_y.unwrap_or(0),
             len_x.unwrap_or(0),
             egc_ptr,
-            stylemask,
+            stylemask.into(),
             ul,
             ur,
             ll,

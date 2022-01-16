@@ -137,7 +137,7 @@ pub use resizecb::{NcResizeCb, NcResizeCbApi, NcResizeCbUnsafe};
 pub use scale::NcScale;
 pub use stats::NcStats;
 pub use string::NcString;
-pub use style::{NcStyle, NcStyleApi};
+pub use style::NcStyle;
 pub use time::NcTime;
 pub use visual::{
     NcRgba, NcVGeom, NcVisual, NcVisualGeometry, NcVisualOptions, NcVisualOptionsBuilder,
@@ -196,7 +196,7 @@ pub mod c_api {
     pub use crate::plane::options::constants::*;
     pub use crate::r#box::constants::*;
     pub use crate::scale::c_api::*;
-    pub use crate::style::constants::*;
+    pub use crate::style::c_api::*;
     pub use crate::visual::options::constants::*;
     pub use crate::widgets::menu::constants::*;
     pub use crate::widgets::plot::constants::*;

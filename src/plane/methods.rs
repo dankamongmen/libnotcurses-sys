@@ -446,7 +446,7 @@ impl NcPlane {
                 x.unwrap_or(NcDim::MAX) as i32,
                 len_y.unwrap_or(0),
                 len_x.unwrap_or(0),
-                stylemask,
+                stylemask.into(),
             )
         };
         error![
@@ -463,7 +463,7 @@ impl NcPlane {
     ///
     /// *C style function: [ncplane_styles()][c_api::ncplane_styles].*
     pub fn styles(&self) -> NcStyle {
-        unsafe { c_api::ncplane_styles(self) }
+        unsafe { c_api::ncplane_styles(self).into() }
     }
 
     /// Removes the specified styles from this `NcPlane`'s existing spec.
@@ -471,7 +471,7 @@ impl NcPlane {
     /// *C style function: [ncplane_off_styles()][c_api::ncplane_off_styles].*
     pub fn off_styles(&mut self, stylemask: NcStyle) {
         unsafe {
-            c_api::ncplane_off_styles(self, stylemask as u32);
+            c_api::ncplane_off_styles(self, stylemask.into());
         }
     }
 
@@ -480,7 +480,7 @@ impl NcPlane {
     /// *C style function: [ncplane_on_styles()][c_api::ncplane_on_styles].*
     pub fn on_styles(&mut self, stylemask: NcStyle) {
         unsafe {
-            c_api::ncplane_on_styles(self, stylemask as u32);
+            c_api::ncplane_on_styles(self, stylemask.into());
         }
     }
 
@@ -489,7 +489,7 @@ impl NcPlane {
     /// *C style function: [ncplane_set_styles()][c_api::ncplane_set_styles].*
     pub fn set_styles(&mut self, stylemask: NcStyle) {
         unsafe {
-            c_api::ncplane_set_styles(self, stylemask as u32);
+            c_api::ncplane_set_styles(self, stylemask.into());
         }
     }
 
@@ -530,7 +530,7 @@ impl NcPlane {
         stylemask: &mut NcStyle,
         channels: &mut NcChannels,
     ) -> NcResult<String> {
-        let egc = unsafe { c_api::ncplane_at_cursor(self, stylemask, channels) };
+        let egc = unsafe { c_api::ncplane_at_cursor(self, stylemask.into(), channels) };
         if egc.is_null() {
             return Err(NcError::with_msg(
                 NcIntResult::ERR,
@@ -579,7 +579,8 @@ impl NcPlane {
         stylemask: &mut NcStyle,
         channels: &mut NcChannels,
     ) -> NcResult<String> {
-        let egc = unsafe { c_api::ncplane_at_yx(self, y as i32, x as i32, stylemask, channels) };
+        let egc =
+            unsafe { c_api::ncplane_at_yx(self, y as i32, x as i32, stylemask.into(), channels) };
         if egc.is_null() {
             return Err(NcError::with_msg(
                 NcIntResult::ERR,
@@ -636,18 +637,22 @@ impl NcPlane {
     //      return nccell_load(n, c, gcluster);
     // - cell-load calls internal.h/pool load:
     //      return pool_load(&n->pool, c, gcluster);
-    pub fn set_base(
+    pub fn set_base<S: Into<NcStyle> + Copy>(
         &mut self,
         egc: &str,
-        stylemask: NcStyle,
+        stylemask: S,
         channels: NcChannels,
     ) -> NcResult<u32> {
-        let res = unsafe { c_api::ncplane_set_base(self, cstring![egc], stylemask, channels) };
+        let res = unsafe {
+            c_api::ncplane_set_base(self, cstring![egc], stylemask.into().into(), channels)
+        };
         error![
             res,
             &format!(
                 "NcPlane.set_base({:?}, {:0X}, {:0X})",
-                egc, stylemask, channels
+                egc,
+                stylemask.into(),
+                channels
             ),
             res as u32
         ]

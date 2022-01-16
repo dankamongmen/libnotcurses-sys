@@ -22,7 +22,7 @@ impl NcCell {
             gcluster: (ch as u32).to_le(),
             gcluster_backstop: 0,
             width: 0_u8,
-            stylemask: 0 as NcStyle,
+            stylemask: NcStyle::None.into(),
             channels: 0 as NcChannels,
         })
     }
@@ -89,7 +89,7 @@ impl NcCell {
         style: NcStyle,
         channels: NcChannels,
     ) -> NcResult<u32> {
-        let bytes = c_api::nccell_prime(plane, cell, gcluster, style, channels);
+        let bytes = c_api::nccell_prime(plane, cell, gcluster, style.into(), channels);
         error![bytes, "", bytes as u32]
     }
 
@@ -332,7 +332,7 @@ impl NcCell {
         styles: &mut NcStyle,
         channels: &mut NcChannels,
     ) -> String {
-        c_api::nccell_extract(plane, self, styles, channels)
+        c_api::nccell_extract(plane, self, styles.into(), channels)
     }
 
     /// Returns the `EGC` of the `NcCell`.
@@ -349,28 +349,28 @@ impl NcCell {
     ///
     /// *C style function: [nccell_styles()][c_api::nccell_styles].*
     pub fn styles(&mut self) -> NcStyle {
-        c_api::nccell_styles(self)
+        c_api::nccell_styles(self).into()
     }
 
     /// Removes the specified [`NcStyle`] bits.
     ///
     /// *C style function: [nccell_off_styles()][c_api::nccell_off_styles].*
     pub fn styles_off(&mut self, stylebits: NcStyle) {
-        c_api::nccell_off_styles(self, stylebits)
+        c_api::nccell_off_styles(self, stylebits.into())
     }
 
     /// Adds the specified [`NcStyle`] bits.
     ///
     /// *C style function: [nccell_on_styles()][c_api::nccell_on_styles].*
     pub fn styles_on(&mut self, stylebits: NcStyle) {
-        c_api::nccell_on_styles(self, stylebits)
+        c_api::nccell_on_styles(self, stylebits.into())
     }
 
     /// Sets just the specified [`NcStyle`] bits.
     ///
     /// *C style function: [nccell_set_styles()][c_api::nccell_set_styles].*
     pub fn styles_set(&mut self, stylebits: NcStyle) {
-        c_api::nccell_set_styles(self, stylebits)
+        c_api::nccell_set_styles(self, stylebits.into())
     }
 }
 
@@ -453,7 +453,16 @@ impl NcCell {
         gcluster: &str,
     ) -> NcResult<()> {
         error![c_api::nccells_load_box(
-            plane, style, channels, ul, ur, ll, lr, hl, vl, gcluster
+            plane,
+            style.into(),
+            channels,
+            ul,
+            ur,
+            ll,
+            lr,
+            hl,
+            vl,
+            gcluster
         )]
     }
 
@@ -472,7 +481,15 @@ impl NcCell {
         vl: &mut NcCell,
     ) -> NcResult<()> {
         error![c_api::nccells_double_box(
-            plane, style, channels, ul, ur, ll, lr, hl, vl
+            plane,
+            style.into(),
+            channels,
+            ul,
+            ur,
+            ll,
+            lr,
+            hl,
+            vl
         )]
     }
 
@@ -491,7 +508,15 @@ impl NcCell {
         vl: &mut NcCell,
     ) -> NcResult<()> {
         error![c_api::nccells_rounded_box(
-            plane, style, channels, ul, ur, ll, lr, hl, vl
+            plane,
+            style.into(),
+            channels,
+            ul,
+            ur,
+            ll,
+            lr,
+            hl,
+            vl
         )]
     }
 
@@ -510,7 +535,15 @@ impl NcCell {
         vl: &mut NcCell,
     ) -> NcResult<()> {
         error![c_api::nccells_ascii_box(
-            plane, style, channels, ul, ur, ll, lr, hl, vl
+            plane,
+            style.into(),
+            channels,
+            ul,
+            ur,
+            ll,
+            lr,
+            hl,
+            vl
         )]
     }
     /// NcCell.[load_box()][NcCell#method.box] with the heavy line
@@ -529,7 +562,15 @@ impl NcCell {
         vl: &mut NcCell,
     ) -> NcResult<()> {
         error![c_api::nccells_heavy_box(
-            plane, style, channels, ul, ur, ll, lr, hl, vl
+            plane,
+            style.into(),
+            channels,
+            ul,
+            ur,
+            ll,
+            lr,
+            hl,
+            vl
         )]
     }
 
@@ -549,7 +590,15 @@ impl NcCell {
         vl: &mut NcCell,
     ) -> NcResult<()> {
         error![c_api::nccells_light_box(
-            plane, style, channels, ul, ur, ll, lr, hl, vl
+            plane,
+            style.into(),
+            channels,
+            ul,
+            ur,
+            ll,
+            lr,
+            hl,
+            vl
         )]
     }
 }

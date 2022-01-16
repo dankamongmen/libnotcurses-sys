@@ -248,7 +248,7 @@ impl NcDirect {
     ///
     /// *C style function: [ncdirect_styles()][c_api::ncdirect_styles].*
     pub fn styles(&self) -> NcStyle {
-        unsafe { c_api::ncdirect_styles(self) as NcStyle }
+        unsafe { c_api::ncdirect_styles(self).into() }
     }
 
     /// Removes the specified styles.
@@ -290,7 +290,7 @@ impl NcDirect {
     ///
     /// *C style function: [ncdirect_supported_styles()][c_api::ncdirect_supported_styles].*
     pub fn supported_styles(&self) -> NcStyle {
-        unsafe { c_api::ncdirect_supported_styles(self) as NcStyle }
+        unsafe { c_api::ncdirect_supported_styles(self).into() }
     }
 
     /// Indicates to use the "default color" for the foreground.
