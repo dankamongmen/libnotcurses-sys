@@ -1,7 +1,5 @@
 //!
 
-use std::fmt;
-
 /// Style bitmask.
 ///
 /// # Default
@@ -33,52 +31,41 @@ impl NcStyle {
     pub const Bold: Self = Self(c_api::NCSTYLE_BOLD);
 }
 
-impl Default for NcStyle {
-    fn default() -> Self {
-        Self::None
+mod std_impls {
+    use std::fmt;
+    use super::{c_api::NcStyle_u16, NcStyle};
+
+    impl Default for NcStyle {
+        fn default() -> Self {
+            Self::None
+        }
+    }
+
+    crate::unit_impl_from![NcStyle, NcStyle_u16];
+
+    // for ncplane_*_styles & ncdirect_*_styles:
+    impl From<NcStyle> for u32 {
+        fn from(style: NcStyle) -> Self {
+            style.0 as u32
+        }
+    }
+
+    crate::unit_impl_ops![bitwise; NcStyle];
+
+    impl fmt::UpperHex for NcStyle {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            let val = self.0;
+            fmt::UpperHex::fmt(&val, f)
+        }
     }
 }
 
-// from (WIP) TODO: macro
-// - all variants
-
-impl From<NcStyle> for c_api::NcStyle_u16 {
-    fn from(style: NcStyle) -> Self {
-        style.0
-    }
-}
-impl<'a> From<&'a mut NcStyle> for &'a mut c_api::NcStyle_u16 {
-    fn from(style: &'a mut NcStyle) -> Self {
-        &mut style.0
-    }
-}
-// TEMP?
-impl From<&mut NcStyle> for *mut c_api::NcStyle_u16 {
-    fn from(style: &mut NcStyle) -> Self {
-        &mut style.0 as *mut c_api::NcStyle_u16
-    }
-}
-
-impl From<c_api::NcStyle_u16> for NcStyle {
-    fn from(value: c_api::NcStyle_u16) -> Self {
+/// # Methods
+impl NcStyle {
+    pub fn new(value: c_api::NcStyle_u16) -> Self {
         Self(value)
     }
-}
 
-impl From<NcStyle> for u32 {
-    fn from(style: NcStyle) -> Self {
-        style.0 as u32
-    }
-}
-
-impl fmt::UpperHex for NcStyle {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let val = self.0;
-        fmt::UpperHex::fmt(&val, f)
-    }
-}
-
-impl NcStyle {
     /// Returns a `Vec` with all the styles contained in the current style.
     pub fn to_vec(&self) -> Vec<NcStyle> {
         let mut v = vec![];

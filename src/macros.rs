@@ -378,3 +378,147 @@ macro_rules! impl_api {
         }
     };
 }
+
+/// Implements multiple variants of `From` between a primitive
+/// and a unit struct containing that primitive.
+#[macro_export]
+#[doc(hidden)]
+macro_rules! unit_impl_from [
+    ($struct:ty, $prim:ty ) => {
+        // from prim
+        impl From<$prim> for $struct {
+            fn from(p: $prim) -> Self { <$struct>::new(p) }
+        }
+        impl<'a> From<&'a $prim> for $struct {
+            fn from(p: &'a $prim) -> Self { <$struct>::new(*p) }
+        }
+        impl<'a> From<&'a mut $prim> for $struct {
+            fn from(p: &'a mut $prim) -> Self { <$struct>::new(*p) }
+        }
+
+        // from struct
+        impl From<$struct> for $prim {
+            fn from(s: $struct) -> Self { s.0 }
+        }
+        impl<'a> From<&'a $struct> for &'a $prim {
+            fn from(s: &'a $struct) -> Self { &s.0 }
+        }
+        impl<'a> From<&'a mut $struct> for &'a mut $prim {
+            fn from(s: &'a mut $struct) -> Self { &mut s.0 }
+        }
+        impl From<&$struct> for *const $prim {
+            fn from(s: &$struct) -> Self { &s.0 as *const $prim}
+        }
+        impl From<&mut $struct> for *mut $prim {
+            fn from(s: &mut $struct) -> Self { &mut s.0 as *mut $prim}
+        }
+    };
+];
+
+/// Implements overloadable operators for a unit struct that contains a primitive.
+#[macro_export]
+#[doc(hidden)]
+macro_rules! unit_impl_ops [
+    // implements the bitwise operators.
+    (bitwise; $type:ty) => {
+        crate::unit_impl_ops![op_refs; BitAnd, bitand, $type];
+        crate::unit_impl_ops![op_refs; BitOr, bitor, $type];
+        crate::unit_impl_ops![op_refs; BitXor, bitxor, $type];
+        crate::unit_impl_ops![op_refs; Shl, shl, $type];
+        crate::unit_impl_ops![op_refs; Shr, shr, $type];
+        crate::unit_impl_ops![op_refs_a; BitAndAssign, bitand_assign, $type];
+        crate::unit_impl_ops![op_refs_a; BitOrAssign, bitor_assign, $type];
+        crate::unit_impl_ops![op_refs_a; BitXorAssign, bitxor_assign, $type];
+        crate::unit_impl_ops![op_refs_a; ShlAssign, shl_assign, $type];
+        crate::unit_impl_ops![op_refs_a; ShrAssign, shr_assign, $type];
+        crate::unit_impl_ops![op_refs_u; Not, not, $type];
+    };
+
+    // implements the arithmetic operators (except neg).
+    (arithmetic; $type:ty) => {
+        crate::unit_impl_ops![op_refs; Add, add, $type];
+        crate::unit_impl_ops![op_refs; Sub, sub, $type];
+        crate::unit_impl_ops![op_refs; Mul, mul, $type];
+        crate::unit_impl_ops![op_refs; Div, div, $type];
+        crate::unit_impl_ops![op_refs; Rem, rem, $type];
+        crate::unit_impl_ops![op_refs; Rem, rem, $type];
+        crate::unit_impl_ops![op_refs_a; AndAssign, and_assign, $type];
+        crate::unit_impl_ops![op_refs_a; OrAssign, or_assign, $type];
+        crate::unit_impl_ops![op_refs_a; XorAssign, xor_assign, $type];
+        crate::unit_impl_ops![op_refs_a; ShlAssign, shl_assign, $type];
+        crate::unit_impl_ops![op_refs_a; ShrAssign, shr_assign, $type];
+    };
+
+    // ----------
+
+    // implements all the variants of a single operator. (non-Assign version)
+    (op_refs; $op:tt, $fn:ident, $type:ty) => {
+        crate::unit_impl_ops![op; $type, $op, $fn, $type, $type];
+        crate::unit_impl_ops![op; $type, $op, $fn, $type, &'b $type];
+        crate::unit_impl_ops![op; $type, $op, $fn, $type, &'b mut $type];
+        crate::unit_impl_ops![op; $type, $op, $fn, &'a $type, $type];
+        crate::unit_impl_ops![op; $type, $op, $fn, &'a $type, &'b $type];
+        crate::unit_impl_ops![op; $type, $op, $fn, &'a $type, &'b mut $type];
+        crate::unit_impl_ops![op; $type, $op, $fn, &'a mut $type, $type];
+        crate::unit_impl_ops![op; $type, $op, $fn, &'a mut $type, &'b $type];
+        crate::unit_impl_ops![op; $type, $op, $fn, &'a mut $type, &'b mut $type];
+    };
+
+    // implements all the variants of a single operator. (Assign version)
+    (op_refs_a; $op:tt, $fn:ident, $type:ty) => {
+        crate::unit_impl_ops![op_a; $op, $fn, $type, $type];
+        crate::unit_impl_ops![op_a; $op, $fn, $type, &'b $type];
+        crate::unit_impl_ops![op_a; $op, $fn, $type, &'b mut $type];
+        crate::unit_impl_ops![op_a; $op, $fn, &'a mut $type, $type];
+        crate::unit_impl_ops![op_a; $op, $fn, &'a mut $type, &'b $type];
+        crate::unit_impl_ops![op_a; $op, $fn, &'a mut $type, &'b mut $type];
+    };
+
+    // implements all the variants of a single operator. (Unary version)
+    (op_refs_u; $op:tt, $fn:ident, $type:ty) => {
+        crate::unit_impl_ops![op_u; $type, $op, $fn, $type];
+        crate::unit_impl_ops![op_u; $type, $op, $fn, &'a $type];
+        crate::unit_impl_ops![op_u; $type, $op, $fn, &'a mut $type];
+    };
+
+    // ----------
+
+    // implements a single operator. (non-Assign version)
+    //
+    // # Arguments
+    //
+    // - $type:  the main type for the implementation, must be owned.
+    // - $op:    the operator trait
+    // - $fn:    the operator function
+    // - $for:   the main type for the implementation, can be a reference.
+    // - $rhs:   the right hand side of the operation, can be a reference.
+    //
+    (op; $type:ty, $op:tt, $fn: ident, $for:ty, $rhs:ty) => {
+        impl<'a, 'b> core::ops::$op<$rhs> for $for {
+            type Output = $type;
+            fn $fn(self, rhs: $rhs) -> Self::Output {
+                <$type>::new(self.0.$fn(rhs.0))
+            }
+        }
+    };
+
+    // implements a single operator. (Assign version)
+    (op_a; $op:tt, $fn: ident, $for:ty, $rhs:ty) => {
+        impl<'a, 'b> core::ops::$op<$rhs> for $for {
+            fn $fn(&mut self, rhs: $rhs) {
+                self.0.$fn(rhs.0)
+            }
+        }
+    };
+
+    // implements a single operator. (Unary version)
+    (op_u; $type:ty, $op:tt, $fn: ident, $for:ty) => {
+        impl<'a> core::ops::$op for $for {
+            type Output = $type;
+            fn $fn(self) -> Self::Output {
+                <$type>::new(self.0.$fn())
+            }
+        }
+    };
+
+];
