@@ -130,7 +130,7 @@ pub use log_level::{NcLogLevel, NcLogLevelApi};
 pub use macros::*;
 pub use notcurses::{Nc, NcOptions};
 pub use palette::{NcPalette, NcPaletteIndex};
-pub use pixel::{NcPixel, NcPixelApi, NcPixelGeometry, NcPixelImpl, NcPixelImplApi};
+pub use pixel::{NcPixel, NcPixelGeometry, NcPixelImpl};
 pub use plane::{NcPlane, NcPlaneOptions, NcPlaneOptionsBuilder};
 pub use r#box::NcBoxMask;
 pub use resizecb::{NcResizeCb, NcResizeCbApi, NcResizeCbUnsafe};
@@ -188,7 +188,7 @@ pub mod c_api {
     pub use crate::metric::constants::*;
     pub use crate::notcurses::constants::*;
     pub use crate::palette::constants::*;
-    pub use crate::pixel::constants::*;
+    pub use crate::pixel::c_api::*;
     pub use crate::plane::options::constants::*;
     pub use crate::r#box::c_api::*;
     pub use crate::scale::c_api::*;

@@ -520,7 +520,7 @@ impl NcVisual {
     pub fn at_yx(&self, y: NcDim, x: NcDim) -> NcResult<NcPixel> {
         let mut pixel = 0;
         let res = unsafe { c_api::ncvisual_at_yx(self, y, x, &mut pixel) };
-        error![res, "NcVisual.at_yx()", pixel]
+        error![res, "NcVisual.at_yx()", pixel.into()]
     }
 
     /// Sets the specified pixel.
@@ -528,8 +528,8 @@ impl NcVisual {
     /// *C style function: [ncvisual_set_yx()][c_api::ncvisual_set_yx].*
     pub fn set_yx(&mut self, y: NcDim, x: NcDim, pixel: NcPixel) -> NcResult<()> {
         error![
-            unsafe { c_api::ncvisual_set_yx(self, y, x, pixel) },
-            &format!["NcVisual.set_yx({}, {}, {})", y, x, pixel]
+            unsafe { c_api::ncvisual_set_yx(self, y, x, pixel.into()) },
+            &format!["NcVisual.set_yx({}, {}, {:?})", y, x, pixel]
         ]
     }
 

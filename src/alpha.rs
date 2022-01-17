@@ -74,7 +74,7 @@ mod std_impls {
                 NCALPHA_HIGHCONTRAST => HighContrast,
                 NCALPHA_OPAQUE => Opaque,
                 NCALPHA_TRANSPARENT => Transparent,
-                _ => Opaque, // invalid values default to `Opaque`
+                _ => Self::default(),
             }
         }
     }

@@ -16,7 +16,6 @@
 ///
 /// # Default
 /// *[`NcBoxMask::None`]
-
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct NcBoxMask(pub c_api::NcBoxMask_u32);
 

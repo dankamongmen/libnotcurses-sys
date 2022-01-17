@@ -18,7 +18,7 @@ fn main() -> NcResult<()> {
     let nc: &mut Nc = unsafe { Nc::new()? };
 
     // Clause: Pixel must be supported
-    if 0 == nc.check_pixel_support() {
+    if !nc.canpixel() {
         unsafe { nc.stop()? };
         return Err(NcError::with_msg(
             1,

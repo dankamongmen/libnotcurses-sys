@@ -310,7 +310,7 @@ impl Nc {
     /// *C style function: [notcurses_check_pixel_support()][c_api::notcurses_check-pixel_support].*
     #[allow(clippy::wildcard_in_or_patterns)]
     pub fn check_pixel_support(&self) -> NcPixelImpl {
-        unsafe { c_api::notcurses_check_pixel_support(self) }
+        unsafe { c_api::notcurses_check_pixel_support(self) }.into()
     }
 
     /// Returns the default foreground color, if it is known.

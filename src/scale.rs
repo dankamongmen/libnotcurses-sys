@@ -83,7 +83,7 @@ mod std_impls {
                 NCSCALE_NONE_HIRES => NoneHires,
                 NCSCALE_SCALE_HIRES => ScaleHires,
                 NCSCALE_STRETCH => Stretch,
-                _ => None, // invalid values default to `None`
+                _ => Self::default(),
             }
         }
     }

@@ -132,7 +132,7 @@ mod std_impls {
                 NCBLIT_PIXEL => Pixel,
                 NCBLIT_4x1 => _4x1,
                 NCBLIT_8x1 => _8x1,
-                _ => Default, // invalid values default to `Default`
+                _ => Self::default(),
             }
         }
     }
@@ -162,7 +162,7 @@ pub(crate) mod c_api {
     ///
     /// It's recommended to use [`NcBlitter`][crate::NcBlitter] instead.
     ///
-    /// # Associated `c_api` constants:
+    /// # Associated `c_api` constants
     ///
     /// - [`NCBLIT_DEFAULT`]
     /// - [`NCBLIT_1x1`]
