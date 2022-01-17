@@ -126,8 +126,7 @@ pub use fd::{NcFdPlane, NcFdPlaneOptions, NcSubproc, NcSubprocOptions};
 pub use file::NcFile;
 pub use input::{NcInput, NcInputType, NcMiceEvents, NcMiceEventsApi, NcReceived};
 pub use key::{NcKey, NcKeyMod};
-pub use log_level::{NcLogLevel, NcLogLevelApi};
-pub use macros::*;
+pub use log_level::NcLogLevel;
 pub use notcurses::{Nc, NcOptions};
 pub use palette::{NcPalette, NcPaletteIndex};
 pub use pixel::{NcPixel, NcPixelGeometry, NcPixelImpl};
@@ -184,7 +183,7 @@ pub mod c_api {
     pub use crate::error::constants::*;
     pub use crate::input::constants::*;
     pub use crate::key::constants::*;
-    pub use crate::log_level::constants::*;
+    pub use crate::log_level::c_api::*;
     pub use crate::metric::constants::*;
     pub use crate::notcurses::constants::*;
     pub use crate::palette::constants::*;

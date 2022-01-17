@@ -1,65 +1,154 @@
-/// Log level for [`NcOptions`][crate::NcOptions] (alias of `i32`).
+//!
+
+/// Log level for [`NcOptions`][crate::NcOptions].
+///
+/// # Default
+///
 ///
 /// These log levels consciously map cleanly to those of libav; notcurses itself
 /// does not use this full granularity. The log level does not affect the opening
-/// and closing banners, which can be disabled via the `NcOptions`
-/// `NCOPTION_SUPPRESS_BANNERS`.
+/// and closing banners, which can be disabled via `NcOptions::SUPPRESS_BANNERS`.
+///
 /// Note that if stderr is connected to the same terminal on which we're
 /// rendering, any kind of logging will disrupt the output.
-pub type NcLogLevel = i32; // crate::bindings::ffi::ncloglevel_e;
+#[repr(i32)]
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum NcLogLevel {
+    /// Default. print nothing once fullscreen service begins.
+    Silent = c_api::NCLOGLEVEL_SILENT,
 
-crate::impl_api![
-    NcLogLevel,
-    NcLogLevelApi,
+    /// Print diagnostics immediately related to crashing.
+    Panic = c_api::NCLOGLEVEL_PANIC,
+
+    /// We're hanging around, but we've had a horrible fault.
+    Fatal = c_api::NCLOGLEVEL_FATAL,
+
+    /// We can't keep doin' this, but we can do other things.
+    Error = c_api::NCLOGLEVEL_ERROR,
+
+    /// You probably don't want what's happening to happen.
+    Warning = c_api::NCLOGLEVEL_WARNING,
+
+    /// "Standard information".
+    Info = c_api::NCLOGLEVEL_INFO,
+
+    /// "Detailed information".
+    Verbose = c_api::NCLOGLEVEL_VERBOSE,
+
+    /// This is honestly a bit much.
+    Debug = c_api::NCLOGLEVEL_DEBUG,
+
+    /// There's probably a better way to do what you want.
+    Trace = c_api::NCLOGLEVEL_TRACE,
+}
+
+mod std_impls {
+    use super::{c_api, NcLogLevel};
+    use std::fmt;
+
+    impl Default for NcLogLevel {
+        fn default() -> Self {
+            Self::Silent
+        }
+    }
+
+    impl fmt::Display for NcLogLevel {
+        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+            use NcLogLevel::*;
+            write!(
+                f,
+                "{}",
+                match self {
+                    Silent => "Silent",
+                    Panic => "Panic",
+                    Fatal => "Fatal",
+                    Error => "Error",
+                    Warning => "Warning",
+                    Info => "Info",
+                    Verbose => "Verbose",
+                    Debug => "Debug",
+                    Trace => "Trace",
+                }
+            )
+        }
+    }
+
+    impl From<c_api::NcLogLevel_i32> for NcLogLevel {
+        fn from(log_level: c_api::NcLogLevel_i32) -> Self {
+            use {c_api::*, NcLogLevel::*};
+            match log_level {
+                NCLOGLEVEL_SILENT => Silent,
+                NCLOGLEVEL_PANIC => Panic,
+                NCLOGLEVEL_FATAL => Fatal,
+                NCLOGLEVEL_ERROR => Error,
+                NCLOGLEVEL_WARNING => Warning,
+                NCLOGLEVEL_INFO => Info,
+                NCLOGLEVEL_VERBOSE => Verbose,
+                NCLOGLEVEL_DEBUG => Debug,
+                NCLOGLEVEL_TRACE => Trace,
+                _ => Self::default(),
+            }
+        }
+    }
+
+    impl From<NcLogLevel> for c_api::NcLogLevel_i32 {
+        fn from(loglevel: NcLogLevel) -> Self {
+            use {c_api::*, NcLogLevel::*};
+            match loglevel {
+                Silent => NCLOGLEVEL_SILENT,
+                Panic => NCLOGLEVEL_PANIC,
+                Fatal => NCLOGLEVEL_FATAL,
+                Error => NCLOGLEVEL_ERROR,
+                Warning => NCLOGLEVEL_WARNING,
+                Info => NCLOGLEVEL_INFO,
+                Verbose => NCLOGLEVEL_VERBOSE,
+                Debug => NCLOGLEVEL_DEBUG,
+                Trace => NCLOGLEVEL_TRACE,
+            }
+        }
+    }
+}
+
+pub(crate) mod c_api {
+    use crate::bindings::ffi;
+
+    /// Log level for [`NcOptions`][crate::NcOptions].
+    ///
+    /// It's recommended to use [`NcLogLevel`][crate::NcLogLevel] instead.
+    ///
+    /// These log levels consciously map cleanly to those of libav; notcurses itself
+    /// does not use this full granularity. The log level does not affect the opening
+    /// and closing banners, which can be disabled via the `NcOptions`
+    /// `NCOPTION_SUPPRESS_BANNERS`.
+    ///
+    /// Note that if stderr is connected to the same terminal on which we're
+    /// rendering, any kind of logging will disrupt the output.
+    pub type NcLogLevel_i32 = ffi::ncloglevel_e;
+
     /// this is honestly a bit much.
-    const DEBUG: NcLogLevel = constants::NCLOGLEVEL_DEBUG;,
-    /// we can't keep doin' this, but we can do other things.
-    const ERROR: NcLogLevel = constants::NCLOGLEVEL_ERROR;,
-    /// we're hanging around, but we've had a horrible fault.
-    const FATAL: NcLogLevel = constants::NCLOGLEVEL_FATAL;,
-    /// "detailed information.
-    const INFO: NcLogLevel = constants::NCLOGLEVEL_INFO;,
-    /// print diagnostics immediately related to crashing.
-    const PANIC: NcLogLevel = constants::NCLOGLEVEL_PANIC;,
-    /// default. print nothing once fullscreen service begins.
-    const SILENT: NcLogLevel = constants::NCLOGLEVEL_SILENT;,
-    /// there's probably a better way to do what you want.
-    const TRACE: NcLogLevel = constants::NCLOGLEVEL_TRACE;,
-    /// "detailed information.
-    const VERBOSE: NcLogLevel = constants::NCLOGLEVEL_VERBOSE;,
-    /// you probably don't want what's happening to happen.
-    const WARNING: NcLogLevel = constants::NCLOGLEVEL_WARNING;
-];
-
-pub(crate) mod constants {
-    use crate::NcLogLevel;
-
-    /// this is honestly a bit much.
-    pub const NCLOGLEVEL_DEBUG: NcLogLevel = crate::bindings::ffi::ncloglevel_e_NCLOGLEVEL_DEBUG;
+    pub const NCLOGLEVEL_DEBUG: NcLogLevel_i32 = ffi::ncloglevel_e_NCLOGLEVEL_DEBUG;
 
     /// we can't keep doin' this, but we can do other things.
-    pub const NCLOGLEVEL_ERROR: NcLogLevel = crate::bindings::ffi::ncloglevel_e_NCLOGLEVEL_ERROR;
+    pub const NCLOGLEVEL_ERROR: NcLogLevel_i32 = ffi::ncloglevel_e_NCLOGLEVEL_ERROR;
 
     /// we're hanging around, but we've had a horrible fault.
-    pub const NCLOGLEVEL_FATAL: NcLogLevel = crate::bindings::ffi::ncloglevel_e_NCLOGLEVEL_FATAL;
+    pub const NCLOGLEVEL_FATAL: NcLogLevel_i32 = ffi::ncloglevel_e_NCLOGLEVEL_FATAL;
 
     /// "detailed information.
-    pub const NCLOGLEVEL_INFO: NcLogLevel = crate::bindings::ffi::ncloglevel_e_NCLOGLEVEL_INFO;
+    pub const NCLOGLEVEL_INFO: NcLogLevel_i32 = ffi::ncloglevel_e_NCLOGLEVEL_INFO;
 
     /// print diagnostics immediately related to crashing.
-    pub const NCLOGLEVEL_PANIC: NcLogLevel = crate::bindings::ffi::ncloglevel_e_NCLOGLEVEL_PANIC;
+    pub const NCLOGLEVEL_PANIC: NcLogLevel_i32 = ffi::ncloglevel_e_NCLOGLEVEL_PANIC;
 
     /// default. print nothing once fullscreen service begins.
-    pub const NCLOGLEVEL_SILENT: NcLogLevel = crate::bindings::ffi::ncloglevel_e_NCLOGLEVEL_SILENT;
+    pub const NCLOGLEVEL_SILENT: NcLogLevel_i32 = ffi::ncloglevel_e_NCLOGLEVEL_SILENT;
 
     /// there's probably a better way to do what you want.
-    pub const NCLOGLEVEL_TRACE: NcLogLevel = crate::bindings::ffi::ncloglevel_e_NCLOGLEVEL_TRACE;
+    pub const NCLOGLEVEL_TRACE: NcLogLevel_i32 = ffi::ncloglevel_e_NCLOGLEVEL_TRACE;
 
     /// "detailed information.
-    pub const NCLOGLEVEL_VERBOSE: NcLogLevel =
-        crate::bindings::ffi::ncloglevel_e_NCLOGLEVEL_VERBOSE;
+    pub const NCLOGLEVEL_VERBOSE: NcLogLevel_i32 = ffi::ncloglevel_e_NCLOGLEVEL_VERBOSE;
 
     /// you probably don't want what's happening to happen.
-    pub const NCLOGLEVEL_WARNING: NcLogLevel =
-        crate::bindings::ffi::ncloglevel_e_NCLOGLEVEL_WARNING;
+    pub const NCLOGLEVEL_WARNING: NcLogLevel_i32 = ffi::ncloglevel_e_NCLOGLEVEL_WARNING;
 }

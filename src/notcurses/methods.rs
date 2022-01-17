@@ -13,18 +13,18 @@ use crate::{
 /// # `NcOptions` Constructors
 impl NcOptions {
     /// New `NcOptions`.
-    pub const fn new() -> Self {
-        Self::with_all_options(0, 0, 0, 0, 0, 0)
+    pub fn new() -> Self {
+        Self::with_all_options(NcLogLevel::Silent, 0, 0, 0, 0, 0)
     }
 
     /// New `NcOptions`, with margins.
-    pub const fn with_margins(top: NcDim, right: NcDim, bottom: NcDim, left: NcDim) -> Self {
-        Self::with_all_options(0, top, right, bottom, left, 0)
+    pub fn with_margins(top: NcDim, right: NcDim, bottom: NcDim, left: NcDim) -> Self {
+        Self::with_all_options(NcLogLevel::Silent, top, right, bottom, left, 0)
     }
 
     /// New `NcOptions`, with flags.
-    pub const fn with_flags(flags: u64) -> Self {
-        Self::with_all_options(0, 0, 0, 0, 0, flags)
+    pub fn with_flags(flags: u64) -> Self {
+        Self::with_all_options(NcLogLevel::Silent, 0, 0, 0, 0, flags)
     }
 
     /// New `NcOptions`, with all the options.
@@ -50,7 +50,7 @@ impl NcOptions {
     ///   General flags; This is expressed as a bitfield so that future options
     ///   can be added without reshaping the struct.
     ///   Undefined bits must be set to 0.
-    pub const fn with_all_options(
+    pub fn with_all_options(
         loglevel: NcLogLevel,
         margin_t: NcDim,
         margin_r: NcDim,
@@ -58,7 +58,15 @@ impl NcOptions {
         margin_l: NcDim,
         flags: u64,
     ) -> Self {
-        Self { termtype: null(), loglevel, margin_t, margin_r, margin_b, margin_l, flags }
+        Self {
+            termtype: null(),
+            loglevel: loglevel.into(),
+            margin_t,
+            margin_r,
+            margin_b,
+            margin_l,
+            flags,
+        }
     }
 }
 
