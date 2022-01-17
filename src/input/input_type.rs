@@ -1,6 +1,6 @@
 //!
 
-use super::constants;
+use super::c_api;
 
 /// The type of the [`NcInput`][crate::NcInput] event.
 ///
@@ -32,10 +32,10 @@ impl From<NcInputType> for u32 {
     fn from(it: NcInputType) -> Self {
         use NcInputType::*;
         match it {
-            Unknown => constants::NCINTYPE_UNKNOWN,
-            Press => constants::NCINTYPE_PRESS,
-            Repeat => constants::NCINTYPE_REPEAT,
-            Release => constants::NCINTYPE_RELEASE,
+            Unknown => c_api::NCINTYPE_UNKNOWN,
+            Press => c_api::NCINTYPE_PRESS,
+            Repeat => c_api::NCINTYPE_REPEAT,
+            Release => c_api::NCINTYPE_RELEASE,
         }
     }
 }
@@ -44,10 +44,10 @@ impl From<u32> for NcInputType {
     fn from(value: u32) -> Self {
         use NcInputType::*;
         match value {
-            constants::NCINTYPE_UNKNOWN => Unknown,
-            constants::NCINTYPE_PRESS => Press,
-            constants::NCINTYPE_REPEAT => Repeat,
-            constants::NCINTYPE_RELEASE => Release,
+            c_api::NCINTYPE_UNKNOWN => Unknown,
+            c_api::NCINTYPE_PRESS => Press,
+            c_api::NCINTYPE_REPEAT => Repeat,
+            c_api::NCINTYPE_RELEASE => Release,
             _ => Unknown,
         }
     }

@@ -160,6 +160,6 @@ pub(crate) mod c_api {
     /// drawn (since at most 2 edges can touch a box's corner).
     pub const NCBOXCORNER_MASK: NcBoxMask_u32 = crate::bindings::ffi::NCBOXCORNER_MASK;
 
-    /// The number of bits [`NCBOXCORNER_MASK`] is shifted in [`NcBoxMask_u32`].
+    /// [`NcBoxMask_u32`] the number of bits [`NCBOXCORNER_MASK`] is shifted.
     pub const NCBOXCORNER_SHIFT: NcBoxMask_u32 = crate::bindings::ffi::NCBOXCORNER_SHIFT;
 }

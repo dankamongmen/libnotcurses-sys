@@ -124,7 +124,7 @@ pub use error::{NcError, NcIntResult, NcIntResultApi, NcResult};
 pub use fade::{NcFadeCb, NcFadeCtx};
 pub use fd::{NcFdPlane, NcFdPlaneOptions, NcSubproc, NcSubprocOptions};
 pub use file::NcFile;
-pub use input::{NcInput, NcInputType, NcMiceEvents, NcMiceEventsApi, NcReceived};
+pub use input::{NcInput, NcInputType, NcMiceEvents, NcReceived};
 pub use key::{NcKey, NcKeyMod};
 pub use log_level::NcLogLevel;
 pub use notcurses::{Nc, NcOptions};
@@ -181,7 +181,7 @@ pub mod c_api {
     pub use crate::channel::constants::*;
     pub use crate::direct::constants::*;
     pub use crate::error::constants::*;
-    pub use crate::input::constants::*;
+    pub use crate::input::c_api::*;
     pub use crate::key::constants::*;
     pub use crate::log_level::c_api::*;
     pub use crate::metric::constants::*;

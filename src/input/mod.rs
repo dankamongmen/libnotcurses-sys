@@ -15,7 +15,7 @@
 
 use std::ffi::CStr;
 
-use crate::{c_api, NcDim, NcKey};
+use crate::{NcDim, NcKey};
 
 pub(crate) mod reimplemented;
 
@@ -23,7 +23,7 @@ mod input_type;
 pub use input_type::NcInputType;
 
 mod mice_events;
-pub use mice_events::{NcMiceEvents, NcMiceEventsApi};
+pub use mice_events::NcMiceEvents;
 
 /// A received character or event.
 #[non_exhaustive]
@@ -179,72 +179,72 @@ impl NcInput {
 
     /// Returns true if there are no modifiers present.
     ///
-    /// *C style function: [ncinput_nomod_p()][c_api::ncinput_nomod_p].*
+    /// *C style function: [ncinput_nomod_p()][crate::c_api::ncinput_nomod_p].*
     pub fn nomod_p(&self) -> bool {
-        c_api::ncinput_nomod_p(self)
+        crate::c_api::ncinput_nomod_p(self)
     }
 
     /// Returns true if the [`Shift`][crate::NcKeyMod::Shift] modifier is present.
     ///
-    /// *C style function: [ncinput_shift_p()][c_api::ncinput_shift_p].*
+    /// *C style function: [ncinput_shift_p()][crate::c_api::ncinput_shift_p].*
     pub fn shift_p(&self) -> bool {
-        c_api::ncinput_shift_p(self)
+        crate::c_api::ncinput_shift_p(self)
     }
 
     /// Returns true if the [`Alt`][crate::NcKeyMod::Alt] modifier is present.
     ///
-    /// *C style function: [ncinput_alt_p()][c_api::ncinput_alt_p].*
+    /// *C style function: [ncinput_alt_p()][crate::c_api::ncinput_alt_p].*
     pub fn alt_p(&self) -> bool {
-        c_api::ncinput_alt_p(self)
+        crate::c_api::ncinput_alt_p(self)
     }
 
     /// Returns true if the [`Ctrl`][crate::NcKeyMod::Ctrl] modifier is present.
     ///
-    /// *C style function: [ncinput_ctrl_p()][c_api::ncinput_ctrl_p].*
+    /// *C style function: [ncinput_ctrl_p()][crate::c_api::ncinput_ctrl_p].*
     pub fn ctrl_p(&self) -> bool {
-        c_api::ncinput_ctrl_p(self)
+        crate::c_api::ncinput_ctrl_p(self)
     }
 
     /// Returns true if the [`Meta`][crate::NcKeyMod::Meta] modifier is present.
     ///
-    /// *C style function: [ncinput_meta_p()][c_api::ncinput_meta_p].*
+    /// *C style function: [ncinput_meta_p()][crate::c_api::ncinput_meta_p].*
     pub fn meta_p(&self) -> bool {
-        c_api::ncinput_meta_p(self)
+        crate::c_api::ncinput_meta_p(self)
     }
 
     /// Returns true if the [`Super`][crate::NcKeyMod::Super] modifier is present.
     ///
-    /// *C style function: [ncinput_super_p()][c_api::ncinput_super_p].*
+    /// *C style function: [ncinput_super_p()][crate::c_api::ncinput_super_p].*
     pub fn super_p(&self) -> bool {
-        c_api::ncinput_super_p(self)
+        crate::c_api::ncinput_super_p(self)
     }
 
     /// Returns true if the [`Hyper`][crate::NcKeyMod::Hyper] modifier is present.
     ///
-    /// *C style function: [ncinput_hyper_p()][c_api::ncinput_hyper_p].*
+    /// *C style function: [ncinput_hyper_p()][crate::c_api::ncinput_hyper_p].*
     pub fn hyper_p(&self) -> bool {
-        c_api::ncinput_hyper_p(self)
+        crate::c_api::ncinput_hyper_p(self)
     }
 
     /// Returns true if the [`CapsLock`][crate::NcKeyMod::CapsLock] modifier is present.
     ///
-    /// *C style function: [ncinput_capslock_p()][c_api::ncinput_capslock_p].*
+    /// *C style function: [ncinput_capslock_p()][crate::c_api::ncinput_capslock_p].*
     pub fn capslock_p(&self) -> bool {
-        c_api::ncinput_capslock_p(self)
+        crate::c_api::ncinput_capslock_p(self)
     }
 
     /// Returns true if the [`NumLock`][crate::NcKeyMod::NumLock] modifier is present.
     ///
-    /// *C style function: [ncinput_numlock_p()][c_api::ncinput_numlock_p].*
+    /// *C style function: [ncinput_numlock_p()][crate::c_api::ncinput_numlock_p].*
     pub fn numlock_p(&self) -> bool {
-        c_api::ncinput_numlock_p(self)
+        crate::c_api::ncinput_numlock_p(self)
     }
 
     /// Returns true if both `NcInput`s are equal.
     ///
-    /// *C style function: [ncinput_equal_p()][c_api::ncinput_equal_p].*
+    /// *C style function: [ncinput_equal_p()][crate::c_api::ncinput_equal_p].*
     pub fn equal_p(&self, other: &NcInput) -> bool {
-        c_api::ncinput_equal_p(self, other)
+        crate::c_api::ncinput_equal_p(self, other)
     }
 }
 
@@ -286,35 +286,40 @@ mod std_impls {
     }
 }
 
-pub(crate) mod constants {
-    use crate::NcMiceEvents;
+pub(crate) mod c_api {
+    use crate::bindings::ffi;
+
+    /// A bitmask for mice input events.
+    ///
+    /// It's recommended to use [`NcMiceEvents`][crate::NcMiceEvents] instead.
+    pub type NcMiceEvents_u32 = u32;
 
     /// *Unknown* input type event.
-    pub const NCINTYPE_UNKNOWN: u32 = crate::bindings::ffi::ncintype_e_NCTYPE_UNKNOWN;
+    pub const NCINTYPE_UNKNOWN: u32 = ffi::ncintype_e_NCTYPE_UNKNOWN;
 
     /// *Press* input type event.
-    pub const NCINTYPE_PRESS: u32 = crate::bindings::ffi::ncintype_e_NCTYPE_PRESS;
+    pub const NCINTYPE_PRESS: u32 = ffi::ncintype_e_NCTYPE_PRESS;
 
     /// *Repeat* input type event.
-    pub const NCINTYPE_REPEAT: u32 = crate::bindings::ffi::ncintype_e_NCTYPE_REPEAT;
+    pub const NCINTYPE_REPEAT: u32 = ffi::ncintype_e_NCTYPE_REPEAT;
 
     /// *Release* input type event.
-    pub const NCINTYPE_RELEASE: u32 = crate::bindings::ffi::ncintype_e_NCTYPE_RELEASE;
+    pub const NCINTYPE_RELEASE: u32 = ffi::ncintype_e_NCTYPE_RELEASE;
 
     // Mice events:
 
     /// Disables all mice events.
-    pub const NCMICE_NO_EVENTS: NcMiceEvents = crate::bindings::ffi::NCMICE_NO_EVENTS;
+    pub const NCMICE_NO_EVENTS: NcMiceEvents_u32 = ffi::NCMICE_NO_EVENTS;
 
     /// Enables mice *move* events
-    pub const NCMICE_MOVE_EVENTS: NcMiceEvents = crate::bindings::ffi::NCMICE_MOVE_EVENT;
+    pub const NCMICE_MOVE_EVENTS: NcMiceEvents_u32 = ffi::NCMICE_MOVE_EVENT;
 
     /// Enables mice *button** events
-    pub const NCMICE_BUTTON_EVENTS: NcMiceEvents = crate::bindings::ffi::NCMICE_BUTTON_EVENT;
+    pub const NCMICE_BUTTON_EVENTS: NcMiceEvents_u32 = ffi::NCMICE_BUTTON_EVENT;
 
     /// Enables mice *drag* events
-    pub const NCMICE_DRAG_EVENTS: NcMiceEvents = crate::bindings::ffi::NCMICE_DRAG_EVENT;
+    pub const NCMICE_DRAG_EVENTS: NcMiceEvents_u32 = ffi::NCMICE_DRAG_EVENT;
 
     /// Enables all mice events.
-    pub const NCMICE_ALL_EVENTS: NcMiceEvents = crate::bindings::ffi::NCMICE_ALL_EVENTS;
+    pub const NCMICE_ALL_EVENTS: NcMiceEvents_u32 = ffi::NCMICE_ALL_EVENTS;
 }

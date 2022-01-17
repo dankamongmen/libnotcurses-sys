@@ -5,9 +5,9 @@ use core::ptr::{null, null_mut};
 use crate::{
     c_api::{self, notcurses_init},
     cstring, error, error_ref_mut, rstring, rstring_free, Nc, NcAlign, NcBlitter, NcCapabilities,
-    NcChannels, NcDim, NcError, NcFile, NcInput, NcLogLevel, NcMiceEvents, NcMiceEventsApi,
-    NcOptions, NcPixelImpl, NcPlane, NcReceived, NcResult, NcRgb, NcScale, NcStats, NcStyle,
-    NcTime, NcVGeom, NcVisual, NcVisualGeometry, NcVisualOptions,
+    NcChannels, NcDim, NcError, NcFile, NcInput, NcLogLevel, NcMiceEvents, NcOptions, NcPixelImpl,
+    NcPlane, NcReceived, NcResult, NcRgb, NcScale, NcStats, NcStyle, NcTime, NcVGeom, NcVisual,
+    NcVisualGeometry, NcVisualOptions,
 };
 
 /// # `NcOptions` Constructors
@@ -633,7 +633,7 @@ impl Nc {
     ///
     /// *C style function: [notcurses_mice_disable()][c_api::notcurses_mice_disable].*
     pub fn mice_disable(&mut self) -> NcResult<()> {
-        self.mice_enable(NcMiceEvents::NO_EVENTS)
+        self.mice_enable(NcMiceEvents::None)
     }
 
     /// Enables mice events according to `eventmask`.
@@ -645,7 +645,7 @@ impl Nc {
     /// *C style function: [notcurses_mice_enable()][c_api::notcurses_mice_enable].*
     pub fn mice_enable(&mut self, eventmask: NcMiceEvents) -> NcResult<()> {
         error![
-            unsafe { c_api::notcurses_mice_enable(self, eventmask) },
+            unsafe { c_api::notcurses_mice_enable(self, eventmask.into()) },
             "Nc.mice_enable()"
         ]
     }
