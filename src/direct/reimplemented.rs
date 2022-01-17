@@ -3,8 +3,8 @@
 use core::ptr::{null, null_mut};
 
 use crate::{
-    c_api, cstring, NcCapabilities, NcChannels, NcComponent, NcDim, NcDirect, NcInput, NcIntResult,
-    NcRgb, NcTime,
+    c_api::{self, NcResult_i32},
+    cstring, NcCapabilities, NcChannels, NcComponent, NcDim, NcDirect, NcInput, NcRgb, NcTime,
 };
 
 /// Can we directly specify RGB values per cell, or only use palettes?
@@ -75,14 +75,14 @@ pub fn ncdirect_capabilities(ncd: &NcDirect) -> NcCapabilities {
 ///
 /// *Method: NcDirect.[get_blocking()][NcDirect#method.get_blocking].*
 #[inline]
-pub fn ncdirect_get_blocking(ncd: &mut NcDirect, input: Option<&mut NcInput>) -> NcIntResult {
+pub fn ncdirect_get_blocking(ncd: &mut NcDirect, input: Option<&mut NcInput>) -> NcResult_i32 {
     let input_ptr;
     if let Some(i) = input {
         input_ptr = i as *mut _;
     } else {
         input_ptr = null_mut();
     }
-    unsafe { c_api::ncdirect_get(ncd, null(), input_ptr) as NcIntResult }
+    unsafe { c_api::ncdirect_get(ncd, null(), input_ptr) as NcResult_i32 }
 }
 
 /// Reads input without blocking.
@@ -95,7 +95,7 @@ pub fn ncdirect_get_blocking(ncd: &mut NcDirect, input: Option<&mut NcInput>) ->
 ///
 /// *Method: NcDirect.[get_nblock()][NcDirect#method.get_nblock].*
 #[inline]
-pub fn ncdirect_get_nblock(ncd: &mut NcDirect, input: Option<&mut NcInput>) -> NcIntResult {
+pub fn ncdirect_get_nblock(ncd: &mut NcDirect, input: Option<&mut NcInput>) -> NcResult_i32 {
     let input_ptr;
     if let Some(i) = input {
         input_ptr = i as *mut _;
@@ -104,7 +104,7 @@ pub fn ncdirect_get_nblock(ncd: &mut NcDirect, input: Option<&mut NcInput>) -> N
     }
     unsafe {
         let ts = NcTime::new(0, 0);
-        c_api::ncdirect_get(ncd, &ts, input_ptr) as NcIntResult
+        c_api::ncdirect_get(ncd, &ts, input_ptr) as NcResult_i32
     }
 }
 
@@ -117,7 +117,7 @@ pub fn ncdirect_set_fg_rgb8(
     red: NcComponent,
     green: NcComponent,
     blue: NcComponent,
-) -> NcIntResult {
+) -> NcResult_i32 {
     let rgb = (red as NcRgb) << 16 | (green as NcRgb) << 8 | blue as NcRgb;
     unsafe { c_api::ncdirect_set_fg_rgb(ncd, rgb) }
 }
@@ -131,7 +131,7 @@ pub fn ncdirect_set_bg_rgb8(
     red: NcComponent,
     green: NcComponent,
     blue: NcComponent,
-) -> NcIntResult {
+) -> NcResult_i32 {
     let rgb = (red as NcRgb) << 16 | (green as NcRgb) << 8 | blue as NcRgb;
     unsafe { c_api::ncdirect_set_bg_rgb(ncd, rgb) }
 }
@@ -155,7 +155,7 @@ pub fn ncdirect_hline_interp(
     len: NcDim,
     h1: NcChannels,
     h2: NcChannels,
-) -> NcIntResult {
+) -> NcResult_i32 {
     #[cfg(any(target_arch = "armv7l", target_arch = "i686"))]
     let egc_ptr = cstring![egc] as *const i8;
     #[cfg(not(any(target_arch = "armv7l", target_arch = "i686")))]
@@ -182,7 +182,7 @@ pub fn ncdirect_vline_interp(
     len: NcDim,
     h1: NcChannels,
     h2: NcChannels,
-) -> NcIntResult {
+) -> NcResult_i32 {
     #[cfg(any(target_arch = "armv7l", target_arch = "i686"))]
     let egc_ptr = cstring![egc] as *const i8;
     #[cfg(not(any(target_arch = "armv7l", target_arch = "i686")))]

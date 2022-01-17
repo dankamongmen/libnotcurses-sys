@@ -1,8 +1,8 @@
 use crate::{
-    c_api::{self, nctree_create},
+    c_api::{self, nctree_create, NCRESULT_ERR},
     error, error_ref_mut,
     widgets::{NcTree, NcTreeItem, NcTreeOptions},
-    NcError, NcInput, NcIntResult, NcIntResultApi, NcPlane, NcResult,
+    NcError, NcInput, NcPlane, NcResult,
 };
 
 /// # `NcTree` constructors & destructors
@@ -41,7 +41,7 @@ impl NcTree {
     //     if !res.is_null() {
     //         Ok(unsafe { &mut *(res as *mut NcTreeItem) })
     //     } else {
-    //         Err(NcError::with_msg(NcIntResult::ERR, "NcTree.goto()"))
+    //         Err(NcError::with_msg(NCRESULT_ERR, "NcTree.goto()"))
     //     }
     // }
 
@@ -73,7 +73,7 @@ impl NcTree {
         if !res.is_null() {
             Ok(unsafe { &mut *(res as *mut NcTreeItem) })
         } else {
-            Err(NcError::with_msg(NcIntResult::ERR, "NcTree.focused()"))
+            Err(NcError::with_msg(NCRESULT_ERR, "NcTree.focused()"))
         }
     }
 
@@ -86,7 +86,7 @@ impl NcTree {
         if !res.is_null() {
             Ok(unsafe { &mut *(res as *mut NcTreeItem) })
         } else {
-            Err(NcError::with_msg(NcIntResult::ERR, "NcTree.next()"))
+            Err(NcError::with_msg(NCRESULT_ERR, "NcTree.next()"))
         }
     }
 
@@ -98,7 +98,7 @@ impl NcTree {
         if !res.is_null() {
             Ok(unsafe { &mut *(res as *mut NcTreeItem) })
         } else {
-            Err(NcError::with_msg(NcIntResult::ERR, "NcTree.prev()"))
+            Err(NcError::with_msg(NCRESULT_ERR, "NcTree.prev()"))
         }
     }
 

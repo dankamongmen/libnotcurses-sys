@@ -4,8 +4,8 @@ use core::{ptr::null_mut, slice::from_raw_parts_mut};
 use crate::{
     c_api, cstring, error, error_ref, error_ref_mut, rstring_free, Nc, NcAlign, NcAlpha, NcBlitter,
     NcBoxMask, NcCell, NcChannel, NcChannels, NcComponent, NcDim, NcError, NcFadeCb, NcFile,
-    NcIntResult, NcIntResultApi, NcOffset, NcPaletteIndex, NcPixelGeometry, NcPlane,
-    NcPlaneOptions, NcResizeCb, NcResult, NcRgb, NcRgba, NcStyle, NcTime,
+    NcOffset, NcPaletteIndex, NcPixelGeometry, NcPlane, NcPlaneOptions, NcResizeCb, NcResult,
+    NcRgb, NcRgba, NcStyle, NcTime,
 };
 
 /// # NcPlane constructors & destructors
@@ -533,7 +533,7 @@ impl NcPlane {
         let egc = unsafe { c_api::ncplane_at_cursor(self, stylemask.into(), channels) };
         if egc.is_null() {
             return Err(NcError::with_msg(
-                NcIntResult::ERR,
+                c_api::NCRESULT_ERR,
                 &format!("NcPlane.at_cursor({:0X}, {:0X})", stylemask, channels),
             ));
         }
@@ -583,7 +583,7 @@ impl NcPlane {
             unsafe { c_api::ncplane_at_yx(self, y as i32, x as i32, stylemask.into(), channels) };
         if egc.is_null() {
             return Err(NcError::with_msg(
-                NcIntResult::ERR,
+                c_api::NCRESULT_ERR,
                 &format!(
                     "NcPlane.at_yx({}, {}, {:0X}, {:0X})",
                     y, x, stylemask, channels
@@ -1389,7 +1389,7 @@ impl NcPlane {
 
     /// Relocates this `NcPlane` above the `above` NcPlane, in the z-buffer.
     ///
-    /// Returns [`NcIntResult::ERR`][NcIntResult#associatedconstant.ERR] if
+    /// Returns [`NCRESULT_ERR`][c_api::NCRESULT_ERR] if
     /// the current plane is already in the desired location.
     /// Both planes must not be the same.
     ///
@@ -1403,7 +1403,7 @@ impl NcPlane {
 
     /// Relocates this `NcPlane` below the `below` NcPlane, in the z-buffer.
     ///
-    /// Returns [`NcIntResult::ERR`][NcIntResult#associatedconstant.ERR] if
+    /// Returns [`NCRESULT_ERR`][c_api::NCRESULT_ERR] if
     /// the current plane is already in the desired location.
     /// Both planes must not be the same.
     ///
@@ -1807,7 +1807,7 @@ impl NcPlane {
     /// Returns the column at which `numcols` columns ought start in order to be
     /// aligned according to `align` within this plane.
     ///
-    /// Returns `-`[NcIntResult::MAX][crate::NcIntResult::MAX] if
+    /// Returns `-`[NCRESULT_MAX][c_api::NCRESULT_MAX] if
     /// [`NcAlign::Unaligned`].
     ///
     /// *C style function: [ncplane_halign()][c_api::ncplane_halign].*
@@ -1824,7 +1824,7 @@ impl NcPlane {
     /// Returns the row at which `rows` rows ought start in order to be
     /// aligned according to `align` within this plane.
     ///
-    /// Returns `-`[NcIntResult::MAX][crate::NcIntResult::MAX] if
+    /// Returns `-`[NCRESULT_MAX][c_api::NCRESULT_MAX] if
     /// [`NcAlign::Unaligned`].
     ///
     /// *C style function: [ncplane_valign()][c_api::ncplane_valign].*
@@ -2511,7 +2511,7 @@ impl NcPlane {
     /// position, stopping at `stop_y` * `stop_x`.
     ///
     /// Returns the number of cells filled on success,
-    /// or [`NcIntResult::ERR`][NcIntResult#associatedconstant.ERR] on error.
+    /// or [`NCRESULT_ERR`][c_api::NCRESULT_ERR] on error.
     ///
     /// The glyph composed of `egc` and `stylemask` is used for all cells.
     /// The channels specified by `ul`, `ur`, `ll`, and `lr` are composed into

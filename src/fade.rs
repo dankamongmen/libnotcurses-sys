@@ -11,7 +11,10 @@
 
 use std::ffi::c_void;
 
-use crate::{c_api, Nc, NcIntResult, NcPlane, NcTime};
+use crate::{
+    c_api::{self, NcResult_i32},
+    Nc, NcPlane, NcTime,
+};
 
 /// Called for each fade iteration on a fading [`NcPlane`].
 ///
@@ -20,7 +23,7 @@ use crate::{c_api, Nc, NcIntResult, NcPlane, NcTime};
 ///
 /// The recommended absolute display time target is passed in 'tspec'.
 pub type NcFadeCb =
-    Option<unsafe extern "C" fn(*mut Nc, *mut NcPlane, *const NcTime, *mut c_void) -> NcIntResult>;
+    Option<unsafe extern "C" fn(*mut Nc, *mut NcPlane, *const NcTime, *mut c_void) -> NcResult_i32>;
 
 /// Context for a palette fade operation
 pub type NcFadeCtx = crate::bindings::ffi::ncfadectx;

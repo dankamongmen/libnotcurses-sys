@@ -1,9 +1,6 @@
 //! Test `ncplane_*` reimplemented functions.
 
-use crate::{
-    c_api::{self, ncplane_new_test, notcurses_init_test, notcurses_stop},
-    NcIntResult, NcIntResultApi,
-};
+use crate::c_api::{self, ncplane_new_test, notcurses_init_test, notcurses_stop};
 use serial_test::serial;
 
 #[test]
@@ -177,7 +174,7 @@ fn ncplane_resize() {
         let plane = ncplane_new_test(nc, 0, 0, 20, 20);
 
         let res = c_api::ncplane_resize_simple(plane, 40, 40);
-        assert_eq![NcIntResult::OK, res];
+        assert_eq![c_api::NCRESULT_OK, res];
 
         let (mut y, mut x) = (0, 0);
         c_api::ncplane_dim_yx(plane, &mut y, &mut x);
@@ -185,7 +182,7 @@ fn ncplane_resize() {
 
         // TODO: test further plane subset keeping unchanged features
         let res = c_api::ncplane_resize(plane, 0, 0, 0, 0, 0, 0, 60, 70);
-        assert_eq![NcIntResult::OK, res];
+        assert_eq![c_api::NCRESULT_OK, res];
 
         assert_eq!(60, c_api::ncplane_dim_y(plane));
         assert_eq!(70, c_api::ncplane_dim_x(plane));

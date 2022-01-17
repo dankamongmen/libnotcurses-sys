@@ -172,7 +172,7 @@ impl Nc {
     /// Returns the offset into `availcols` at which `cols` ought be output given
     /// the requirements of `align`.
     ///
-    /// Returns `-`[NcIntResult::MAX][crate::NcIntResult::MAX] if
+    /// Returns `-`[NCRESULT_MAX][c_api::NCRESULT_MAX] if
     /// [`NcAlign::Unaligned`].
     ///
     /// *C style function: [notcurses_align()][c_api::notcurses_align].*

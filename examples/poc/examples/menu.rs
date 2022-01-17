@@ -7,7 +7,7 @@ use libnotcurses_sys::{widgets::*, *};
 
 fn main() -> NcResult<()> {
     let mut nc = unsafe { Nc::new()? };
-    nc.mice_enable(NcMiceEvents::ALL_EVENTS)?;
+    nc.mice_enable(NcMiceEvents::All)?;
 
     let mut demo_items = [
         NcMenuItem::new("Restart", NcInput::with_ctrl('r')),

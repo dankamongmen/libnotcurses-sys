@@ -5,9 +5,9 @@
 use libc::strcmp;
 
 use crate::{
-    c_api::{self, nccell_release, NcStyle_u16},
-    cstring, rstring, NcAlpha, NcCell, NcChannel, NcChannels, NcComponent, NcIntResult,
-    NcIntResultApi, NcPaletteIndex, NcPlane, NcRgb,
+    c_api::{self, nccell_release, NcResult_i32, NcStyle_u16},
+    cstring, rstring, NcAlpha, NcCell, NcChannel, NcChannels, NcComponent, NcPaletteIndex, NcPlane,
+    NcRgb,
 };
 
 const NCBOXLIGHT: &str = "┌┐└┘─│";
@@ -403,7 +403,7 @@ pub fn nccell_prime(
     gcluster: &str,
     style: NcStyle_u16,
     channels: NcChannels,
-) -> NcIntResult {
+) -> NcResult_i32 {
     cell.stylemask = style;
     cell.channels = channels;
     unsafe { c_api::nccell_load(plane, cell, cstring![gcluster]) }
@@ -411,8 +411,8 @@ pub fn nccell_prime(
 
 /// Loads up six cells with the `EGC`s necessary to draw a box.
 ///
-/// Returns [`NcIntResult::OK`][NcIntResult#associatedconstant.OK] on success
-/// or [`NcIntResult::ERR`][NcIntResult#associatedconstant.ERR] on error.
+/// Returns [`NCRESULT_OK`][c_api::NCRESULT_OK] on success
+/// or [`NCRESULT_ERR`][c_api::NCRESULT_ERR] on error.
 ///
 /// On error, any [`NcCell`]s this function might have loaded before the error
 /// are [nccell_release]d. There must be at least six `EGC`s in `gcluster`.
@@ -430,13 +430,13 @@ pub fn nccells_load_box(
     hl: &mut NcCell,
     vl: &mut NcCell,
     gcluster: &str,
-) -> NcIntResult {
+) -> NcResult_i32 {
     assert![gcluster.len() >= 6]; // DEBUG
 
     // TODO: CHECK: mutable copy for pointer arithmetics:
     let mut gclu = cstring![gcluster];
 
-    let mut ulen: NcIntResult;
+    let mut ulen: NcResult_i32;
 
     ulen = nccell_prime(plane, ul, gcluster, style, channels);
 
@@ -461,7 +461,7 @@ pub fn nccells_load_box(
                         ulen = nccell_prime(plane, vl, gcluster, style, channels);
 
                         if ulen > 0 {
-                            return NcIntResult::OK;
+                            return c_api::NCRESULT_OK;
                         }
                         unsafe {
                             nccell_release(plane, hl);
@@ -483,7 +483,7 @@ pub fn nccells_load_box(
             nccell_release(plane, ul);
         }
     }
-    NcIntResult::ERR
+    c_api::NCRESULT_ERR
 }
 
 /// [`nccells_load_box`] with ASCII characters.
@@ -500,7 +500,7 @@ pub fn nccells_ascii_box(
     lr: &mut NcCell,
     hl: &mut NcCell,
     vl: &mut NcCell,
-) -> NcIntResult {
+) -> NcResult_i32 {
     nccells_load_box(plane, style, channels, ul, ur, ll, lr, hl, vl, NCBOXASCII)
 }
 
@@ -518,7 +518,7 @@ pub fn nccells_double_box(
     lr: &mut NcCell,
     hl: &mut NcCell,
     vl: &mut NcCell,
-) -> NcIntResult {
+) -> NcResult_i32 {
     nccells_load_box(plane, style, channels, ul, ur, ll, lr, hl, vl, NCBOXDOUBLE)
 }
 
@@ -536,7 +536,7 @@ pub fn nccells_heavy_box(
     lr: &mut NcCell,
     hl: &mut NcCell,
     vl: &mut NcCell,
-) -> NcIntResult {
+) -> NcResult_i32 {
     nccells_load_box(plane, style, channels, ul, ur, ll, lr, hl, vl, NCBOXHEAVY)
 }
 
@@ -554,7 +554,7 @@ pub fn nccells_light_box(
     lr: &mut NcCell,
     hl: &mut NcCell,
     vl: &mut NcCell,
-) -> NcIntResult {
+) -> NcResult_i32 {
     nccells_load_box(plane, style, channels, ul, ur, ll, lr, hl, vl, NCBOXLIGHT)
 }
 
@@ -572,6 +572,6 @@ pub fn nccells_rounded_box(
     lr: &mut NcCell,
     hl: &mut NcCell,
     vl: &mut NcCell,
-) -> NcIntResult {
+) -> NcResult_i32 {
     nccells_load_box(plane, style, channels, ul, ur, ll, lr, hl, vl, NCBOXROUND)
 }

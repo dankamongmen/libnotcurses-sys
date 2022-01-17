@@ -52,7 +52,7 @@
 //!
 //! It requires more use of unsafe, since it has less safer abstractions.
 //!
-//! Error handling is done this way by checking the returned `NcIntResult`,
+//! Error handling is done this way by checking the returned `NcResult_i32`,
 //! or in case of receiving a pointer, by comparing it to `null_mut()`.
 //!
 //! ### Example
@@ -120,7 +120,7 @@ pub use cell::NcCell;
 pub use channel::{NcChannel, NcChannelApi, NcChannels, NcChannelsApi, NcComponent, NcRgb};
 pub use dimension::{NcDim, NcOffset};
 pub use direct::{NcDirect, NcDirectFlags, NcDirectFlagsApi};
-pub use error::{NcError, NcIntResult, NcIntResultApi, NcResult};
+pub use error::{NcError, NcResult};
 pub use fade::{NcFadeCb, NcFadeCtx};
 pub use fd::{NcFdPlane, NcFdPlaneOptions, NcSubproc, NcSubprocOptions};
 pub use file::NcFile;
@@ -180,7 +180,7 @@ pub mod c_api {
     pub use crate::blitter::c_api::*;
     pub use crate::channel::constants::*;
     pub use crate::direct::constants::*;
-    pub use crate::error::constants::*;
+    pub use crate::error::c_api::*;
     pub use crate::input::c_api::*;
     pub use crate::key::constants::*;
     pub use crate::log_level::c_api::*;

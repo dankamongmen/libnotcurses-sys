@@ -6,7 +6,7 @@
 #[allow(unused_imports)] // for doc comments
 use crate::{
     c_api::{NCRESULT_ERR, NCRESULT_OK},
-    Nc, NcDirect, NcError, NcIntResultApi, NcPlane, NcResult, NcVisual, NcVisualOptions,
+    Nc, NcDirect, NcError, NcPlane, NcResult, NcVisual, NcVisualOptions,
 };
 
 // Sleep, Render & Flush Macros ------------------------------------------------

@@ -27,7 +27,7 @@ fn main() -> NcResult<()> {
     let nc: &mut Nc = unsafe { Nc::new()? };
 
     // Enable mouse
-    nc.mice_enable(NcMiceEvents::ALL_EVENTS)?;
+    nc.mice_enable(NcMiceEvents::All)?;
 
     // Get a reference to the standard plane (full screen)
     let stdplane: &mut NcPlane = unsafe { nc.stdplane() };

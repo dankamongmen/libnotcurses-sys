@@ -4,9 +4,10 @@ use core::ptr::{null, null_mut};
 use libc::c_void;
 
 use crate::{
-    c_api, cstring, error, error_ref_mut, Nc, NcBlitter, NcChannel, NcComponent, NcDim, NcDirect,
-    NcError, NcIntResult, NcIntResultApi, NcPixel, NcPlane, NcResult, NcRgba, NcScale, NcTime,
-    NcVGeom, NcVisual, NcVisualGeometry, NcVisualOptions,
+    c_api::{self, NcResult_i32, NCRESULT_ERR},
+    cstring, error, error_ref_mut, Nc, NcBlitter, NcChannel, NcComponent, NcDim, NcDirect, NcError,
+    NcPixel, NcPlane, NcResult, NcRgba, NcScale, NcTime, NcVGeom, NcVisual, NcVisualGeometry,
+    NcVisualOptions,
 };
 
 /// # NcVisual Constructors & destructors
@@ -262,9 +263,9 @@ impl NcVisual {
     /// Returns 0 for normal frames, and 1 to indicate EOF.
     ///
     /// *C style function: [ncvisual_decode()][c_api::ncvisual_decode].*
-    pub fn decode(&mut self) -> NcResult<NcIntResult> {
+    pub fn decode(&mut self) -> NcResult<NcResult_i32> {
         let res = unsafe { c_api::ncvisual_decode(self) };
-        if res == NcIntResult::ERR {
+        if res == NCRESULT_ERR {
             Err(NcError::with_msg(res, "NcVisual.decode()"))
         } else {
             Ok(res)
@@ -280,9 +281,9 @@ impl NcVisual {
     /// Returns 0 for normal frames and 1 to indicate EOF.
     ///
     /// *C style function: [ncvisual_decode_loop()][c_api::ncvisual_decode_loop].*
-    pub fn decode_loop(&mut self) -> NcResult<NcIntResult> {
+    pub fn decode_loop(&mut self) -> NcResult<NcResult_i32> {
         let res = unsafe { c_api::ncvisual_decode_loop(self) };
-        if res == NcIntResult::ERR {
+        if res == NCRESULT_ERR {
             Err(NcError::with_msg(res, "NcVisual.decode_loop()"))
         } else {
             Ok(res)

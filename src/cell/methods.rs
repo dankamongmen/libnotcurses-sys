@@ -1,9 +1,9 @@
 //! `NcCell` methods and associated functions.
 
 use crate::{
-    c_api::{self, nccell_load},
-    cstring, error, rstring, NcAlpha, NcCell, NcChannels, NcComponent, NcError, NcIntResult,
-    NcIntResultApi, NcPaletteIndex, NcPlane, NcResult, NcRgb, NcStyle,
+    c_api::{self, nccell_load, NCRESULT_ERR},
+    cstring, error, rstring, NcAlpha, NcCell, NcChannels, NcComponent, NcError, NcPaletteIndex,
+    NcPlane, NcResult, NcRgb, NcStyle,
 };
 
 #[allow(unused_imports)] // for doc comments
@@ -34,7 +34,7 @@ impl NcCell {
     pub fn from_char(plane: &mut NcPlane, ch: char) -> NcResult<Self> {
         let mut cell = Self::new();
         let res = unsafe { nccell_load(plane, &mut cell, cstring![ch.to_string()]) };
-        if res == NcIntResult::ERR {
+        if res == NCRESULT_ERR {
             return Err(NcError::new());
         }
         Ok(cell)
@@ -47,7 +47,7 @@ impl NcCell {
     pub fn from_str(plane: &mut NcPlane, string: &str) -> NcResult<Self> {
         let mut cell = Self::new();
         let res = unsafe { nccell_load(plane, &mut cell, cstring![string]) };
-        if res == NcIntResult::ERR {
+        if res == NCRESULT_ERR {
             return Err(NcError::new());
         }
         Ok(cell)

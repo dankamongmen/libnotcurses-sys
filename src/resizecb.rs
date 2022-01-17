@@ -1,16 +1,19 @@
 //! `NcResizeCb`
 
-use crate::{c_api, NcIntResult, NcPlane};
+use crate::{
+    c_api::{self, NcResult_i32},
+    NcPlane,
+};
 
 /// A callback function called when an [`NcPlane`] is resized.
 ///
 /// See also [`ncresizecb_to_rust`][c_api::ncresizecb_to_rust]
 /// & [`ncresizecb_to_c`][c_api::ncresizecb_to_c].
 ///
-pub type NcResizeCb = fn(&mut NcPlane) -> NcIntResult;
+pub type NcResizeCb = fn(&mut NcPlane) -> NcResult_i32;
 
 /// The unsafe version of [`NcResizeCb`] expected by the notcurses C API.
-pub type NcResizeCbUnsafe = unsafe extern "C" fn(*mut NcPlane) -> NcIntResult;
+pub type NcResizeCbUnsafe = unsafe extern "C" fn(*mut NcPlane) -> NcResult_i32;
 
 pub(crate) mod reimplemented {
     use super::*;

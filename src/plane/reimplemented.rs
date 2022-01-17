@@ -19,9 +19,9 @@ use core::ptr::null_mut;
 use std::ffi::CString;
 
 use crate::{
-    c_api::{self, nccell_release, NCRESULT_ERR},
+    c_api::{self, nccell_release, NcResult_i32, NCRESULT_ERR, NCRESULT_OK},
     cstring, NcAlign, NcAlpha, NcBoxMask, NcCell, NcChannel, NcChannels, NcComponent, NcDim,
-    NcIntResult, NcIntResultApi, NcOffset, NcPlane, NcRgb, NcStyle,
+    NcOffset, NcPlane, NcRgb, NcStyle,
 };
 
 // Alpha -----------------------------------------------------------------------
@@ -224,7 +224,7 @@ pub fn ncplane_set_bg_not_default(plane: &NcPlane) -> NcChannels {
 ///
 /// *Method: NcPlane.[putc()][NcPlane#method.putc].*
 #[inline]
-pub fn ncplane_putc(plane: &mut NcPlane, cell: &NcCell) -> NcIntResult {
+pub fn ncplane_putc(plane: &mut NcPlane, cell: &NcCell) -> NcResult_i32 {
     unsafe { c_api::ncplane_putc_yx(plane, -1, -1, cell) }
 }
 
@@ -238,11 +238,11 @@ pub fn ncplane_putc(plane: &mut NcPlane, cell: &NcCell) -> NcIntResult {
 ///
 /// *Method: NcPlane.[putchar()][NcPlane#method.putchar].*
 #[inline]
-pub fn ncplane_putchar(plane: &mut NcPlane, ch: char) -> NcIntResult {
+pub fn ncplane_putchar(plane: &mut NcPlane, ch: char) -> NcResult_i32 {
     unsafe {
         let cell = NcCell::from_char(plane, ch);
         if cell.is_err() {
-            return NcIntResult::ERR;
+            return NCRESULT_ERR;
         }
         c_api::ncplane_putc_yx(plane, -1, -1, &cell.unwrap())
     }
@@ -258,11 +258,11 @@ pub fn ncplane_putchar(plane: &mut NcPlane, ch: char) -> NcIntResult {
 ///
 /// *Method: NcPlane.[putchar_yx()][NcPlane#method.putchar_yx].*
 #[inline]
-pub fn ncplane_putchar_yx(plane: &mut NcPlane, y: NcDim, x: NcDim, ch: char) -> NcIntResult {
+pub fn ncplane_putchar_yx(plane: &mut NcPlane, y: NcDim, x: NcDim, ch: char) -> NcResult_i32 {
     unsafe {
         let cell = NcCell::from_char(plane, ch);
         if cell.is_err() {
-            return NcIntResult::ERR;
+            return NCRESULT_ERR;
         }
         c_api::ncplane_putc_yx(plane, y as i32, x as i32, &cell.unwrap())
     }
@@ -278,7 +278,7 @@ pub fn ncplane_putchar_yx(plane: &mut NcPlane, y: NcDim, x: NcDim, ch: char) -> 
 ///
 /// *Method: NcPlane.[putchar_stained()][NcPlane#method.putchar_stained].*
 #[inline]
-pub fn ncplane_putchar_stained(plane: &mut NcPlane, ch: char) -> NcIntResult {
+pub fn ncplane_putchar_stained(plane: &mut NcPlane, ch: char) -> NcResult_i32 {
     ncplane_putstr_stained(plane, &ch.to_string())
 }
 
@@ -296,7 +296,7 @@ pub fn ncplane_putchar_stained(plane: &mut NcPlane, ch: char) -> NcIntResult {
 ///
 /// *Method: NcPlane.[putegc()][NcPlane#method.putegc].*
 #[inline]
-pub fn ncplane_putegc(plane: &mut NcPlane, egc: &str, sbytes: Option<&mut usize>) -> NcIntResult {
+pub fn ncplane_putegc(plane: &mut NcPlane, egc: &str, sbytes: Option<&mut usize>) -> NcResult_i32 {
     let sbytes_ptr;
     if let Some(sb) = sbytes {
         sbytes_ptr = sb as *mut _;
@@ -327,7 +327,7 @@ pub fn ncplane_putegc_yx(
     x: Option<NcDim>,
     egc: &str,
     sbytes: Option<&mut usize>,
-) -> NcIntResult {
+) -> NcResult_i32 {
     let sbytes_ptr;
     if let Some(sb) = sbytes {
         sbytes_ptr = sb as *mut _;
@@ -364,7 +364,7 @@ pub fn ncplane_putegc_stained(
     plane: &mut NcPlane,
     egc: &str,
     sbytes: Option<&mut usize>,
-) -> NcIntResult {
+) -> NcResult_i32 {
     let sbytes_ptr;
     if let Some(sb) = sbytes {
         sbytes_ptr = sb as *mut _;
@@ -388,7 +388,7 @@ pub fn ncplane_putegc_stained(
 ///
 /// *Method: NcPlane.[putstr()][NcPlane#method.putstr].*
 #[inline]
-pub fn ncplane_putstr(plane: &mut NcPlane, string: &str) -> NcIntResult {
+pub fn ncplane_putstr(plane: &mut NcPlane, string: &str) -> NcResult_i32 {
     ncplane_putstr_yx(plane, None, None, string)
 }
 
@@ -410,7 +410,7 @@ pub fn ncplane_putstr_yx(
     y: Option<NcDim>,
     x: Option<NcDim>,
     string: &str,
-) -> NcIntResult {
+) -> NcResult_i32 {
     let cstring = CString::new(string).unwrap();
     let mut cstring_ptr = cstring.as_ptr();
 
@@ -464,7 +464,7 @@ pub fn ncplane_putstr_aligned(
     y: Option<NcDim>,
     align: NcAlign,
     string: &str,
-) -> NcIntResult {
+) -> NcResult_i32 {
     let (mut validbytes, mut validwidth) = (0, 0);
 
     // we'll want to do the partial write if there's an error somewhere within
@@ -493,7 +493,7 @@ pub fn ncplane_putstr_aligned(
 ///
 /// *Method: NcPlane.[putstr_stained()][NcPlane#method.putstr_stained].*
 #[inline]
-pub fn ncplane_putstr_stained(plane: &mut NcPlane, string: &str) -> NcIntResult {
+pub fn ncplane_putstr_stained(plane: &mut NcPlane, string: &str) -> NcResult_i32 {
     let cstring = CString::new(string).unwrap();
     let mut cstring_ptr = cstring.as_ptr();
 
@@ -534,7 +534,7 @@ pub fn ncplane_putnstr_yx(
     x: Option<NcDim>,
     num_bytes: usize,
     string: &str,
-) -> NcIntResult {
+) -> NcResult_i32 {
     let cstring = CString::new(string).unwrap();
     let cstring_bytes_len = cstring.as_bytes().len();
     let cstring_ptr = cstring.as_ptr();
@@ -583,7 +583,7 @@ pub fn ncplane_putnstr_yx(
 ///
 /// *Method: NcPlane.[putnstr()][NcPlane#method.putnstr].*
 #[inline]
-pub fn ncplane_putnstr(plane: &mut NcPlane, num_bytes: usize, string: &str) -> NcIntResult {
+pub fn ncplane_putnstr(plane: &mut NcPlane, num_bytes: usize, string: &str) -> NcResult_i32 {
     c_api::ncplane_putnstr_yx(plane, None, None, num_bytes, string)
 }
 
@@ -598,7 +598,7 @@ pub fn ncplane_putnstr(plane: &mut NcPlane, num_bytes: usize, string: &str) -> N
 ///
 /// *Method: NcPlane.[move_rel()][NcPlane#method.move_rel].*
 #[inline]
-pub fn ncplane_moverel(plane: &mut NcPlane, rows: NcOffset, cols: NcOffset) -> NcIntResult {
+pub fn ncplane_moverel(plane: &mut NcPlane, rows: NcOffset, cols: NcOffset) -> NcResult_i32 {
     let (mut orig_y, mut orig_x) = (0, 0);
     unsafe {
         c_api::ncplane_yx(plane, &mut orig_y, &mut orig_x);
@@ -687,7 +687,7 @@ pub fn ncplane_dim_y(plane: &NcPlane) -> NcDim {
 ///
 /// *Method: NcPlane.[resize_simple()][NcPlane#method.resize_simple].*
 #[inline]
-pub fn ncplane_resize_simple(plane: &mut NcPlane, len_y: NcDim, len_x: NcDim) -> NcIntResult {
+pub fn ncplane_resize_simple(plane: &mut NcPlane, len_y: NcDim, len_x: NcDim) -> NcResult_i32 {
     let (mut old_y, mut old_x) = (0, 0);
     unsafe {
         c_api::ncplane_dim_yx(plane, &mut old_y, &mut old_x);
@@ -724,24 +724,24 @@ pub fn ncplane_resize_simple(plane: &mut NcPlane, len_y: NcDim, len_x: NcDim) ->
 /// Returns the column at which `numcols` columns ought start in order to be
 /// aligned according to `align` within the `plane`.
 ///
-/// Returns `-`[`NcIntResult::MAX`][crate::NcIntResult::MAX] if
+/// Returns `-`[`NCRESULT_MAX`][c_api::NCRESULT_MAX] if
 /// [NcAlign::Unaligned].
 ///
 /// *Method: NcPlane.[halign()][NcPlane#method.halign].*
 #[inline]
-pub fn ncplane_halign(plane: &NcPlane, align: NcAlign, numcols: NcDim) -> NcIntResult {
+pub fn ncplane_halign(plane: &NcPlane, align: NcAlign, numcols: NcDim) -> NcResult_i32 {
     c_api::notcurses_align(ncplane_dim_x(plane), align, numcols)
 }
 
 /// Returns the row at which `numrows` rows ought start in order to be aligned
 /// according to `align` within this NcPlane.
 ///
-/// Returns `-`[`NcIntResult::MAX`][crate::NcIntResult::MAX] if
+/// Returns `-`[`NCRESULT_MAX`][c_api::NCRESULT_MAX] if
 /// [NcAlign::Unaligned].
 ///
 /// *Method: NcPlane.[valign()][NcPlane#method.valign].*
 #[inline]
-pub fn ncplane_valign(plane: &NcPlane, align: NcAlign, numrows: NcDim) -> NcIntResult {
+pub fn ncplane_valign(plane: &NcPlane, align: NcAlign, numrows: NcDim) -> NcResult_i32 {
     c_api::notcurses_align(ncplane_dim_y(plane), align, numrows)
 }
 
@@ -758,7 +758,7 @@ pub fn ncplane_valign(plane: &NcPlane, align: NcAlign, numrows: NcDim) -> NcIntR
 ///
 /// *Method: NcPlane.[hline()][NcPlane#method.hline].*
 #[inline]
-pub fn ncplane_hline(plane: &mut NcPlane, cell: &NcCell, len: NcDim) -> NcIntResult {
+pub fn ncplane_hline(plane: &mut NcPlane, cell: &NcCell, len: NcDim) -> NcResult_i32 {
     unsafe { c_api::ncplane_hline_interp(plane, cell, len, cell.channels, cell.channels) }
 }
 
@@ -773,7 +773,7 @@ pub fn ncplane_hline(plane: &mut NcPlane, cell: &NcCell, len: NcDim) -> NcIntRes
 ///
 /// *Method: NcPlane.[vline()][NcPlane#method.vline].*
 #[inline]
-pub fn ncplane_vline(plane: &mut NcPlane, cell: &NcCell, len: NcDim) -> NcIntResult {
+pub fn ncplane_vline(plane: &mut NcPlane, cell: &NcCell, len: NcDim) -> NcResult_i32 {
     unsafe { c_api::ncplane_vline_interp(plane, cell, len, cell.channels, cell.channels) }
 }
 
@@ -792,7 +792,7 @@ pub fn ncplane_perimeter(
     hline: &NcCell,
     vline: &NcCell,
     boxmask: NcBoxMask,
-) -> NcIntResult {
+) -> NcResult_i32 {
     unsafe {
         c_api::ncplane_cursor_move_yx(plane, 0, 0);
         let (mut dimy, mut dimx) = (0, 0);
@@ -821,9 +821,9 @@ pub fn ncplane_perimeter_double(
     stylemask: NcStyle,
     channels: NcChannels,
     boxmask: NcBoxMask,
-) -> NcIntResult {
-    if unsafe { c_api::ncplane_cursor_move_yx(plane, 0, 0) } != NcIntResult::OK {
-        return NcIntResult::ERR;
+) -> NcResult_i32 {
+    if unsafe { c_api::ncplane_cursor_move_yx(plane, 0, 0) } != NCRESULT_OK {
+        return NCRESULT_ERR;
     }
     let (mut dimy, mut dimx) = (0, 0);
     unsafe {
@@ -845,9 +845,9 @@ pub fn ncplane_perimeter_double(
         &mut lr,
         &mut hl,
         &mut vl,
-    ) != NcIntResult::OK
+    ) != NCRESULT_OK
     {
-        return NcIntResult::ERR;
+        return NCRESULT_ERR;
     }
     let ret = ncplane_box_sized(
         plane,
@@ -881,9 +881,9 @@ pub fn ncplane_perimeter_rounded(
     stylemask: NcStyle,
     channels: NcChannels,
     boxmask: NcBoxMask,
-) -> NcIntResult {
-    if unsafe { c_api::ncplane_cursor_move_yx(plane, 0, 0) } != NcIntResult::OK {
-        return NcIntResult::ERR;
+) -> NcResult_i32 {
+    if unsafe { c_api::ncplane_cursor_move_yx(plane, 0, 0) } != NCRESULT_OK {
+        return NCRESULT_ERR;
     }
     let (mut dimy, mut dimx) = (0, 0);
     unsafe {
@@ -905,9 +905,9 @@ pub fn ncplane_perimeter_rounded(
         &mut lr,
         &mut hl,
         &mut vl,
-    ) != NcIntResult::OK
+    ) != NCRESULT_OK
     {
-        return NcIntResult::ERR;
+        return NCRESULT_ERR;
     }
     let ret = ncplane_box_sized(
         plane,
@@ -945,9 +945,9 @@ pub fn ncplane_ascii_box(
     end_y: NcDim,
     end_x: NcDim,
     boxmask: NcBoxMask,
-) -> NcIntResult {
+) -> NcResult_i32 {
     #[allow(unused_assignments)]
-    let mut ret = NcIntResult::OK;
+    let mut ret = NCRESULT_OK;
 
     let mut ul = NcCell::new();
     let mut ur = NcCell::new();
@@ -968,7 +968,7 @@ pub fn ncplane_ascii_box(
             &mut hl,
             &mut vl,
         );
-        if ret == NcIntResult::OK {
+        if ret == NCRESULT_OK {
             ret = c_api::ncplane_box(
                 plane,
                 &ul,
@@ -1013,7 +1013,7 @@ pub fn ncplane_box_sized(
     len_y: NcDim,
     len_x: NcDim,
     boxmask: NcBoxMask,
-) -> NcIntResult {
+) -> NcResult_i32 {
     let (mut y, mut x) = (0, 0);
     unsafe {
         c_api::ncplane_cursor_yx(plane, &mut y, &mut x);
@@ -1044,9 +1044,9 @@ pub fn ncplane_double_box(
     end_y: NcDim,
     end_x: NcDim,
     boxmask: NcBoxMask,
-) -> NcIntResult {
+) -> NcResult_i32 {
     #[allow(unused_assignments)]
-    let mut ret = NcIntResult::OK;
+    let mut ret = NCRESULT_OK;
 
     let mut ul = NcCell::new();
     let mut ur = NcCell::new();
@@ -1067,7 +1067,7 @@ pub fn ncplane_double_box(
             &mut hl,
             &mut vl,
         );
-        if ret == NcIntResult::OK {
+        if ret == NCRESULT_OK {
             ret = c_api::ncplane_box(
                 plane,
                 &ul,
@@ -1103,7 +1103,7 @@ pub fn ncplane_double_box_sized(
     len_y: NcDim,
     len_x: NcDim,
     boxmask: NcBoxMask,
-) -> NcIntResult {
+) -> NcResult_i32 {
     let (mut y, mut x) = (0, 0);
     unsafe {
         c_api::ncplane_cursor_yx(plane, &mut y, &mut x);
@@ -1130,9 +1130,9 @@ pub fn ncplane_rounded_box(
     end_y: NcDim,
     end_x: NcDim,
     boxmask: NcBoxMask,
-) -> NcIntResult {
+) -> NcResult_i32 {
     #[allow(unused_assignments)]
-    let mut ret = NcIntResult::OK;
+    let mut ret = NCRESULT_OK;
 
     let mut ul = NcCell::new();
     let mut ur = NcCell::new();
@@ -1153,7 +1153,7 @@ pub fn ncplane_rounded_box(
             &mut hl,
             &mut vl,
         );
-        if ret == NcIntResult::OK {
+        if ret == NCRESULT_OK {
             ret = c_api::ncplane_box(
                 plane,
                 &ul,
@@ -1188,7 +1188,7 @@ pub fn ncplane_rounded_box_sized(
     len_y: NcDim,
     len_x: NcDim,
     boxmask: NcBoxMask,
-) -> NcIntResult {
+) -> NcResult_i32 {
     let (mut y, mut x) = (0, 0);
     unsafe {
         c_api::ncplane_cursor_yx(plane, &mut y, &mut x);
@@ -1247,7 +1247,7 @@ pub fn ncplane_gradient(
     ur: NcChannels,
     ll: NcChannels,
     lr: NcChannels,
-) -> NcIntResult {
+) -> NcResult_i32 {
     #[cfg(any(target_arch = "armv7l", target_arch = "i686"))]
     let egc_ptr = cstring![egc] as *const i8;
     #[cfg(not(any(target_arch = "armv7l", target_arch = "i686")))]

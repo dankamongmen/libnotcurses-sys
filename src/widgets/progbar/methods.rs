@@ -53,7 +53,7 @@ impl NcProgBar {
 
     /// Sets the progress bar's completion, an 0 <= [f64] <= 1.
     ///
-    /// Returns [`NcIntResult::ERR`][crate::NcIntResult#associatedconstant.ERR]
+    /// Returns [`NCRESULT_ERR`][c_api::NCRESULT_ERR]
     /// if progress is < 0 || > 1.
     ///
     /// *C style function: [ncprogbar_set_progress()][c_api::ncprogbar_set_progress].*

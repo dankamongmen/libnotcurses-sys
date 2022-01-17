@@ -3,29 +3,29 @@
 use core::ptr::{null, null_mut};
 
 use crate::{
-    c_api, Nc, NcAlign, NcDim, NcError, NcInput, NcIntResult, NcIntResultApi, NcPlane, NcResult,
-    NcTime,
+    c_api::{self, NcResult_i32, NCRESULT_ERR},
+    Nc, NcAlign, NcDim, NcError, NcInput, NcPlane, NcResult, NcTime,
 };
 
 /// Returns the offset into `avail_u` at which `u` ought be output given
 /// the requirements of `align`.
 ///
-/// Returns `-`[`NcIntResult::MAX`][NcIntResult#associatedconstant.MAX] if
+/// Returns `-`[`NcResult_i32::MAX`][NcResult_i32#associatedconstant.MAX] if
 /// [NCALIGN_UNALIGNED][c_api::NCALIGN_UNALIGNED] or invalid `align`.
 ///
 /// *Method: Nc.[align()][Nc#method.align].*
 #[inline]
-pub fn notcurses_align(avail_u: NcDim, align: NcAlign, u: NcDim) -> NcIntResult {
+pub fn notcurses_align(avail_u: NcDim, align: NcAlign, u: NcDim) -> NcResult_i32 {
     if align == NcAlign::Left || align == NcAlign::Top {
         return 0;
     }
     if align == NcAlign::Center {
-        return ((avail_u - u) / 2) as NcIntResult;
+        return ((avail_u - u) / 2) as NcResult_i32;
     }
     if align == NcAlign::Right || align == NcAlign::Bottom {
-        return (avail_u - u) as NcIntResult;
+        return (avail_u - u) as NcResult_i32;
     }
-    -NcIntResult::MAX
+    -NcResult_i32::MAX
 }
 
 /// Returns true if we can blit pixel-accurate bitmaps.
@@ -115,14 +115,14 @@ pub fn notcurses_cansextant(nc: &Nc) -> bool {
 ///
 /// *Method: Nc.[get_blocking()][Nc#method.get_blocking].*
 #[inline]
-pub fn notcurses_get_blocking(nc: &mut Nc, input: Option<&mut NcInput>) -> NcIntResult {
+pub fn notcurses_get_blocking(nc: &mut Nc, input: Option<&mut NcInput>) -> NcResult_i32 {
     let input_ptr;
     if let Some(i) = input {
         input_ptr = i as *mut _;
     } else {
         input_ptr = null_mut();
     }
-    unsafe { c_api::notcurses_get(nc, null(), input_ptr) as NcIntResult }
+    unsafe { c_api::notcurses_get(nc, null(), input_ptr) as NcResult_i32 }
 }
 
 /// Reads input without blocking.
@@ -135,7 +135,7 @@ pub fn notcurses_get_blocking(nc: &mut Nc, input: Option<&mut NcInput>) -> NcInt
 ///
 /// *Method: Nc.[get_nblock()][Nc#method.get_nblock].*
 #[inline]
-pub fn notcurses_get_nblock(nc: &mut Nc, input: Option<&mut NcInput>) -> NcIntResult {
+pub fn notcurses_get_nblock(nc: &mut Nc, input: Option<&mut NcInput>) -> NcResult_i32 {
     let input_ptr;
     if let Some(i) = input {
         input_ptr = i as *mut _;
@@ -144,7 +144,7 @@ pub fn notcurses_get_nblock(nc: &mut Nc, input: Option<&mut NcInput>) -> NcIntRe
     }
     unsafe {
         let ts = NcTime::new(0, 0);
-        c_api::notcurses_get(nc, &ts, input_ptr) as NcIntResult
+        c_api::notcurses_get(nc, &ts, input_ptr) as NcResult_i32
     }
 }
 
@@ -152,10 +152,10 @@ pub fn notcurses_get_nblock(nc: &mut Nc, input: Option<&mut NcInput>) -> NcIntRe
 ///
 /// *Method: Nc.[render()][Nc#method.render].*
 #[inline]
-pub fn notcurses_render(nc: &mut Nc) -> NcIntResult {
+pub fn notcurses_render(nc: &mut Nc) -> NcResult_i32 {
     let stdplane = unsafe { c_api::notcurses_stdplane(nc) };
-    if unsafe { c_api::ncpile_render(stdplane) } == NcIntResult::ERR {
-        return NcIntResult::ERR;
+    if unsafe { c_api::ncpile_render(stdplane) } == NCRESULT_ERR {
+        return NCRESULT_ERR;
     }
     unsafe { c_api::ncpile_rasterize(stdplane) }
 }
@@ -214,7 +214,7 @@ pub fn notcurses_term_dim_yx(nc: &Nc) -> (NcDim, NcDim) {
 
 /// Disables all mice tracking.
 #[inline]
-pub fn notcurses_mice_disable(nc: &mut Nc) -> NcIntResult {
+pub fn notcurses_mice_disable(nc: &mut Nc) -> NcResult_i32 {
     unsafe { c_api::notcurses_mice_enable(nc, c_api::NCMICE_NO_EVENTS) }
 }
 

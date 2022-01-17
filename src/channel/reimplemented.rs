@@ -1,7 +1,8 @@
 //! `ncchannel*_*` reimplemented functions.
 
 use crate::{
-    c_api, NcAlpha, NcChannel, NcChannels, NcComponent, NcIntResult, NcPaletteIndex, NcRgb,
+    c_api::{self, NcResult_i32},
+    NcAlpha, NcChannel, NcChannels, NcComponent, NcPaletteIndex, NcRgb,
 };
 
 // Alpha -----------------------------------------------------------------------
@@ -24,7 +25,7 @@ pub fn ncchannel_alpha(channel: NcChannel) -> NcAlpha {
 ///
 /// *Method: NcChannel.[set_alpha()][NcChannel#method.set_alpha]*
 #[inline]
-pub fn ncchannel_set_alpha(channel: &mut NcChannel, alpha: NcAlpha) -> NcIntResult {
+pub fn ncchannel_set_alpha(channel: &mut NcChannel, alpha: NcAlpha) -> NcResult_i32 {
     let alpha_u32 = c_api::NcAlpha_u32::from(alpha);
 
     if (alpha_u32 & !c_api::NC_BG_ALPHA_MASK) != 0 {
@@ -57,7 +58,7 @@ pub fn ncchannels_bg_alpha(channels: NcChannels) -> NcAlpha {
 ///
 /// *Method: NcChannels.[set_fg_alpha()][NcChannels#method.set_fg_alpha]*
 #[inline]
-pub fn ncchannels_set_fg_alpha(channels: &mut NcChannels, alpha: NcAlpha) -> NcIntResult {
+pub fn ncchannels_set_fg_alpha(channels: &mut NcChannels, alpha: NcAlpha) -> NcResult_i32 {
     let mut channel = ncchannels_fchannel(*channels);
     if ncchannel_set_alpha(&mut channel, alpha) < 0 {
         return c_api::NCRESULT_ERR;
@@ -70,7 +71,7 @@ pub fn ncchannels_set_fg_alpha(channels: &mut NcChannels, alpha: NcAlpha) -> NcI
 ///
 /// *Method: NcChannels.[set_bg_alpha()][NcChannels#method.set_bg_alpha]*
 #[inline]
-pub fn ncchannels_set_bg_alpha(channels: &mut NcChannels, alpha: NcAlpha) -> NcIntResult {
+pub fn ncchannels_set_bg_alpha(channels: &mut NcChannels, alpha: NcAlpha) -> NcResult_i32 {
     if alpha == NcAlpha::HighContrast {
         return c_api::NCRESULT_ERR;
     }
