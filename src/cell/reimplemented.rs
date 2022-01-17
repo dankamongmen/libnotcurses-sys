@@ -6,8 +6,7 @@ use libc::strcmp;
 
 use crate::{
     c_api::{self, nccell_release, NcResult_i32, NcStyle_u16},
-    cstring, rstring, NcAlpha, NcCell, NcChannel, NcChannels, NcComponent, NcPaletteIndex, NcPlane,
-    NcRgb,
+    cstring, rstring, NcAlpha, NcCell, NcChannel, NcChannels, NcPaletteIndex, NcPlane, NcRgb,
 };
 
 const NCBOXLIGHT: &str = "┌┐└┘─│";
@@ -51,61 +50,41 @@ pub fn nccell_set_bg_alpha(cell: &mut NcCell, alpha: NcAlpha) {
     c_api::ncchannels_set_bg_alpha(&mut cell.channels, alpha);
 }
 
-// NcComponent ---------------------------------------------------------------------
+// u8 ---------------------------------------------------------------------
 
-/// Gets the foreground [`NcComponent`]s of an [`NcCell`],
+/// Gets the foreground components of an [`NcCell`],
 /// and returns the [`NcChannel`] (which can have some extra bits set).
 ///
 /// *Method: NcCell.[fg_rgb8()][NcCell#method.fg_rgb8].*
 #[inline]
-pub fn nccell_fg_rgb8(
-    cell: &NcCell,
-    red: &mut NcComponent,
-    green: &mut NcComponent,
-    blue: &mut NcComponent,
-) -> NcChannel {
+pub fn nccell_fg_rgb8(cell: &NcCell, red: &mut u8, green: &mut u8, blue: &mut u8) -> NcChannel {
     c_api::ncchannels_fg_rgb8(cell.channels, red, green, blue)
 }
 
-/// Gets the background [`NcComponent`]s of an [`NcCell`],
+/// Gets the background components of an [`NcCell`],
 /// and returns the [`NcChannel`] (which can have some extra bits set).
 ///
 /// *Method: NcCell.[bg_rgb8()][NcCell#method.bg_rgb8].*
 #[inline]
-pub fn nccell_bg_rgb8(
-    cell: &NcCell,
-    red: &mut NcComponent,
-    green: &mut NcComponent,
-    blue: &mut NcComponent,
-) -> NcChannel {
+pub fn nccell_bg_rgb8(cell: &NcCell, red: &mut u8, green: &mut u8, blue: &mut u8) -> NcChannel {
     c_api::ncchannels_bg_rgb8(cell.channels, red, green, blue)
 }
 
-/// Sets the foreground [`NcComponent`]s of the [`NcCell`],
+/// Sets the foreground components of the [`NcCell`],
 /// and marks it as not using the "default color".
 ///
 /// *Method: NcCell.[set_fg_rgb8()][NcCell#method.set_fg_rgb8].*
 #[inline]
-pub fn nccell_set_fg_rgb8(
-    cell: &mut NcCell,
-    red: NcComponent,
-    green: NcComponent,
-    blue: NcComponent,
-) {
+pub fn nccell_set_fg_rgb8(cell: &mut NcCell, red: u8, green: u8, blue: u8) {
     c_api::ncchannels_set_fg_rgb8(&mut cell.channels, red, green, blue);
 }
 
-/// Sets the background [`NcComponent`]s of the [`NcCell`],
+/// Sets the background components of the [`NcCell`],
 /// and marks it as not using the "default color".
 ///
 /// *Method: NcCell.[set_bg_rgb8()][NcCell#method.set_bg_rgb8].*
 #[inline]
-pub fn nccell_set_bg_rgb8(
-    cell: &mut NcCell,
-    red: NcComponent,
-    green: NcComponent,
-    blue: NcComponent,
-) {
+pub fn nccell_set_bg_rgb8(cell: &mut NcCell, red: u8, green: u8, blue: u8) {
     c_api::ncchannels_set_bg_rgb8(&mut cell.channels, red, green, blue);
 }
 

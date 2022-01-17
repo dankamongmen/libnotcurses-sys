@@ -59,7 +59,7 @@ pub type NcVisual = crate::bindings::ffi::ncvisual;
 
 // NcRgba
 //
-/// Three RGB [`NcComponent`]s plus one alpha [`NcComponent`] (alias of `u32`).
+/// Three RGB components plus one alpha component (alias of `u32`).
 ///
 /// ## Diagram
 ///
@@ -69,8 +69,6 @@ pub type NcVisual = crate::bindings::ffi::ncvisual;
 /// `type in C: no data type`
 ///
 /// See also: [`NcRgb`] and [`NcChannel`] types.
-///
-/// [`NcComponent`]: crate::NcComponent
 pub type NcRgba = u32;
 
 // // NcBgra

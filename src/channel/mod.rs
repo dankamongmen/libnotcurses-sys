@@ -206,20 +206,9 @@ pub type NcChannels = u64;
 /// See also: [`NcRgba`] and [`NcChannel`] types.
 pub type NcRgb = u32;
 
-// NcComponent
-//
-/// 8 bits representing an R/G/B color component or an alpha channel component
-/// (alias of `u8`).
-///
-/// ## Diagram
-///
-/// ```txt
-/// CCCCCCCC (1 Byte)
-/// ```
-/// `type in C: no data type`
-pub type NcComponent = u8;
+pub(crate) mod c_api {
+    use crate::bindings::ffi;
 
-pub(crate) mod constants {
     #[allow(unused_imports)]
     use crate::{NcAlpha, NcChannel, NcChannels};
 
@@ -229,7 +218,7 @@ pub(crate) mod constants {
     /// [`NcChannel::DEFAULT_MASK`][NcChannel#associatedconstant.DEFAULT_MASK]
     ///
     /// See the detailed diagram at [`NcChannels`]
-    pub const NC_BGDEFAULT_MASK: u32 = crate::bindings::ffi::NC_BGDEFAULT_MASK;
+    pub const NC_BGDEFAULT_MASK: u32 = ffi::NC_BGDEFAULT_MASK;
 
     /// Extract these bits to get the (background) [`NcAlpha`] mask.
     ///
@@ -237,7 +226,7 @@ pub(crate) mod constants {
     /// [`NcChannel::ALPHA_MASK`][NcChannel#associatedconstant.ALPHA_MASK]
     ///
     /// See the detailed diagram at [`NcChannels`]
-    pub const NC_BG_ALPHA_MASK: u32 = crate::bindings::ffi::NC_BG_ALPHA_MASK;
+    pub const NC_BG_ALPHA_MASK: u32 = ffi::NC_BG_ALPHA_MASK;
 
     /// If this bit *and* [`NC_BGDEFAULT_MASK`] are set, we're using a
     /// palette-indexed background color
@@ -246,7 +235,7 @@ pub(crate) mod constants {
     /// [`NcChannel::PALETTE_MASK`][NcChannel#associatedconstant.PALETTE_MASK]
     ///
     /// See the detailed diagram at [`NcChannels`]
-    pub const NC_BG_PALETTE: u32 = crate::bindings::ffi::NC_BG_PALETTE;
+    pub const NC_BG_PALETTE: u32 = ffi::NC_BG_PALETTE;
 
     /// Extract these bits to get the background [`NcRgb`][crate::NcRgb] value
     ///
@@ -254,12 +243,12 @@ pub(crate) mod constants {
     /// [`NcChannel::RGB_MASK`][NcChannel#associatedconstant.RGB_MASK]
     ///
     /// See the detailed diagram at [`NcChannels`]
-    pub const NC_BG_RGB_MASK: u32 = crate::bindings::ffi::NC_BG_RGB_MASK;
+    pub const NC_BG_RGB_MASK: u32 = ffi::NC_BG_RGB_MASK;
 
     /// Does this glyph completely obscure the background?
     ///
     /// If so, there's no need to emit a background when rasterizing,
     /// a small optimization. These are also used to track regions into which
     /// we must not cellblit.
-    pub const NC_NOBACKGROUND_MASK: u64 = crate::bindings::ffi::NC_NOBACKGROUND_MASK as u64;
+    pub const NC_NOBACKGROUND_MASK: u64 = ffi::NC_NOBACKGROUND_MASK as u64;
 }

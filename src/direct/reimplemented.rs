@@ -4,7 +4,7 @@ use core::ptr::{null, null_mut};
 
 use crate::{
     c_api::{self, NcResult_i32},
-    cstring, NcCapabilities, NcChannels, NcComponent, NcDim, NcDirect, NcInput, NcRgb, NcTime,
+    cstring, NcCapabilities, NcChannels, NcDim, NcDirect, NcInput, NcRgb, NcTime,
 };
 
 /// Can we directly specify RGB values per cell, or only use palettes?
@@ -108,30 +108,20 @@ pub fn ncdirect_get_nblock(ncd: &mut NcDirect, input: Option<&mut NcInput>) -> N
     }
 }
 
-/// Sets the foreground [`NcComponent`] components.
+/// Sets the foreground component components.
 ///
 /// *Method: NcDirect.[set_fg_rgb8()][NcDirect#method.set_fg_rgb8].*
 #[inline]
-pub fn ncdirect_set_fg_rgb8(
-    ncd: &mut NcDirect,
-    red: NcComponent,
-    green: NcComponent,
-    blue: NcComponent,
-) -> NcResult_i32 {
+pub fn ncdirect_set_fg_rgb8(ncd: &mut NcDirect, red: u8, green: u8, blue: u8) -> NcResult_i32 {
     let rgb = (red as NcRgb) << 16 | (green as NcRgb) << 8 | blue as NcRgb;
     unsafe { c_api::ncdirect_set_fg_rgb(ncd, rgb) }
 }
 
-/// Sets the background [`NcComponent`] components.
+/// Sets the background component components.
 ///
 /// *Method: NcDirect.[set_bg_rgb8()][NcDirect#method.set_bg_rgb8].*
 #[inline]
-pub fn ncdirect_set_bg_rgb8(
-    ncd: &mut NcDirect,
-    red: NcComponent,
-    green: NcComponent,
-    blue: NcComponent,
-) -> NcResult_i32 {
+pub fn ncdirect_set_bg_rgb8(ncd: &mut NcDirect, red: u8, green: u8, blue: u8) -> NcResult_i32 {
     let rgb = (red as NcRgb) << 16 | (green as NcRgb) << 8 | blue as NcRgb;
     unsafe { c_api::ncdirect_set_bg_rgb(ncd, rgb) }
 }

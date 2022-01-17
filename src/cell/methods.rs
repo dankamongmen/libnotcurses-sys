@@ -2,8 +2,8 @@
 
 use crate::{
     c_api::{self, nccell_load, NCRESULT_ERR},
-    cstring, error, rstring, NcAlpha, NcCell, NcChannels, NcComponent, NcError, NcPaletteIndex,
-    NcPlane, NcResult, NcRgb, NcStyle,
+    cstring, error, rstring, NcAlpha, NcCell, NcChannels, NcError, NcPaletteIndex, NcPlane,
+    NcResult, NcRgb, NcStyle,
 };
 
 #[allow(unused_imports)] // for doc comments
@@ -170,10 +170,10 @@ impl NcCell {
         c_api::nccell_bg_rgb(self)
     }
 
-    /// Gets the background RGB [`NcComponent`]s.
+    /// Gets the background RGB components.
     ///
     /// *C style function: [nccell_bg_rgb8()][c_api::nccell_bg_rgb8].*
-    pub fn bg_rgb8(&self) -> (NcComponent, NcComponent, NcComponent) {
+    pub fn bg_rgb8(&self) -> (u8, u8, u8) {
         let (mut r, mut g, mut b) = (0, 0, 0);
         c_api::nccell_bg_rgb8(self, &mut r, &mut g, &mut b);
         (r, g, b)
@@ -215,10 +215,10 @@ impl NcCell {
         c_api::nccell_fg_rgb(self)
     }
 
-    /// Gets the foreground RGB [`NcComponent`]s.
+    /// Gets the foreground RGB components.
     ///
     /// *C style function: [nccell_fg_rgb8()][c_api::nccell_fg_rgb8].*
-    pub fn fg_rgb8(&self) -> (NcComponent, NcComponent, NcComponent) {
+    pub fn fg_rgb8(&self) -> (u8, u8, u8) {
         let (mut r, mut g, mut b) = (0, 0, 0);
         c_api::nccell_fg_rgb8(self, &mut r, &mut g, &mut b);
         (r, g, b)
@@ -258,11 +258,11 @@ impl NcCell {
         c_api::nccell_set_bg_rgb(self, rgb);
     }
 
-    /// Sets the background RGB [`NcComponent`]s, and marks it as not using
+    /// Sets the background RGB components, and marks it as not using
     /// the "default color".
     ///
     /// *C style function: [nccell_set_bg_rgb8()][c_api::nccell_set_bg_rgb8].*
-    pub fn set_bg_rgb8(&mut self, red: NcComponent, green: NcComponent, blue: NcComponent) {
+    pub fn set_bg_rgb8(&mut self, red: u8, green: u8, blue: u8) {
         c_api::nccell_set_bg_rgb8(self, red, green, blue);
     }
 
@@ -300,11 +300,11 @@ impl NcCell {
         c_api::nccell_set_fg_rgb(self, rgb);
     }
 
-    /// Sets the foreground RGB [`NcComponent`]s, and marks it as not using
+    /// Sets the foreground RGB components, and marks it as not using
     /// the "default color".
     ///
     /// *C style function: [nccell_set_fg_rgb8()][c_api::nccell_set_fg_rgb8].*
-    pub fn set_fg_rgb8(&mut self, red: NcComponent, green: NcComponent, blue: NcComponent) {
+    pub fn set_fg_rgb8(&mut self, red: u8, green: u8, blue: u8) {
         c_api::nccell_set_fg_rgb8(self, red, green, blue);
     }
 }

@@ -2,7 +2,7 @@
 
 use crate::{
     c_api::{self, NcResult_i32},
-    NcAlpha, NcChannel, NcChannels, NcComponent, NcPaletteIndex, NcRgb,
+    NcAlpha, NcChannel, NcChannels, NcPaletteIndex, NcRgb,
 };
 
 // Alpha -----------------------------------------------------------------------
@@ -155,163 +155,138 @@ pub fn ncchannels_reverse(channels: NcChannels) -> NcChannels {
     ret
 }
 
-// NcComponent ---------------------------------------------------------------------
+// u8 ---------------------------------------------------------------------
 
-/// Gets the red [`NcComponent`] from an [`NcChannel`].
+/// Gets the red component from an [`NcChannel`].
 ///
 /// Only valid if `ncchannel_rgb_p` would return true for the channel.
 ///
 /// *Method: NcChannel.[r()][NcChannel#method.r]*
 #[inline]
-pub const fn ncchannel_r(channel: NcChannel) -> NcComponent {
-    ((channel & 0xff0000) >> 16) as NcComponent
+pub const fn ncchannel_r(channel: NcChannel) -> u8 {
+    ((channel & 0xff0000) >> 16) as u8
 }
 
-/// Gets the green [`NcComponent`] from an [`NcChannel`].
+/// Gets the green component from an [`NcChannel`].
 ///
 /// Only valid if `ncchannel_rgb_p` would return true for the channel.
 ///
 /// *Method: NcChannel.[g()][NcChannel#method.g]*
 #[inline]
-pub const fn ncchannel_g(channel: NcChannel) -> NcComponent {
-    ((channel & 0x00ff00) >> 8) as NcComponent
+pub const fn ncchannel_g(channel: NcChannel) -> u8 {
+    ((channel & 0x00ff00) >> 8) as u8
 }
 
-/// Gets the blue [`NcComponent`] from an [`NcChannel`].
+/// Gets the blue component from an [`NcChannel`].
 ///
 /// Only valid if `ncchannel_rgb_p` would return true for the channel.
 ///
 /// *Method: NcChannel.[b()][NcChannel#method.b]*
 #[inline]
-pub const fn ncchannel_b(channel: NcChannel) -> NcComponent {
-    (channel & 0x0000ff) as NcComponent
+pub const fn ncchannel_b(channel: NcChannel) -> u8 {
+    (channel & 0x0000ff) as u8
 }
 
-/// Sets the red [`NcComponent`] of an [`NcChannel`], and returns it.
+/// Sets the red component of an [`NcChannel`], and returns it.
 ///
 /// *Method: NcChannel.[set_r()][NcChannel#method.set_r]*
 //
 // Not in the C API.
 #[inline]
-pub fn ncchannel_set_r(channel: &mut NcChannel, r: NcComponent) -> NcChannel {
+pub fn ncchannel_set_r(channel: &mut NcChannel, r: u8) -> NcChannel {
     *channel = (r as NcChannel) << 16 | (*channel & 0xff00) | (*channel & 0xff);
     *channel
 }
 
-/// Sets the green [`NcComponent`] of an [`NcChannel`], and returns it.
+/// Sets the green component of an [`NcChannel`], and returns it.
 ///
 /// *Method: NcChannel.[set_g()][NcChannel#method.set_g]*
 //
 // Not in the C API.
 #[inline]
-pub fn ncchannel_set_g(channel: &mut NcChannel, g: NcComponent) -> NcChannel {
+pub fn ncchannel_set_g(channel: &mut NcChannel, g: u8) -> NcChannel {
     *channel = (*channel & 0xff0000) | (g as NcChannel) << 8 | (*channel & 0xff);
     *channel
 }
 
-/// Sets the blue [`NcComponent`] of an [`NcChannel`], and returns it.
+/// Sets the blue component of an [`NcChannel`], and returns it.
 ///
 /// *Method: NcChannel.[set_b()][NcChannel#method.set_b]*
 //
 // Not in the C API.
 #[inline]
-pub fn ncchannel_set_b(channel: &mut NcChannel, b: NcComponent) -> NcChannel {
+pub fn ncchannel_set_b(channel: &mut NcChannel, b: u8) -> NcChannel {
     *channel = (*channel & 0xff0000) | (*channel & 0xff00) | (b as NcChannel);
     *channel
 }
 
-/// Gets the three RGB [`NcComponent`]s from an [`NcChannel`], and returns it.
+/// Gets the three RGB components from an [`NcChannel`], and returns it.
 ///
 /// Only valid if `ncchannel_rgb_p` would return true for the channel.
 ///
 /// *Method: NcChannel.[rgb8()][NcChannel#method.rgb8]*
 #[inline]
-pub fn ncchannel_rgb8(
-    channel: NcChannel,
-    r: &mut NcComponent,
-    g: &mut NcComponent,
-    b: &mut NcComponent,
-) -> NcChannel {
+pub fn ncchannel_rgb8(channel: NcChannel, r: &mut u8, g: &mut u8, b: &mut u8) -> NcChannel {
     *r = ncchannel_r(channel);
     *g = ncchannel_g(channel);
     *b = ncchannel_b(channel);
     channel
 }
 
-/// Sets the three RGB [`NcComponent`]s an [`NcChannel`], and marks it as NOT using the
+/// Sets the three RGB components an [`NcChannel`], and marks it as NOT using the
 /// "default color", retaining the other bits unchanged.
 ///
 /// Note: Unlike the original C function, this one can't fail.
 ///
 /// *Method: NcChannel.[set_rgb8()][NcChannel#method.set_rgb8]*
 #[inline]
-pub fn ncchannel_set_rgb8(channel: &mut NcChannel, r: NcComponent, g: NcComponent, b: NcComponent) {
+pub fn ncchannel_set_rgb8(channel: &mut NcChannel, r: u8, g: u8, b: u8) {
     let rgb: NcRgb = (r as NcChannel) << 16 | (g as NcChannel) << 8 | (b as NcChannel);
     *channel = (*channel & !(c_api::NC_BG_RGB_MASK | c_api::NC_BG_PALETTE))
         | c_api::NC_BGDEFAULT_MASK
         | rgb;
 }
 
-/// Gets the three foreground RGB [`NcComponent`]s from an [`NcChannels`], and
+/// Gets the three foreground RGB components from an [`NcChannels`], and
 /// returns the foreground [`NcChannel`] (which can have some extra bits set).
 ///
 /// *Method: NcChannels.[fg_rgb8()][NcChannels#method.fg_rgb8]*
 #[inline]
-pub fn ncchannels_fg_rgb8(
-    channels: NcChannels,
-    r: &mut NcComponent,
-    g: &mut NcComponent,
-    b: &mut NcComponent,
-) -> NcChannel {
+pub fn ncchannels_fg_rgb8(channels: NcChannels, r: &mut u8, g: &mut u8, b: &mut u8) -> NcChannel {
     ncchannel_rgb8(ncchannels_fchannel(channels), r, g, b)
 }
 
-/// Gets the three background RGB [`NcComponent`]s from an [`NcChannels`], and
+/// Gets the three background RGB components from an [`NcChannels`], and
 /// returns the background [`NcChannel`] (which can have some extra bits set).
 ///
 /// *Method: NcChannels.[bg_rgb8()][NcChannels#method.bg_rgb8]*
 #[inline]
-pub fn ncchannels_bg_rgb8(
-    channels: NcChannels,
-    r: &mut NcComponent,
-    g: &mut NcComponent,
-    b: &mut NcComponent,
-) -> NcChannel {
+pub fn ncchannels_bg_rgb8(channels: NcChannels, r: &mut u8, g: &mut u8, b: &mut u8) -> NcChannel {
     ncchannel_rgb8(ncchannels_bchannel(channels), r, g, b)
 }
 
-/// Sets the three foreground RGB [`NcComponent`]s of an [`NcChannels`], and
+/// Sets the three foreground RGB components of an [`NcChannels`], and
 /// marks it as NOT using the "default color", retaining the other bits unchanged.
 ///
 /// Note: Unlike the original C function, this one returns the new `NcChannels`.
 ///
 /// *Method: NcChannels.[set_fg_rgb8()][NcChannels#method.set_fg_rgb8]*
 #[inline]
-pub fn ncchannels_set_fg_rgb8(
-    channels: &mut NcChannels,
-    r: NcComponent,
-    g: NcComponent,
-    b: NcComponent,
-) -> NcChannels {
+pub fn ncchannels_set_fg_rgb8(channels: &mut NcChannels, r: u8, g: u8, b: u8) -> NcChannels {
     let mut channel = ncchannels_fchannel(*channels);
     ncchannel_set_rgb8(&mut channel, r, g, b);
     *channels = (channel as NcChannels) << 32 | *channels & 0xffffffff;
     *channels
 }
 
-/// Sets the three background RGB [`NcComponent`]s of an [`NcChannels`], and
+/// Sets the three background RGB components of an [`NcChannels`], and
 /// marks it as NOT using the "default color", retaining the other bits unchanged.
 ///
 /// Note: Unlike the original C function, this one returns the new `NcChannels`.
 ///
 /// *Method: NcChannels.[set_bg_rgb8()][NcChannels#method.set_bg_rgb8]*
 #[inline]
-pub fn ncchannels_set_bg_rgb8(
-    channels: &mut NcChannels,
-    r: NcComponent,
-    g: NcComponent,
-    b: NcComponent,
-) -> NcChannels {
+pub fn ncchannels_set_bg_rgb8(channels: &mut NcChannels, r: u8, g: u8, b: u8) -> NcChannels {
     let mut channel = ncchannels_bchannel(*channels);
     ncchannel_set_rgb8(&mut channel, r, g, b);
     ncchannels_set_bchannel(channels, channel);

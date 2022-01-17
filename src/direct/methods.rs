@@ -4,8 +4,8 @@ use core::ptr::{null, null_mut};
 
 use crate::{
     c_api, cstring, error, error_ref_mut, rstring_free, NcAlign, NcBlitter, NcCapabilities,
-    NcChannels, NcComponent, NcDim, NcDirect, NcDirectFlags, NcError, NcInput, NcOffset,
-    NcPaletteIndex, NcPlane, NcResult, NcRgb, NcScale, NcStyle, NcTime,
+    NcChannels, NcDim, NcDirect, NcDirectFlags, NcError, NcInput, NcOffset, NcPaletteIndex,
+    NcPlane, NcResult, NcRgb, NcScale, NcStyle, NcTime,
 };
 
 /// # `NcDirect` constructors and destructors
@@ -16,7 +16,7 @@ impl NcDirect {
     ///
     /// Direct mode supports a limited subset of notcurses routines,
     /// and neither supports nor requires
-    /// [notcurses_render()][c_api::notcurses_render]. This can be used to add
+    /// [`notcurses_render`][c_api::notcurses_render]. This can be used to add
     /// color and styling to text in the standard output paradigm.
     ///
     /// # Safety
@@ -29,7 +29,7 @@ impl NcDirect {
         Self::with_flags(0)
     }
 
-    /// New NcDirect with optional flags.
+    /// New `NcDirect` with optional flags.
     ///
     /// # Safety
     /// You must not create multiple `NcDirect` instances at the same time, on
@@ -42,7 +42,7 @@ impl NcDirect {
         error_ref_mut![res, "Initializing NcDirect"]
     }
 
-    /// Releases this NcDirect and any associated resources.
+    /// Releases this `NcDirect` and any associated resources.
     ///
     /// # Safety
     /// You must not call this method repeatedly on the same `NcDirect` instance.
@@ -125,8 +125,8 @@ impl NcDirect {
     /// will only occupy the column of the cursor, and those to the right.
     ///
     /// The render/raster process can be split by using
-    /// [render_frame()][#method.render_frame] and
-    /// [raster_frame()][#method.raster_frame].
+    /// [`render_frame`][#method.render_frame] and
+    /// [`raster_frame`][#method.raster_frame].
     ///
     /// *C style function: [ncdirect_render_image()][c_api::ncdirect_render_image].*
     pub fn render_image(
@@ -156,7 +156,7 @@ impl NcDirect {
 
 /// ## NcDirect methods: `NcPaletteIndex`, `NcRgb`, `NcStyle` & default color
 impl NcDirect {
-    /// Sets the foreground [NcPaletteIndex].
+    /// Sets the foreground [`NcPaletteIndex`].
     ///
     /// *C style function: [ncdirect_set_fg_palindex()][c_api::ncdirect_set_fg_palindex].*
     pub fn set_fg_palindex(&mut self, index: NcPaletteIndex) -> NcResult<()> {
@@ -166,7 +166,7 @@ impl NcDirect {
         ]
     }
 
-    /// Sets the background [NcPaletteIndex].
+    /// Sets the background [`NcPaletteIndex`].
     ///
     /// *C style function: [ncdirect_set_bg_palindex()][c_api::ncdirect_set_bg_palindex].*
     pub fn set_bg_palindex(&mut self, index: NcPaletteIndex) -> NcResult<()> {
@@ -194,7 +194,7 @@ impl NcDirect {
         Ok(res)
     }
 
-    /// Sets the foreground [NcRgb].
+    /// Sets the foreground [`NcRgb`].
     ///
     /// *C style function: [ncdirect_set_fg_rgb()][c_api::ncdirect_set_fg_rgb].*
     pub fn set_fg_rgb(&mut self, rgb: NcRgb) -> NcResult<()> {
@@ -204,7 +204,7 @@ impl NcDirect {
         ]
     }
 
-    /// Sets the background [NcRgb].
+    /// Sets the background [`NcRgb`].
     ///
     /// *C style function: [ncdirect_set_bg_rgb()][c_api::ncdirect_set_bg_rgb].*
     pub fn set_bg_rgb(&mut self, rgb: NcRgb) -> NcResult<()> {
@@ -214,30 +214,20 @@ impl NcDirect {
         ]
     }
 
-    /// Sets the foreground [NcComponent] components.
+    /// Sets the foreground individual RGB components.
     ///
     /// *C style function: [ncdirect_set_fg_rgb8()][c_api::ncdirect_set_fg_rgb8].*
-    pub fn set_fg_rgb8(
-        &mut self,
-        red: NcComponent,
-        green: NcComponent,
-        blue: NcComponent,
-    ) -> NcResult<()> {
+    pub fn set_fg_rgb8(&mut self, red: u8, green: u8, blue: u8) -> NcResult<()> {
         error![
             c_api::ncdirect_set_fg_rgb8(self, red, green, blue),
             &format!("NcDirect.set_fg_rgb8({}, {}, {})", red, green, blue)
         ]
     }
 
-    /// Sets the background [NcComponent] components.
+    /// Sets the background individual RGB components.
     ///
     /// *C style function: [ncdirect_set_bg_rgb()][c_api::ncdirect_set_bg_rgb].*
-    pub fn set_bg_rgb8(
-        &mut self,
-        red: NcComponent,
-        green: NcComponent,
-        blue: NcComponent,
-    ) -> NcResult<()> {
+    pub fn set_bg_rgb8(&mut self, red: u8, green: u8, blue: u8) -> NcResult<()> {
         error![
             c_api::ncdirect_set_bg_rgb8(self, red, green, blue),
             &format!("NcDirect.set_bg_rgb8({}, {}, {})", red, green, blue)
@@ -286,7 +276,7 @@ impl NcDirect {
     /// The attribute is only indicated as supported if the terminal can support
     /// it together with color.
     ///
-    /// For more information, see the "ncv" capability in terminfo(5).
+    /// For more information, see the "ncv" capability in *terminfo(5)*.
     ///
     /// *C style function: [ncdirect_supported_styles()][c_api::ncdirect_supported_styles].*
     pub fn supported_styles(&self) -> NcStyle {
@@ -637,8 +627,8 @@ impl NcDirect {
 
     /// Get a file descriptor suitable for input event poll()ing.
     ///
-    /// When this descriptor becomes available, you can call
-    /// [get_nblock()][NcDirect#method.get_nblock], and input ought be ready.
+    /// When this descriptor becomes available, you can call `NcDirect.`
+    /// [`get_nblock`][NcDirect#method.get_nblock], and input ought be ready.
     ///
     /// This file descriptor is not necessarily the file descriptor associated
     /// with stdin (but it might be!).
@@ -670,8 +660,9 @@ impl NcDirect {
     /// Initializes Readline the first time it's called.
     ///
     /// For input to be echoed to the terminal, it is necessary that the flag
-    /// [`NcDirectFlags::INHIBIT_CBREAK`][NcDirectFlags#associatedconstant.INHIBIT_CBREAK]
-    /// be provided to the constructor.
+    /// [`NcDirectFlags::INHIBIT_CBREAK`][0] be provided to the constructor.
+    ///
+    /// [0]: NcDirectFlags#associatedconstant.INHIBIT_CBREAK
     ///
     /// *C style function: [ncdirect_readline()][c_api::ncdirect_readline].*
     //
@@ -691,7 +682,7 @@ impl NcDirect {
     /// Draws a box with its upper-left corner at the current cursor position,
     /// having dimensions `ylen` * `xlen`.
     ///
-    /// See NcPlane.[box()][NcPlane#method.box] for more information.
+    /// See `NcPlane.`[`box`][NcPlane#method.box] for more information.
     ///
     /// The minimum box size is 2x2, and it cannot be drawn off-screen.
     ///
@@ -722,7 +713,7 @@ impl NcDirect {
         ]
     }
 
-    /// NcDirect.[box()][NcDirect#method.box] with the double box-drawing characters.
+    /// `NcDirect.`[`box`][NcDirect#method.box] with the double box-drawing characters.
     ///
     /// *C style function: [ncdirect_double_box()][c_api::ncdirect_double_box].*
     pub fn double_box(
@@ -738,7 +729,7 @@ impl NcDirect {
         error![unsafe { c_api::ncdirect_double_box(self, ul, ur, ll, lr, len_y, len_x, ctlword) }]
     }
 
-    /// NcDirect.[box()][NcDirect#method.box] with the rounded box-drawing characters.
+    /// `NcDirect.`[`box`][NcDirect#method.box] with the rounded box-drawing characters.
     ///
     /// *C style function: [ncdirect_rounded_box()][c_api::ncdirect_rounded_box].*
     pub fn rounded_box(

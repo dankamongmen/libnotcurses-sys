@@ -1,6 +1,6 @@
 //! `NcPalette` methods and associated functions.
 
-use crate::{c_api, error, Nc, NcChannel, NcComponent, NcPalette, NcPaletteIndex, NcResult, NcRgb};
+use crate::{c_api, error, Nc, NcChannel, NcPalette, NcPaletteIndex, NcResult, NcRgb};
 
 impl NcPalette {
     /// New `NcPalette`.
@@ -26,16 +26,16 @@ impl NcPalette {
         error![unsafe { c_api::ncpalette_use(nc, self) }]
     }
 
-    /// Returns the [`NcComponent`]s from the [`NcChannel`] in this `NcPalette`.
+    /// Returns the components from the [`NcChannel`] in this `NcPalette`.
     ///
     /// *C style function: [ncpalette_get_rgb()][c_api::ncpalette_get_rgb8].*
-    pub fn get_rgb8(&self, index: NcPaletteIndex) -> (NcComponent, NcComponent, NcComponent) {
+    pub fn get_rgb8(&self, index: NcPaletteIndex) -> (u8, u8, u8) {
         let (mut r, mut g, mut b) = (0, 0, 0);
         c_api::ncchannel_rgb8(self.chans[index as usize], &mut r, &mut g, &mut b);
         (r, g, b)
     }
 
-    /// Extracts the [`NcComponent`]s from an [`NcChannel`] entry inside
+    /// Extracts the components from an [`NcChannel`] entry inside
     /// this NcPalette, and returns the NcChannel.
     ///
     /// *C style function: [ncpalette_get_rgb()][c_api::ncpalette_get_rgb8].*

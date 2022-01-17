@@ -1,25 +1,23 @@
 //! `NcChannel*` methods and associated functions.
 #![allow(clippy::unnecessary_cast)]
 
-use crate::{
-    c_api, error, NcAlpha, NcChannel, NcChannels, NcComponent, NcPaletteIndex, NcResult, NcRgb,
-};
+use crate::{c_api, error, NcAlpha, NcChannel, NcChannels, NcPaletteIndex, NcResult, NcRgb};
 
 /// Enables the [`NcChannel`] associated methods and constants.
 pub trait NcChannelApi {
     // constants
-    const DEFAULT_MASK: u32 = super::constants::NC_BGDEFAULT_MASK;
-    const ALPHA_MASK: u32 = super::constants::NC_BG_ALPHA_MASK;
-    const PALETTE_MASK: u32 = super::constants::NC_BG_PALETTE;
-    const RGB_MASK: u32 = super::constants::NC_BG_RGB_MASK;
+    const DEFAULT_MASK: u32 = c_api::NC_BGDEFAULT_MASK;
+    const ALPHA_MASK: u32 = c_api::NC_BG_ALPHA_MASK;
+    const PALETTE_MASK: u32 = c_api::NC_BG_PALETTE;
+    const RGB_MASK: u32 = c_api::NC_BG_RGB_MASK;
 
     // constructors
     fn new() -> Self;
     fn with_default() -> Self;
     fn from_rgb(rgb: NcRgb) -> Self;
     fn from_rgb_alpha(rgb: NcRgb, alpha: NcAlpha) -> Self;
-    fn from_rgb8(r: NcComponent, g: NcComponent, b: NcComponent) -> Self;
-    fn from_rgb8_alpha(r: NcComponent, g: NcComponent, b: NcComponent, alpha: NcAlpha) -> Self;
+    fn from_rgb8(r: u8, g: u8, b: u8) -> Self;
+    fn from_rgb8_alpha(r: u8, g: u8, b: u8, alpha: NcAlpha) -> Self;
 
     // methods
     fn fcombine(&self, bchannel: NcChannel) -> NcChannels;
@@ -32,14 +30,14 @@ pub trait NcChannelApi {
     fn rgb(&self) -> NcRgb;
     fn set(&mut self, rgb: NcRgb) -> Self;
 
-    fn rgb8(&self) -> (NcComponent, NcComponent, NcComponent);
-    fn set_rgb8(&mut self, r: NcComponent, g: NcComponent, b: NcComponent) -> Self;
-    fn r(&self) -> NcComponent;
-    fn g(&self) -> NcComponent;
-    fn b(&self) -> NcComponent;
-    fn set_r(&mut self, r: NcComponent) -> Self;
-    fn set_g(&mut self, g: NcComponent) -> Self;
-    fn set_b(&mut self, b: NcComponent) -> Self;
+    fn rgb8(&self) -> (u8, u8, u8);
+    fn set_rgb8(&mut self, r: u8, g: u8, b: u8) -> Self;
+    fn r(&self) -> u8;
+    fn g(&self) -> u8;
+    fn b(&self) -> u8;
+    fn set_r(&mut self, r: u8) -> Self;
+    fn set_g(&mut self, g: u8) -> Self;
+    fn set_b(&mut self, b: u8) -> Self;
 
     fn default_p(&self) -> bool;
     fn set_default(&mut self) -> Self;
@@ -53,11 +51,11 @@ pub trait NcChannelApi {
 /// Enables the [`NcChannels`] associated methods and constants.
 pub trait NcChannelsApi {
     // constants
-    const BG_DEFAULT_MASK: u32 = super::constants::NC_BGDEFAULT_MASK;
-    const BG_ALPHA_MASK: u32 = super::constants::NC_BG_ALPHA_MASK;
-    const BG_PALETTE_MASK: u32 = super::constants::NC_BG_PALETTE;
-    const BG_RGB_MASK: u32 = super::constants::NC_BG_RGB_MASK;
-    const NOBACKGROUND_MASK: u64 = super::constants::NC_NOBACKGROUND_MASK;
+    const BG_DEFAULT_MASK: u32 = super::c_api::NC_BGDEFAULT_MASK;
+    const BG_ALPHA_MASK: u32 = super::c_api::NC_BG_ALPHA_MASK;
+    const BG_PALETTE_MASK: u32 = super::c_api::NC_BG_PALETTE;
+    const BG_RGB_MASK: u32 = super::c_api::NC_BG_RGB_MASK;
+    const NOBACKGROUND_MASK: u64 = super::c_api::NC_NOBACKGROUND_MASK;
 
     // constructors
     fn new() -> Self;
@@ -66,27 +64,19 @@ pub trait NcChannelsApi {
     fn from_rgb_both(rgb: NcRgb) -> Self;
     fn from_rgb_alpha(fg_rgb: NcRgb, fg_alpha: NcAlpha, bg_rgb: NcRgb, bg_alpha: NcAlpha) -> Self;
     fn from_rgb_alpha_both(rgb: NcRgb, alpha: NcAlpha) -> Self;
-    fn from_rgb8(
-        fg_r: NcComponent,
-        fg_g: NcComponent,
-        fg_b: NcComponent,
-        bg_r: NcComponent,
-        bg_g: NcComponent,
-        bg_b: NcComponent,
-    ) -> Self;
-    fn from_rgb8_both(r: NcComponent, g: NcComponent, b: NcComponent) -> Self;
+    fn from_rgb8(fg_r: u8, fg_g: u8, fg_b: u8, bg_r: u8, bg_g: u8, bg_b: u8) -> Self;
+    fn from_rgb8_both(r: u8, g: u8, b: u8) -> Self;
     fn from_rgb8_alpha(
-        fg_r: NcComponent,
-        fg_g: NcComponent,
-        fg_b: NcComponent,
+        fg_r: u8,
+        fg_g: u8,
+        fg_b: u8,
         fg_alpha: NcAlpha,
-        bg_r: NcComponent,
-        bg_g: NcComponent,
-        bg_b: NcComponent,
+        bg_r: u8,
+        bg_g: u8,
+        bg_b: u8,
         bg_alpha: NcAlpha,
     ) -> Self;
-    fn from_rgb8_alpha_both(r: NcComponent, g: NcComponent, b: NcComponent, alpha: NcAlpha)
-        -> Self;
+    fn from_rgb8_alpha_both(r: u8, g: u8, b: u8, alpha: NcAlpha) -> Self;
 
     // methods
     fn combine(fchannel: NcChannel, bchannel: NcChannel) -> Self;
@@ -109,22 +99,22 @@ pub trait NcChannelsApi {
     fn set_fg_rgb(&mut self, rgb: NcRgb) -> Self;
     fn set_bg_rgb(&mut self, rgb: NcRgb) -> Self;
 
-    fn fg_rgb8(&self) -> (NcComponent, NcComponent, NcComponent);
-    fn bg_rgb8(&self) -> (NcComponent, NcComponent, NcComponent);
-    fn set_fg_rgb8(&mut self, r: NcComponent, g: NcComponent, b: NcComponent) -> Self;
-    fn set_bg_rgb8(&mut self, r: NcComponent, g: NcComponent, b: NcComponent) -> Self;
-    fn fg_r(&self) -> NcComponent;
-    fn fg_g(&self) -> NcComponent;
-    fn fg_b(&self) -> NcComponent;
-    fn bg_r(&self) -> NcComponent;
-    fn bg_g(&self) -> NcComponent;
-    fn bg_b(&self) -> NcComponent;
-    fn fg_set_r(&mut self, r: NcComponent) -> Self;
-    fn fg_set_g(&mut self, g: NcComponent) -> Self;
-    fn fg_set_b(&mut self, b: NcComponent) -> Self;
-    fn bg_set_r(&mut self, r: NcComponent) -> Self;
-    fn bg_set_g(&mut self, g: NcComponent) -> Self;
-    fn bg_set_b(&mut self, b: NcComponent) -> Self;
+    fn fg_rgb8(&self) -> (u8, u8, u8);
+    fn bg_rgb8(&self) -> (u8, u8, u8);
+    fn set_fg_rgb8(&mut self, r: u8, g: u8, b: u8) -> Self;
+    fn set_bg_rgb8(&mut self, r: u8, g: u8, b: u8) -> Self;
+    fn fg_r(&self) -> u8;
+    fn fg_g(&self) -> u8;
+    fn fg_b(&self) -> u8;
+    fn bg_r(&self) -> u8;
+    fn bg_g(&self) -> u8;
+    fn bg_b(&self) -> u8;
+    fn fg_set_r(&mut self, r: u8) -> Self;
+    fn fg_set_g(&mut self, g: u8) -> Self;
+    fn fg_set_b(&mut self, b: u8) -> Self;
+    fn bg_set_r(&mut self, r: u8) -> Self;
+    fn bg_set_g(&mut self, g: u8) -> Self;
+    fn bg_set_b(&mut self, b: u8) -> Self;
 
     fn fg_default_p(&self) -> bool;
     fn bg_default_p(&self) -> bool;
@@ -153,13 +143,13 @@ impl NcChannelApi for NcChannel {
     ///
     /// Note: this is equivalent to
     /// [`NcChannels::BG_DEFAULT_MASK`][NcChannels#associatedconstant.BG_DEFAULT_MASK]
-    const DEFAULT_MASK: u32 = super::constants::NC_BGDEFAULT_MASK;
+    const DEFAULT_MASK: u32 = super::c_api::NC_BGDEFAULT_MASK;
 
     /// Extract these bits to get the (background) [`NcAlpha`] mask.
     ///
     /// Note: this is equivalent to
     /// [`NcChannels::BG_ALPHA_MASK`][NcChannels#associatedconstant.BG_ALPHA_MASK]
-    const ALPHA_MASK: u32 = super::constants::NC_BG_ALPHA_MASK;
+    const ALPHA_MASK: u32 = super::c_api::NC_BG_ALPHA_MASK;
 
     /// If this bit *and*
     /// [`DEFAULT_MASK`][NcChannel#associatedconstant.DEFAULT_MASK] are set,
@@ -167,13 +157,13 @@ impl NcChannelApi for NcChannel {
     ///
     /// Note: this is equivalent to
     /// [`NcChannels::BG_PALETTE_MASK`][NcChannels#associatedconstant.BG_PALETTE_MASK]
-    const PALETTE_MASK: u32 = super::constants::NC_BG_PALETTE;
+    const PALETTE_MASK: u32 = super::c_api::NC_BG_PALETTE;
 
     /// Extract these bits to get the background [`NcRgb`][crate::NcRgb] value.
     ///
     /// Note: this is equivalent to
     /// [`NcChannels::BG_RGB_MASK`][NcChannels#associatedconstant.BG_RGB_MASK]
-    const RGB_MASK: u32 = super::constants::NC_BG_RGB_MASK;
+    const RGB_MASK: u32 = super::c_api::NC_BG_RGB_MASK;
 
     // Constructors
 
@@ -197,13 +187,13 @@ impl NcChannelApi for NcChannel {
         Self::new().set(rgb).set_alpha(alpha)
     }
 
-    /// New `NcChannel`, expects three RGB [`NcComponent`] components.
-    fn from_rgb8(r: NcComponent, g: NcComponent, b: NcComponent) -> Self {
+    /// New `NcChannel`, expects three RGB component components.
+    fn from_rgb8(r: u8, g: u8, b: u8) -> Self {
         Self::new().set_rgb8(r, g, b)
     }
 
-    /// New `NcChannel`, expects three RGB [`NcComponent`] components & [`NcAlpha`].
-    fn from_rgb8_alpha(r: NcComponent, g: NcComponent, b: NcComponent, alpha: NcAlpha) -> Self {
+    /// New `NcChannel`, expects three RGB component components & [`NcAlpha`].
+    fn from_rgb8_alpha(r: u8, g: u8, b: u8, alpha: NcAlpha) -> Self {
         Self::new().set_rgb8(r, g, b).set_alpha(alpha)
     }
 
@@ -273,71 +263,71 @@ impl NcChannelApi for NcChannel {
         *self
     }
 
-    // NcComponent
+    // u8
 
-    /// Gets the three [`NcComponent`]s.
+    /// Gets the three components.
     ///
     /// *C style function: [ncchannel_rgb8()][c_api::ncchannel_rgb8].*
-    fn rgb8(&self) -> (NcComponent, NcComponent, NcComponent) {
+    fn rgb8(&self) -> (u8, u8, u8) {
         let (mut r, mut g, mut b) = (0, 0, 0);
         c_api::ncchannel_rgb8(*self, &mut r, &mut g, &mut b);
         (r, g, b)
     }
 
-    /// Sets the three [`NcComponent`]s, and
+    /// Sets the three components, and
     /// marks the NcChannel as NOT using the "default color".
     ///
     /// *C style function: [ncchannel_set_rgb8()][c_api::ncchannel_set_rgb8].*
-    fn set_rgb8(&mut self, r: NcComponent, g: NcComponent, b: NcComponent) -> Self {
+    fn set_rgb8(&mut self, r: u8, g: u8, b: u8) -> Self {
         c_api::ncchannel_set_rgb8(self, r, g, b);
         *self
     }
 
-    /// Gets the red [`NcComponent`].
+    /// Gets the red component.
     ///
     /// *C style function: [ncchannel_r()][c_api::ncchannel_r].*
-    fn r(&self) -> NcComponent {
+    fn r(&self) -> u8 {
         c_api::ncchannel_r(*self)
     }
 
-    /// Gets the green [`NcComponent`].
+    /// Gets the green component.
     ///
     /// *C style function: [ncchannel_g()][c_api::ncchannel_g].*
-    fn g(&self) -> NcComponent {
+    fn g(&self) -> u8 {
         c_api::ncchannel_g(*self)
     }
 
-    /// Gets the blue [`NcComponent`].
+    /// Gets the blue component.
     ///
     /// *C style function: [ncchannel_b()][c_api::ncchannel_b].*
-    fn b(&self) -> NcComponent {
+    fn b(&self) -> u8 {
         c_api::ncchannel_b(*self)
     }
 
-    /// Sets the red [`NcComponent`], and returns the new `NcChannel`.
+    /// Sets the red component, and returns the new `NcChannel`.
     ///
     /// *C style function: [ncchannel_set_r()][c_api::ncchannel_set_r].*
     //
     // Not in the C API
-    fn set_r(&mut self, r: NcComponent) -> Self {
+    fn set_r(&mut self, r: u8) -> Self {
         c_api::ncchannel_set_r(self, r)
     }
 
-    /// Sets the green [`NcComponent`], and returns the new `NcChannel`.
+    /// Sets the green component, and returns the new `NcChannel`.
     ///
     /// *C style function: [ncchannel_set_g()][c_api::ncchannel_set_g].*
     //
     // Not in the C API
-    fn set_g(&mut self, g: NcComponent) -> Self {
+    fn set_g(&mut self, g: u8) -> Self {
         c_api::ncchannel_set_g(self, g)
     }
 
-    /// Sets the blue [`NcComponent`], and returns the new `NcChannel`.
+    /// Sets the blue component, and returns the new `NcChannel`.
     ///
     /// *C style function: [ncchannel_set_b()][c_api::ncchannel_set_b].*
     //
     // Not in the C API
-    fn set_b(&mut self, b: NcComponent) -> Self {
+    fn set_b(&mut self, b: u8) -> Self {
         c_api::ncchannel_set_b(self, b)
     }
 
@@ -410,22 +400,22 @@ impl NcChannelsApi for NcChannels {
     /// If this bit is set, we are *not* using the default background color.
     ///
     /// See the detailed diagram at [`NcChannels`][crate::NcChannels]
-    const BG_DEFAULT_MASK: u32 = super::constants::NC_BGDEFAULT_MASK;
+    const BG_DEFAULT_MASK: u32 = super::c_api::NC_BGDEFAULT_MASK;
 
     /// Extract these bits to get the background [`NcAlpha`] mask.
     ///
     /// See the detailed diagram at [`NcChannels`][crate::NcChannels]
-    const BG_ALPHA_MASK: u32 = super::constants::NC_BG_ALPHA_MASK;
+    const BG_ALPHA_MASK: u32 = super::c_api::NC_BG_ALPHA_MASK;
 
     /// If this bit *and*
     /// [`BG_DEFAULT_MASK`][NcChannels#associatedconstant.BG_DEFAULT_MASK]
     /// are set, we're using a palette-indexed background color.
     ///
     /// See the detailed diagram at [`NcChannels`][crate::NcChannels]
-    const BG_PALETTE_MASK: u32 = super::constants::NC_BG_PALETTE;
+    const BG_PALETTE_MASK: u32 = super::c_api::NC_BG_PALETTE;
 
     /// Extract these bits to get the background [`NcRgb`][crate::NcRgb] value.
-    const BG_RGB_MASK: u32 = super::constants::NC_BG_RGB_MASK;
+    const BG_RGB_MASK: u32 = super::c_api::NC_BG_RGB_MASK;
 
     // Constructors
 
@@ -471,39 +461,32 @@ impl NcChannelsApi for NcChannels {
         Self::combine(channel, channel)
     }
 
-    /// New `NcChannels`, expects three RGB [`NcComponent`] components
+    /// New `NcChannels`, expects three RGB component components
     /// for each channel.
-    fn from_rgb8(
-        fg_r: NcComponent,
-        fg_g: NcComponent,
-        fg_b: NcComponent,
-        bg_r: NcComponent,
-        bg_g: NcComponent,
-        bg_b: NcComponent,
-    ) -> Self {
+    fn from_rgb8(fg_r: u8, fg_g: u8, fg_b: u8, bg_r: u8, bg_g: u8, bg_b: u8) -> Self {
         Self::combine(
             NcChannel::from_rgb8(fg_r, fg_g, fg_b),
             NcChannel::from_rgb8(bg_r, bg_g, bg_b),
         )
     }
 
-    /// New `NcChannels`, expects three RGB [`NcComponent`] components for
+    /// New `NcChannels`, expects three RGB component components for
     /// both the foreground and background channels.
-    fn from_rgb8_both(r: NcComponent, g: NcComponent, b: NcComponent) -> Self {
+    fn from_rgb8_both(r: u8, g: u8, b: u8) -> Self {
         let channel = NcChannel::new().set_rgb8(r, g, b);
         Self::combine(channel, channel)
     }
 
-    /// New `NcChannels`, expects three RGB [`NcComponent`]s and
+    /// New `NcChannels`, expects three RGB components and
     /// [`NcAlpha`], for both the foreground and background channels.
     fn from_rgb8_alpha(
-        fg_r: NcComponent,
-        fg_g: NcComponent,
-        fg_b: NcComponent,
+        fg_r: u8,
+        fg_g: u8,
+        fg_b: u8,
         fg_alpha: NcAlpha,
-        bg_r: NcComponent,
-        bg_g: NcComponent,
-        bg_b: NcComponent,
+        bg_r: u8,
+        bg_g: u8,
+        bg_b: u8,
         bg_alpha: NcAlpha,
     ) -> Self {
         Self::combine(
@@ -512,13 +495,8 @@ impl NcChannelsApi for NcChannels {
         )
     }
 
-    /// New `NcChannel`, expects three RGB [`NcComponent`]s.
-    fn from_rgb8_alpha_both(
-        r: NcComponent,
-        g: NcComponent,
-        b: NcComponent,
-        alpha: NcAlpha,
-    ) -> Self {
+    /// New `NcChannel`, expects three RGB components.
+    fn from_rgb8_alpha_both(r: u8, g: u8, b: u8, alpha: NcAlpha) -> Self {
         let channel = NcChannel::new().set_rgb8(r, g, b).set_alpha(alpha);
         Self::combine(channel, channel)
     }
@@ -656,128 +634,128 @@ impl NcChannelsApi for NcChannels {
         *self
     }
 
-    // NcComponent
+    // u8
 
-    /// Gets the three foreground RGB [`NcComponent`]s (r, g, b).
+    /// Gets the three foreground RGB components (r, g, b).
     ///
     /// *C style function: [channels_fg_rgb8()][c_api::ncchannels_fg_rgb8].*
-    fn fg_rgb8(&self) -> (NcComponent, NcComponent, NcComponent) {
+    fn fg_rgb8(&self) -> (u8, u8, u8) {
         let (mut r, mut g, mut b) = (0, 0, 0);
         c_api::ncchannels_fg_rgb8(*self, &mut r, &mut g, &mut b);
         (r, g, b)
     }
 
-    /// Gets the three background RGB [`NcComponent`]s (r, g, b).
+    /// Gets the three background RGB components (r, g, b).
     ///
     /// *C style function: [channels_bg_rgb8()][c_api::ncchannels_bg_rgb8].*
-    fn bg_rgb8(&self) -> (NcComponent, NcComponent, NcComponent) {
+    fn bg_rgb8(&self) -> (u8, u8, u8) {
         let (mut r, mut g, mut b) = (0, 0, 0);
         c_api::ncchannels_bg_rgb8(*self, &mut r, &mut g, &mut b);
         (r, g, b)
     }
 
-    /// Sets the three foreground RGB [`NcComponent`]s (r, g, b), and
+    /// Sets the three foreground RGB components (r, g, b), and
     /// marks the foreground [`NcChannel`] as not using the "default color".
     ///
     /// *C style function: [channels_set_fg_rgb8()][c_api::ncchannels_set_fg_rgb8].*
-    fn set_fg_rgb8(&mut self, r: NcComponent, g: NcComponent, b: NcComponent) -> Self {
+    fn set_fg_rgb8(&mut self, r: u8, g: u8, b: u8) -> Self {
         c_api::ncchannels_set_fg_rgb8(self, r, g, b)
     }
 
-    /// Sets the three background RGB [`NcComponent`]s (r, g, b), and
+    /// Sets the three background RGB components (r, g, b), and
     /// marks the background [`NcChannel`] as not using the "default color".
     ///
     /// *C style function: [channels_set_bg_rgb8()][c_api::ncchannels_set_bg_rgb8].*
-    fn set_bg_rgb8(&mut self, r: NcComponent, g: NcComponent, b: NcComponent) -> Self {
+    fn set_bg_rgb8(&mut self, r: u8, g: u8, b: u8) -> Self {
         c_api::ncchannels_set_bg_rgb8(self, r, g, b)
     }
 
-    /// Gets the foreground red [`NcComponent`].
+    /// Gets the foreground red component.
     ///
     /// *(No equivalent C style function)*
-    fn fg_r(&self) -> NcComponent {
+    fn fg_r(&self) -> u8 {
         c_api::ncchannel_r(c_api::ncchannels_fchannel(*self))
     }
 
-    /// Gets the foreground green [`NcComponent`].
+    /// Gets the foreground green component.
     ///
     /// *(No equivalent C style function)*
-    fn fg_g(&self) -> NcComponent {
+    fn fg_g(&self) -> u8 {
         c_api::ncchannel_g(c_api::ncchannels_fchannel(*self))
     }
 
-    /// Gets the foreground blue [`NcComponent`].
+    /// Gets the foreground blue component.
     ///
     /// *(No equivalent C style function)*
-    fn fg_b(&self) -> NcComponent {
+    fn fg_b(&self) -> u8 {
         c_api::ncchannel_b(c_api::ncchannels_fchannel(*self))
     }
 
-    /// Gets the background red [`NcComponent`].
+    /// Gets the background red component.
     ///
     /// *(No equivalent C style function)*
-    fn bg_r(&self) -> NcComponent {
+    fn bg_r(&self) -> u8 {
         c_api::ncchannel_r(c_api::ncchannels_bchannel(*self))
     }
 
-    /// Gets the background green [`NcComponent`].
+    /// Gets the background green component.
     ///
     /// *(No equivalent C style function)*
-    fn bg_g(&self) -> NcComponent {
+    fn bg_g(&self) -> u8 {
         c_api::ncchannel_g(c_api::ncchannels_bchannel(*self))
     }
 
-    /// Gets the background blue [`NcComponent`].
+    /// Gets the background blue component.
     ///
     /// *(No equivalent C style function)*
-    fn bg_b(&self) -> NcComponent {
+    fn bg_b(&self) -> u8 {
         c_api::ncchannel_b(c_api::ncchannels_bchannel(*self))
     }
 
-    /// Sets the foreground red [`NcComponent`], and returns the new `NcChannels`.
+    /// Sets the foreground red component, and returns the new `NcChannels`.
     ///
     /// *(No equivalent C style function)*
-    fn fg_set_r(&mut self, r: NcComponent) -> Self {
+    fn fg_set_r(&mut self, r: u8) -> Self {
         let (_, g, b) = self.bg_rgb8();
         c_api::ncchannels_set_fg_rgb8(self, r, g, b)
     }
 
-    /// Sets the foreground green [`NcComponent`], and returns the new `NcChannels`.
+    /// Sets the foreground green component, and returns the new `NcChannels`.
     ///
     /// *(No equivalent C style function)*
-    fn fg_set_g(&mut self, g: NcComponent) -> Self {
+    fn fg_set_g(&mut self, g: u8) -> Self {
         let (r, _, b) = self.bg_rgb8();
         c_api::ncchannels_set_fg_rgb8(self, r, g, b)
     }
 
-    /// Sets the foreground blue [`NcComponent`], and returns the new `NcChannels`.
+    /// Sets the foreground blue component, and returns the new `NcChannels`.
     ///
     /// *(No equivalent C style function)*
-    fn fg_set_b(&mut self, b: NcComponent) -> Self {
+    fn fg_set_b(&mut self, b: u8) -> Self {
         let (r, g, _) = self.bg_rgb8();
         c_api::ncchannels_set_fg_rgb8(self, r, g, b)
     }
 
-    /// Sets the background red [`NcComponent`], and returns the new `NcChannels`.
+    /// Sets the background red component, and returns the new `NcChannels`.
     ///
     /// *(No equivalent C style function)*
-    fn bg_set_r(&mut self, r: NcComponent) -> Self {
+    fn bg_set_r(&mut self, r: u8) -> Self {
         let (_, g, b) = self.bg_rgb8();
         c_api::ncchannels_set_bg_rgb8(self, r, g, b)
     }
 
-    /// Sets the background green [`NcComponent`], and returns the new `NcChannels`.
+    /// Sets the background green component, and returns the new `NcChannels`.
     ///
     /// *(No equivalent C style function)*
-    fn bg_set_g(&mut self, g: NcComponent) -> Self {
+    fn bg_set_g(&mut self, g: u8) -> Self {
         let (r, _, b) = self.bg_rgb8();
         c_api::ncchannels_set_bg_rgb8(self, r, g, b)
     }
 
-    /// Sets the background blue [`NcComponent`], and returns the new `NcChannels`.
+    /// Sets the background blue component, and returns the new `NcChannels`.
     ///
     /// *(No equivalent C style function)*
-    fn bg_set_b(&mut self, b: NcComponent) -> Self {
+    fn bg_set_b(&mut self, b: u8) -> Self {
         let (r, g, _) = self.bg_rgb8();
         c_api::ncchannels_set_bg_rgb8(self, r, g, b)
     }
@@ -908,5 +886,5 @@ impl NcChannelsApi for NcChannels {
     /// Does this glyph completely obscure the background? If so, there's no need
     /// to emit a background when rasterizing, a small optimization. These are
     /// also used to track regions into which we must not cellblit.
-    const NOBACKGROUND_MASK: u64 = super::constants::NC_NOBACKGROUND_MASK;
+    const NOBACKGROUND_MASK: u64 = c_api::NC_NOBACKGROUND_MASK;
 }

@@ -3,9 +3,9 @@ use core::{ptr::null_mut, slice::from_raw_parts_mut};
 
 use crate::{
     c_api, cstring, error, error_ref, error_ref_mut, rstring_free, Nc, NcAlign, NcAlpha, NcBlitter,
-    NcBoxMask, NcCell, NcChannel, NcChannels, NcComponent, NcDim, NcError, NcFadeCb, NcFile,
-    NcOffset, NcPaletteIndex, NcPixelGeometry, NcPlane, NcPlaneOptions, NcResizeCb, NcResult,
-    NcRgb, NcRgba, NcStyle, NcTime,
+    NcBoxMask, NcCell, NcChannel, NcChannels, NcDim, NcError, NcFadeCb, NcFile, NcOffset,
+    NcPaletteIndex, NcPixelGeometry, NcPlane, NcPlaneOptions, NcResizeCb, NcResult, NcRgb, NcRgba,
+    NcStyle, NcTime,
 };
 
 /// # NcPlane constructors & destructors
@@ -237,29 +237,29 @@ impl NcPlane {
 }
 
 // -----------------------------------------------------------------------------
-/// ## NcPlane methods: `NcComponent`, `NcRgb` & default color
+/// ## NcPlane methods: `NcRgb`, components & default color
 impl NcPlane {
-    /// Gets the foreground RGB [`NcComponent`]s from this `NcPlane`.
+    /// Gets the foreground RGB components from this `NcPlane`.
     ///
     /// *C style function: [ncplane_fg_rgb8()][c_api::ncplane_fg_rgb8].*
     #[inline]
-    pub fn fg_rgb8(&self) -> (NcComponent, NcComponent, NcComponent) {
+    pub fn fg_rgb8(&self) -> (u8, u8, u8) {
         let (mut r, mut g, mut b) = (0, 0, 0);
         let _ = c_api::ncchannels_fg_rgb8(c_api::ncplane_channels(self), &mut r, &mut g, &mut b);
         (r, g, b)
     }
 
-    /// Gets the background RGB [`NcComponent`]s from this `NcPlane`.
+    /// Gets the background RGB components from this `NcPlane`.
     ///
     /// *C style function: [ncplane_bg_rgb8()][c_api::ncplane_bg_rgb8].*
     #[inline]
-    pub fn bg_rgb8(&self) -> (NcComponent, NcComponent, NcComponent) {
+    pub fn bg_rgb8(&self) -> (u8, u8, u8) {
         let (mut r, mut g, mut b) = (0, 0, 0);
         let _ = c_api::ncchannels_bg_rgb8(c_api::ncplane_channels(self), &mut r, &mut g, &mut b);
         (r, g, b)
     }
 
-    /// Sets the foreground RGB [`NcComponent`]s for this `NcPlane`.
+    /// Sets the foreground RGB components for this `NcPlane`.
     ///
     /// If the terminal does not support directly-specified 3x8b cells
     /// (24-bit "TrueColor", indicated by the "RGB" terminfo capability),
@@ -269,14 +269,14 @@ impl NcPlane {
     /// time using "color pairs"; notcurses will manage color pairs transparently.
     ///
     /// *C style function: [ncplane_set_fg_rgb8()][c_api::ncplane_set_fg_rgb8].*
-    pub fn set_fg_rgb8(&mut self, red: NcComponent, green: NcComponent, blue: NcComponent) {
+    pub fn set_fg_rgb8(&mut self, red: u8, green: u8, blue: u8) {
         unsafe {
             // Can't fail because of type enforcing.
             let _ = c_api::ncplane_set_fg_rgb8(self, red as u32, green as u32, blue as u32);
         }
     }
 
-    /// Sets the background RGB [`NcComponent`]s for this `NcPlane`.
+    /// Sets the background RGB components for this `NcPlane`.
     ///
     /// If the terminal does not support directly-specified 3x8b cells
     /// (24-bit "TrueColor", indicated by the "RGB" terminfo capability),
@@ -286,7 +286,7 @@ impl NcPlane {
     /// time using "color pairs"; notcurses will manage color pairs transparently.
     ///
     /// *C style function: [ncplane_set_bg_rgb8()][c_api::ncplane_set_bg_rgb8].*
-    pub fn set_bg_rgb8(&mut self, red: NcComponent, green: NcComponent, blue: NcComponent) {
+    pub fn set_bg_rgb8(&mut self, red: u8, green: u8, blue: u8) {
         unsafe {
             // Can't fail because of type enforcing.
             let _ = c_api::ncplane_set_bg_rgb8(self, red as u32, green as u32, blue as u32);

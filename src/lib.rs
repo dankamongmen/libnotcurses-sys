@@ -20,20 +20,22 @@
 //!
 //! ### Notes on the Rust API
 //!
-//! The `Drop` trait is not implemented for any wrapping type in this library.
+//! The `Drop` trait is not implemented for any wrapping type in this library
+//! over structures created by the underlying C library.
 //!
 //! This means you still have to manually call the `stop()` method for `Nc`
 //! and `NcDirect` objects, and the `destroy()` method for the rest of types that
-//! allocate, (like `NcPlane`, `NcMenu`…) at the end of their scope, since the
+//! allocate, (like `NcPlane`, `NcMenu`…) at the end of their scope.
 //!
 //! But they do implement methods and use `NcResult` as the return type,
 //! for handling errors in the way we are used to in Rust.
 //!
 //! For the types that don't allocate, most are based on primitives like `i32`,
 //! `u32`, `u64`… without a name in the C library. In Rust they are type aliased
-//! (e.g.: `NcChannel`, `NcChannelPair`, `NcRgb`, `NcColor`…), to
-//! leverage type checking, and they implement methods through traits
-//! (e.g. `NcChannelApi` must be in scope to use the `NcChannel` methods.
+//! for the C API (e.g.: `NcChannel_u32`, `NcLogLevel_i32`, `NcStyle_u16`…), to
+//! leverage type checking. And for the Rust API they are wrapped as unit structs
+//! or enums, with associated methods and constants (e.g. `NcChannel`,
+//! `NcLogLevel`, `NcStyle`…).
 //!
 //! Several methods are declared unsafe when they have addittional contracts to
 //! manually upheld in order to avoid *UB*.
@@ -117,7 +119,7 @@ pub use alpha::NcAlpha;
 pub use blitter::NcBlitter;
 pub use capabilities::NcCapabilities;
 pub use cell::NcCell;
-pub use channel::{NcChannel, NcChannelApi, NcChannels, NcChannelsApi, NcComponent, NcRgb};
+pub use channel::{NcChannel, NcChannelApi, NcChannels, NcChannelsApi, NcRgb};
 pub use dimension::{NcDim, NcOffset};
 pub use direct::{NcDirect, NcDirectFlags, NcDirectFlagsApi};
 pub use error::{NcError, NcResult};
@@ -178,7 +180,7 @@ pub mod c_api {
     pub use crate::align::c_api::*;
     pub use crate::alpha::c_api::*;
     pub use crate::blitter::c_api::*;
-    pub use crate::channel::constants::*;
+    pub use crate::channel::c_api::*;
     pub use crate::direct::constants::*;
     pub use crate::error::c_api::*;
     pub use crate::input::c_api::*;

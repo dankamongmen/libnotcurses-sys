@@ -5,8 +5,8 @@ use libc::c_void;
 
 use crate::{
     c_api::{self, NcResult_i32, NCRESULT_ERR},
-    cstring, error, error_ref_mut, Nc, NcBlitter, NcChannel, NcComponent, NcDim, NcDirect, NcError,
-    NcPixel, NcPlane, NcResult, NcRgba, NcScale, NcTime, NcVGeom, NcVisual, NcVisualGeometry,
+    cstring, error, error_ref_mut, Nc, NcBlitter, NcChannel, NcDim, NcDirect, NcError, NcPixel,
+    NcPlane, NcResult, NcRgba, NcScale, NcTime, NcVGeom, NcVisual, NcVisualGeometry,
     NcVisualOptions,
 };
 
@@ -117,7 +117,7 @@ impl NcVisual {
         rows: NcDim,
         rowstride: NcDim,
         cols: NcDim,
-        alpha: NcComponent,
+        alpha: u8,
     ) -> NcResult<&'a mut NcVisual> {
         error_ref_mut![
             unsafe {
@@ -145,7 +145,7 @@ impl NcVisual {
         rows: NcDim,
         rowstride: NcDim,
         cols: NcDim,
-        alpha: NcComponent,
+        alpha: u8,
     ) -> NcResult<&'a mut NcVisual> {
         error_ref_mut![
             unsafe {

@@ -3,7 +3,7 @@
 // TOC:
 // - Alpha
 // - NcChannel
-// - NcComponent
+// - RGB components
 // - NcRgb
 // - Default
 // - put & print
@@ -20,8 +20,8 @@ use std::ffi::CString;
 
 use crate::{
     c_api::{self, nccell_release, NcResult_i32, NCRESULT_ERR, NCRESULT_OK},
-    cstring, NcAlign, NcAlpha, NcBoxMask, NcCell, NcChannel, NcChannels, NcComponent, NcDim,
-    NcOffset, NcPlane, NcRgb, NcStyle,
+    cstring, NcAlign, NcAlpha, NcBoxMask, NcCell, NcChannel, NcChannels, NcDim, NcOffset, NcPlane,
+    NcRgb, NcStyle,
 };
 
 // Alpha -----------------------------------------------------------------------
@@ -96,33 +96,23 @@ pub fn ncplane_set_channels(plane: &mut NcPlane, channels: NcChannels) {
     }
 }
 
-// NcComponent ---------------------------------------------------------------------
+// RGB components --------------------------------------------------------------
 
-/// Gets the foreground RGB [`NcComponent`]s from an [`NcPlane`].
+/// Gets the foreground RGB components from an [`NcPlane`].
 /// and returns the background [`NcChannel`].
 ///
 /// *Method: NcPlane.[fg_rgb8()][NcPlane#method.fg_rgb8].*
 #[inline]
-pub fn ncplane_fg_rgb8(
-    plane: &NcPlane,
-    red: &mut NcComponent,
-    green: &mut NcComponent,
-    blue: &mut NcComponent,
-) -> NcChannel {
+pub fn ncplane_fg_rgb8(plane: &NcPlane, red: &mut u8, green: &mut u8, blue: &mut u8) -> NcChannel {
     c_api::ncchannels_fg_rgb8(ncplane_channels(plane), red, green, blue)
 }
 
-/// Gets the background RGB [`NcComponent`]s from an [`NcPlane`],
+/// Gets the background RGB componentss from an [`NcPlane`],
 /// and returns the background [`NcChannel`].
 ///
 /// *Method: NcPlane.[bg_rgb8()][NcPlane#method.bg_rgb8].*
 #[inline]
-pub fn ncplane_bg_rgb8(
-    plane: &NcPlane,
-    red: &mut NcComponent,
-    green: &mut NcComponent,
-    blue: &mut NcComponent,
-) -> NcChannel {
+pub fn ncplane_bg_rgb8(plane: &NcPlane, red: &mut u8, green: &mut u8, blue: &mut u8) -> NcChannel {
     c_api::ncchannels_bg_rgb8(ncplane_channels(plane), red, green, blue)
 }
 
