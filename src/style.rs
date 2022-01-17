@@ -1,39 +1,57 @@
 //!
 
-/// Style bitmask.
+/// A bitmask of styles.
+///
+/// # Flags
+/// - [`Bold`][NcStyle::Bold]
+/// - [`Italic`][NcStyle::Italic]
+/// - [`Struck`][NcStyle::Struck]
+/// - [`Underline`][NcStyle::Underline]
+/// - [`Undercurl`][NcStyle::Undercurl]
+/// - [`None`][NcStyle::None]
+/// - [`Mask`][NcStyle::Mask]
 ///
 /// # Default
 /// *[`NcStyle::None`]
+///
+/// # Notes
+/// - if you want reverse video, try [`NcChannels.reverse`]
+/// - if you want blink, try [`NcPlane.pulse`].
+/// - if you want protection, put things on a different `NcPlane`.
+///
+/// [`NcChannels.reverse`]: crate::NcChannels#method.reverse
+/// [`NcPlane.pulse`]: crate::NcPlane#method.pulse
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub struct NcStyle(c_api::NcStyle_u16);
+pub struct NcStyle(pub c_api::NcStyle_u16);
 
 /// # Constants
 impl NcStyle {
+    /// Bold.
+    pub const Bold: Self = Self(c_api::NCSTYLE_BOLD);
+
+    /// Italic.
+    pub const Italic: Self = Self(c_api::NCSTYLE_ITALIC);
+
+    /// Struck.
+    pub const Struck: Self = Self(c_api::NCSTYLE_STRUCK);
+
+    /// Underline.
+    pub const Underline: Self = Self(c_api::NCSTYLE_UNDERLINE);
+
+    /// Undercurl.
+    pub const Undercurl: Self = Self(c_api::NCSTYLE_UNDERCURL);
+
     /// None of the styles (all bits set to 0).
     pub const None: Self = Self(0);
 
-    /// The style mask (all bits set to 1).
+    /// The mask of all styles (all bits set to 1).
     pub const Mask: Self = Self(c_api::NCSTYLE_MASK);
-
-    ///
-    pub const Italic: Self = Self(c_api::NCSTYLE_ITALIC);
-
-    ///
-    pub const Underline: Self = Self(c_api::NCSTYLE_UNDERLINE);
-
-    ///
-    pub const Undercurl: Self = Self(c_api::NCSTYLE_UNDERCURL);
-
-    ///
-    pub const Struck: Self = Self(c_api::NCSTYLE_STRUCK);
-
-    ///
-    pub const Bold: Self = Self(c_api::NCSTYLE_BOLD);
 }
 
 mod std_impls {
-    use std::fmt;
     use super::{c_api::NcStyle_u16, NcStyle};
+    use std::fmt;
 
     impl Default for NcStyle {
         fn default() -> Self {
@@ -52,6 +70,7 @@ mod std_impls {
 
     crate::unit_impl_ops![bitwise; NcStyle];
 
+    // TODO: make macro
     impl fmt::UpperHex for NcStyle {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             let val = self.0;
@@ -62,6 +81,7 @@ mod std_impls {
 
 /// # Methods
 impl NcStyle {
+    /// Returns a new `NcStyle`.
     pub fn new(value: c_api::NcStyle_u16) -> Self {
         Self(value)
     }
@@ -102,8 +122,6 @@ pub(crate) mod c_api {
     /// Styling attribute flags.
     ///
     /// It's recommended to use [`NcStyle`][crate::NcStyle] instead.
-    ///
-    /// `type in C:  uint16_t`
     ///
     /// # Associated `c_api` constants
     ///

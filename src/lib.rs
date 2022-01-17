@@ -132,7 +132,7 @@ pub use notcurses::{Nc, NcOptions};
 pub use palette::{NcPalette, NcPaletteIndex};
 pub use pixel::{NcPixel, NcPixelApi, NcPixelGeometry, NcPixelImpl, NcPixelImplApi};
 pub use plane::{NcPlane, NcPlaneOptions, NcPlaneOptionsBuilder};
-pub use r#box::{NcBoxMask, NcBoxMaskApi};
+pub use r#box::NcBoxMask;
 pub use resizecb::{NcResizeCb, NcResizeCbApi, NcResizeCbUnsafe};
 pub use scale::NcScale;
 pub use stats::NcStats;
@@ -144,7 +144,7 @@ pub use visual::{
 };
 
 pub mod c_api {
-    //! The C API including global constants, functions and structs.
+    //! The `C API`, including structs, constants, functions and type aliases.
     //!
     //! Includes also both automatically imported functions by bindgen, and
     //! manually wrapped and reimplemented global functions.
@@ -154,10 +154,6 @@ pub mod c_api {
 
     pub mod ffi {
         //! Rust FFI bindings, automatically generated with bindgen.
-        //!
-        //! Almost all of the notcurses API functions are reexported to the public
-        //! API, while structs, enums and constants are type aliased or wrapped up.
-        //!
         pub use crate::bindings::ffi::*;
     }
 
@@ -194,7 +190,7 @@ pub mod c_api {
     pub use crate::palette::constants::*;
     pub use crate::pixel::constants::*;
     pub use crate::plane::options::constants::*;
-    pub use crate::r#box::constants::*;
+    pub use crate::r#box::c_api::*;
     pub use crate::scale::c_api::*;
     pub use crate::style::c_api::*;
     pub use crate::visual::options::constants::*;

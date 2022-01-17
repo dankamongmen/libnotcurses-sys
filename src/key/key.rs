@@ -206,13 +206,13 @@ impl NcKey {
 /// # Constants
 impl NcKey {
     /// Rather than using one of the Private Use Areas of Unicode, we use the
-    /// area beyond the 17 65536-entry Planes (1114112).
+    /// area beyond the 17 65_536-entry Planes (1_114_112).
     ///
-    /// We round up to 5000 so that it's trivial to identify synthesized
+    /// We round up to 5_000 so that it's trivial to identify synthesized
     /// characters based on their numeric definition here.
     ///
     /// This is safe, since we needn't convert these synthesized characters
-    /// into UTF8 (they would otherwise require more than four bytes).
+    /// into UTF-8 (they would otherwise require more than four bytes).
     pub const PRETERUNICODEBASE: u32 = 1115000;
 
     pub const INVALID: NcKey = NcKey(constants::NCKEY_INVALID);

@@ -2304,7 +2304,18 @@ impl NcPlane {
         boxmask: NcBoxMask,
     ) -> NcResult<()> {
         error![unsafe {
-            c_api::ncplane_box(self, ul, ur, ll, lr, hline, vline, stop_y, stop_x, boxmask)
+            c_api::ncplane_box(
+                self,
+                ul,
+                ur,
+                ll,
+                lr,
+                hline,
+                vline,
+                stop_y,
+                stop_x,
+                boxmask.into(),
+            )
         }]
     }
 

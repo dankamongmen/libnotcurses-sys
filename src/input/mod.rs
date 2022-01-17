@@ -41,6 +41,7 @@ pub enum NcReceived {
     Other(u32),
 }
 
+/// # Methods
 impl NcReceived {
     /// New `NcReceived`, from a `u32` number.
     pub fn new(num: u32) -> Self {
@@ -52,34 +53,6 @@ impl NcReceived {
             Self::Char(c)
         } else {
             Self::Other(num)
-        }
-    }
-}
-
-impl From<NcInput> for NcReceived {
-    fn from(i: NcInput) -> Self {
-        Self::new(i.id)
-    }
-}
-impl From<&NcInput> for NcReceived {
-    fn from(i: &NcInput) -> Self {
-        Self::new(i.id)
-    }
-}
-impl From<&mut NcInput> for NcReceived {
-    fn from(i: &mut NcInput) -> Self {
-        Self::new(i.id)
-    }
-}
-
-impl From<NcReceived> for u32 {
-    fn from(r: NcReceived) -> Self {
-        use NcReceived::*;
-        match r {
-            Char(c) => c.into(),
-            Event(e) => e.into(),
-            NoInput => 0,
-            Other(o) => o,
         }
     }
 }
@@ -106,12 +79,6 @@ impl From<NcReceived> for u32 {
 //
 // We encompass single Unicode codepoints, not complete EGCs.
 pub type NcInput = crate::bindings::ffi::ncinput;
-
-impl PartialEq for NcInput {
-    fn eq(&self, other: &Self) -> bool {
-        self.equal_p(other)
-    }
-}
 
 /// # Constructors
 impl NcInput {
@@ -278,6 +245,44 @@ impl NcInput {
     /// *C style function: [ncinput_equal_p()][c_api::ncinput_equal_p].*
     pub fn equal_p(&self, other: &NcInput) -> bool {
         c_api::ncinput_equal_p(self, other)
+    }
+}
+
+mod std_impls {
+    use super::{NcInput, NcReceived};
+
+    impl From<NcInput> for NcReceived {
+        fn from(i: NcInput) -> Self {
+            Self::new(i.id)
+        }
+    }
+    impl From<&NcInput> for NcReceived {
+        fn from(i: &NcInput) -> Self {
+            Self::new(i.id)
+        }
+    }
+    impl From<&mut NcInput> for NcReceived {
+        fn from(i: &mut NcInput) -> Self {
+            Self::new(i.id)
+        }
+    }
+
+    impl PartialEq for NcInput {
+        fn eq(&self, other: &Self) -> bool {
+            self.equal_p(other)
+        }
+    }
+
+    impl From<NcReceived> for u32 {
+        fn from(r: NcReceived) -> Self {
+            use NcReceived::*;
+            match r {
+                Char(c) => c.into(),
+                Event(e) => e.into(),
+                NoInput => 0,
+                Other(o) => o,
+            }
+        }
     }
 }
 

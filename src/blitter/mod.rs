@@ -10,8 +10,6 @@
 //W+ ncblit_rgb_packed
 //W+ ncblit_rgba
 
-use std::fmt;
-
 mod methods;
 
 /// The blitter mode to use for rasterizing an [`NcVisual`][crate::NcVisual].
@@ -90,64 +88,69 @@ impl NcBlitter {
     pub const _3x2: NcBlitter = NcBlitter::Sextant;
 }
 
-impl Default for NcBlitter {
-    fn default() -> Self {
-        Self::Default
-    }
-}
+mod std_impls {
+    use super::{c_api, NcBlitter};
+    use std::fmt;
 
-impl fmt::Display for NcBlitter {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        use NcBlitter::*;
-        write!(
-            f,
-            "{}",
-            match self {
-                Default => "Default",
-                Ascii => "Ascii",
-                Half => "Half",
-                Quadrant => "Quadrant",
-                Sextant => "Sextant",
-                Braille => "Braille",
-                Pixel => "Pixel",
-                _4x1 => "4x1",
-                _8x1 => "8x1",
-            }
-        )
-    }
-}
-
-impl From<c_api::NcBlitter_u32> for NcBlitter {
-    fn from(blitter: c_api::NcBlitter_u32) -> Self {
-        use {c_api::*, NcBlitter::*};
-        match blitter {
-            NCBLIT_DEFAULT => Default,
-            NCBLIT_1x1 => Ascii,
-            NCBLIT_2x1 => Half,
-            NCBLIT_2x2 => Quadrant,
-            NCBLIT_3x2 => Sextant,
-            NCBLIT_BRAILLE => Braille,
-            NCBLIT_PIXEL => Pixel,
-            NCBLIT_4x1 => _4x1,
-            NCBLIT_8x1 => _8x1,
-            _ => Default, // invalid values default to `Default`
+    impl Default for NcBlitter {
+        fn default() -> Self {
+            Self::Default
         }
     }
-}
 
-impl From<NcBlitter> for c_api::NcBlitter_u32 {
-    fn from(blitter: NcBlitter) -> Self {
-        use {c_api::*, NcBlitter::*};
-        match blitter {
-            Default => NCBLIT_DEFAULT,
-            Ascii => NCBLIT_1x1,
-            Half => NCBLIT_2x1,
-            Quadrant => NCBLIT_2x2,
-            Sextant => NCBLIT_3x2,
-            Braille => NCBLIT_BRAILLE,
-            Pixel => NCBLIT_PIXEL,
-            _4x1 => NCBLIT_4x1,
-            _8x1 => NCBLIT_8x1,
+    impl fmt::Display for NcBlitter {
+        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+            use NcBlitter::*;
+            write!(
+                f,
+                "{}",
+                match self {
+                    Default => "Default",
+                    Ascii => "Ascii",
+                    Half => "Half",
+                    Quadrant => "Quadrant",
+                    Sextant => "Sextant",
+                    Braille => "Braille",
+                    Pixel => "Pixel",
+                    _4x1 => "4x1",
+                    _8x1 => "8x1",
+                }
+            )
+        }
+    }
+
+    impl From<c_api::NcBlitter_u32> for NcBlitter {
+        fn from(blitter: c_api::NcBlitter_u32) -> Self {
+            use {c_api::*, NcBlitter::*};
+            match blitter {
+                NCBLIT_DEFAULT => Default,
+                NCBLIT_1x1 => Ascii,
+                NCBLIT_2x1 => Half,
+                NCBLIT_2x2 => Quadrant,
+                NCBLIT_3x2 => Sextant,
+                NCBLIT_BRAILLE => Braille,
+                NCBLIT_PIXEL => Pixel,
+                NCBLIT_4x1 => _4x1,
+                NCBLIT_8x1 => _8x1,
+                _ => Default, // invalid values default to `Default`
+            }
+        }
+    }
+
+    impl From<NcBlitter> for c_api::NcBlitter_u32 {
+        fn from(blitter: NcBlitter) -> Self {
+            use {c_api::*, NcBlitter::*};
+            match blitter {
+                Default => NCBLIT_DEFAULT,
+                Ascii => NCBLIT_1x1,
+                Half => NCBLIT_2x1,
+                Quadrant => NCBLIT_2x2,
+                Sextant => NCBLIT_3x2,
+                Braille => NCBLIT_BRAILLE,
+                Pixel => NCBLIT_PIXEL,
+                _4x1 => NCBLIT_4x1,
+                _8x1 => NCBLIT_8x1,
+            }
         }
     }
 }

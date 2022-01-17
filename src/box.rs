@@ -1,97 +1,166 @@
 //! `NcBoxMask`
 
-/// Controls the drawing of borders, gradients and corners (alias of `u32`).
+/// A bitmask for drawing borders, gradients and corners.
 ///
-/// NcBoxMax is defined in the least significant byte, where bits [3, 0] are
-/// are a border mask, and bits [7, 4] are a gradient mask.
+/// # Flags
+/// - [`GradTop`][NcBoxMask::GradTop]
+/// - [`GradRight`][NcBoxMask::GradRight]
+/// - [`GradBottom`][NcBoxMask::GradBottom]
+/// - [`GradLeft`][NcBoxMask::GradLeft]
+/// - [`MaskTop`][NcBoxMask::MaskTop]
+/// - [`MaskRight`][NcBoxMask::MaskRight]
+/// - [`MaskBottom`][NcBoxMask::MaskBottom]
+/// - [`MaskLeft`][NcBoxMask::MaskLeft]
+/// - [`CornerMask`][NcBoxMask::CornerMask]
+/// - [`CornerShift`][NcBoxMask::CornerShift]
 ///
-/// The drawing of the corners is defined in the second byte,
-/// see [`NcBoxMask::CORNER_MASK`][NcBoxMask#associatedconstant.CORNER_MASK].
-///
-/// ## Diagram
-///
-/// ```txt
-/// MASK_TOP    0x0001  0b00000001
-/// MASK_RIGHT  0x0002  0b00000010
-/// MASK_BOTTOM 0x0004  0b00000100
-/// MASK_LEFT   0x0008  0b00001000
-///
-/// GRAD_TOP    0x0010  0b00010000
-/// GRAD_RIGHT  0x0020  0b00100000
-/// GRAD_BOTTOM 0x0040  0b01000000
-/// GRAD_LEFT   0x0080  0b10000000
-///
-/// NCBOXCORNER_MASK  0x0300  0b00000111_00000000
-///
-/// NCBOXCORNER_SHIFT 8
-/// ```
-pub type NcBoxMask = u32;
+/// # Default
+/// *[`NcBoxMask::None`]
 
-crate::impl_api![
-    NcBoxMask,
-    NcBoxMaskApi,
-    /// [`NcBoxMask`] top gradient mask.
-    const GRAD_TOP: NcBoxMask = constants::NCBOXGRAD_TOP;,
-    /// [`NcBoxMask`] right gradient mask.
-    const GRAD_RIGHT: NcBoxMask = constants::NCBOXGRAD_RIGHT;,
-    /// [`NcBoxMask`] bottom gradient mask.
-    const GRAD_BOTTOM: NcBoxMask = constants::NCBOXGRAD_BOTTOM;,
-    /// [`NcBoxMask`] left gradient mask.
-    const GRAD_LEFT: NcBoxMask = constants::NCBOXGRAD_LEFT;,
-    /// [`NcBoxMask`] top border mask.
-    const MASK_TOP: NcBoxMask = constants::NCBOXMASK_TOP;,
-    /// [`NcBoxMask`] right border mask.
-    const MASK_RIGHT: NcBoxMask = constants::NCBOXMASK_RIGHT;,
-    /// [`NcBoxMask`] bottom border mask.
-    const MASK_BOTTOM: NcBoxMask = constants::NCBOXMASK_BOTTOM;,
-    /// [`NcBoxMask`] left border mask.
-    const MASK_LEFT: NcBoxMask = constants::NCBOXMASK_LEFT;,
-    /// [`NcBoxMask`] corner mask to control the drawing of boxes corners.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct NcBoxMask(pub c_api::NcBoxMask_u32);
+
+/// # Constants
+impl NcBoxMask {
+    /// Top gradient mask.
+    pub const GradTop: Self = Self(c_api::NCBOXGRAD_TOP);
+
+    /// Right gradient mask.
+    pub const GradRight: Self = Self(c_api::NCBOXGRAD_RIGHT);
+
+    /// Bottom gradient mask.
+    pub const GradBottom: Self = Self(c_api::NCBOXGRAD_BOTTOM);
+
+    /// Left gradient mask.
+    pub const GradLeft: Self = Self(c_api::NCBOXGRAD_LEFT);
+
+    /// Top border mask.
+    pub const MaskTop: Self = Self(c_api::NCBOXMASK_TOP);
+
+    /// Right border mask.
+    pub const MaskRight: Self = Self(c_api::NCBOXMASK_RIGHT);
+
+    /// Bottom border mask.
+    pub const MaskBottom: Self = Self(c_api::NCBOXMASK_BOTTOM);
+
+    /// Left border mask.
+    pub const MaskLeft: Self = Self(c_api::NCBOXMASK_LEFT);
+
+    /// Corner mask to control the drawing of boxes corners.
     ///
     /// By default, vertexes are drawn whether their connecting edges are drawn
     /// or not. The value of the bits control this, and are interpreted as the
     /// number of connecting edges necessary to draw a given corner.
     ///
-    /// At 0 (the default), corners are always drawn. At 3, corners are never drawn
-    /// (since at most 2 edges can touch a box's corner),.
-    const CORNER_MASK: NcBoxMask = constants::NCBOXCORNER_MASK;,
-    /// The number of bits
-    /// [`NcBoxMask::CORNER_MASK`][NcBoxMask#associatedconstant.CORNER_MASK]
-    /// is shifted.
-    const CORNER_SHIFT: NcBoxMask = constants::NCBOXCORNER_SHIFT;
-];
+    /// At 0 (the default), corners are always drawn. At 3, corners are never
+    /// drawn (since at most 2 edges can touch a box's corner).
+    pub const CornerMask: Self = Self(c_api::NCBOXCORNER_MASK);
 
-pub(crate) mod constants {
-    use crate::NcBoxMask;
+    /// The number of bits [`CornerMask`] is shifted.
+    ///
+    /// [`CornerMask`]: NcBoxMask#associatedconstant.CornerMask
+    pub const CornerShift: Self = Self(c_api::NCBOXCORNER_SHIFT);
 
-    /// [`NcBoxMask`] top gradient mask.
-    pub const NCBOXGRAD_TOP: NcBoxMask = crate::bindings::ffi::NCBOXGRAD_TOP;
-    /// [`NcBoxMask`] right gradient mask.
-    pub const NCBOXGRAD_RIGHT: NcBoxMask = crate::bindings::ffi::NCBOXGRAD_RIGHT;
-    /// [`NcBoxMask`] bottom gradient mask.
-    pub const NCBOXGRAD_BOTTOM: NcBoxMask = crate::bindings::ffi::NCBOXGRAD_BOTTOM;
-    /// [`NcBoxMask`] left gradient mask.
-    pub const NCBOXGRAD_LEFT: NcBoxMask = crate::bindings::ffi::NCBOXGRAD_LEFT;
+    /// None of the bits set.
+    pub const None: Self = Self(0);
+}
 
-    /// [`NcBoxMask`] top border mask.
-    pub const NCBOXMASK_TOP: NcBoxMask = crate::bindings::ffi::NCBOXMASK_TOP;
-    /// [`NcBoxMask`] right border mask.
-    pub const NCBOXMASK_RIGHT: NcBoxMask = crate::bindings::ffi::NCBOXMASK_RIGHT;
-    /// [`NcBoxMask`] bottom border mask.
-    pub const NCBOXMASK_BOTTOM: NcBoxMask = crate::bindings::ffi::NCBOXMASK_BOTTOM;
-    /// [`NcBoxMask`] left border mask.
-    pub const NCBOXMASK_LEFT: NcBoxMask = crate::bindings::ffi::NCBOXMASK_LEFT;
+/// # Methods
+impl NcBoxMask {
+    /// Returns a new `NcBoxMask`.
+    pub fn new(value: c_api::NcBoxMask_u32) -> Self {
+        Self(value)
+    }
 
-    /// [`NcBoxMask`] corner mask to control the drawing of boxes corners.
+    /// Returns true if the current style has included the `other_style`.
+    pub fn has(&self, other: NcBoxMask) -> bool {
+        (self.0 & other.0) == other.0
+    }
+
+    /// Adds the `other_style` to the current style.
+    pub fn add(&mut self, other: NcBoxMask) {
+        self.0 |= other.0
+    }
+}
+
+mod std_impls {
+    use super::{c_api::NcBoxMask_u32, NcBoxMask};
+
+    impl Default for NcBoxMask {
+        fn default() -> Self {
+            Self::None
+        }
+    }
+
+    crate::unit_impl_from![NcBoxMask, NcBoxMask_u32];
+
+    crate::unit_impl_ops![bitwise; NcBoxMask];
+}
+
+pub(crate) mod c_api {
+    /// Controls the drawing of borders, gradients and corners.
+    ///
+    /// It's recommended to use [`NcBoxMask`][crate::NcBoxMask] instead.
+    ///
+    /// `NcBoxMax_u32` is defined in the least significant byte, where bits [3, 0] are
+    /// are a border mask, and bits [7, 4] are a gradient mask.
+    ///
+    /// The drawing of the corners is defined in the second byte,
+    /// see [`NCBOXCORNER_MASK`].
+    ///
+    /// ## Diagram
+    ///
+    /// ```txt
+    /// MASK_TOP    0x0001  0b00000001
+    /// MASK_RIGHT  0x0002  0b00000010
+    /// MASK_BOTTOM 0x0004  0b00000100
+    /// MASK_LEFT   0x0008  0b00001000
+    ///
+    /// GRAD_TOP    0x0010  0b00010000
+    /// GRAD_RIGHT  0x0020  0b00100000
+    /// GRAD_BOTTOM 0x0040  0b01000000
+    /// GRAD_LEFT   0x0080  0b10000000
+    ///
+    /// NCBOXCORNER_MASK  0x0300  0b00000111_00000000
+    ///
+    /// NCBOXCORNER_SHIFT 8
+    /// ```
+    pub type NcBoxMask_u32 = u32;
+
+    /// [`NcBoxMask_u32`] top gradient mask.
+    pub const NCBOXGRAD_TOP: NcBoxMask_u32 = crate::bindings::ffi::NCBOXGRAD_TOP;
+
+    /// [`NcBoxMask_u32`] right gradient mask.
+    pub const NCBOXGRAD_RIGHT: NcBoxMask_u32 = crate::bindings::ffi::NCBOXGRAD_RIGHT;
+
+    /// [`NcBoxMask_u32`] bottom gradient mask.
+    pub const NCBOXGRAD_BOTTOM: NcBoxMask_u32 = crate::bindings::ffi::NCBOXGRAD_BOTTOM;
+
+    /// [`NcBoxMask_u32`] left gradient mask.
+    pub const NCBOXGRAD_LEFT: NcBoxMask_u32 = crate::bindings::ffi::NCBOXGRAD_LEFT;
+
+    /// [`NcBoxMask_u32`] top border mask.
+    pub const NCBOXMASK_TOP: NcBoxMask_u32 = crate::bindings::ffi::NCBOXMASK_TOP;
+
+    /// [`NcBoxMask_u32`] right border mask.
+    pub const NCBOXMASK_RIGHT: NcBoxMask_u32 = crate::bindings::ffi::NCBOXMASK_RIGHT;
+
+    /// [`NcBoxMask_u32`] bottom border mask.
+    pub const NCBOXMASK_BOTTOM: NcBoxMask_u32 = crate::bindings::ffi::NCBOXMASK_BOTTOM;
+
+    /// [`NcBoxMask_u32`] left border mask.
+    pub const NCBOXMASK_LEFT: NcBoxMask_u32 = crate::bindings::ffi::NCBOXMASK_LEFT;
+
+    /// [`NcBoxMask_u32`] corner mask to control the drawing of boxes corners.
     ///
     /// By default, vertexes are drawn whether their connecting edges are drawn
     /// or not. The value of the bits control this, and are interpreted as the
     /// number of connecting edges necessary to draw a given corner.
     ///
-    /// At 0 (the default), corners are always drawn. At 3, corners are never drawn
-    /// (since at most 2 edges can touch a box's corner).
-    pub const NCBOXCORNER_MASK: NcBoxMask = crate::bindings::ffi::NCBOXCORNER_MASK;
+    /// At 0 (the default), corners are always drawn. At 3, corners are never
+    /// drawn (since at most 2 edges can touch a box's corner).
+    pub const NCBOXCORNER_MASK: NcBoxMask_u32 = crate::bindings::ffi::NCBOXCORNER_MASK;
 
-    /// The number of bits [`NCBOXCORNER_MASK`] is shifted in [`NcBoxMask`].
-    pub const NCBOXCORNER_SHIFT: NcBoxMask = crate::bindings::ffi::NCBOXCORNER_SHIFT;
+    /// The number of bits [`NCBOXCORNER_MASK`] is shifted in [`NcBoxMask_u32`].
+    pub const NCBOXCORNER_SHIFT: NcBoxMask_u32 = crate::bindings::ffi::NCBOXCORNER_SHIFT;
 }

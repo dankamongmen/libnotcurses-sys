@@ -1,7 +1,5 @@
 //! `NcScale`
 
-use std::fmt;
-
 /// Indicates how to scale an [`NcVisual`][crate::NcVisual] during rendering.
 ///
 /// # Default
@@ -49,52 +47,57 @@ pub enum NcScale {
     Stretch = c_api::NCSCALE_STRETCH,
 }
 
-impl Default for NcScale {
-    fn default() -> Self {
-        Self::None
-    }
-}
+mod std_impls {
+    use super::{c_api, NcScale};
+    use std::fmt;
 
-impl fmt::Display for NcScale {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        use NcScale::*;
-        write!(
-            f,
-            "{}",
-            match self {
-                None => "None",
-                Scale => "Scale",
-                NoneHires => "NoneHires",
-                ScaleHires => "ScaleHires",
-                Stretch => "Stretch",
-            }
-        )
-    }
-}
-
-impl From<c_api::NcScale_u32> for NcScale {
-    fn from(scale: c_api::NcScale_u32) -> Self {
-        use {c_api::*, NcScale::*};
-        match scale {
-            NCSCALE_NONE => None,
-            NCSCALE_SCALE => Scale,
-            NCSCALE_NONE_HIRES => NoneHires,
-            NCSCALE_SCALE_HIRES => ScaleHires,
-            NCSCALE_STRETCH => Stretch,
-            _ => None, // invalid values default to `None`
+    impl Default for NcScale {
+        fn default() -> Self {
+            Self::None
         }
     }
-}
 
-impl From<NcScale> for c_api::NcScale_u32 {
-    fn from(scale: NcScale) -> Self {
-        use {c_api::*, NcScale::*};
-        match scale {
-            None => NCSCALE_NONE,
-            Scale => NCSCALE_SCALE,
-            NoneHires => NCSCALE_NONE_HIRES,
-            ScaleHires => NCSCALE_SCALE_HIRES,
-            Stretch => NCSCALE_STRETCH,
+    impl fmt::Display for NcScale {
+        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+            use NcScale::*;
+            write!(
+                f,
+                "{}",
+                match self {
+                    None => "None",
+                    Scale => "Scale",
+                    NoneHires => "NoneHires",
+                    ScaleHires => "ScaleHires",
+                    Stretch => "Stretch",
+                }
+            )
+        }
+    }
+
+    impl From<c_api::NcScale_u32> for NcScale {
+        fn from(scale: c_api::NcScale_u32) -> Self {
+            use {c_api::*, NcScale::*};
+            match scale {
+                NCSCALE_NONE => None,
+                NCSCALE_SCALE => Scale,
+                NCSCALE_NONE_HIRES => NoneHires,
+                NCSCALE_SCALE_HIRES => ScaleHires,
+                NCSCALE_STRETCH => Stretch,
+                _ => None, // invalid values default to `None`
+            }
+        }
+    }
+
+    impl From<NcScale> for c_api::NcScale_u32 {
+        fn from(scale: NcScale) -> Self {
+            use {c_api::*, NcScale::*};
+            match scale {
+                None => NCSCALE_NONE,
+                Scale => NCSCALE_SCALE,
+                NoneHires => NCSCALE_NONE_HIRES,
+                ScaleHires => NCSCALE_SCALE_HIRES,
+                Stretch => NCSCALE_STRETCH,
+            }
         }
     }
 }

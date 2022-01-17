@@ -969,7 +969,18 @@ pub fn ncplane_ascii_box(
             &mut vl,
         );
         if ret == NcIntResult::OK {
-            ret = c_api::ncplane_box(plane, &ul, &ur, &ll, &lr, &hl, &vl, end_y, end_x, boxmask);
+            ret = c_api::ncplane_box(
+                plane,
+                &ul,
+                &ur,
+                &ll,
+                &lr,
+                &hl,
+                &vl,
+                end_y,
+                end_x,
+                boxmask.into(),
+            );
         }
 
         nccell_release(plane, &mut ul);
@@ -1016,7 +1027,7 @@ pub fn ncplane_box_sized(
             vline,
             (y + len_y - 1) as NcDim,
             (x + len_x - 1) as NcDim,
-            boxmask,
+            boxmask.into(),
         )
     }
 }
@@ -1057,7 +1068,18 @@ pub fn ncplane_double_box(
             &mut vl,
         );
         if ret == NcIntResult::OK {
-            ret = c_api::ncplane_box(plane, &ul, &ur, &ll, &lr, &hl, &vl, end_y, end_x, boxmask);
+            ret = c_api::ncplane_box(
+                plane,
+                &ul,
+                &ur,
+                &ll,
+                &lr,
+                &hl,
+                &vl,
+                end_y,
+                end_x,
+                boxmask.into(),
+            );
         }
 
         nccell_release(plane, &mut ul);
@@ -1132,7 +1154,18 @@ pub fn ncplane_rounded_box(
             &mut vl,
         );
         if ret == NcIntResult::OK {
-            ret = c_api::ncplane_box(plane, &ul, &ur, &ll, &lr, &hl, &vl, end_y, end_x, boxmask);
+            ret = c_api::ncplane_box(
+                plane,
+                &ul,
+                &ur,
+                &ll,
+                &lr,
+                &hl,
+                &vl,
+                end_y,
+                end_x,
+                boxmask.into(),
+            );
         }
         nccell_release(plane, &mut ul);
         nccell_release(plane, &mut ur);

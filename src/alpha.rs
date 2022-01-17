@@ -1,7 +1,5 @@
 //! NcAlpha
 
-use std::fmt;
-
 #[allow(unused_imports)] // for doc comments
 use crate::NcCell;
 
@@ -42,49 +40,54 @@ pub enum NcAlpha {
     Transparent = c_api::NCALPHA_TRANSPARENT,
 }
 
-impl Default for NcAlpha {
-    fn default() -> Self {
-        Self::Opaque
-    }
-}
+mod std_impls {
+    use super::{c_api, NcAlpha};
+    use std::fmt;
 
-impl fmt::Display for NcAlpha {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        use NcAlpha::*;
-        write!(
-            f,
-            "{}",
-            match self {
-                Blend => "Blend",
-                HighContrast => "HighContrast",
-                Opaque => "Opaque",
-                Transparent => "Transparent",
-            }
-        )
-    }
-}
-
-impl From<c_api::NcAlpha_u32> for NcAlpha {
-    fn from(alpha: c_api::NcAlpha_u32) -> Self {
-        use {c_api::*, NcAlpha::*};
-        match alpha {
-            NCALPHA_BLEND => Blend,
-            NCALPHA_HIGHCONTRAST => HighContrast,
-            NCALPHA_OPAQUE => Opaque,
-            NCALPHA_TRANSPARENT => Transparent,
-            _ => Opaque, // invalid values default to `Opaque`
+    impl Default for NcAlpha {
+        fn default() -> Self {
+            Self::Opaque
         }
     }
-}
 
-impl From<NcAlpha> for c_api::NcAlpha_u32 {
-    fn from(alpha: NcAlpha) -> Self {
-        use {c_api::*, NcAlpha::*};
-        match alpha {
-            Blend => NCALPHA_BLEND,
-            HighContrast => NCALPHA_HIGHCONTRAST,
-            Opaque => NCALPHA_OPAQUE,
-            Transparent => NCALPHA_TRANSPARENT,
+    impl fmt::Display for NcAlpha {
+        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+            use NcAlpha::*;
+            write!(
+                f,
+                "{}",
+                match self {
+                    Blend => "Blend",
+                    HighContrast => "HighContrast",
+                    Opaque => "Opaque",
+                    Transparent => "Transparent",
+                }
+            )
+        }
+    }
+
+    impl From<c_api::NcAlpha_u32> for NcAlpha {
+        fn from(alpha: c_api::NcAlpha_u32) -> Self {
+            use {c_api::*, NcAlpha::*};
+            match alpha {
+                NCALPHA_BLEND => Blend,
+                NCALPHA_HIGHCONTRAST => HighContrast,
+                NCALPHA_OPAQUE => Opaque,
+                NCALPHA_TRANSPARENT => Transparent,
+                _ => Opaque, // invalid values default to `Opaque`
+            }
+        }
+    }
+
+    impl From<NcAlpha> for c_api::NcAlpha_u32 {
+        fn from(alpha: NcAlpha) -> Self {
+            use {c_api::*, NcAlpha::*};
+            match alpha {
+                Blend => NCALPHA_BLEND,
+                HighContrast => NCALPHA_HIGHCONTRAST,
+                Opaque => NCALPHA_OPAQUE,
+                Transparent => NCALPHA_TRANSPARENT,
+            }
         }
     }
 }
@@ -96,7 +99,9 @@ pub(crate) mod c_api {
     use crate::NcCell;
 
     /// 2 bits of alpha (surrounded by context dependent bits)
-    /// part of an [`NcChannel`][crate::NcChannel], (alias of `u32`).
+    /// part of an [`NcChannel`][crate::NcChannel].
+    ///
+    /// It's recommended to use [`NcAlpha`][crate::NcAlpha] instead.
     ///
     /// ## Diagram
     ///

@@ -1,7 +1,5 @@
 //! `NcAlign`
 
-use std::fmt;
-
 /// Alignment within an [`NcPlane`][crate::NcPlane] or terminal.
 ///
 /// - `Left`|`Right` justified (horizontally).
@@ -24,88 +22,93 @@ pub enum NcAlign {
     Right = c_api::NCALIGN_RIGHT,
 }
 
-impl Default for NcAlign {
-    fn default() -> Self {
-        Self::Left
+mod std_impls {
+    use super::{c_api, NcAlign};
+    use std::fmt;
+
+    impl Default for NcAlign {
+        fn default() -> Self {
+            Self::Left
+        }
     }
-}
 
-/// # Aliases
-impl NcAlign {
-    /// Top (==[`Left`][NcAlign::Left]) alignment.
-    pub const Top: NcAlign = NcAlign::Left;
-    /// Bottom (==[`Right`][NcAlign::Right]) alignment.
-    pub const Bottom: NcAlign = NcAlign::Right;
-}
+    /// # Aliases
+    impl NcAlign {
+        /// Top (==[`Left`][NcAlign::Left]) alignment.
+        pub const Top: NcAlign = NcAlign::Left;
+        /// Bottom (==[`Right`][NcAlign::Right]) alignment.
+        pub const Bottom: NcAlign = NcAlign::Right;
+    }
 
-impl fmt::Display for NcAlign {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        use NcAlign::*;
-        write!(
-            f,
-            "{}",
-            match self {
-                Left => "Left",
-                Center => "Center",
-                Right => "Right",
-                Unaligned => "Unaligned",
+    impl fmt::Display for NcAlign {
+        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+            use NcAlign::*;
+            write!(
+                f,
+                "{}",
+                match self {
+                    Left => "Left",
+                    Center => "Center",
+                    Right => "Right",
+                    Unaligned => "Unaligned",
+                }
+            )
+        }
+    }
+
+    impl From<c_api::NcAlign_u32> for NcAlign {
+        fn from(align: c_api::NcAlign_u32) -> Self {
+            use {c_api::*, NcAlign::*};
+            match align {
+                NCALIGN_LEFT => Left,
+                NCALIGN_CENTER => Center,
+                NCALIGN_RIGHT => Right,
+                NCALIGN_UNALIGNED => Unaligned,
+                _ => Unaligned, // invalid values default to `Unaligned`
             }
-        )
-    }
-}
-
-impl From<c_api::NcAlign_u32> for NcAlign {
-    fn from(align: c_api::NcAlign_u32) -> Self {
-        use {c_api::*, NcAlign::*};
-        match align {
-            NCALIGN_LEFT => Left,
-            NCALIGN_CENTER => Center,
-            NCALIGN_RIGHT => Right,
-            NCALIGN_UNALIGNED => Unaligned,
-            _ => Unaligned, // invalid values default to `Unaligned`
         }
     }
-}
 
-impl From<NcAlign> for c_api::NcAlign_u32 {
-    fn from(align: NcAlign) -> Self {
-        use {c_api::*, NcAlign::*};
-        match align {
-            Left => NCALIGN_LEFT,
-            Center => NCALIGN_CENTER,
-            Right => NCALIGN_RIGHT,
-            Unaligned => NCALIGN_UNALIGNED,
+    impl From<NcAlign> for c_api::NcAlign_u32 {
+        fn from(align: NcAlign) -> Self {
+            use {c_api::*, NcAlign::*};
+            match align {
+                Left => NCALIGN_LEFT,
+                Center => NCALIGN_CENTER,
+                Right => NCALIGN_RIGHT,
+                Unaligned => NCALIGN_UNALIGNED,
+            }
         }
     }
-}
 
-impl From<i32> for NcAlign {
-    fn from(align: i32) -> Self {
-        use {c_api::*, NcAlign::*};
+    impl From<i32> for NcAlign {
+        fn from(align: i32) -> Self {
+            use {c_api::*, NcAlign::*};
 
-        const NCALIGN_LEFT_i32: i32 = NCALIGN_LEFT as i32;
-        const NCALIGN_CENTER_i32: i32 = NCALIGN_CENTER as i32;
-        const NCALIGN_RIGHT_i32: i32 = NCALIGN_RIGHT as i32;
-        const NCALIGN_UNALIGNED_i32: i32 = NCALIGN_UNALIGNED as i32;
+            const NCALIGN_LEFT_i32: i32 = NCALIGN_LEFT as i32;
+            const NCALIGN_CENTER_i32: i32 = NCALIGN_CENTER as i32;
+            const NCALIGN_RIGHT_i32: i32 = NCALIGN_RIGHT as i32;
+            const NCALIGN_UNALIGNED_i32: i32 = NCALIGN_UNALIGNED as i32;
 
-        match align {
-            NCALIGN_LEFT_i32 => Left,
-            NCALIGN_CENTER_i32 => Center,
-            NCALIGN_RIGHT_i32 => Right,
-            NCALIGN_UNALIGNED_i32 => Unaligned,
-            _ => Unaligned,
+            match align {
+                NCALIGN_LEFT_i32 => Left,
+                NCALIGN_CENTER_i32 => Center,
+                NCALIGN_RIGHT_i32 => Right,
+                NCALIGN_UNALIGNED_i32 => Unaligned,
+                _ => Unaligned,
+            }
         }
     }
-}
 
-impl From<NcAlign> for i32 {
-    fn from(align: NcAlign) -> Self {
-        use {c_api::*, NcAlign::*};
-        match align {
-            Left => NCALIGN_LEFT as i32,
-            Center => NCALIGN_CENTER as i32,
-            Right => NCALIGN_RIGHT as i32,
-            Unaligned => NCALIGN_UNALIGNED as i32,
+    impl From<NcAlign> for i32 {
+        fn from(align: NcAlign) -> Self {
+            use {c_api::*, NcAlign::*};
+            match align {
+                Left => NCALIGN_LEFT as i32,
+                Center => NCALIGN_CENTER as i32,
+                Right => NCALIGN_RIGHT as i32,
+                Unaligned => NCALIGN_UNALIGNED as i32,
+            }
         }
     }
 }
