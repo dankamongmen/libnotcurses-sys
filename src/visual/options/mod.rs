@@ -6,7 +6,7 @@ pub use builder::NcVisualOptionsBuilder;
 
 use core::ptr::null_mut;
 
-use crate::{NcBlitter, NcDim, NcOffset, NcPlane, NcRgba, NcScale};
+use crate::{NcBlitter, NcPlane, NcRgba, NcScale};
 
 /// Options struct for [`NcVisual`][crate::NcVisual].
 ///
@@ -192,10 +192,10 @@ impl<'ncplane> NcVisualOptions {
     pub fn new<RGBA: Into<NcRgba>>(
         plane: Option<&mut NcPlane>,
         scale: NcScale,
-        y: NcOffset,
-        x: NcOffset,
-        section_yx_lenyx: Option<(NcDim, NcDim, NcDim, NcDim)>,
-        cell_offset_yx: Option<(NcDim, NcDim)>,
+        y: i32,
+        x: i32,
+        section_yx_lenyx: Option<(u32, u32, u32, u32)>,
+        cell_offset_yx: Option<(u32, u32)>,
         blitter: NcBlitter,
         flags: u32,
         transcolor: RGBA,

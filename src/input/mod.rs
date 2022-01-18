@@ -15,7 +15,7 @@
 
 use std::ffi::CStr;
 
-use crate::{NcDim, NcKey};
+use crate::NcKey;
 
 pub(crate) mod reimplemented;
 
@@ -123,8 +123,8 @@ impl NcInput {
     /// New `NcInput`, expecting all the arguments (except utf8).
     pub const fn with_all_args(
         id: char,
-        x: Option<NcDim>,
-        y: Option<NcDim>,
+        x: Option<u32>,
+        y: Option<u32>,
         alt: bool,
         shift: bool,
         ctrl: bool,

@@ -1,6 +1,6 @@
 //!
 
-use crate::{c_api, NcAlign, NcDim, NcOffset, NcPlaneOptions, NcResizeCb};
+use crate::{c_api, NcAlign, NcPlaneOptions, NcResizeCb};
 
 use std::{
     fmt,
@@ -19,10 +19,10 @@ use std::{
 /// [`MARGINALIZED`]: NcPlaneOptions#associatedconstant.MARGINALIZED
 #[derive(Clone)]
 pub struct NcPlaneOptionsBuilder {
-    pub(crate) y: NcOffset,
-    pub(crate) x: NcOffset,
-    pub(crate) rows: NcDim,
-    pub(crate) cols: NcDim,
+    pub(crate) y: i32,
+    pub(crate) x: i32,
+    pub(crate) rows: u32,
+    pub(crate) cols: u32,
     // TODO:
     // The void* ‘userptr’ can be retrieved (and reset) later.
     // pub(crate) userptr: mut* c_void,
@@ -31,8 +31,8 @@ pub struct NcPlaneOptionsBuilder {
     // pub(crate) name: String,
     pub(crate) resizecb: Option<NcResizeCb>,
     pub(crate) flags: u64,
-    pub(crate) margin_b: NcDim,
-    pub(crate) margin_r: NcDim,
+    pub(crate) margin_b: u32,
+    pub(crate) margin_r: u32,
 }
 
 //
@@ -179,7 +179,7 @@ impl NcPlaneOptionsBuilder {
     /// Effect: Sets the *y* coordinate and unsets the [`VERALIGNED`] flag.
     ///
     /// [`VERALIGNED`]: NcPlaneOptions#associatedconstant.VERALIGNED
-    pub fn y(mut self, y: NcOffset) -> Self {
+    pub fn y(mut self, y: i32) -> Self {
         self.y = y;
         self.flags &= !NcPlaneOptions::VERALIGNED;
         self
@@ -192,7 +192,7 @@ impl NcPlaneOptionsBuilder {
     /// Effect: Sets the *x* coordinate and unsets the [`HORALIGNED`] flag.
     ///
     /// [`HORALIGNED`]: NcPlaneOptions#associatedconstant.HORALIGNED
-    pub fn x(mut self, x: NcOffset) -> Self {
+    pub fn x(mut self, x: i32) -> Self {
         self.x = x;
         self.flags &= !NcPlaneOptions::HORALIGNED;
         self
@@ -207,7 +207,7 @@ impl NcPlaneOptionsBuilder {
     ///
     /// [`VERALIGNED`]: NcPlaneOptions#associatedconstant.VERALIGNED
     /// [`HORALIGNED`]: NcPlaneOptions#associatedconstant.HORALIGNED
-    pub fn yx(mut self, y: NcOffset, x: NcOffset) -> Self {
+    pub fn yx(mut self, y: i32, x: i32) -> Self {
         self.y = y;
         self.x = x;
         self.flags &= !NcPlaneOptions::VERALIGNED;
@@ -265,7 +265,7 @@ impl NcPlaneOptionsBuilder {
     /// Effect: sets the *rows* field and unsets the [`MARGINALIZED`] flag.
     ///
     /// [`MARGINALIZED`]: NcPlaneOptions#associatedconstant.MARGINALIZED
-    pub fn rows(mut self, rows: NcDim) -> Self {
+    pub fn rows(mut self, rows: u32) -> Self {
         self.rows = rows;
         self.flags &= !NcPlaneOptions::MARGINALIZED;
         self
@@ -280,7 +280,7 @@ impl NcPlaneOptionsBuilder {
     /// Effect: sets the *cols* field and unsets the [`MARGINALIZED`] flag.
     ///
     /// [`MARGINALIZED`]: NcPlaneOptions#associatedconstant.MARGINALIZED
-    pub fn cols(mut self, cols: NcDim) -> Self {
+    pub fn cols(mut self, cols: u32) -> Self {
         self.cols = cols;
         self.flags &= !NcPlaneOptions::MARGINALIZED;
         self
@@ -296,7 +296,7 @@ impl NcPlaneOptionsBuilder {
     /// flag.
     ///
     /// [`MARGINALIZED`]: NcPlaneOptions#associatedconstant.MARGINALIZED
-    pub fn rows_cols(mut self, rows: NcDim, cols: NcDim) -> Self {
+    pub fn rows_cols(mut self, rows: u32, cols: u32) -> Self {
         self.rows = rows;
         self.cols = cols;
         self.flags &= !NcPlaneOptions::MARGINALIZED;
@@ -311,7 +311,7 @@ impl NcPlaneOptionsBuilder {
     /// flag.
     ///
     /// [`MARGINALIZED`]: NcPlaneOptions#associatedconstant.MARGINALIZED
-    pub fn margins(mut self, bottom: NcDim, right: NcDim) -> Self {
+    pub fn margins(mut self, bottom: u32, right: u32) -> Self {
         self.margin_b = bottom;
         self.margin_r = right;
         self.flags |= NcPlaneOptions::MARGINALIZED;

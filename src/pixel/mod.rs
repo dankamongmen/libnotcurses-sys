@@ -27,8 +27,6 @@
 //W+ ncpixel_set_r
 //W+ ncpixel_set_rgb8
 
-use crate::NcDim;
-
 mod methods;
 pub(crate) mod reimplemented;
 
@@ -83,22 +81,22 @@ mod std_impls {
 #[derive(Clone, Debug)]
 pub struct NcPixelGeometry {
     /// The height in pixels of the display region.
-    pub term_y: NcDim,
+    pub term_y: u32,
 
     /// The width in pixels of the display region.
-    pub term_x: NcDim,
+    pub term_x: u32,
 
     /// The height in pixels of a single cell.
-    pub cell_y: NcDim,
+    pub cell_y: u32,
 
     /// The width in pixels of a single cell.
-    pub cell_x: NcDim,
+    pub cell_x: u32,
 
     /// The height in pixels of the maximum displayable bitmap (0 if not supported).
-    pub max_bitmap_y: NcDim,
+    pub max_bitmap_y: u32,
 
     /// The width in pixels of the maximum displayable bitmap (0 if not supported).
-    pub max_bitmap_x: NcDim,
+    pub max_bitmap_x: u32,
 }
 
 pub(crate) mod c_api {

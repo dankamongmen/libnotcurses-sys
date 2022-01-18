@@ -4,7 +4,7 @@ use core::ptr::{null, null_mut};
 
 use crate::{
     c_api::{self, NcChannels_u64, NcResult_i32, NcRgb_u32},
-    cstring, NcCapabilities, NcDim, NcDirect, NcInput, NcTime,
+    cstring, NcCapabilities, NcDirect, NcInput, NcTime,
 };
 
 /// Can we directly specify RGB values per cell, or only use palettes?
@@ -142,7 +142,7 @@ pub fn ncdirect_set_bg_rgb8(ncd: &mut NcDirect, red: u8, green: u8, blue: u8) ->
 pub fn ncdirect_hline_interp(
     ncd: &mut NcDirect,
     egc: &str,
-    len: NcDim,
+    len: u32,
     h1: NcChannels_u64,
     h2: NcChannels_u64,
 ) -> NcResult_i32 {
@@ -169,7 +169,7 @@ pub fn ncdirect_hline_interp(
 pub fn ncdirect_vline_interp(
     ncd: &mut NcDirect,
     egc: &str,
-    len: NcDim,
+    len: u32,
     h1: NcChannels_u64,
     h2: NcChannels_u64,
 ) -> NcResult_i32 {

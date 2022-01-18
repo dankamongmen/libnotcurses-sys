@@ -5,7 +5,7 @@ use core::ptr::{null, null_mut};
 use crate::{
     c_api::{self, notcurses_init},
     cstring, error, error_ref_mut, rstring, rstring_free, Nc, NcAlign, NcBlitter, NcCapabilities,
-    NcChannels, NcDim, NcError, NcFile, NcInput, NcLogLevel, NcMiceEvents, NcOptions, NcPixelImpl,
+    NcChannels, NcError, NcFile, NcInput, NcLogLevel, NcMiceEvents, NcOptions, NcPixelImpl,
     NcPlane, NcReceived, NcResult, NcRgb, NcScale, NcStats, NcStyle, NcTime, NcVisual,
     NcVisualGeometry, NcVisualOptions,
 };
@@ -18,7 +18,7 @@ impl NcOptions {
     }
 
     /// New `NcOptions`, with margins.
-    pub fn with_margins(top: NcDim, right: NcDim, bottom: NcDim, left: NcDim) -> Self {
+    pub fn with_margins(top: u32, right: u32, bottom: u32, left: u32) -> Self {
         Self::with_all_options(NcLogLevel::Silent, top, right, bottom, left, 0)
     }
 
@@ -52,10 +52,10 @@ impl NcOptions {
     ///   Undefined bits must be set to 0.
     pub fn with_all_options(
         loglevel: NcLogLevel,
-        margin_t: NcDim,
-        margin_r: NcDim,
-        margin_b: NcDim,
-        margin_l: NcDim,
+        margin_t: u32,
+        margin_r: u32,
+        margin_b: u32,
+        margin_l: u32,
         flags: u64,
     ) -> Self {
         Self {
@@ -176,12 +176,12 @@ impl Nc {
     /// [`NcAlign::Unaligned`].
     ///
     /// *C style function: [notcurses_align()][c_api::notcurses_align].*
-    pub fn align(availcols: NcDim, align: NcAlign, cols: NcDim) -> NcResult<NcDim> {
+    pub fn align(availcols: u32, align: NcAlign, cols: u32) -> NcResult<u32> {
         let res = c_api::notcurses_align(availcols, align, cols);
         error![
             res,
             &format!("NcPlane.valign({:?}, {})", align, cols),
-            res as NcDim
+            res as u32
         ]
     }
 
@@ -192,8 +192,8 @@ impl Nc {
     /// *C style function: [notcurses_at_yx()][c_api::notcurses_at_yx].*
     pub fn at_yx(
         &mut self,
-        y: NcDim,
-        x: NcDim,
+        y: u32,
+        x: u32,
         stylemask: &mut NcStyle,
         channels: &mut NcChannels,
     ) -> Option<String> {
@@ -358,7 +358,7 @@ impl Nc {
     /// It is an error if `y`, `x` lies outside the standard plane.
     ///
     /// *C style function: [notcurses_cursor_enable()][c_api::notcurses_cursor_enable].*
-    pub fn cursor_enable(&mut self, y: NcDim, x: NcDim) -> NcResult<()> {
+    pub fn cursor_enable(&mut self, y: u32, x: u32) -> NcResult<()> {
         error![unsafe { c_api::notcurses_cursor_enable(self, y as i32, x as i32) }]
     }
 
@@ -677,12 +677,12 @@ impl Nc {
     ///
     /// *C style function: [notcurses_refresh()][c_api::notcurses_refresh].*
     //
-    pub fn refresh(&mut self) -> NcResult<(NcDim, NcDim)> {
+    pub fn refresh(&mut self) -> NcResult<(u32, u32)> {
         let (mut y, mut x) = (0, 0);
         error![
             unsafe { c_api::notcurses_refresh(self, &mut y, &mut x) },
             "",
-            (y as NcDim, x as NcDim)
+            (y as u32, x as u32)
         ]
     }
 
@@ -730,8 +730,8 @@ impl Nc {
     // #[inline]
     // pub fn stddim_yx<'a>(
     //     &'a mut self,
-    //     y: &mut NcDim,
-    //     x: &mut NcDim,
+    //     y: &mut u32,
+    //     x: &mut u32,
     // ) -> NcResult<&'a mut NcPlane> {
     //     c_api::notcurses_stddim_yx(self, y, x)
     // }
@@ -743,8 +743,8 @@ impl Nc {
     // #[inline]
     // pub fn stddim_yx_const<'a>(
     //     &'a self,
-    //     y: &mut NcDim,
-    //     x: &mut NcDim,
+    //     y: &mut u32,
+    //     x: &mut u32,
     // ) -> NcResult<&'a NcPlane> {
     //     c_api::notcurses_stddim_yx_const(self, y, x)
     // }
@@ -829,7 +829,7 @@ impl Nc {
     /// Returns our current idea of the terminal dimensions in rows and cols.
     ///
     /// *C style function: [notcurses_term_dim_yx()][c_api::notcurses_term_dim_yx].*
-    pub fn term_dim_yx(&self) -> (NcDim, NcDim) {
+    pub fn term_dim_yx(&self) -> (u32, u32) {
         c_api::notcurses_term_dim_yx(self)
     }
 
@@ -920,12 +920,12 @@ impl Nc {
         // if an `NcVisual` is not provided, only `maxpixel_yx`, `cdim_yx` and
         // `scale_yx` can be non-zero.
         if visual.is_none() {
-            cdim_yx = Some((vg.cdimy as NcDim, vg.cdimx as NcDim));
-            scale_yx = Some((vg.scaley as NcDim, vg.scalex as NcDim));
+            cdim_yx = Some((vg.cdimy as u32, vg.cdimx as u32));
+            scale_yx = Some((vg.scaley as u32, vg.scalex as u32));
 
             // pixel blitter only is defined for Ncblitter::PIXEL
             if vg.blitter == NcBlitter::Pixel.into() {
-                maxpixel_yx = Some((vg.maxpixely as NcDim, vg.maxpixelx as NcDim));
+                maxpixel_yx = Some((vg.maxpixely as u32, vg.maxpixelx as u32));
             } else {
                 maxpixel_yx = None;
             }
@@ -938,7 +938,7 @@ impl Nc {
         } else {
             // `maxpixel_yx` only is defined for `Ncblitter`::PIXEL.
             if vg.blitter == NcBlitter::Pixel.into() {
-                maxpixel_yx = Some((vg.maxpixely as NcDim, vg.maxpixelx as NcDim));
+                maxpixel_yx = Some((vg.maxpixely as u32, vg.maxpixelx as u32));
             } else {
                 maxpixel_yx = None;
             }
@@ -948,35 +948,35 @@ impl Nc {
                 beg_yx = None;
                 len_yx = None;
             } else {
-                beg_yx = Some((vg.begy as NcDim, vg.begx as NcDim));
-                len_yx = Some((vg.leny as NcDim, vg.lenx as NcDim));
+                beg_yx = Some((vg.begy as u32, vg.begx as u32));
+                len_yx = Some((vg.leny as u32, vg.lenx as u32));
             }
 
             // valid values for the following fields can't be 0 either:
             if vg.pixy | vg.pixx == 0 {
                 pix_yx = None;
             } else {
-                pix_yx = Some((vg.pixy as NcDim, vg.pixx as NcDim));
+                pix_yx = Some((vg.pixy as u32, vg.pixx as u32));
             }
             if vg.cdimy | vg.cdimx == 0 {
                 cdim_yx = None;
             } else {
-                cdim_yx = Some((vg.cdimy as NcDim, vg.cdimx as NcDim));
+                cdim_yx = Some((vg.cdimy as u32, vg.cdimx as u32));
             }
             if vg.scaley | vg.scalex == 0 {
                 scale_yx = None;
             } else {
-                scale_yx = Some((vg.scaley as NcDim, vg.scalex as NcDim));
+                scale_yx = Some((vg.scaley as u32, vg.scalex as u32));
             }
             if vg.rpixy | vg.rpixx == 0 {
                 rpix_yx = None;
             } else {
-                rpix_yx = Some((vg.rpixy as NcDim, vg.rpixx as NcDim));
+                rpix_yx = Some((vg.rpixy as u32, vg.rpixx as u32));
             }
             if vg.rcelly | vg.rcellx == 0 {
                 rcell_yx = None;
             } else {
-                rcell_yx = Some((vg.rcelly as NcDim, vg.rcellx as NcDim));
+                rcell_yx = Some((vg.rcelly as u32, vg.rcellx as u32));
             }
         }
 

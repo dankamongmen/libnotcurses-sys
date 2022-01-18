@@ -4,7 +4,7 @@ mod builder;
 pub(crate) mod constants;
 pub use builder::NcPlaneOptionsBuilder;
 
-use crate::{c_api, NcAlign, NcDim, NcOffset, NcResizeCb};
+use crate::{c_api, NcAlign, NcResizeCb};
 
 use std::ptr::{null, null_mut};
 
@@ -48,7 +48,7 @@ pub type NcPlaneOptions = crate::bindings::ffi::ncplane_options;
 /// # Constructors
 impl NcPlaneOptions {
     /// New NcPlaneOptions using the horizontal x.
-    pub fn new(y: NcOffset, x: NcOffset, rows: NcDim, cols: NcDim) -> Self {
+    pub fn new(y: i32, x: i32, rows: u32, cols: u32) -> Self {
         Self::with_flags(y, x, rows, cols, None, 0, 0, 0)
     }
 
@@ -63,20 +63,20 @@ impl NcPlaneOptions {
     }
 
     /// New NcPlaneOptions with horizontal alignment.
-    pub fn new_aligned(y: NcOffset, align: NcAlign, rows: NcDim, cols: NcDim) -> Self {
+    pub fn new_aligned(y: i32, align: NcAlign, rows: u32, cols: u32) -> Self {
         Self::with_flags_aligned(y, align, rows, cols, None, NcPlaneOptions::HORALIGNED)
     }
 
     /// New NcPlaneOptions, with flags.
     pub fn with_flags(
-        y: NcOffset,
-        x: NcOffset,
-        rows: NcDim,
-        cols: NcDim,
+        y: i32,
+        x: i32,
+        rows: u32,
+        cols: u32,
         resizecb: Option<NcResizeCb>,
         flags: u64,
-        margin_b: NcDim,
-        margin_r: NcDim,
+        margin_b: u32,
+        margin_r: u32,
     ) -> Self {
         NcPlaneOptions {
             y: y as i32,
@@ -98,10 +98,10 @@ impl NcPlaneOptions {
     /// [`NcPlaneOptions::HORALIGNED`][NcPlaneOptions#associatedconstant.HORALIGNED]
     /// flag.
     pub fn with_flags_aligned(
-        y: NcOffset,
+        y: i32,
         align: NcAlign,
-        rows: NcDim,
-        cols: NcDim,
+        rows: u32,
+        cols: u32,
         resizecb: Option<NcResizeCb>,
         flags: u64,
     ) -> Self {

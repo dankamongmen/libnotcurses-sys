@@ -3,9 +3,8 @@ use core::{ptr::null_mut, slice::from_raw_parts_mut};
 
 use crate::{
     c_api, cstring, error, error_ref, error_ref_mut, rstring_free, Nc, NcAlign, NcAlpha, NcBlitter,
-    NcBoxMask, NcCell, NcChannel, NcChannels, NcDim, NcError, NcFadeCb, NcFile, NcOffset,
-    NcPaletteIndex, NcPixelGeometry, NcPlane, NcPlaneOptions, NcResizeCb, NcResult, NcRgb, NcRgba,
-    NcStyle, NcTime,
+    NcBoxMask, NcCell, NcChannel, NcChannels, NcError, NcFadeCb, NcFile, NcPaletteIndex,
+    NcPixelGeometry, NcPlane, NcPlaneOptions, NcResizeCb, NcResult, NcRgb, NcRgba, NcStyle, NcTime,
 };
 
 /// # NcPlane constructors & destructors
@@ -60,10 +59,10 @@ impl NcPlane {
     /// *C style function: [ncplane_create()][c_api::ncplane_create].*
     pub fn new_child_sized<'plane>(
         parent: &mut NcPlane,
-        y: NcOffset,
-        x: NcOffset,
-        rows: NcDim,
-        cols: NcDim,
+        y: i32,
+        x: i32,
+        rows: u32,
+        cols: u32,
     ) -> NcResult<&'plane mut NcPlane> {
         Self::new_child(parent, &NcPlaneOptions::new(y, x, rows, cols))
     }
@@ -78,10 +77,10 @@ impl NcPlane {
     /// [`new_child_sized`]: NcPlane#method.new_child_sized
     pub fn new_pile_sized<'nc, 'plane>(
         nc: &'nc mut Nc,
-        y: NcOffset,
-        x: NcOffset,
-        rows: NcDim,
-        cols: NcDim,
+        y: i32,
+        x: i32,
+        rows: u32,
+        cols: u32,
     ) -> NcResult<&'plane mut NcPlane> {
         Self::new_pile(nc, &NcPlaneOptions::new(y, x, rows, cols))
     }
@@ -203,10 +202,10 @@ impl NcPlane {
     /// *C style function: [ncplane_stain()][c_api::ncplane_stain].*
     pub fn stain(
         &mut self,
-        y: Option<NcDim>,
-        x: Option<NcDim>,
-        len_y: Option<NcDim>,
-        len_x: Option<NcDim>,
+        y: Option<u32>,
+        x: Option<u32>,
+        len_y: Option<u32>,
+        len_x: Option<u32>,
         ul: NcChannels,
         ur: NcChannels,
         ll: NcChannels,
@@ -215,8 +214,8 @@ impl NcPlane {
         let res = unsafe {
             c_api::ncplane_stain(
                 self,
-                y.unwrap_or(NcDim::MAX) as i32,
-                x.unwrap_or(NcDim::MAX) as i32,
+                y.unwrap_or(u32::MAX) as i32,
+                x.unwrap_or(u32::MAX) as i32,
                 len_y.unwrap_or(0),
                 len_x.unwrap_or(0),
                 ul.0,
@@ -433,17 +432,17 @@ impl NcPlane {
     /// *C style function: [ncplane_format()][c_api::ncplane_format].*
     pub fn format(
         &mut self,
-        y: Option<NcDim>,
-        x: Option<NcDim>,
-        len_y: Option<NcDim>,
-        len_x: Option<NcDim>,
+        y: Option<u32>,
+        x: Option<u32>,
+        len_y: Option<u32>,
+        len_x: Option<u32>,
         stylemask: NcStyle,
-    ) -> NcResult<NcDim> {
+    ) -> NcResult<u32> {
         let res = unsafe {
             c_api::ncplane_format(
                 self,
-                y.unwrap_or(NcDim::MAX) as i32,
-                x.unwrap_or(NcDim::MAX) as i32,
+                y.unwrap_or(u32::MAX) as i32,
+                x.unwrap_or(u32::MAX) as i32,
                 len_y.unwrap_or(0),
                 len_x.unwrap_or(0),
                 stylemask.into(),
@@ -574,8 +573,8 @@ impl NcPlane {
     /// *C style function: [ncplane_at_yx()][c_api::ncplane_at_yx].*
     pub fn at_yx(
         &mut self,
-        y: NcDim,
-        x: NcDim,
+        y: u32,
+        x: u32,
         stylemask: &mut NcStyle,
         channels: &mut NcChannels,
     ) -> NcResult<String> {
@@ -601,7 +600,7 @@ impl NcPlane {
     ///
     /// *C style function: [ncplane_at_yx_cell()][c_api::ncplane_at_yx_cell].*
     #[inline]
-    pub fn at_yx_cell(&mut self, y: NcDim, x: NcDim, cell: &mut NcCell) -> NcResult<u32> {
+    pub fn at_yx_cell(&mut self, y: u32, x: u32, cell: &mut NcCell) -> NcResult<u32> {
         let bytes = unsafe { c_api::ncplane_at_yx_cell(self, y as i32, x as i32, cell) };
         error![
             bytes,
@@ -689,15 +688,15 @@ impl NcPlane {
     /// *C style function: [ncplane_contents()][c_api::ncplane_contents].*
     pub fn contents(
         &mut self,
-        beg_y: Option<NcDim>,
-        beg_x: Option<NcDim>,
-        len_y: Option<NcDim>,
-        len_x: Option<NcDim>,
+        beg_y: Option<u32>,
+        beg_x: Option<u32>,
+        len_y: Option<u32>,
+        len_x: Option<u32>,
     ) -> String {
         rstring_free![c_api::ncplane_contents(
             self,
-            beg_y.unwrap_or(NcDim::MAX) as i32,
-            beg_x.unwrap_or(NcDim::MAX) as i32,
+            beg_y.unwrap_or(u32::MAX) as i32,
+            beg_x.unwrap_or(u32::MAX) as i32,
             len_y.unwrap_or(0),
             len_x.unwrap_or(0)
         )]
@@ -752,10 +751,10 @@ impl NcPlane {
     /// *C style function: [ncplane_erase_region()][c_api::ncplane_erase_region].*
     pub fn erase_region(
         &mut self,
-        beg_y: Option<NcDim>,
-        beg_x: Option<NcDim>,
-        len_y: NcOffset,
-        len_x: NcOffset,
+        beg_y: Option<u32>,
+        beg_x: Option<u32>,
+        len_y: i32,
+        len_x: i32,
     ) -> NcResult<()> {
         error![
             unsafe {
@@ -786,12 +785,12 @@ impl NcPlane {
     /// scrolling is enabled.
     ///
     /// *C style function: [ncplane_putc_yx()][c_api::ncplane_putc_yx].*
-    pub fn putc_yx(&mut self, y: NcDim, x: NcDim, cell: &NcCell) -> NcResult<NcDim> {
+    pub fn putc_yx(&mut self, y: u32, x: u32, cell: &NcCell) -> NcResult<u32> {
         let res = unsafe { c_api::ncplane_putc_yx(self, y as i32, x as i32, cell) };
         error![
             res,
             &format!("NcPlane.putc_yx({}, {}, {:?})", y, x, cell),
-            res as NcDim
+            res as u32
         ]
     }
 
@@ -807,9 +806,9 @@ impl NcPlane {
     /// scrolling is enabled.
     ///
     /// *C style function: [ncplane_putc()][c_api::ncplane_putc].*
-    pub fn putc(&mut self, cell: &NcCell) -> NcResult<NcDim> {
+    pub fn putc(&mut self, cell: &NcCell) -> NcResult<u32> {
         let res = c_api::ncplane_putc(self, cell);
-        error![res, &format!("NcPlane.putc({:?})", cell), res as NcDim]
+        error![res, &format!("NcPlane.putc({:?})", cell), res as u32]
     }
 
     /// Calls [`putchar_yx`][NcPlane#method.putchar_yx] at the current cursor
@@ -823,9 +822,9 @@ impl NcPlane {
     /// NOTE: Unlike the original C function, this one accepts any 4-byte `char`.
     ///
     /// *C style function: [ncplane_putchar()][c_api::ncplane_putchar].*
-    pub fn putchar(&mut self, ch: char) -> NcResult<NcDim> {
+    pub fn putchar(&mut self, ch: char) -> NcResult<u32> {
         let res = c_api::ncplane_putchar(self, ch);
-        error![res, &format!("NcPlane.putchar({:?})", ch), res as NcDim]
+        error![res, &format!("NcPlane.putchar({:?})", ch), res as u32]
     }
 
     /// Replaces the [`NcCell`] at the current location with the provided `char`,
@@ -840,12 +839,12 @@ impl NcPlane {
     ///
     /// *C style function: [ncplane_putchar_stained()][c_api::ncplane_putchar_stained].*
     // WIP
-    pub fn putchar_stained(&mut self, ch: char) -> NcResult<NcDim> {
+    pub fn putchar_stained(&mut self, ch: char) -> NcResult<u32> {
         let res = c_api::ncplane_putchar_stained(self, ch);
         error![
             res,
             &format!("NcPlane.putchar_stained({:?})", ch),
-            res as NcDim
+            res as u32
         ]
     }
 
@@ -860,12 +859,12 @@ impl NcPlane {
     /// NOTE: Unlike the original C function, this one accepts any 4-byte `char`.
     ///
     /// *C style function: [ncplane_putchar_yx()][c_api::ncplane_putchar_yx].*
-    pub fn putchar_yx(&mut self, y: NcDim, x: NcDim, ch: char) -> NcResult<NcDim> {
+    pub fn putchar_yx(&mut self, y: u32, x: u32, ch: char) -> NcResult<u32> {
         let res = c_api::ncplane_putchar_yx(self, y, x, ch);
         error![
             res,
             &format!("NcPlane.putchar_yx({}, {}, {:?})", y, x, ch),
-            res as NcDim
+            res as u32
         ]
     }
 
@@ -884,9 +883,9 @@ impl NcPlane {
     /// NOTE: Unlike the original C function, this one accepts any 4-byte `char`.
     ///
     /// *C style function: [ncplane_putegc()][c_api::ncplane_putegc].*
-    pub fn putegc(&mut self, egc: &str, sbytes: Option<&mut usize>) -> NcResult<NcDim> {
+    pub fn putegc(&mut self, egc: &str, sbytes: Option<&mut usize>) -> NcResult<u32> {
         let res = c_api::ncplane_putegc(self, egc, sbytes);
-        error![res, &format!("NcPlane.putegc({:?}, …)", egc), res as NcDim]
+        error![res, &format!("NcPlane.putegc({:?}, …)", egc), res as u32]
     }
 
     /// Replaces the [`NcCell`] at the specified coordinates with the provided
@@ -906,16 +905,16 @@ impl NcPlane {
     /// *C style function: [ncplane_putegc_yx()][c_api::ncplane_putegc_yx].*
     pub fn putegc_yx(
         &mut self,
-        y: Option<NcDim>,
-        x: Option<NcDim>,
+        y: Option<u32>,
+        x: Option<u32>,
         egc: &str,
         sbytes: Option<&mut usize>,
-    ) -> NcResult<NcDim> {
+    ) -> NcResult<u32> {
         let res = c_api::ncplane_putegc_yx(self, y, x, egc, sbytes);
         error![
             res,
             &format!("NcPlane.putegc_yx({:?}, {:?}, {:?}, …)", y, x, egc),
-            res as NcDim
+            res as u32
         ]
     }
 
@@ -934,12 +933,12 @@ impl NcPlane {
     /// NOTE: Unlike the original C function, this one accepts any 4-byte `char`.
     ///
     /// *C style function: [ncplane_putegc_stained()][c_api::ncplane_putegc_stained].*
-    pub fn putegc_stained(&mut self, egc: &str, sbytes: Option<&mut usize>) -> NcResult<NcDim> {
+    pub fn putegc_stained(&mut self, egc: &str, sbytes: Option<&mut usize>) -> NcResult<u32> {
         let res = c_api::ncplane_putegc_stained(self, egc, sbytes);
         error![
             res,
             &format!("NcPlane.putegc_stained({:?}, …)", egc),
-            res as NcDim
+            res as u32
         ]
     }
 
@@ -967,11 +966,11 @@ impl NcPlane {
     /// scrolling is enabled.
     ///
     /// *C style function: [ncplane_puttext()][c_api::ncplane_puttext].*
-    pub fn puttext(&mut self, y: NcDim, align: NcAlign, string: &str) -> NcResult<NcDim> {
+    pub fn puttext(&mut self, y: u32, align: NcAlign, string: &str) -> NcResult<u32> {
         let res = unsafe {
             c_api::ncplane_puttext(self, y as i32, align.into(), cstring![string], null_mut())
         };
-        error![res, &format!("NcPlane.puttext({:?})", string), res as NcDim]
+        error![res, &format!("NcPlane.puttext({:?})", string), res as u32]
     }
 
     /// Writes a string to the current location, using the current style.
@@ -987,9 +986,9 @@ impl NcPlane {
     ///
     /// *C style function: [ncplane_putstr()][c_api::ncplane_putstr].*
     #[inline]
-    pub fn putstr(&mut self, string: &str) -> NcResult<NcDim> {
+    pub fn putstr(&mut self, string: &str) -> NcResult<u32> {
         let res = c_api::ncplane_putstr(self, string);
-        error![res, &format!("NcPlane.putstr({:?})", string), res as NcDim]
+        error![res, &format!("NcPlane.putstr({:?})", string), res as u32]
     }
 
     /// Same as [`putstr`][NcPlane#method.putstr], but it also puts a newline
@@ -998,7 +997,7 @@ impl NcPlane {
     /// This will only work if scrolling is enabled in the plane.
     ///
     /// *(No equivalent C style function)*
-    pub fn putstrln(&mut self, string: &str) -> NcResult<NcDim> {
+    pub fn putstrln(&mut self, string: &str) -> NcResult<u32> {
         let mut cols = self.putstr(string)?;
         cols += self.putstr("\n")?;
         Ok(cols)
@@ -1009,7 +1008,7 @@ impl NcPlane {
     /// This will only work if scrolling is enabled in the plane.
     ///
     /// *(No equivalent C style function)*
-    pub fn putln(&mut self) -> NcResult<NcDim> {
+    pub fn putln(&mut self) -> NcResult<u32> {
         let cols = self.putstr("\n")?;
         Ok(cols)
     }
@@ -1026,12 +1025,12 @@ impl NcPlane {
     /// scrolling is enabled.
     ///
     /// *C style function: [ncplane_putstr_stained()][c_api::ncplane_putstr_stained].*
-    pub fn putstr_stained(&mut self, string: &str) -> NcResult<NcDim> {
+    pub fn putstr_stained(&mut self, string: &str) -> NcResult<u32> {
         let res = c_api::ncplane_putstr_stained(self, string);
         error![
             res,
             &format!("NcPlane.putstr_stained({:?})", string),
-            res as NcDim
+            res as u32
         ]
     }
 
@@ -1050,15 +1049,15 @@ impl NcPlane {
     /// *C style function: [ncplane_putstr_aligned()][c_api::ncplane_putstr_aligned].*
     pub fn putstr_aligned(
         &mut self,
-        y: Option<NcDim>,
+        y: Option<u32>,
         align: NcAlign,
         string: &str,
-    ) -> NcResult<NcDim> {
+    ) -> NcResult<u32> {
         let res = c_api::ncplane_putstr_aligned(self, y, align, string);
         error![
             res,
             &format!("NcPlane.putstr_aligned({:?}, {}, {:?})", y, align, string),
-            res as NcDim
+            res as u32
         ]
     }
 
@@ -1074,17 +1073,12 @@ impl NcPlane {
     /// scrolling is enabled.
     ///
     /// *C style function: [ncplane_putstr_yx()][c_api::ncplane_putstr_yx].*
-    pub fn putstr_yx(
-        &mut self,
-        y: Option<NcDim>,
-        x: Option<NcDim>,
-        string: &str,
-    ) -> NcResult<NcDim> {
+    pub fn putstr_yx(&mut self, y: Option<u32>, x: Option<u32>, string: &str) -> NcResult<u32> {
         let res = c_api::ncplane_putstr_yx(self, y, x, string);
         error![
             res,
             &format!("NcPlane.putstr_yx({:?}, {:?}, {:?})", y, x, string),
-            res as NcDim
+            res as u32
         ]
     }
 
@@ -1103,10 +1097,10 @@ impl NcPlane {
     /// *(No equivalent C style function)*
     pub fn putstr_aligned_stained(
         &mut self,
-        y: NcDim,
+        y: u32,
         align: NcAlign,
         string: &str,
-    ) -> NcResult<NcDim> {
+    ) -> NcResult<u32> {
         let width = string.chars().count() as u32;
         let xpos = self.halign(align, width)?;
         self.cursor_move_yx(y, xpos)?;
@@ -1117,7 +1111,7 @@ impl NcPlane {
                 "NcPlane.putstr_aligned_stained({}, {}, {:?})",
                 y, align, string
             ),
-            res as NcDim
+            res as u32
         ]
     }
 
@@ -1134,13 +1128,13 @@ impl NcPlane {
     /// scrolling is enabled.
     ///
     /// *(No equivalent C style function)*
-    pub fn putstr_yx_stained(&mut self, y: NcDim, x: NcDim, string: &str) -> NcResult<NcDim> {
+    pub fn putstr_yx_stained(&mut self, y: u32, x: u32, string: &str) -> NcResult<u32> {
         self.cursor_move_yx(y, x)?;
         let res = c_api::ncplane_putstr_stained(self, string);
         error![
             res,
             &format!("NcPlane.putstr_yx_stained({}, {}, {:?})", y, x, string),
-            res as NcDim
+            res as u32
         ]
     }
 
@@ -1158,12 +1152,12 @@ impl NcPlane {
     ///
     /// *C style function: [ncplane_putnstr()][c_api::ncplane_putnstr].*
     #[inline]
-    pub fn putnstr(&mut self, num_bytes: usize, string: &str) -> NcResult<NcDim> {
+    pub fn putnstr(&mut self, num_bytes: usize, string: &str) -> NcResult<u32> {
         let res = c_api::ncplane_putnstr(self, num_bytes, string);
         error![
             res,
             &format!("NcPlane.puntstr({}, {:?})", num_bytes, string),
-            res as NcDim
+            res as u32
         ]
     }
 
@@ -1182,11 +1176,11 @@ impl NcPlane {
     /// *C style function: [ncplane_putnstr_aligned()][c_api::ncplane_putnstr_aligned].*
     pub fn putnstr_aligned(
         &mut self,
-        y: NcDim,
+        y: u32,
         align: NcAlign,
         num_bytes: usize,
         string: &str,
-    ) -> NcResult<NcDim> {
+    ) -> NcResult<u32> {
         let res = unsafe {
             c_api::ncplane_putnstr_aligned(
                 self,
@@ -1202,7 +1196,7 @@ impl NcPlane {
                 "NcPlane.putnstr_aligned({}, {}, {}, {:?})",
                 y, align, num_bytes, string
             ),
-            res as NcDim
+            res as u32
         ]
     }
 
@@ -1221,11 +1215,11 @@ impl NcPlane {
     /// *C style function: [ncplane_putnstr_yx()][c_api::ncplane_putnstr_yx].*
     pub fn putnstr_yx(
         &mut self,
-        y: Option<NcDim>,
-        x: Option<NcDim>,
+        y: Option<u32>,
+        x: Option<u32>,
         num_bytes: usize,
         string: &str,
-    ) -> NcResult<NcDim> {
+    ) -> NcResult<u32> {
         let res = c_api::ncplane_putnstr_yx(self, y, x, num_bytes, string);
         error![
             res,
@@ -1233,7 +1227,7 @@ impl NcPlane {
                 "NcPlane.putnstr_yx({:?}, {:?}, {}, {:?})",
                 y, x, num_bytes, string
             ),
-            res as NcDim
+            res as u32
         ]
     }
 
@@ -1245,7 +1239,7 @@ impl NcPlane {
     /// An invalid initial `y`, `x` is an error.
     ///
     /// *C style function: [ncplane_putnstr_yx()][c_api::ncplane_putnstr_yx].*
-    pub fn polyfill_yx(&mut self, y: NcDim, x: NcDim, cell: &NcCell) -> NcResult<usize> {
+    pub fn polyfill_yx(&mut self, y: u32, x: u32, cell: &NcCell) -> NcResult<usize> {
         let res = unsafe { c_api::ncplane_polyfill_yx(self, y as i32, x as i32, cell) };
         error![
             res,
@@ -1261,27 +1255,27 @@ impl NcPlane {
     /// Gets the origin of this plane relative to its pile.
     ///
     /// *C style function: [ncplane_abs_yx()][c_api::ncplane_abs_yx].*
-    pub fn abs_yx(&self) -> (NcDim, NcDim) {
+    pub fn abs_yx(&self) -> (u32, u32) {
         let mut y = 0;
         let mut x = 0;
         unsafe {
             c_api::ncplane_abs_yx(self, &mut y, &mut x);
         }
-        (y as NcDim, x as NcDim)
+        (y as u32, x as u32)
     }
 
     /// Gets the origin of this plane relative to its pile, in the y axis.
     ///
     /// *C style function: [ncplane_abs_y()][c_api::ncplane_abs_y].*
-    pub fn abs_y(&self) -> NcDim {
-        unsafe { c_api::ncplane_abs_y(self) as NcDim }
+    pub fn abs_y(&self) -> u32 {
+        unsafe { c_api::ncplane_abs_y(self) as u32 }
     }
 
     /// Gets the origin of this plane relative to its pile, in the x axis.
     ///
     /// *C style function: [ncplane_abs_x()][c_api::ncplane_abs_x].*
-    pub fn abs_x(&self) -> NcDim {
-        unsafe { c_api::ncplane_abs_x(self) as NcDim }
+    pub fn abs_x(&self) -> u32 {
+        unsafe { c_api::ncplane_abs_x(self) as u32 }
     }
 
     /// Duplicates this `NcPlane`.
@@ -1342,7 +1336,7 @@ impl NcPlane {
     /// It is an error to attempt to move the standard plane.
     ///
     /// *C style function: [ncplane_move_yx()][c_api::ncplane_move_yx].*
-    pub fn move_yx(&mut self, y: NcOffset, x: NcOffset) -> NcResult<()> {
+    pub fn move_yx(&mut self, y: i32, x: i32) -> NcResult<()> {
         error![
             unsafe { c_api::ncplane_move_yx(self, y, x) },
             &format!("NcPlane.move_yx({}, {})", y, x)
@@ -1357,7 +1351,7 @@ impl NcPlane {
     /// It is an error to attempt to move the standard plane.
     ///
     /// *C style function: [ncplane_moverel()][c_api::ncplane_moverel].*
-    pub fn move_rel(&mut self, rows: NcOffset, cols: NcOffset) -> NcResult<()> {
+    pub fn move_rel(&mut self, rows: i32, cols: i32) -> NcResult<()> {
         error![
             c_api::ncplane_moverel(self, rows, cols),
             &format!("NcPlane.move_rel({}, {})", rows, cols)
@@ -1505,24 +1499,24 @@ impl NcPlane {
     pub fn mergedown(
         &mut self,
         source: &mut NcPlane,
-        beg_src_y: Option<NcDim>,
-        beg_src_x: Option<NcDim>,
-        len_y: Option<NcDim>,
-        len_x: Option<NcDim>,
-        dst_y: Option<NcDim>,
-        dst_x: Option<NcDim>,
+        beg_src_y: Option<u32>,
+        beg_src_x: Option<u32>,
+        len_y: Option<u32>,
+        len_x: Option<u32>,
+        dst_y: Option<u32>,
+        dst_x: Option<u32>,
     ) -> NcResult<()> {
         error![
             unsafe {
                 c_api::ncplane_mergedown(
                     source,
                     self,
-                    beg_src_y.unwrap_or(NcDim::MAX) as i32,
-                    beg_src_x.unwrap_or(NcDim::MAX) as i32,
+                    beg_src_y.unwrap_or(u32::MAX) as i32,
+                    beg_src_x.unwrap_or(u32::MAX) as i32,
                     len_y.unwrap_or(0),
                     len_x.unwrap_or(0),
-                    dst_y.unwrap_or(NcDim::MAX) as i32,
-                    dst_x.unwrap_or(NcDim::MAX) as i32,
+                    dst_y.unwrap_or(u32::MAX) as i32,
+                    dst_x.unwrap_or(u32::MAX) as i32,
                 )
             },
             &format!(
@@ -1632,7 +1626,7 @@ impl NcPlane {
     /// Renders and rasterizes the pile of which this `NcPlane` is a part.
     ///
     /// *(No equivalent C style function)*
-    pub fn render2(&mut self) -> NcResult<()> {
+    pub fn render_raster(&mut self) -> NcResult<()> {
         self.render()?;
         self.rasterize()?;
         Ok(())
@@ -1712,23 +1706,23 @@ impl NcPlane {
     //
     // NOTE: y and/or x may be NULL.
     // check for null and return NcResult
-    pub fn cursor_yx(&self) -> (NcDim, NcDim) {
+    pub fn cursor_yx(&self) -> (u32, u32) {
         let (mut y, mut x) = (0, 0);
         unsafe { c_api::ncplane_cursor_yx(self, &mut y, &mut x) };
-        (y as NcDim, x as NcDim)
+        (y as u32, x as u32)
     }
 
     /// Returns the current row of the cursor within this `NcPlane`.
     ///
     /// *C style function: [ncplane_cursor_y()][c_api::ncplane_cursor_y].*
-    pub fn cursor_y(&self) -> NcDim {
+    pub fn cursor_y(&self) -> u32 {
         c_api::ncplane_cursor_y(self)
     }
 
     /// Returns the current column of the cursor within this `NcPlane`.
     ///
     /// *C style function: [ncplane_cursor_x()][c_api::ncplane_cursor_x].*
-    pub fn cursor_x(&self) -> NcDim {
+    pub fn cursor_x(&self) -> u32 {
         c_api::ncplane_cursor_x(self)
     }
 
@@ -1740,7 +1734,7 @@ impl NcPlane {
     /// and the cursor position will remain unchanged.
     ///
     /// *C style function: [ncplane_cursor_move_yx()][c_api::ncplane_cursor_move_yx].*
-    pub fn cursor_move_yx(&mut self, y: NcDim, x: NcDim) -> NcResult<()> {
+    pub fn cursor_move_yx(&mut self, y: u32, x: u32) -> NcResult<()> {
         error![
             unsafe { c_api::ncplane_cursor_move_yx(self, y as i32, x as i32) },
             &format!("NcPlane.move_yx({}, {})", y, x)
@@ -1750,7 +1744,7 @@ impl NcPlane {
     /// Moves the cursor to the specified row within this `NcPlane`.
     ///
     /// *(No equivalent C style function)*
-    pub fn cursor_move_y(&mut self, y: NcDim) -> NcResult<()> {
+    pub fn cursor_move_y(&mut self, y: u32) -> NcResult<()> {
         let x = self.cursor_x();
         error![
             unsafe { c_api::ncplane_cursor_move_yx(self, y as i32, x as i32) },
@@ -1761,7 +1755,7 @@ impl NcPlane {
     /// Moves the cursor to the specified column within this `NcPlane`.
     ///
     /// *(No equivalent C style function)*
-    pub fn cursor_move_x(&mut self, x: NcDim) -> NcResult<()> {
+    pub fn cursor_move_x(&mut self, x: u32) -> NcResult<()> {
         let y = self.cursor_y();
         error![
             unsafe { c_api::ncplane_cursor_move_yx(self, y as i32, x as i32) },
@@ -1774,9 +1768,9 @@ impl NcPlane {
     /// It will error if the target row exceeds the plane dimensions.
     ///
     /// *(No equivalent C style function)*
-    pub fn cursor_move_rows(&mut self, rows: NcOffset) -> NcResult<()> {
+    pub fn cursor_move_rows(&mut self, rows: i32) -> NcResult<()> {
         let (y, x) = self.cursor_yx();
-        self.cursor_move_yx((y as NcOffset + rows) as NcDim, x)
+        self.cursor_move_yx((y as i32 + rows) as u32, x)
     }
 
     /// Moves the cursor the number of columns specified (forward or backwards).
@@ -1784,9 +1778,9 @@ impl NcPlane {
     /// It will error if the target column exceeds the plane dimensions.
     ///
     /// *(No equivalent C style function)*
-    pub fn cursor_move_cols(&mut self, cols: NcOffset) -> NcResult<()> {
+    pub fn cursor_move_cols(&mut self, cols: i32) -> NcResult<()> {
         let (y, x) = self.cursor_yx();
-        self.cursor_move_yx(y, (x as NcOffset + cols) as NcDim)
+        self.cursor_move_yx(y, (x as i32 + cols) as u32)
     }
 
     /// Moves the cursor relatively, the number of rows and columns specified
@@ -1795,7 +1789,7 @@ impl NcPlane {
     /// It will error if the target row or column exceeds the plane dimensions.
     ///
     /// *C style function: [ncplane_cursor_move_rel()][c_api::ncplane_cursor_move_rel].*
-    pub fn cursor_move_rel(&mut self, rows: NcOffset, cols: NcOffset) -> NcResult<()> {
+    pub fn cursor_move_rel(&mut self, rows: i32, cols: i32) -> NcResult<()> {
         self.cursor_move_rows(rows)?;
         self.cursor_move_cols(cols)?;
         Ok(())
@@ -1813,12 +1807,12 @@ impl NcPlane {
     ///
     /// *C style function: [ncplane_halign()][c_api::ncplane_halign].*
     #[inline]
-    pub fn halign(&mut self, align: NcAlign, numcols: NcDim) -> NcResult<NcDim> {
+    pub fn halign(&mut self, align: NcAlign, numcols: u32) -> NcResult<u32> {
         let res = c_api::ncplane_halign(self, align, numcols);
         error![
             res,
             &format!("NcPlane.halign({:?}, {})", align, numcols),
-            res as NcDim
+            res as u32
         ]
     }
 
@@ -1830,12 +1824,12 @@ impl NcPlane {
     ///
     /// *C style function: [ncplane_valign()][c_api::ncplane_valign].*
     #[inline]
-    pub fn valign(&mut self, align: NcAlign, numrows: NcDim) -> NcResult<NcDim> {
+    pub fn valign(&mut self, align: NcAlign, numrows: u32) -> NcResult<u32> {
         let res = c_api::ncplane_valign(self, align, numrows);
         error![
             res,
             &format!("NcPlane.valign({:?}, {})", align, numrows),
-            res as NcDim
+            res as u32
         ]
     }
 
@@ -1847,28 +1841,28 @@ impl NcPlane {
     /// The center is then modified relative to the plane's origin.
     ///
     /// *C style function: [ncplane_center_abs()][c_api::ncplane_center_abs].*
-    pub fn center_abs(&self) -> (NcDim, NcDim) {
+    pub fn center_abs(&self) -> (u32, u32) {
         let (mut y, mut x) = (0, 0);
         unsafe {
             c_api::ncplane_center_abs(self, &mut y, &mut x);
         }
-        (y as NcDim, x as NcDim)
+        (y as u32, x as u32)
     }
 
     /// Returns the dimensions of this `NcPlane`.
     ///
     /// *C style function: [ncplane_dim_yx()][c_api::ncplane_dim_yx].*
-    pub fn dim_yx(&self) -> (NcDim, NcDim) {
+    pub fn dim_yx(&self) -> (u32, u32) {
         let (mut y, mut x) = (0, 0);
         unsafe { c_api::ncplane_dim_yx(self, &mut y, &mut x) };
-        (y as NcDim, x as NcDim)
+        (y as u32, x as u32)
     }
 
     /// Return the rows of this `NcPlane`.
     ///
     /// *C style function: [ncplane_dim_y()][c_api::ncplane_dim_y].*
     #[inline]
-    pub fn dim_y(&self) -> NcDim {
+    pub fn dim_y(&self) -> u32 {
         self.dim_yx().0
     }
 
@@ -1876,7 +1870,7 @@ impl NcPlane {
     ///
     /// *C style function: [ncplane_dim_x()][c_api::ncplane_dim_x].*
     #[inline]
-    pub fn dim_x(&self) -> NcDim {
+    pub fn dim_x(&self) -> u32 {
         self.dim_yx().1
     }
 
@@ -1886,7 +1880,7 @@ impl NcPlane {
     ///
     /// *C style function: [ncplane_dim_y()][c_api::ncplane_dim_y].*
     #[inline]
-    pub fn rows(&self) -> NcDim {
+    pub fn rows(&self) -> u32 {
         self.dim_yx().0
     }
 
@@ -1896,7 +1890,7 @@ impl NcPlane {
     ///
     /// *C style function: [ncplane_dim_x()][c_api::ncplane_dim_x].*
     #[inline]
-    pub fn cols(&self) -> NcDim {
+    pub fn cols(&self) -> u32 {
         self.dim_yx().1
     }
 
@@ -1917,10 +1911,10 @@ impl NcPlane {
     pub fn as_rgba(
         &mut self,
         blitter: NcBlitter,
-        beg_y: Option<NcDim>,
-        beg_x: Option<NcDim>,
-        len_y: Option<NcDim>,
-        len_x: Option<NcDim>,
+        beg_y: Option<u32>,
+        beg_x: Option<u32>,
+        len_y: Option<u32>,
+        len_x: Option<u32>,
     ) -> NcResult<&mut [NcRgba]> {
         // pixel geometry
         let mut pxdim_y = 0;
@@ -1930,8 +1924,8 @@ impl NcPlane {
             c_api::ncplane_as_rgba(
                 self,
                 blitter.into(),
-                beg_y.unwrap_or(NcDim::MAX) as i32,
-                beg_x.unwrap_or(NcDim::MAX) as i32,
+                beg_y.unwrap_or(u32::MAX) as i32,
+                beg_x.unwrap_or(u32::MAX) as i32,
                 len_y.unwrap_or(0),
                 len_x.unwrap_or(0),
                 &mut pxdim_y,
@@ -1976,12 +1970,12 @@ impl NcPlane {
             );
         }
         NcPixelGeometry {
-            term_y: pxy as NcDim,
-            term_x: pxx as NcDim,
-            cell_y: celldimy as NcDim,
-            cell_x: celldimx as NcDim,
-            max_bitmap_y: maxbmapy as NcDim,
-            max_bitmap_x: maxbmapx as NcDim,
+            term_y: pxy as u32,
+            term_x: pxx as u32,
+            cell_y: celldimy as u32,
+            cell_x: celldimx as u32,
+            max_bitmap_y: maxbmapy as u32,
+            max_bitmap_x: maxbmapx as u32,
         }
     }
 
@@ -2007,14 +2001,14 @@ impl NcPlane {
     /// *C style function: [ncplane_resize()][c_api::ncplane_resize].*
     pub fn resize(
         &mut self,
-        keep_y: NcDim,
-        keep_x: NcDim,
-        keep_len_y: NcDim,
-        keep_len_x: NcDim,
-        off_y: NcOffset,
-        off_x: NcOffset,
-        len_y: NcDim,
-        len_x: NcDim,
+        keep_y: u32,
+        keep_x: u32,
+        keep_len_y: u32,
+        keep_len_x: u32,
+        off_y: i32,
+        off_x: i32,
+        len_y: u32,
+        len_x: u32,
     ) -> NcResult<()> {
         error![
             unsafe {
@@ -2090,7 +2084,7 @@ impl NcPlane {
     ///
     /// *C style function: [ncplane_resize_simple()][c_api::ncplane_resize_simple].*
     #[inline]
-    pub fn resize_simple(&mut self, len_y: NcDim, len_x: NcDim) -> NcResult<()> {
+    pub fn resize_simple(&mut self, len_y: u32, len_x: u32) -> NcResult<()> {
         error![c_api::ncplane_resize_simple(
             self,
             len_y as u32,
@@ -2147,7 +2141,7 @@ impl NcPlane {
     /// *C style function: [ncplane_translate()][c_api::ncplane_translate].*
     //
     // TODO: API change, return the coordinates as a tuple instead of being &mut
-    pub fn translate(&self, target: &NcPlane, y: &mut NcDim, x: &mut NcDim) {
+    pub fn translate(&self, target: &NcPlane, y: &mut u32, x: &mut u32) {
         unsafe { c_api::ncplane_translate(self, target, &mut (*y as i32), &mut (*x as i32)) }
     }
 
@@ -2159,7 +2153,7 @@ impl NcPlane {
     /// *C style function: [ncplane_translate_abs()][c_api::ncplane_translate_abs].*
     //
     // TODO: API change, return a tuple (y,x,bool)
-    pub fn translate_abs(&self, y: &mut NcDim, x: &mut NcDim) -> bool {
+    pub fn translate_abs(&self, y: &mut u32, x: &mut u32) -> bool {
         unsafe { c_api::ncplane_translate_abs(self, &mut (*y as i32), &mut (*x as i32)) }
     }
 
@@ -2169,26 +2163,26 @@ impl NcPlane {
     /// *C style function: [ncplane_yx()][c_api::ncplane_yx].*
     //
     // CHECK: negative offsets
-    pub fn yx(&self) -> (NcOffset, NcOffset) {
+    pub fn yx(&self) -> (i32, i32) {
         let (mut y, mut x) = (0, 0);
         unsafe { c_api::ncplane_yx(self, &mut y, &mut x) };
-        (y as NcOffset, x as NcOffset)
+        (y as i32, x as i32)
     }
 
     /// Gets the `x` origin of this `NcPlane` relative to the standard plane,
     /// or the `NcPlane` to which it is bound.
     ///
     /// *C style function: [ncplane_x()][c_api::ncplane_x].*
-    pub fn x(&self) -> NcOffset {
-        unsafe { c_api::ncplane_x(self) as NcOffset }
+    pub fn x(&self) -> i32 {
+        unsafe { c_api::ncplane_x(self) as i32 }
     }
 
     /// Gets the `y` origin of this `NcPlane` relative to the standard plane,
     /// or the `NcPlane` to which it is bound.
     ///
     /// *C style function: [ncplane_y()][c_api::ncplane_y].*
-    pub fn y(&self) -> NcOffset {
-        unsafe { c_api::ncplane_y(self) as NcOffset }
+    pub fn y(&self) -> i32 {
+        unsafe { c_api::ncplane_y(self) as i32 }
     }
 
     /// Returns `true` if this `NcPlane` has scrolling enabled, or `false` otherwise.
@@ -2223,9 +2217,9 @@ impl NcPlane {
     /// and otherwise returns the number of lines scrolled.
     ///
     /// *C style function: [ncplane_scrollup()][c_api::ncplane_scrollup].*
-    pub fn scrollup(&mut self, r: NcDim) -> NcResult<NcDim> {
+    pub fn scrollup(&mut self, r: u32) -> NcResult<u32> {
         let res = unsafe { c_api::ncplane_scrollup(self, r as i32) };
-        error![res, "", res as NcDim]
+        error![res, "", res as u32]
     }
 
     /// Scrolls down the current plane until `child` is no longer hidden beneath it.
@@ -2236,9 +2230,9 @@ impl NcPlane {
     /// Returns the number of scrolling events otherwise (might be 0).
     ///
     /// *C style function: [ncplane_scrollup_child()][c_api::ncplane_scrollup_child].*
-    pub fn scrollup_child(&mut self, child: &NcPlane) -> NcResult<NcDim> {
+    pub fn scrollup_child(&mut self, child: &NcPlane) -> NcResult<u32> {
         let res = unsafe { c_api::ncplane_scrollup_child(self, child) };
-        error![res, "", res as NcDim]
+        error![res, "", res as u32]
     }
 
     /// Returns `true` if this `NcPlane` has autogrow enabled, or `false` otherwise.
@@ -2300,8 +2294,8 @@ impl NcPlane {
         lr: &NcCell,
         hline: &NcCell,
         vline: &NcCell,
-        stop_y: NcDim,
-        stop_x: NcDim,
+        stop_y: u32,
+        stop_x: u32,
         boxmask: NcBoxMask,
     ) -> NcResult<()> {
         error![unsafe {
@@ -2336,8 +2330,8 @@ impl NcPlane {
         lr: &NcCell,
         hline: &NcCell,
         vline: &NcCell,
-        len_y: NcDim,
-        len_x: NcDim,
+        len_y: u32,
+        len_x: u32,
         boxmask: NcBoxMask,
     ) -> NcResult<()> {
         error![c_api::ncplane_box_sized(
@@ -2353,8 +2347,8 @@ impl NcPlane {
         &mut self,
         stylemask: NcStyle,
         channels: NcChannels,
-        stop_y: NcDim,
-        stop_x: NcDim,
+        stop_y: u32,
+        stop_x: u32,
         boxmask: NcBoxMask,
     ) -> NcResult<()> {
         error![c_api::ncplane_ascii_box(
@@ -2375,8 +2369,8 @@ impl NcPlane {
         &mut self,
         stylemask: NcStyle,
         channels: NcChannels,
-        stop_y: NcDim,
-        stop_x: NcDim,
+        stop_y: u32,
+        stop_x: u32,
         boxmask: NcBoxMask,
     ) -> NcResult<()> {
         error![c_api::ncplane_double_box(
@@ -2398,8 +2392,8 @@ impl NcPlane {
         &mut self,
         stylemask: NcStyle,
         channels: NcChannels,
-        len_y: NcDim,
-        len_x: NcDim,
+        len_y: u32,
+        len_x: u32,
         boxmask: NcBoxMask,
     ) -> NcResult<()> {
         error![c_api::ncplane_double_box(
@@ -2559,17 +2553,17 @@ impl NcPlane {
     /// *C style function: [ncplane_gradient()][c_api::ncplane_gradient].*
     pub fn gradient(
         &mut self,
-        y: Option<NcDim>,
-        x: Option<NcDim>,
-        stop_y: Option<NcDim>,
-        stop_x: Option<NcDim>,
+        y: Option<u32>,
+        x: Option<u32>,
+        stop_y: Option<u32>,
+        stop_x: Option<u32>,
         egc: &str,
         stylemask: NcStyle,
         ul: NcChannels,
         ur: NcChannels,
         ll: NcChannels,
         lr: NcChannels,
-    ) -> NcResult<NcDim> {
+    ) -> NcResult<u32> {
         let res = c_api::ncplane_gradient(
             self,
             y,
@@ -2583,7 +2577,7 @@ impl NcPlane {
             ll.into(),
             lr.into(),
         );
-        error![res, "", res as NcDim]
+        error![res, "", res as u32]
     }
 
     /// Does a high-resolution gradient using upper blocks and synced backgrounds.
@@ -2602,20 +2596,20 @@ impl NcPlane {
     /// *C style function: [ncplane_gradient2x1()][c_api::ncplane_gradient2x1].*
     pub fn gradient2x1(
         &mut self,
-        y: Option<NcDim>,
-        x: Option<NcDim>,
-        len_y: Option<NcDim>,
-        len_x: Option<NcDim>,
+        y: Option<u32>,
+        x: Option<u32>,
+        len_y: Option<u32>,
+        len_x: Option<u32>,
         ul: NcChannel,
         ur: NcChannel,
         ll: NcChannel,
         lr: NcChannel,
-    ) -> NcResult<NcDim> {
+    ) -> NcResult<u32> {
         let res = unsafe {
             c_api::ncplane_gradient2x1(
                 self,
-                y.unwrap_or(NcDim::MAX) as i32,
-                x.unwrap_or(NcDim::MAX) as i32,
+                y.unwrap_or(u32::MAX) as i32,
+                x.unwrap_or(u32::MAX) as i32,
                 len_y.unwrap_or(0),
                 len_x.unwrap_or(0),
                 ul.into(),
@@ -2624,7 +2618,7 @@ impl NcPlane {
                 lr.into(),
             )
         };
-        error![res, "", res as NcDim]
+        error![res, "", res as u32]
     }
 
     /// Converts this `NcPlane`'s content to greyscale.
@@ -2651,7 +2645,7 @@ impl NcPlane {
     /// It is an error not to have sufficient room to draw the qrcode.
     ///
     /// *C style function: [ncplane_qrcode()][c_api::ncplane_qrcode].*
-    pub fn qrcode(&mut self, data: &mut [u8]) -> NcResult<(NcDim, NcDim, NcDim)> {
+    pub fn qrcode(&mut self, data: &mut [u8]) -> NcResult<(u32, u32, u32)> {
         let (mut max_y, mut max_x) = (0, 0);
         let len = data.len();
         let data_ptr = data.as_ptr() as *const std::ffi::c_void;

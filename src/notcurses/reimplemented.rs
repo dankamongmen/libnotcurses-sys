@@ -4,7 +4,7 @@ use core::ptr::{null, null_mut};
 
 use crate::{
     c_api::{self, NcResult_i32, NCRESULT_ERR},
-    Nc, NcAlign, NcDim, NcError, NcInput, NcPlane, NcResult, NcTime,
+    Nc, NcAlign, NcError, NcInput, NcPlane, NcResult, NcTime,
 };
 
 /// Returns the offset into `avail_u` at which `u` ought be output given
@@ -15,7 +15,7 @@ use crate::{
 ///
 /// *Method: Nc.[align()][Nc#method.align].*
 #[inline]
-pub fn notcurses_align(avail_u: NcDim, align: NcAlign, u: NcDim) -> NcResult_i32 {
+pub fn notcurses_align(avail_u: u32, align: NcAlign, u: u32) -> NcResult_i32 {
     if align == NcAlign::Left || align == NcAlign::Top {
         return 0;
     }
@@ -167,8 +167,8 @@ pub fn notcurses_render(nc: &mut Nc) -> NcResult_i32 {
 #[inline]
 pub fn notcurses_stddim_yx<'a>(
     nc: &'a mut Nc,
-    y: &mut NcDim,
-    x: &mut NcDim,
+    y: &mut u32,
+    x: &mut u32,
 ) -> NcResult<&'a mut NcPlane> {
     unsafe {
         let sp = c_api::notcurses_stdplane(nc);
@@ -187,8 +187,8 @@ pub fn notcurses_stddim_yx<'a>(
 #[inline]
 pub fn notcurses_stddim_yx_const<'a>(
     nc: &'a Nc,
-    y: &mut NcDim,
-    x: &mut NcDim,
+    y: &mut u32,
+    x: &mut u32,
 ) -> NcResult<&'a NcPlane> {
     unsafe {
         let sp = c_api::notcurses_stdplane_const(nc);
@@ -204,12 +204,12 @@ pub fn notcurses_stddim_yx_const<'a>(
 ///
 /// *Method: Nc.[term_dim_yx()][Nc#method.term_dim_yx].*
 #[inline]
-pub fn notcurses_term_dim_yx(nc: &Nc) -> (NcDim, NcDim) {
+pub fn notcurses_term_dim_yx(nc: &Nc) -> (u32, u32) {
     let (mut y, mut x) = (0, 0);
     unsafe {
         c_api::ncplane_dim_yx(c_api::notcurses_stdplane_const(nc), &mut y, &mut x);
     }
-    (y as NcDim, x as NcDim)
+    (y as u32, x as u32)
 }
 
 /// Disables all mice tracking.

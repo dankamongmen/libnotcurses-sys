@@ -1,7 +1,6 @@
-use crate::{
-    widgets::{NcTreeItem, NcTreeItemCbUnsafe, NcTreeOptions},
-    NcDim,
-};
+//!
+
+use crate::widgets::{NcTreeItem, NcTreeItemCbUnsafe, NcTreeOptions};
 
 #[allow(unused_imports)] // for doc comments
 use crate::widgets::NcTree;
@@ -9,7 +8,7 @@ use crate::widgets::NcTree;
 /// # `NcTreeOptions` constructors
 impl NcTreeOptions {
     /// New NcTreeOptions for [`NcTree`].
-    pub fn new(items: &[NcTreeItem], indentcols: NcDim) -> Self {
+    pub fn new(items: &[NcTreeItem], indentcols: u32) -> Self {
         Self::with_all_args(items, items.len(), None, indentcols, 0)
     }
 
@@ -26,7 +25,7 @@ impl NcTreeOptions {
         nctreecb: Option<NcTreeItemCbUnsafe>,
 
         // columns to indent per level of hierarchy
-        indentcols: NcDim,
+        indentcols: u32,
 
         // bitfield of `NCTREE_OPTION_*` (there's none for now)
         flags: u64,

@@ -37,7 +37,7 @@
 //W+ ncvisualplane_create
 
 #[allow(unused_imports)] // for doc comments
-use crate::{NcBlitter, NcChannel, NcDim, NcOffset, NcPlane, NcScale};
+use crate::{NcBlitter, NcChannel, NcPlane, NcScale};
 
 mod geometry;
 mod methods;

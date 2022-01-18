@@ -1,6 +1,6 @@
 //!
 
-use crate::{NcAlign, NcBlitter, NcDim, NcOffset, NcPlane, NcRgba, NcScale, NcVisualOptions};
+use crate::{NcAlign, NcBlitter, NcPlane, NcRgba, NcScale, NcVisualOptions};
 
 /// Builder object for [`NcVisualOptions`].
 ///
@@ -11,10 +11,10 @@ use crate::{NcAlign, NcBlitter, NcDim, NcOffset, NcPlane, NcRgba, NcScale, NcVis
 pub struct NcVisualOptionsBuilder<'ncplane> {
     plane: Option<&'ncplane mut NcPlane>,
     scale: NcScale,
-    y: NcOffset,
-    x: NcOffset,
-    region_yx_lenyx: Option<(NcDim, NcDim, NcDim, NcDim)>,
-    cell_offset_yx: Option<(NcDim, NcDim)>,
+    y: i32,
+    x: i32,
+    region_yx_lenyx: Option<(u32, u32, u32, u32)>,
+    cell_offset_yx: Option<(u32, u32)>,
     blitter: NcBlitter,
     flags: u32,
     transcolor: NcRgba,
@@ -109,7 +109,7 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
     /// Effect: Sets the *y* coordinate, and unsets the [`VERALIGNED`] flag.
     ///
     /// [`VERALIGNED`]: NcVisualOptions#associatedconstant.VERALIGNED
-    pub fn y(mut self, y: NcOffset) -> Self {
+    pub fn y(mut self, y: i32) -> Self {
         self.y = y;
         self.flags &= !NcVisualOptions::VERALIGNED;
         self
@@ -122,7 +122,7 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
     /// Effect: Sets the *x* coordinate, and unsets the [`HORALIGNED`] flag.
     ///
     /// [`HORALIGNED`]: NcVisualOptions#associatedconstant.HORALIGNED
-    pub fn x(mut self, x: NcOffset) -> Self {
+    pub fn x(mut self, x: i32) -> Self {
         self.x = x;
         self.flags &= !NcVisualOptions::HORALIGNED;
         self
@@ -137,7 +137,7 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
     ///
     /// [`VERALIGNED`]: NcVisualOptions#associatedconstant.VERALIGNED
     /// [`HORALIGNED`]: NcVisualOptions#associatedconstant.HORALIGNED
-    pub fn yx(mut self, y: NcOffset, x: NcOffset) -> Self {
+    pub fn yx(mut self, y: i32, x: i32) -> Self {
         self.y = y;
         self.x = x;
         self.flags &= !NcVisualOptions::VERALIGNED;
@@ -273,7 +273,7 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
     /// Sets the region to be rendered.
     ///
     /// (start_y, start_x, len_y, len_x)
-    pub fn region(mut self, beg_y: NcDim, beg_x: NcDim, len_y: NcDim, len_x: NcDim) -> Self {
+    pub fn region(mut self, beg_y: u32, beg_x: u32, len_y: u32, len_x: u32) -> Self {
         self.region_yx_lenyx = Some((beg_y, beg_x, len_y, len_x));
         self
     }
@@ -281,7 +281,7 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
     /// Sets the pixel offset within the [`NcCell`][crate::NcCell].
     ///
     ///
-    pub fn cell_offset(mut self, y: NcDim, x: NcDim) -> Self {
+    pub fn cell_offset(mut self, y: u32, x: u32) -> Self {
         self.cell_offset_yx = Some((y, x));
         self
     }

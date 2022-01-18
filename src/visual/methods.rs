@@ -5,8 +5,8 @@ use libc::c_void;
 
 use crate::{
     c_api::{self, NcChannel_u32, NcResult_i32, NCRESULT_ERR},
-    cstring, error, error_ref_mut, Nc, NcBlitter, NcChannel, NcDim, NcDirect, NcError, NcPixel,
-    NcPlane, NcResult, NcRgba, NcScale, NcTime, NcVisual, NcVisualGeometry, NcVisualOptions,
+    cstring, error, error_ref_mut, Nc, NcBlitter, NcChannel, NcDirect, NcError, NcPixel, NcPlane,
+    NcResult, NcRgba, NcScale, NcTime, NcVisual, NcVisualGeometry, NcVisualOptions,
 };
 
 /// # NcVisual Constructors & destructors
@@ -16,9 +16,9 @@ impl NcVisual {
     /// *C style function: [ncvisual_from_bgra()][c_api::ncvisual_from_bgra].*
     pub fn from_bgra<'a>(
         bgra: &[u8],
-        rows: NcDim,
-        rowstride: NcDim,
-        cols: NcDim,
+        rows: u32,
+        rowstride: u32,
+        cols: u32,
     ) -> NcResult<&'a mut NcVisual> {
         error_ref_mut![
             unsafe {
@@ -68,18 +68,18 @@ impl NcVisual {
     pub fn from_plane<'a>(
         plane: &NcPlane,
         blitter: NcBlitter,
-        beg_y: Option<NcDim>,
-        beg_x: Option<NcDim>,
-        len_y: Option<NcDim>,
-        len_x: Option<NcDim>,
+        beg_y: Option<u32>,
+        beg_x: Option<u32>,
+        len_y: Option<u32>,
+        len_x: Option<u32>,
     ) -> NcResult<&'a mut NcVisual> {
         error_ref_mut![
             unsafe {
                 c_api::ncvisual_from_plane(
                     plane,
                     blitter.into(),
-                    beg_y.unwrap_or(NcDim::MAX) as i32,
-                    beg_x.unwrap_or(NcDim::MAX) as i32,
+                    beg_y.unwrap_or(u32::MAX) as i32,
+                    beg_x.unwrap_or(u32::MAX) as i32,
                     len_y.unwrap_or(0),
                     len_x.unwrap_or(0),
                 )
@@ -94,11 +94,7 @@ impl NcVisual {
     /// Constructs an `NcVisual` from a nul-terminated Sixel control `sequence`.
     ///
     /// *C style function: [ncvisual_from_sixel()][c_api::ncvisual_from_sixel].*
-    pub fn from_sixel<'a>(
-        sequence: &str,
-        len_y: NcDim,
-        len_x: NcDim,
-    ) -> NcResult<&'a mut NcVisual> {
+    pub fn from_sixel<'a>(sequence: &str, len_y: u32, len_x: u32) -> NcResult<&'a mut NcVisual> {
         error_ref_mut![
             unsafe { c_api::ncvisual_from_file(cstring![sequence]) },
             &format!("NcVisual::from_sixel({}, {}, {})", sequence, len_y, len_x)
@@ -113,9 +109,9 @@ impl NcVisual {
     /// *C style function: [ncvisual_from_rgb_loose()][c_api::ncvisual_from_rgb_loose].*
     pub fn from_rgb_loose<'a>(
         rgb: &[u8],
-        rows: NcDim,
-        rowstride: NcDim,
-        cols: NcDim,
+        rows: u32,
+        rowstride: u32,
+        cols: u32,
         alpha: u8,
     ) -> NcResult<&'a mut NcVisual> {
         error_ref_mut![
@@ -141,9 +137,9 @@ impl NcVisual {
     /// *C style function: [ncvisual_from_rgb_packed()][c_api::ncvisual_from_rgb_packed].*
     pub fn from_rgb_packed<'a>(
         rgb: &[u8],
-        rows: NcDim,
-        rowstride: NcDim,
-        cols: NcDim,
+        rows: u32,
+        rowstride: u32,
+        cols: u32,
         alpha: u8,
     ) -> NcResult<&'a mut NcVisual> {
         error_ref_mut![
@@ -176,9 +172,9 @@ impl NcVisual {
     /// *C style function: [ncvisual_from_rgba()][c_api::ncvisual_from_rgba].*
     pub fn from_rgba<'a>(
         rgba: &[u8],
-        rows: NcDim,
-        rowstride: NcDim,
-        cols: NcDim,
+        rows: u32,
+        rowstride: u32,
+        cols: u32,
     ) -> NcResult<&'a mut NcVisual> {
         error_ref_mut![
             unsafe {
@@ -217,11 +213,11 @@ impl NcVisual {
     // ) -> *mut ncvisual;
     pub fn from_palidx<'a>(
         data: &[u8],
-        rows: NcDim,
-        rowstride: NcDim,
-        cols: NcDim,
+        rows: u32,
+        rowstride: u32,
+        cols: u32,
         palsize: u8,
-        pstride: NcDim,
+        pstride: u32,
         palette: &[NcChannel],
     ) -> NcResult<&'a mut NcVisual> {
         // assert![];
@@ -340,7 +336,7 @@ impl NcVisual {
 
         // if an `Nc` context is not provided, only `pix_yx` will be filled in.
         if nc.is_none() {
-            pix_yx = Some((vg.pixy as NcDim, vg.pixx as NcDim));
+            pix_yx = Some((vg.pixy as u32, vg.pixx as u32));
 
             cdim_yx = None;
             rpix_yx = None;
@@ -352,7 +348,7 @@ impl NcVisual {
         } else {
             // `maxpixel_yx` only is defined for `Ncblitter::PIXEL`.
             if vg.blitter == NcBlitter::Pixel.into() {
-                maxpixel_yx = Some((vg.maxpixely as NcDim, vg.maxpixelx as NcDim));
+                maxpixel_yx = Some((vg.maxpixely as u32, vg.maxpixelx as u32));
             } else {
                 maxpixel_yx = None;
             }
@@ -362,35 +358,35 @@ impl NcVisual {
                 beg_yx = None;
                 len_yx = None;
             } else {
-                beg_yx = Some((vg.begy as NcDim, vg.begx as NcDim));
-                len_yx = Some((vg.leny as NcDim, vg.lenx as NcDim));
+                beg_yx = Some((vg.begy as u32, vg.begx as u32));
+                len_yx = Some((vg.leny as u32, vg.lenx as u32));
             }
 
             // valid values for the following fields can't be 0 either:
             if vg.pixy | vg.pixx == 0 {
                 pix_yx = None;
             } else {
-                pix_yx = Some((vg.pixy as NcDim, vg.pixx as NcDim));
+                pix_yx = Some((vg.pixy as u32, vg.pixx as u32));
             }
             if vg.cdimy | vg.cdimx == 0 {
                 cdim_yx = None;
             } else {
-                cdim_yx = Some((vg.cdimy as NcDim, vg.cdimx as NcDim));
+                cdim_yx = Some((vg.cdimy as u32, vg.cdimx as u32));
             }
             if vg.scaley | vg.scalex == 0 {
                 scale_yx = None;
             } else {
-                scale_yx = Some((vg.scaley as NcDim, vg.scalex as NcDim));
+                scale_yx = Some((vg.scaley as u32, vg.scalex as u32));
             }
             if vg.rpixy | vg.rpixx == 0 {
                 rpix_yx = None;
             } else {
-                rpix_yx = Some((vg.rpixy as NcDim, vg.rpixx as NcDim));
+                rpix_yx = Some((vg.rpixy as u32, vg.rpixx as u32));
             }
             if vg.rcelly | vg.rcellx == 0 {
                 rcell_yx = None;
             } else {
-                rcell_yx = Some((vg.rcelly as NcDim, vg.rcellx as NcDim));
+                rcell_yx = Some((vg.rcelly as u32, vg.rcellx as u32));
             }
         }
 
@@ -434,7 +430,7 @@ impl NcVisual {
     /// Polyfills at the specified location using `rgba`.
     ///
     /// *C style function: [ncvisual_polyfill_yx()][c_api::ncvisual_polyfill_yx].*
-    pub fn polyfill_yx<RGBA>(&mut self, y: NcDim, x: NcDim, rgba: RGBA) -> NcResult<()>
+    pub fn polyfill_yx<RGBA>(&mut self, y: u32, x: u32, rgba: RGBA) -> NcResult<()>
     where
         RGBA: Into<NcRgba>,
     {
@@ -483,7 +479,7 @@ impl NcVisual {
     /// This is a lossy transformation, unless the size is unchanged.
     ///
     /// *C style function: [ncvisual_resize()][c_api::ncvisual_resize].*
-    pub fn resize(&mut self, rows: NcDim, cols: NcDim) -> NcResult<()> {
+    pub fn resize(&mut self, rows: u32, cols: u32) -> NcResult<()> {
         error![
             unsafe { c_api::ncvisual_resize(self, rows as i32, cols as i32) },
             &format!["NcVisual.resize({}, {})", rows, cols]
@@ -497,7 +493,7 @@ impl NcVisual {
     ///
     /// *C style function:
     /// [ncvisual_resize_noninterpolative()][c_api::ncvisual_resize_noninterpolative].*
-    pub fn resize_noninterpolative(&mut self, rows: NcDim, cols: NcDim) -> NcResult<()> {
+    pub fn resize_noninterpolative(&mut self, rows: u32, cols: u32) -> NcResult<()> {
         error![
             unsafe { c_api::ncvisual_resize_noninterpolative(self, rows as i32, cols as i32) },
             &format!["NcVisual.resize_noninterpolative({}, {})", cols, rows]
@@ -520,7 +516,7 @@ impl NcVisual {
     /// Gets the specified pixel from this NcVisual.
     ///
     /// *C style function: [ncvisual_at_yx()][c_api::ncvisual_at_yx].*
-    pub fn at_yx(&self, y: NcDim, x: NcDim) -> NcResult<NcPixel> {
+    pub fn at_yx(&self, y: u32, x: u32) -> NcResult<NcPixel> {
         let mut pixel = 0;
         let res = unsafe { c_api::ncvisual_at_yx(self, y, x, &mut pixel) };
         error![res, "NcVisual.at_yx()", pixel.into()]
@@ -529,7 +525,7 @@ impl NcVisual {
     /// Sets the specified pixel.
     ///
     /// *C style function: [ncvisual_set_yx()][c_api::ncvisual_set_yx].*
-    pub fn set_yx(&mut self, y: NcDim, x: NcDim, pixel: NcPixel) -> NcResult<()> {
+    pub fn set_yx(&mut self, y: u32, x: u32, pixel: NcPixel) -> NcResult<()> {
         error![
             unsafe { c_api::ncvisual_set_yx(self, y, x, pixel.into()) },
             &format!["NcVisual.set_yx({}, {}, {:?})", y, x, pixel]

@@ -131,11 +131,11 @@ fn erase_region_slideshow(state: &mut State) -> NcResult<()> {
 /// shows a *slide* with the result of calling `erase_region`.
 fn erase_region(
     state: &mut State,
-    cursor: (NcDim, NcDim),
-    ystart: Option<NcDim>,
-    xstart: Option<NcDim>,
-    ylen: NcOffset,
-    xlen: NcOffset,
+    cursor: (u32, u32),
+    ystart: Option<u32>,
+    xstart: Option<u32>,
+    ylen: i32,
+    xlen: i32,
     what_is_erased: &str,
 ) -> NcResult<()> {
     // resets the showcase plane
@@ -210,7 +210,7 @@ fn show_cursor(state: &mut State) -> NcResult<()> {
 /// prints a row in the info panel, with optional stain
 fn print_info_row(
     state: &mut State,
-    row: NcDim,
+    row: u32,
     stain: Option<NcChannels>,
     align: NcAlign,
     string: &str,

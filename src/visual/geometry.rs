@@ -1,6 +1,6 @@
 //!
 
-use crate::{NcBlitter, NcDim};
+use crate::NcBlitter;
 
 /// Describes all the geometries of an [`NcVisual`].
 ///
@@ -34,7 +34,7 @@ pub struct NcVisualGeometry {
     /// [`NcVisual`]: crate::NcVisual
     /// [`pixy`]: crate::c_api::ffi::ncvgeom#structfield.pixy
     /// [`pixx`]: crate::c_api::ffi::ncvgeom#structfield.pixx
-    pub pix_yx: Option<(NcDim, NcDim)>,
+    pub pix_yx: Option<(u32, u32)>,
 
     /// *Terminal* **cell** geometry at the time of the call. This is the size
     /// of a cell in pixels.
@@ -50,7 +50,7 @@ pub struct NcVisualGeometry {
     /// [`cdimx`]: crate::c_api::ffi::ncvgeom#structfield.cdimx
     /// [`cell_y`]: crate::NcPixelGeometry#structfield.cell_y
     /// [`cell_x`]: crate::NcPixelGeometry#structfield.cell_x
-    pub cdim_yx: Option<(NcDim, NcDim)>,
+    pub cdim_yx: Option<(u32, u32)>,
 
     /// Rendered **pixel** geometry, per `NcVisualOptions`.
     /// as handed to the blitter, following any scaling.
@@ -59,7 +59,7 @@ pub struct NcVisualGeometry {
     ///
     /// [`rpixy`]: crate::c_api::ffi::ncvgeom#structfield.rpixy
     /// [`rpixx`]: crate::c_api::ffi::ncvgeom#structfield.rpixx
-    pub rpix_yx: Option<(NcDim, NcDim)>,
+    pub rpix_yx: Option<(u32, u32)>,
 
     /// Rendered **cell** geometry, per `NcVisualOptions`.
     ///
@@ -71,7 +71,7 @@ pub struct NcVisualGeometry {
     ///
     /// [`rcelly`]: crate::c_api::ffi::ncvgeom#structfield.rcelly
     /// [`rcellx`]: crate::c_api::ffi::ncvgeom#structfield.rcellx
-    pub rcell_yx: Option<(NcDim, NcDim)>,
+    pub rcell_yx: Option<(u32, u32)>,
 
     /// The number of input pixels drawn to a single cell.
     ///
@@ -82,7 +82,7 @@ pub struct NcVisualGeometry {
     /// [`scaley`]: crate::c_api::ffi::ncvgeom#structfield.scaley
     /// [`scalex`]: crate::c_api::ffi::ncvgeom#structfield.scalex
     /// [`cdim_yx`]: Self#structfield.cdim_yx
-    pub scale_yx: Option<(NcDim, NcDim)>,
+    pub scale_yx: Option<(u32, u32)>,
 
     /// The largest bitmap geometry that the terminal is willing to accept.
     ///
@@ -92,7 +92,7 @@ pub struct NcVisualGeometry {
     ///
     /// [`maxpixely`]: crate::c_api::ffi::ncvgeom#structfield.maxmaxpixely
     /// [`maxpixelx`]: crate::c_api::ffi::ncvgeom#structfield.maxpixelx
-    pub maxpixel_yx: Option<(NcDim, NcDim)>,
+    pub maxpixel_yx: Option<(u32, u32)>,
 
     /// The upper-left corner of the used section.
     ///
@@ -103,7 +103,7 @@ pub struct NcVisualGeometry {
     /// [`begx`]: crate::c_api::ffi::ncvgeom#structfield.begx
     /// [vo#begx]: crate::c_api::ffi::ncvisual_options#structfield.begx
     /// [vo#begy]: crate::c_api::ffi::ncvisual_options#structfield.begy
-    pub beg_yx: Option<(NcDim, NcDim)>,
+    pub beg_yx: Option<(u32, u32)>,
 
     /// The geometry of the used section.
     ///
@@ -114,7 +114,7 @@ pub struct NcVisualGeometry {
     /// [`lenx`]: crate::c_api::ffi::ncvgeom#structfield.lenx
     /// [vo#lenx]: crate::c_api::ffi::ncvisual_options#structfield.lenx
     /// [vo#leny]: crate::c_api::ffi::ncvisual_options#structfield.leny
-    pub len_yx: Option<(NcDim, NcDim)>,
+    pub len_yx: Option<(u32, u32)>,
 
     /// The [`NcBlitter`] which will be used.
     ///
@@ -141,58 +141,58 @@ impl NcVisualGeometry {
 /// [`NcVGeom`]: crate::c_api::NcVGeom
 ///
 impl NcVisualGeometry {
-    pub fn pixy(&self) -> NcDim {
+    pub fn pixy(&self) -> u32 {
         self.pix_yx.unwrap_or((0, 0)).0
     }
-    pub fn pixx(&self) -> NcDim {
+    pub fn pixx(&self) -> u32 {
         self.pix_yx.unwrap_or((0, 0)).1
     }
-    pub fn cdimy(&self) -> NcDim {
+    pub fn cdimy(&self) -> u32 {
         self.cdim_yx.unwrap_or((0, 0)).0
     }
-    pub fn cdimx(&self) -> NcDim {
+    pub fn cdimx(&self) -> u32 {
         self.cdim_yx.unwrap_or((0, 0)).1
     }
-    pub fn rpixy(&self) -> NcDim {
+    pub fn rpixy(&self) -> u32 {
         self.rpix_yx.unwrap_or((0, 0)).0
     }
-    pub fn rpixx(&self) -> NcDim {
+    pub fn rpixx(&self) -> u32 {
         self.rpix_yx.unwrap_or((0, 0)).1
     }
-    pub fn rcelly(&self) -> NcDim {
+    pub fn rcelly(&self) -> u32 {
         self.rcell_yx.unwrap_or((0, 0)).0
     }
-    pub fn rcellx(&self) -> NcDim {
+    pub fn rcellx(&self) -> u32 {
         self.rcell_yx.unwrap_or((0, 0)).1
     }
-    pub fn scaley(&self) -> NcDim {
+    pub fn scaley(&self) -> u32 {
         self.scale_yx.unwrap_or((0, 0)).0
     }
-    pub fn scalex(&self) -> NcDim {
+    pub fn scalex(&self) -> u32 {
         self.scale_yx.unwrap_or((0, 0)).1
     }
-    pub fn maxpixely(&self) -> NcDim {
+    pub fn maxpixely(&self) -> u32 {
         self.maxpixel_yx.unwrap_or((0, 0)).0
     }
-    pub fn maxpixelx(&self) -> NcDim {
+    pub fn maxpixelx(&self) -> u32 {
         self.maxpixel_yx.unwrap_or((0, 0)).1
     }
-    pub fn begy(&self) -> NcDim {
+    pub fn begy(&self) -> u32 {
         self.beg_yx.unwrap_or((0, 0)).0
     }
-    pub fn begx(&self) -> NcDim {
+    pub fn begx(&self) -> u32 {
         self.beg_yx.unwrap_or((0, 0)).1
     }
-    pub fn leny(&self) -> NcDim {
+    pub fn leny(&self) -> u32 {
         self.len_yx.unwrap_or((0, 0)).0
     }
-    pub fn lenx(&self) -> NcDim {
+    pub fn lenx(&self) -> u32 {
         self.len_yx.unwrap_or((0, 0)).1
     }
 }
 
 mod std_impls {
-    use super::{c_api::NcVGeom, NcBlitter, NcDim, NcVisualGeometry};
+    use super::{c_api::NcVGeom, NcBlitter, NcVisualGeometry};
 
     impl From<NcVGeom> for NcVisualGeometry {
         /// Since we don't know the origin of the `NcVGeom` struct, when some fields
@@ -215,33 +215,33 @@ mod std_impls {
             if vg.pixy == 0 || vg.pixx == 0 {
                 pix_yx = None;
             } else {
-                pix_yx = Some((vg.pixy as NcDim, vg.pixx as NcDim));
+                pix_yx = Some((vg.pixy as u32, vg.pixx as u32));
             }
             if vg.cdimy == 0 || vg.cdimx == 0 {
                 cdim_yx = None;
             } else {
-                cdim_yx = Some((vg.cdimy as NcDim, vg.cdimx as NcDim));
+                cdim_yx = Some((vg.cdimy as u32, vg.cdimx as u32));
             }
             if vg.rpixy == 0 || vg.rpixx == 0 {
                 // MAYBE double CHECK this case
                 rpix_yx = None;
             } else {
-                rpix_yx = Some((vg.rpixy as NcDim, vg.rpixx as NcDim));
+                rpix_yx = Some((vg.rpixy as u32, vg.rpixx as u32));
             }
             if vg.rcelly == 0 || vg.rcellx == 0 {
                 rcell_yx = None;
             } else {
-                rcell_yx = Some((vg.rcelly as NcDim, vg.rcellx as NcDim));
+                rcell_yx = Some((vg.rcelly as u32, vg.rcellx as u32));
             }
             if vg.scaley == 0 || vg.scalex == 0 {
                 scale_yx = None;
             } else {
-                scale_yx = Some((vg.scaley as NcDim, vg.scalex as NcDim));
+                scale_yx = Some((vg.scaley as u32, vg.scalex as u32));
             }
 
             // maxpixel_yx is only defined when using NcBlitter::Pixel
             if vg.blitter == NcBlitter::Pixel.into() {
-                maxpixel_yx = Some((vg.maxpixely as NcDim, vg.maxpixelx as NcDim));
+                maxpixel_yx = Some((vg.maxpixely as u32, vg.maxpixelx as u32));
             } else {
                 maxpixel_yx = None;
             }
@@ -254,8 +254,8 @@ mod std_impls {
                 scale_yx,
                 maxpixel_yx,
 
-                len_yx: Some((vg.leny as NcDim, vg.lenx as NcDim)),
-                beg_yx: Some((vg.begy as NcDim, vg.begx as NcDim)),
+                len_yx: Some((vg.leny as u32, vg.lenx as u32)),
+                beg_yx: Some((vg.begy as u32, vg.begx as u32)),
 
                 blitter: vg.blitter.into(),
             }

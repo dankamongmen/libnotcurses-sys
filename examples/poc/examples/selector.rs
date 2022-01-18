@@ -40,7 +40,7 @@ fn main() -> NcResult<()> {
     stdplane.putstr_aligned(Some(0), NcAlign::Right, "selector widget demo")?;
 
     // Create selection plane
-    // y: NcOffset, x: NcOffset, rows: NcDim, cols: NcDim
+    // y: i32, x: i32, rows: u32, cols: u32
     let planeopts: NcPlaneOptions = NcPlaneOptions::new_aligned(1, NcAlign::Left, 15, 80);
     let selplane: &mut NcPlane = NcPlane::new_child(stdplane, &planeopts)?;
 
