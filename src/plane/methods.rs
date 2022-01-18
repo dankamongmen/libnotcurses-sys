@@ -145,14 +145,14 @@ impl NcPlane {
     ///
     /// *C style function: [ncplane_channels()][c_api::ncplane_channels].*
     pub fn channels(&self) -> NcChannels {
-        c_api::ncplane_channels(self)
+        c_api::ncplane_channels(self).into()
     }
 
     /// Sets the current [`NcChannels`] for this `NcPlane`.
     ///
     /// *C style function: [ncplane_set_channels()][c_api::ncplane_set_channels].*
     pub fn set_channels(&mut self, channels: NcChannels) {
-        c_api::ncplane_set_channels(self, channels);
+        c_api::ncplane_set_channels(self, channels.0);
     }
 
     /// Gets the foreground [`NcChannel`] from an [`NcPlane`].
@@ -160,7 +160,7 @@ impl NcPlane {
     /// *C style function: [ncplane_fchannel()][c_api::ncplane_fchannel].*
     #[inline]
     pub fn fchannel(&self) -> NcChannel {
-        c_api::ncchannels_fchannel(c_api::ncplane_channels(self))
+        c_api::ncchannels_fchannel(c_api::ncplane_channels(self)).into()
     }
 
     /// Gets the background [`NcChannel`] from an [`NcPlane`].
@@ -168,7 +168,7 @@ impl NcPlane {
     /// *C style function: [ncplane_bchannel()][c_api::ncplane_bchannel].*
     #[inline]
     pub fn bchannel(&self) -> NcChannel {
-        c_api::ncchannels_bchannel(c_api::ncplane_channels(self))
+        c_api::ncchannels_bchannel(c_api::ncplane_channels(self)).into()
     }
 
     /// Sets the current foreground [`NcChannel`] for this `NcPlane`.
@@ -176,7 +176,7 @@ impl NcPlane {
     ///
     /// *C style function: [ncplane_set_fchannel()][c_api::ncplane_set_fchannel].*
     pub fn set_fchannel(&mut self, channel: NcChannel) -> NcChannels {
-        c_api::ncplane_set_fchannel(self, channel)
+        c_api::ncplane_set_fchannel(self, channel.0).into()
     }
 
     /// Sets the current background [`NcChannel`] for this `NcPlane`.
@@ -184,7 +184,7 @@ impl NcPlane {
     ///
     /// *C style function: [ncplane_set_bchannel()][c_api::ncplane_set_bchannel].*
     pub fn set_bchannel(&mut self, channel: NcChannel) -> NcChannels {
-        c_api::ncplane_set_bchannel(self, channel)
+        c_api::ncplane_set_bchannel(self, channel.0).into()
     }
 
     /// Sets the given [`NcChannels`]s throughout the specified region,
@@ -219,10 +219,10 @@ impl NcPlane {
                 x.unwrap_or(NcDim::MAX) as i32,
                 len_y.unwrap_or(0),
                 len_x.unwrap_or(0),
-                ul,
-                ur,
-                ll,
-                lr,
+                ul.0,
+                ur.0,
+                ll.0,
+                lr.0,
             )
         };
         error![
@@ -298,7 +298,7 @@ impl NcPlane {
     /// *C style function: [ncplane_fg_rgb()][c_api::ncplane_fg_rgb].*
     #[inline]
     pub fn fg_rgb(&self) -> NcRgb {
-        c_api::ncchannels_fg_rgb(c_api::ncplane_channels(self))
+        c_api::ncchannels_fg_rgb(c_api::ncplane_channels(self)).into()
     }
 
     /// Gets the background [`NcRgb`] from this `NcPlane`, shifted to LSBs.
@@ -306,16 +306,16 @@ impl NcPlane {
     /// *C style function: [ncplane_bg_rgb()][c_api::ncplane_bg_rgb].*
     #[inline]
     pub fn bg_rgb(&self) -> NcRgb {
-        c_api::ncchannels_bg_rgb(c_api::ncplane_channels(self))
+        c_api::ncchannels_bg_rgb(c_api::ncplane_channels(self)).into()
     }
 
     /// Sets the foreground [`NcRgb`] for this `NcPlane`.
     ///
     /// *C style function: [ncplane_set_fg_rgb()][c_api::ncplane_set_fg_rgb].*
     #[inline]
-    pub fn set_fg_rgb(&mut self, rgb: NcRgb) {
+    pub fn set_fg_rgb<RGB: Into<NcRgb>>(&mut self, rgb: RGB) {
         unsafe {
-            c_api::ncplane_set_fg_rgb(self, rgb);
+            c_api::ncplane_set_fg_rgb(self, rgb.into().into());
         }
     }
 
@@ -323,9 +323,9 @@ impl NcPlane {
     ///
     /// *C style function: [ncplane_set_bg_rgb()][c_api::ncplane_set_bg_rgb].*
     #[inline]
-    pub fn set_bg_rgb(&mut self, rgb: NcRgb) {
+    pub fn set_bg_rgb<RGB: Into<NcRgb>>(&mut self, rgb: RGB) {
         unsafe {
-            c_api::ncplane_set_bg_rgb(self, rgb);
+            c_api::ncplane_set_bg_rgb(self, rgb.into().into());
         }
     }
 
@@ -374,7 +374,7 @@ impl NcPlane {
     // Not in the C API
     #[inline]
     pub fn set_fg_not_default(&mut self) -> NcChannels {
-        c_api::ncplane_set_fg_not_default(self)
+        c_api::ncplane_set_fg_not_default(self).into()
     }
 
     /// Marks the background as NOT using the default color.
@@ -386,7 +386,7 @@ impl NcPlane {
     // Not in the C API
     #[inline]
     pub fn set_bg_not_default(&mut self) -> NcChannels {
-        c_api::ncplane_set_bg_not_default(self)
+        c_api::ncplane_set_bg_not_default(self).into()
     }
 
     /// Marks both the foreground and background as using the default color.
@@ -398,7 +398,7 @@ impl NcPlane {
     // Not in the C API
     #[inline]
     pub fn set_default(&mut self) -> NcChannels {
-        c_api::ncplane_set_default(self)
+        c_api::ncplane_set_default(self).into()
     }
 
     /// Marks both the foreground and background as NOT using the default color.
@@ -410,7 +410,7 @@ impl NcPlane {
     // Not in the C API
     #[inline]
     pub fn set_not_default(&mut self) -> NcChannels {
-        c_api::ncplane_set_not_default(self)
+        c_api::ncplane_set_not_default(self).into()
     }
 }
 
@@ -530,7 +530,7 @@ impl NcPlane {
         stylemask: &mut NcStyle,
         channels: &mut NcChannels,
     ) -> NcResult<String> {
-        let egc = unsafe { c_api::ncplane_at_cursor(self, stylemask.into(), channels) };
+        let egc = unsafe { c_api::ncplane_at_cursor(self, stylemask.into(), &mut channels.0) };
         if egc.is_null() {
             return Err(NcError::with_msg(
                 c_api::NCRESULT_ERR,
@@ -579,8 +579,9 @@ impl NcPlane {
         stylemask: &mut NcStyle,
         channels: &mut NcChannels,
     ) -> NcResult<String> {
-        let egc =
-            unsafe { c_api::ncplane_at_yx(self, y as i32, x as i32, stylemask.into(), channels) };
+        let egc = unsafe {
+            c_api::ncplane_at_yx(self, y as i32, x as i32, stylemask.into(), &mut channels.0)
+        };
         if egc.is_null() {
             return Err(NcError::with_msg(
                 c_api::NCRESULT_ERR,
@@ -644,7 +645,7 @@ impl NcPlane {
         channels: NcChannels,
     ) -> NcResult<u32> {
         let res = unsafe {
-            c_api::ncplane_set_base(self, cstring![egc], stylemask.into().into(), channels)
+            c_api::ncplane_set_base(self, cstring![egc], stylemask.into().into(), channels.0)
         };
         error![
             res,
@@ -1944,7 +1945,7 @@ impl NcPlane {
                 "NcPlane.rgba({}, {:?}, {:?}, {:?}, {:?})",
                 blitter, beg_y, beg_x, len_y, len_x
             ],
-            from_raw_parts_mut(res_array, (pxdim_y * pxdim_x) as usize)
+            from_raw_parts_mut(res_array as *mut NcRgba, (pxdim_y * pxdim_x) as usize)
         ]
     }
 
@@ -2357,7 +2358,12 @@ impl NcPlane {
         boxmask: NcBoxMask,
     ) -> NcResult<()> {
         error![c_api::ncplane_ascii_box(
-            self, stylemask, channels, stop_y, stop_x, boxmask
+            self,
+            stylemask.into(),
+            channels.into(),
+            stop_y,
+            stop_x,
+            boxmask
         )]
     }
 
@@ -2374,7 +2380,12 @@ impl NcPlane {
         boxmask: NcBoxMask,
     ) -> NcResult<()> {
         error![c_api::ncplane_double_box(
-            self, stylemask, channels, stop_y, stop_x, boxmask
+            self,
+            stylemask.into(),
+            channels.into(),
+            stop_y,
+            stop_x,
+            boxmask
         )]
     }
 
@@ -2392,7 +2403,12 @@ impl NcPlane {
         boxmask: NcBoxMask,
     ) -> NcResult<()> {
         error![c_api::ncplane_double_box(
-            self, stylemask, channels, len_y, len_x, boxmask
+            self,
+            stylemask.into(),
+            channels.into(),
+            len_y,
+            len_x,
+            boxmask
         )]
     }
 
@@ -2426,7 +2442,10 @@ impl NcPlane {
         boxmask: NcBoxMask,
     ) -> NcResult<()> {
         error![c_api::ncplane_perimeter_double(
-            self, stylemask, channels, boxmask
+            self,
+            stylemask.into(),
+            channels.into(),
+            boxmask
         )]
     }
 
@@ -2441,7 +2460,10 @@ impl NcPlane {
         boxmask: NcBoxMask,
     ) -> NcResult<()> {
         error![c_api::ncplane_perimeter_rounded(
-            self, stylemask, channels, boxmask
+            self,
+            stylemask.into(),
+            channels.into(),
+            boxmask
         )]
     }
 }
@@ -2548,8 +2570,19 @@ impl NcPlane {
         ll: NcChannels,
         lr: NcChannels,
     ) -> NcResult<NcDim> {
-        let res =
-            c_api::ncplane_gradient(self, y, x, stop_y, stop_x, egc, stylemask, ul, ur, ll, lr);
+        let res = c_api::ncplane_gradient(
+            self,
+            y,
+            x,
+            stop_y,
+            stop_x,
+            egc,
+            stylemask.into(),
+            ul.into(),
+            ur.into(),
+            ll.into(),
+            lr.into(),
+        );
         error![res, "", res as NcDim]
     }
 
@@ -2585,10 +2618,10 @@ impl NcPlane {
                 x.unwrap_or(NcDim::MAX) as i32,
                 len_y.unwrap_or(0),
                 len_x.unwrap_or(0),
-                ul,
-                ur,
-                ll,
-                lr,
+                ul.into(),
+                ur.into(),
+                ll.into(),
+                lr.into(),
             )
         };
         error![res, "", res as NcDim]

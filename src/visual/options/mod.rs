@@ -189,7 +189,7 @@ impl<'ncplane> NcVisualOptions {
     /// [`VERALIGNED`]:NcVisualOptions#associatedconstant.VERALIGNED
     /// [`HORALIGNED`]: NcVisualOptions#associatedconstant.HORALIGNED
     /// [`NOINTERPOLATE`]: NcVisualOptions#associatedconstant.NOINTERPOLATE
-    pub fn new(
+    pub fn new<RGBA: Into<NcRgba>>(
         plane: Option<&mut NcPlane>,
         scale: NcScale,
         y: NcOffset,
@@ -198,7 +198,7 @@ impl<'ncplane> NcVisualOptions {
         cell_offset_yx: Option<(NcDim, NcDim)>,
         blitter: NcBlitter,
         flags: u32,
-        transcolor: NcRgba,
+        transcolor: RGBA,
     ) -> Self {
         let plane_ptr = if let Some(p) = plane { p } else { null_mut() };
         let (begy, begx, leny, lenx) =
@@ -221,7 +221,7 @@ impl<'ncplane> NcVisualOptions {
 
             flags: flags as u64,
 
-            transcolor,
+            transcolor: transcolor.into().into(),
 
             pxoffy,
             pxoffx,

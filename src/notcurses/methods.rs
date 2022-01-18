@@ -197,7 +197,7 @@ impl Nc {
         stylemask: &mut NcStyle,
         channels: &mut NcChannels,
     ) -> Option<String> {
-        let egc = unsafe { c_api::notcurses_at_yx(self, y, x, stylemask.into(), channels) };
+        let egc = unsafe { c_api::notcurses_at_yx(self, y, x, stylemask.into(), &mut channels.0) };
         if egc.is_null() {
             return None;
         }
@@ -323,23 +323,23 @@ impl Nc {
 
     /// Returns the default foreground color, if it is known.
     pub fn default_forekground(&self) -> Option<NcRgb> {
-        let mut fg: NcRgb = 0;
+        let mut fg = 0;
         let res = unsafe { c_api::notcurses_default_foreground(self, &mut fg) };
         if res == c_api::NCRESULT_ERR {
             None
         } else {
-            Some(fg)
+            Some(fg.into())
         }
     }
 
     /// Returns the default background color, if it is known.
     pub fn default_background(&self) -> Option<NcRgb> {
-        let mut bg: NcRgb = 0;
+        let mut bg = 0;
         let res = unsafe { c_api::notcurses_default_background(self, &mut bg) };
         if res == c_api::NCRESULT_ERR {
             None
         } else {
-            Some(bg)
+            Some(bg.into())
         }
     }
 

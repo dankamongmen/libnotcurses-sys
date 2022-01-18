@@ -97,6 +97,7 @@ mod palette;
 mod pixel;
 mod plane;
 mod resizecb;
+mod rgb;
 mod scale;
 mod stats;
 mod string;
@@ -119,7 +120,7 @@ pub use alpha::NcAlpha;
 pub use blitter::NcBlitter;
 pub use capabilities::NcCapabilities;
 pub use cell::NcCell;
-pub use channel::{NcChannel, NcChannelApi, NcChannels, NcChannelsApi, NcRgb};
+pub use channel::{NcChannel, NcChannels};
 pub use dimension::{NcDim, NcOffset};
 pub use direct::{NcDirect, NcDirectFlags, NcDirectFlagsApi};
 pub use error::{NcError, NcResult};
@@ -135,14 +136,13 @@ pub use pixel::{NcPixel, NcPixelGeometry, NcPixelImpl};
 pub use plane::{NcPlane, NcPlaneOptions, NcPlaneOptionsBuilder};
 pub use r#box::NcBoxMask;
 pub use resizecb::{NcResizeCb, NcResizeCbApi, NcResizeCbUnsafe};
+pub use rgb::{NcRgb, NcRgba};
 pub use scale::NcScale;
 pub use stats::NcStats;
 pub use string::NcString;
 pub use style::NcStyle;
 pub use time::NcTime;
-pub use visual::{
-    NcRgba, NcVGeom, NcVisual, NcVisualGeometry, NcVisualOptions, NcVisualOptionsBuilder,
-};
+pub use visual::{NcVGeom, NcVisual, NcVisualGeometry, NcVisualOptions, NcVisualOptionsBuilder};
 
 pub mod c_api {
     //! The `C API`, including structs, constants, functions and type aliases.
@@ -192,6 +192,7 @@ pub mod c_api {
     pub use crate::pixel::c_api::*;
     pub use crate::plane::options::constants::*;
     pub use crate::r#box::c_api::*;
+    pub use crate::rgb::c_api::*;
     pub use crate::scale::c_api::*;
     pub use crate::style::c_api::*;
     pub use crate::visual::options::constants::*;

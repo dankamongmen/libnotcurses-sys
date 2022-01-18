@@ -150,9 +150,9 @@ impl Canvas {
 
     // decomposes an NcRgb into its constituents.
     fn decompose_rgb(color: NcRgb) -> (u8, u8, u8) {
-        let r = ((color & 0xFF0000) >> 16) as u8;
-        let g = ((color & 0xFF00) >> 8) as u8;
-        let b = (color & 0xFF) as u8;
+        let r = ((color.0 & 0xFF0000) >> 16) as u8;
+        let g = ((color.0 & 0xFF00) >> 8) as u8;
+        let b = (color.0 & 0xFF) as u8;
         (r, g, b)
     }
 }

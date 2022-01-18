@@ -1,7 +1,7 @@
 //! `NcCell` methods and associated functions.
 
 use crate::{
-    c_api::{self, nccell_load, NCRESULT_ERR},
+    c_api::{self, nccell_load, NcChannels_u64, NCRESULT_ERR},
     cstring, error, rstring, NcAlpha, NcCell, NcChannels, NcError, NcPaletteIndex, NcPlane,
     NcResult, NcRgb, NcStyle,
 };
@@ -23,7 +23,7 @@ impl NcCell {
             gcluster_backstop: 0,
             width: 0_u8,
             stylemask: NcStyle::None.into(),
-            channels: 0 as NcChannels,
+            channels: 0 as NcChannels_u64,
         })
     }
 
@@ -89,7 +89,7 @@ impl NcCell {
         style: NcStyle,
         channels: NcChannels,
     ) -> NcResult<u32> {
-        let bytes = c_api::nccell_prime(plane, cell, gcluster, style.into(), channels);
+        let bytes = c_api::nccell_prime(plane, cell, gcluster, style.into(), channels.into());
         error![bytes, "", bytes as u32]
     }
 
@@ -129,9 +129,9 @@ impl NcCell {
     ///
     /// *(No equivalent C style function)*
     pub fn channels(&mut self, plane: &mut NcPlane) -> NcChannels {
-        let (mut _styles, mut channels) = (0, 0);
-        let _egc = c_api::nccell_extract(plane, self, &mut _styles, &mut channels);
-        channels
+        let (mut styles, mut channels) = (0, 0);
+        let _egc = c_api::nccell_extract(plane, self, &mut styles, &mut channels);
+        channels.into()
     }
 
     /// Extracts the background [`NcAlpha`] (shifted to LSBs).
@@ -167,7 +167,7 @@ impl NcCell {
     ///
     /// *C style function: [nccell_bg_rgb()][c_api::nccell_bg_rgb].*
     pub fn bg_rgb(&self) -> NcRgb {
-        c_api::nccell_bg_rgb(self)
+        c_api::nccell_bg_rgb(self).into()
     }
 
     /// Gets the background RGB components.
@@ -212,7 +212,7 @@ impl NcCell {
     ///
     /// *C style function: [nccell_fg_rgb()][c_api::nccell_fg_rgb].*
     pub fn fg_rgb(&self) -> NcRgb {
-        c_api::nccell_fg_rgb(self)
+        c_api::nccell_fg_rgb(self).into()
     }
 
     /// Gets the foreground RGB components.
@@ -254,8 +254,8 @@ impl NcCell {
     /// Sets the background [`NcRgb`] and marks it as not using the default color.
     ///
     /// *C style function: [nccell_set_bg_rgb()][c_api::nccell_set_bg_rgb].*
-    pub fn set_bg_rgb(&mut self, rgb: NcRgb) {
-        c_api::nccell_set_bg_rgb(self, rgb);
+    pub fn set_bg_rgb<RGB: Into<NcRgb>>(&mut self, rgb: RGB) {
+        c_api::nccell_set_bg_rgb(self, rgb.into().into());
     }
 
     /// Sets the background RGB components, and marks it as not using
@@ -296,8 +296,8 @@ impl NcCell {
     /// Sets the foreground [`NcRgb`] and marks it as not using the default color.
     ///
     /// *C style function: [nccell_set_fg_rgb()][c_api::nccell_set_fg_rgb].*
-    pub fn set_fg_rgb(&mut self, rgb: NcRgb) {
-        c_api::nccell_set_fg_rgb(self, rgb);
+    pub fn set_fg_rgb<RGB: Into<NcRgb>>(&mut self, rgb: RGB) {
+        c_api::nccell_set_fg_rgb(self, rgb.into().into());
     }
 
     /// Sets the foreground RGB components, and marks it as not using
@@ -332,7 +332,7 @@ impl NcCell {
         styles: &mut NcStyle,
         channels: &mut NcChannels,
     ) -> String {
-        c_api::nccell_extract(plane, self, styles.into(), channels)
+        c_api::nccell_extract(plane, self, styles.into(), channels.into())
     }
 
     /// Returns the `EGC` of the `NcCell`.
@@ -455,7 +455,7 @@ impl NcCell {
         error![c_api::nccells_load_box(
             plane,
             style.into(),
-            channels,
+            channels.into(),
             ul,
             ur,
             ll,
@@ -483,7 +483,7 @@ impl NcCell {
         error![c_api::nccells_double_box(
             plane,
             style.into(),
-            channels,
+            channels.into(),
             ul,
             ur,
             ll,
@@ -510,7 +510,7 @@ impl NcCell {
         error![c_api::nccells_rounded_box(
             plane,
             style.into(),
-            channels,
+            channels.into(),
             ul,
             ur,
             ll,
@@ -537,7 +537,7 @@ impl NcCell {
         error![c_api::nccells_ascii_box(
             plane,
             style.into(),
-            channels,
+            channels.into(),
             ul,
             ur,
             ll,
@@ -564,7 +564,7 @@ impl NcCell {
         error![c_api::nccells_heavy_box(
             plane,
             style.into(),
-            channels,
+            channels.into(),
             ul,
             ur,
             ll,
@@ -592,7 +592,7 @@ impl NcCell {
         error![c_api::nccells_light_box(
             plane,
             style.into(),
-            channels,
+            channels.into(),
             ul,
             ur,
             ll,

@@ -268,7 +268,7 @@ pub use options::{NcPlaneOptions, NcPlaneOptionsBuilder};
 /// Methods:
 /// - [`NcAlpha`](#ncplane-methods-ncalphabits)
 /// - [`NcChannel` & `NcChannels`](#ncplane-methods-ncchannel)
-/// - [`NcComponent`, `NcRgb` & default color](#ncplane-methods-nccomponent-ncrgb--default-color)
+/// - [`NcRgb`, components & default color](#ncplane-methods-ncrgb-components--default-color)
 /// - [`NcStyle` & `NcPaletteIndex`](#ncplane-methods-ncstylemask--paletteindex)
 /// - [`NcCell` & strings](#ncplane-methods-nccell--strings)
 /// - [cursor](#ncplane-methods-cursor)

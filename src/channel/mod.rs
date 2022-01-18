@@ -65,152 +65,139 @@
 // X channels_set_fg_rgb8_clipped    // not needed
 //W  channels_set_not_default        // not in the original C API
 
-#[allow(unused_imports)] // for doc comments
-use crate::{NcCell, NcRgba};
-
 #[cfg(test)]
 mod test;
 
-mod methods;
+#[allow(clippy::module_inception)]
+mod channel;
+mod channels;
 pub(crate) mod reimplemented;
-pub use methods::{NcChannelApi, NcChannelsApi};
-
-// NcChannel
-//
-/// 32 bits of context-dependent info containing [`NcRgb`] + [`NcAlpha`] + extra
-/// (alias of `u32`).
-///
-/// It is:
-/// - a 24-bit [`NcRgb`] value
-/// - plus 8 bits divided in:
-///   - 2 bits of [`NcAlpha`]
-///   - 6 bits of context-dependent info
-///
-/// The context details are documented in [`NcChannels`]
-///
-/// ## Diagram
-///
-/// ```txt
-/// ~~AA~~~~ RRRRRRRR GGGGGGGG BBBBBBBB
-/// ```
-/// `type in C: channel (uint32_t)`
-///
-/// # See also
-/// - [`NcRgb`]
-/// - [`NcRgba`]
-///
-///[`NcAlpha`]: crate::NcAlpha
-pub type NcChannel = u32;
-
-// NcChannels
-//
-/// 64 bits containing a foreground and background [`NcChannel`] (alias of `u64`).
-///
-/// At render time, both 24-bit [`NcRgb`] values are quantized down to terminal
-/// capabilities, if necessary. There's a clear path to 10-bit support should
-/// we one day need it.
-///
-/// ## Default Color
-///
-/// The "default color" is best explained by [color(3NCURSES)][0] and
-/// [default_colors(3NCURSES)][1]. Ours is the same concept.
-///
-/// [0]: https://manpages.debian.org/stretch/ncurses-doc/color.3ncurses.en.html
-/// [1]: https://manpages.debian.org/stretch/ncurses-doc/default_colors.3ncurses.en.html
-///
-/// **Until the "not default color" bit is set, any color you load will be ignored.**
-///
-/// ## Diagram
-///
-/// ```txt
-/// ~~AA~~~~|RRRRRRRR|GGGGGGGG|BBBBBBBB║~~AA~~~~|RRRRRRRR|GGGGGGGG|BBBBBBBB
-/// ↑↑↑↑↑↑↑↑↑↑↑↑ foreground ↑↑↑↑↑↑↑↑↑↑↑║↑↑↑↑↑↑↑↑↑↑↑↑ background ↑↑↑↑↑↑↑↑↑↑↑
-/// ```
-///
-/// Detailed info (specially on the context-dependent bits on each
-/// [`NcChannel`]'s 4th byte):
-///
-/// ```txt
-///                             ~foreground channel~
-/// reserved, must be 0                                  ↓bits view↓               ↓hex mask↓
-/// 0·······|········|········|········║········|········|········|········  =  8·······|········
-///
-/// NcChannels::FG_DEFAULT_MASK: foreground is NOT "default color"
-/// ·1······|········|········|········║········|········|········|········  =  4·······|········
-///
-/// NcChannels::FG_ALPHA_MASK: foreground alpha (2bits)
-/// ··11····|········|········|········║········|········|········|········  =  3·······|········
-///
-/// NcChannels::FG_PALETTE: foreground uses palette index
-/// ····1···|········|········|········║········|········|········|········  =  ·8······|········
-///
-/// NcChannels::NOBACKGROUND_MASK: glyph is entirely foreground
-/// ·····1··|········|········|········║········|········|········|········  =  ·4······|········
-///
-/// reserved, must be 0
-/// ······00|········|········|········║········|········|········|········  =  ·3······|········
-///
-/// NcChannels::FG_RGB_MASK: foreground in 3x8 RGB (rrggbb)
-/// ········|11111111|11111111|11111111║········|········|········|········  =  ··FFFFFF|········
-/// ```
-
-/// ```txt
-///                             ~background channel~
-/// reserved, must be 0                                  ↓bits view↓               ↓hex mask↓
-/// ········|········|········|········║0·······|········|········|········  =  ········|8·······
-///
-/// NcChannels::BGDEFAULT_MASK: background is NOT "default color"
-/// ········|········|········|········║·1······|········|········|········  =  ········|4·······
-///
-/// NcChannels::BG_ALPHA_MASK: background alpha (2 bits)
-/// ········|········|········|········║··11····|········|········|········  =  ········|3·······
-///
-/// NcChannels::BG_PALETTE: background uses palette index
-/// ········|········|········|········║····1···|········|········|········  =  ········|·8······
-///
-/// reserved, must be 0
-/// ········|········|········|········║·····000|········|········|········  =  ········|·7······
-///
-/// NcChannels::BG_RGB_MASK: background in 3x8 RGB (rrggbb)
-/// ········|········|········|········║········|11111111|11111111|11111111  =  ········|··FFFFFF
-/// ```
-/// `type in C: channels (uint64_t)`
-///
-/// ## `NcChannels` Mask Flags
-///
-/// - [`NcChannels::BG_DEFAULT_MASK`][NcChannels#associatedconstant.BGDEFAULT_MASK]
-/// - [`NcChannels::BG_ALPHA_MASK`][NcChannels#associatedconstant.BG_ALPHA_MASK]
-/// - [`NcChannels::BG_PALETTE`][NcChannels#associatedconstant.BG_PALETTE]
-/// - [`NcChannels::BG_RGB_MASK`][NcChannels#associatedconstant.BG_RGB_MASK]
-/// - [`NcChannels::FG_DEFAULT_MASK`][NcChannels#associatedconstant.FGDEFAULT_MASK]
-/// - [`NcChannels::FG_ALPHA_MASK`][NcChannels#associatedconstant.FG_ALPHA_MASK]
-/// - [`NcChannels::FG_PALETTE`][NcChannels#associatedconstant.FG_PALETTE]
-/// - [`NcChannels::FG_RGB_MASK`][NcChannels#associatedconstant.FG_RGB_MASK]
-///
-pub type NcChannels = u64;
-
-// NcRgb
-//
-/// 24 bits broken into 3x 8bpp channels (alias of `u32`).
-///
-/// Unlike with [`NcChannel`], operations involving [`NcRgb`] ignores the last
-/// 4th byte (the alpha component).
-///
-/// ## Diagram
-///
-/// ```txt
-/// -------- RRRRRRRR GGGGGGGG BBBBBBBB
-/// ```
-/// `type in C: no data type`
-///
-/// See also: [`NcRgba`] and [`NcChannel`] types.
-pub type NcRgb = u32;
+pub use {channel::NcChannel, channels::NcChannels};
 
 pub(crate) mod c_api {
     use crate::bindings::ffi;
 
     #[allow(unused_imports)]
     use crate::{NcAlpha, NcChannel, NcChannels};
+
+    /// 32 bits of context-dependent info containing [`NcRgb_u32`]
+    /// + [`NcAlpha_u32`] + extra
+    ///
+    /// It's recommended to use [`NcChannel`][crate::NcChannel] instead.
+    ///
+    /// It is composed of:
+    /// - a 24-bit [`NcRgb_u32`] value
+    /// - plus 8 bits divided in:
+    ///   - 2 bits of [`NcAlpha_u32`]
+    ///   - 6 bits of context-dependent info
+    ///
+    /// The context details are documented in [`NcChannels_u64`].
+    ///
+    /// ## Diagram
+    ///
+    /// ```txt
+    /// ~~AA~~~~ RRRRRRRR GGGGGGGG BBBBBBBB
+    /// ```
+    /// `type in C: channel (uint32_t)`
+    ///
+    /// # See also
+    /// - [`NcRgb_u32`]
+    /// - [`NcRgba_u32`]
+    ///
+    /// [`NcRgb_u32`]: crate::c_api::NcRgb_u32
+    /// [`NcRgba_u32`]: crate::c_api::NcRgba_u32
+    /// [`NcAlpha_u32`]: crate::c_api::NcAlpha_u32
+    pub type NcChannel_u32 = u32;
+
+    /// 64 bits containing a foreground and background [`NcChannel_u32`].
+    ///
+    /// It's recommended to use [`NcChannels`][crate::NcChannels] instead.
+    ///
+    /// At render time, both 24-bit [`NcRgb_u32`] values are quantized down to
+    /// terminal capabilities, if necessary. There's a clear path to 10-bit
+    /// support should we one day need it.
+    ///
+    /// ## Default Color
+    ///
+    /// The "default color" is best explained by [color(3NCURSES)][0] and
+    /// [default_colors(3NCURSES)][1]. Ours is the same concept.
+    ///
+    /// [0]: https://manpages.debian.org/stretch/ncurses-doc/color.3ncurses.en.html
+    /// [1]: https://manpages.debian.org/stretch/ncurses-doc/default_colors.3ncurses.en.html
+    ///
+    /// **Until the "not default color" bit is set, any color you load will be ignored.**
+    ///
+    /// ## Diagram
+    ///
+    /// ```txt
+    /// ~~AA~~~~|RRRRRRRR|GGGGGGGG|BBBBBBBB║~~AA~~~~|RRRRRRRR|GGGGGGGG|BBBBBBBB
+    /// ↑↑↑↑↑↑↑↑↑↑↑↑ foreground ↑↑↑↑↑↑↑↑↑↑↑║↑↑↑↑↑↑↑↑↑↑↑↑ background ↑↑↑↑↑↑↑↑↑↑↑
+    /// ```
+    ///
+    /// Detailed info (specially on the context-dependent bits on each
+    /// [`NcChannel_u32`]'s 4th byte):
+    ///
+    /// ```txt
+    ///                             ~foreground channel~
+    /// reserved, must be 0                                  ↓bits view↓               ↓hex mask↓
+    /// 0·······|········|········|········║········|········|········|········  =  8·······|········
+    ///
+    /// NcChannels::FG_DEFAULT_MASK: foreground is NOT "default color"
+    /// ·1······|········|········|········║········|········|········|········  =  4·······|········
+    ///
+    /// NcChannels::FG_ALPHA_MASK: foreground alpha (2bits)
+    /// ··11····|········|········|········║········|········|········|········  =  3·······|········
+    ///
+    /// NcChannels::FG_PALETTE: foreground uses palette index
+    /// ····1···|········|········|········║········|········|········|········  =  ·8······|········
+    ///
+    /// NcChannels::NOBACKGROUND_MASK: glyph is entirely foreground
+    /// ·····1··|········|········|········║········|········|········|········  =  ·4······|········
+    ///
+    /// reserved, must be 0
+    /// ······00|········|········|········║········|········|········|········  =  ·3······|········
+    ///
+    /// NcChannels::FG_RGB_MASK: foreground in 3x8 RGB (rrggbb)
+    /// ········|11111111|11111111|11111111║········|········|········|········  =  ··FFFFFF|········
+    /// ```
+    ///
+    /// ```txt
+    ///                             ~background channel~
+    /// reserved, must be 0                                  ↓bits view↓               ↓hex mask↓
+    /// ········|········|········|········║0·······|········|········|········  =  ········|8·······
+    ///
+    /// NcChannels::BGDEFAULT_MASK: background is NOT "default color"
+    /// ········|········|········|········║·1······|········|········|········  =  ········|4·······
+    ///
+    /// NcChannels::BG_ALPHA_MASK: background alpha (2 bits)
+    /// ········|········|········|········║··11····|········|········|········  =  ········|3·······
+    ///
+    /// NcChannels::BG_PALETTE: background uses palette index
+    /// ········|········|········|········║····1···|········|········|········  =  ········|·8······
+    ///
+    /// reserved, must be 0
+    /// ········|········|········|········║·····000|········|········|········  =  ········|·7······
+    ///
+    /// NcChannels::BG_RGB_MASK: background in 3x8 RGB (rrggbb)
+    /// ········|········|········|········║········|11111111|11111111|11111111  =  ········|··FFFFFF
+    /// ```
+    /// `type in C: channels (uint64_t)`
+    ///
+    /// ## `NcChannels` Mask Flags
+    ///
+    /// - [`NcChannels::BG_DEFAULT_MASK`][NcChannels#associatedconstant.BGDEFAULT_MASK]
+    /// - [`NcChannels::BG_ALPHA_MASK`][NcChannels#associatedconstant.BG_ALPHA_MASK]
+    /// - [`NcChannels::BG_PALETTE`][NcChannels#associatedconstant.BG_PALETTE]
+    /// - [`NcChannels::BG_RGB_MASK`][NcChannels#associatedconstant.BG_RGB_MASK]
+    /// - [`NcChannels::FG_DEFAULT_MASK`][NcChannels#associatedconstant.FGDEFAULT_MASK]
+    /// - [`NcChannels::FG_ALPHA_MASK`][NcChannels#associatedconstant.FG_ALPHA_MASK]
+    /// - [`NcChannels::FG_PALETTE`][NcChannels#associatedconstant.FG_PALETTE]
+    /// - [`NcChannels::FG_RGB_MASK`][NcChannels#associatedconstant.FG_RGB_MASK]
+    ///
+    /// [`NcRgb_u32`]: crate::c_api::NcRgb_u32
+    /// [`NcChannel_u32`]: crate::c_api::NcChannel_u32
+    ///
+    pub type NcChannels_u64 = u64;
 
     /// If this bit is set, we are *not* using the default background color
     ///

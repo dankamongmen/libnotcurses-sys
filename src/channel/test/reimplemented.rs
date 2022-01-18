@@ -3,41 +3,41 @@
 use serial_test::serial;
 
 use crate::{
-    c_api::{self, NcAlpha_u32},
-    NcAlpha, NcChannel, NcChannels,
+    c_api::{self, NcAlpha_u32, NcChannel_u32, NcChannels_u64},
+    NcAlpha,
 };
 
-// NcChannel tests -------------------------------------------------------------
+// NcChannel_u32 tests -------------------------------------------------------------
 
-/// retrieves the red NcComponent component
+/// retrieves the red component
 #[test]
 #[serial]
 fn channel_r() {
-    let c: NcChannel = 0x112233;
+    let c: NcChannel_u32 = 0x112233;
     assert_eq!(c_api::ncchannel_r(c), 0x11);
 }
 
-/// retrieves the green NcComponent component
+/// retrieves the green component
 #[test]
 #[serial]
 fn channel_g() {
-    let c: NcChannel = 0x112233;
+    let c: NcChannel_u32 = 0x112233;
     assert_eq!(c_api::ncchannel_g(c), 0x22);
 }
 
-/// retrieves the blue NcComponent component
+/// retrieves the blue component
 #[test]
 #[serial]
 fn channel_b() {
-    let c: NcChannel = 0x112233;
+    let c: NcChannel_u32 = 0x112233;
     assert_eq!(c_api::ncchannel_b(c), 0x33);
 }
 
-/// writes out the three RGB NcComponent components
+/// writes out the three RGB components
 #[test]
 #[serial]
 fn channel_rgb8() {
-    let c: NcChannel = 0x112233;
+    let c: NcChannel_u32 = 0x112233;
     let mut r = 0;
     let mut g = 0;
     let mut b = 0;
@@ -47,7 +47,7 @@ fn channel_rgb8() {
     assert_eq!(b, 0x33);
 }
 
-/// sets the three RGB NcComponent components
+/// sets the three RGB components
 #[test]
 #[serial]
 fn channel_set_rgb8() {
@@ -88,10 +88,10 @@ fn channel_set() {
 #[test]
 #[serial]
 fn channel_alpha() {
-    let c: NcChannel = 0x112233;
+    let c: NcChannel_u32 = 0x112233;
     assert_ne!(c_api::ncchannel_alpha(c), NcAlpha::Transparent);
 
-    let c: NcChannel = 0x112233 | NcAlpha_u32::from(NcAlpha::Transparent);
+    let c: NcChannel_u32 = 0x112233 | NcAlpha_u32::from(NcAlpha::Transparent);
     assert_eq!(c_api::ncchannel_alpha(c), NcAlpha::Transparent);
 }
 
@@ -99,7 +99,7 @@ fn channel_alpha() {
 #[test]
 #[serial]
 fn channel_set_alpha() {
-    let mut c: NcChannel = 0x112233;
+    let mut c: NcChannel_u32 = 0x112233;
     c_api::ncchannel_set_alpha(&mut c, NcAlpha::HighContrast);
     assert_eq!(NcAlpha::HighContrast, c_api::ncchannel_alpha(c));
 
@@ -158,7 +158,7 @@ fn channel_set_not_default() {
 #[test]
 #[serial]
 fn channel_default_p() {
-    let mut c: NcChannel = 0x112233;
+    let mut c: NcChannel_u32 = 0x112233;
     assert_eq!(true, c_api::ncchannel_default_p(c));
 
     let _ = c_api::ncchannel_set_alpha(&mut c, NcAlpha::Opaque);
@@ -175,8 +175,8 @@ fn channel_default_p() {
 #[serial]
 #[allow(non_snake_case)]
 fn channels_set_fchannel__channels_fchannel() {
-    let fc: NcChannel = 0x112233;
-    let mut cp: NcChannels = 0;
+    let fc: NcChannel_u32 = 0x112233;
+    let mut cp: NcChannels_u64 = 0;
     c_api::ncchannels_set_fchannel(&mut cp, fc);
     assert_eq!(c_api::ncchannels_fchannel(cp), fc);
 }
@@ -186,8 +186,8 @@ fn channels_set_fchannel__channels_fchannel() {
 #[serial]
 #[allow(non_snake_case)]
 fn channels_set_bchannel__channels_bchannel() {
-    let bc: NcChannel = 0x112233;
-    let mut cp: NcChannels = 0;
+    let bc: NcChannel_u32 = 0x112233;
+    let mut cp: NcChannels_u64 = 0;
     c_api::ncchannels_set_bchannel(&mut cp, bc);
     assert_eq!(c_api::ncchannels_bchannel(cp), bc);
 }
@@ -196,10 +196,10 @@ fn channels_set_bchannel__channels_bchannel() {
 #[test]
 #[serial]
 fn channels_combine() {
-    let bc: NcChannel = 0x112233;
-    let fc: NcChannel = 0x445566;
-    let mut cp1: NcChannels = 0;
-    let mut _cp2: NcChannels = 0;
+    let bc: NcChannel_u32 = 0x112233;
+    let fc: NcChannel_u32 = 0x445566;
+    let mut cp1: NcChannels_u64 = 0;
+    let mut _cp2: NcChannels_u64 = 0;
     c_api::ncchannels_set_bchannel(&mut cp1, bc);
     c_api::ncchannels_set_fchannel(&mut cp1, fc);
     _cp2 = c_api::ncchannels_combine(fc, bc);
@@ -210,8 +210,8 @@ fn channels_combine() {
 #[test]
 #[serial]
 fn channels_palette() {
-    let bc: NcChannel = 0x112233;
-    let fc: NcChannel = 0x445566;
+    let bc: NcChannel_u32 = 0x112233;
+    let fc: NcChannel_u32 = 0x445566;
     assert_eq!(false, c_api::ncchannel_palindex_p(bc));
     assert_eq!(false, c_api::ncchannel_palindex_p(fc));
 

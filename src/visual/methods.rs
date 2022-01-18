@@ -4,7 +4,7 @@ use core::ptr::{null, null_mut};
 use libc::c_void;
 
 use crate::{
-    c_api::{self, NcResult_i32, NCRESULT_ERR},
+    c_api::{self, NcChannel_u32, NcResult_i32, NCRESULT_ERR},
     cstring, error, error_ref_mut, Nc, NcBlitter, NcChannel, NcDim, NcDirect, NcError, NcPixel,
     NcPlane, NcResult, NcRgba, NcScale, NcTime, NcVGeom, NcVisual, NcVisualGeometry,
     NcVisualOptions,
@@ -235,7 +235,7 @@ impl NcVisual {
                     cols as i32,
                     palsize as i32,
                     pstride as i32,
-                    palette.as_ptr() as *const NcChannel,
+                    palette.as_ptr() as *const NcChannel_u32,
                 )
             },
             &format!(
@@ -435,10 +435,13 @@ impl NcVisual {
     /// Polyfills at the specified location using `rgba`.
     ///
     /// *C style function: [ncvisual_polyfill_yx()][c_api::ncvisual_polyfill_yx].*
-    pub fn polyfill_yx(&mut self, y: NcDim, x: NcDim, rgba: NcRgba) -> NcResult<()> {
+    pub fn polyfill_yx<RGBA>(&mut self, y: NcDim, x: NcDim, rgba: RGBA) -> NcResult<()>
+    where
+        RGBA: Into<NcRgba>,
+    {
         error![
-            unsafe { c_api::ncvisual_polyfill_yx(self, y, x, rgba) },
-            &format!["NcVisual.polyfill_yx({}, {}, {})", y, x, rgba]
+            unsafe { c_api::ncvisual_polyfill_yx(self, y, x, rgba.into().into()) },
+            &format!["NcVisual.polyfill_yx({}, {}, rgba)", y, x]
         ]
     }
 

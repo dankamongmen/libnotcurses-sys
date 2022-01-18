@@ -387,13 +387,13 @@ macro_rules! unit_impl_from [
     ($struct:ty, $prim:ty ) => {
         // from prim
         impl From<$prim> for $struct {
-            fn from(p: $prim) -> Self { <$struct>::new(p) }
+            fn from(p: $prim) -> Self { <$struct>::from_primitive(p) }
         }
         impl<'a> From<&'a $prim> for $struct {
-            fn from(p: &'a $prim) -> Self { <$struct>::new(*p) }
+            fn from(p: &'a $prim) -> Self { <$struct>::from_primitive(*p) }
         }
         impl<'a> From<&'a mut $prim> for $struct {
-            fn from(p: &'a mut $prim) -> Self { <$struct>::new(*p) }
+            fn from(p: &'a mut $prim) -> Self { <$struct>::from_primitive(*p) }
         }
 
         // from struct
@@ -497,7 +497,7 @@ macro_rules! unit_impl_ops [
         impl<'a, 'b> core::ops::$op<$rhs> for $for {
             type Output = $type;
             fn $fn(self, rhs: $rhs) -> Self::Output {
-                <$type>::new(self.0.$fn(rhs.0))
+                <$type>::from_primitive(self.0.$fn(rhs.0))
             }
         }
     };
@@ -516,9 +516,20 @@ macro_rules! unit_impl_ops [
         impl<'a> core::ops::$op for $for {
             type Output = $type;
             fn $fn(self) -> Self::Output {
-                <$type>::new(self.0.$fn())
+                <$type>::from_primitive(self.0.$fn())
             }
         }
     };
+];
 
+/// Implements a constructor for unit structs from its inner value type,
+/// intended to be called from the `unit_impl_*` macros.
+#[macro_export]
+#[doc(hidden)]
+macro_rules! from_primitive [
+    ($inner:ty) => {
+        pub(crate) fn from_primitive(value: $inner) -> Self {
+            Self(value)
+        }
+    }
 ];

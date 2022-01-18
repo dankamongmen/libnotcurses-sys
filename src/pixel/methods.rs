@@ -1,6 +1,8 @@
 use crate::{c_api, NcPixel};
 
 impl NcPixel {
+    crate::from_primitive![c_api::NcPixel_u32];
+
     /// Returns a new `NcPixel`.
     pub fn new(value: c_api::NcPixel_u32) -> Self {
         Self(value)

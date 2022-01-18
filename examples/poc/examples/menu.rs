@@ -32,10 +32,11 @@ fn main() -> NcResult<()> {
     ];
 
     let mut mopts = NcMenuOptions::new(&mut sections);
-    mopts.header_channels_mut().set_fg_rgb(0x00ff00);
-    mopts.header_channels_mut().set_bg_rgb(0x440000);
-    mopts.section_channels_mut().set_fg_rgb(0xb0d700);
-    mopts.section_channels_mut().set_bg_rgb(0x002000);
+    // FIXME: better API
+    c_api::ncchannels_set_fg_rgb(&mut mopts.headerchannels, 0x00ff00);
+    c_api::ncchannels_set_bg_rgb(&mut mopts.headerchannels, 0x440000);
+    c_api::ncchannels_set_fg_rgb(&mut mopts.sectionchannels, 0xb0d700);
+    c_api::ncchannels_set_bg_rgb(&mut mopts.sectionchannels, 0x002200);
 
     let stdplane = unsafe { nc.stdplane() };
     let (dim_y, _dim_x) = stdplane.dim_yx();
@@ -87,7 +88,7 @@ fn run_menu(nc: &mut Nc, menu: &mut NcMenu) -> NcResult<()> {
     let selplane = NcPlane::new_child(stdplane, &planeopts)?;
     selplane.set_fg_rgb(0);
     selplane.set_bg_rgb(0xdddddd);
-    let mut channels = 0;
+    let mut channels = NcChannels::new();
     channels.set_fg_rgb(0x000088);
     channels.set_bg_rgb(0x88aa00);
     selplane.set_base(" ", 0, channels)?;

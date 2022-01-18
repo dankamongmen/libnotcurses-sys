@@ -27,5 +27,5 @@ fn main() -> NcResult<()> {
 
 Current version `3.1.2` is compatible with notcurses `3.0.3`.
 
-Current major version `3` is considered a development version. Just as if it
-were a semver major version `0`.
+Current major version `3` is considered a development version, same as if it
+were semver major version `0`.

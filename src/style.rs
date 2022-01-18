@@ -70,7 +70,6 @@ mod std_impls {
 
     crate::unit_impl_ops![bitwise; NcStyle];
 
-    // TODO: make macro
     impl fmt::UpperHex for NcStyle {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             let val = self.0;
@@ -81,10 +80,7 @@ mod std_impls {
 
 /// # Methods
 impl NcStyle {
-    /// Returns a new `NcStyle`.
-    pub fn new(value: c_api::NcStyle_u16) -> Self {
-        Self(value)
-    }
+    crate::from_primitive![c_api::NcStyle_u16];
 
     /// Returns a `Vec` with all the styles contained in the current style.
     pub fn to_vec(&self) -> Vec<NcStyle> {

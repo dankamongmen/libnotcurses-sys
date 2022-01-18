@@ -165,11 +165,11 @@ impl NcSelectorOptions {
             // 0 to use all available space
             maxdisplay: max_display,
             // exhaustive styling options
-            opchannels,
-            descchannels,
-            titlechannels,
-            footchannels,
-            boxchannels,
+            opchannels: opchannels.into(),
+            descchannels: descchannels.into(),
+            titlechannels: titlechannels.into(),
+            footchannels: footchannels.into(),
+            boxchannels: boxchannels.into(),
             flags: 0x0,
         }
     }

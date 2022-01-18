@@ -41,14 +41,17 @@ impl NcPalette {
     /// *C style function: [ncpalette_get_rgb()][c_api::ncpalette_get_rgb8].*
     pub fn get_rgb(&self, index: NcPaletteIndex) -> NcChannel {
         let (mut r, mut g, mut b) = (0, 0, 0);
-        c_api::ncchannel_rgb8(self.chans[index as usize], &mut r, &mut g, &mut b)
+        c_api::ncchannel_rgb8(self.chans[index as usize], &mut r, &mut g, &mut b).into()
     }
 
     /// Sets the [`NcRgb`] value of the [`NcChannel`][crate::NcChannel] entry
     /// inside this NcPalette.
     ///
     /// *C style function: [ncpalette_set()][c_api::ncpalette_set].*
-    pub fn set(&mut self, index: NcPaletteIndex, rgb: NcRgb) {
-        c_api::ncchannel_set(&mut self.chans[index as usize], rgb);
+    pub fn set<RGB>(&mut self, index: NcPaletteIndex, rgb: RGB)
+    where
+        RGB: Into<NcRgb>,
+    {
+        c_api::ncchannel_set(&mut self.chans[index as usize], rgb.into().into());
     }
 }

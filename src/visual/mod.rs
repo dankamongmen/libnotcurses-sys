@@ -37,7 +37,7 @@
 //W+ ncvisualplane_create
 
 #[allow(unused_imports)] // for doc comments
-use crate::{NcBlitter, NcChannel, NcDim, NcOffset, NcPlane, NcRgb, NcScale};
+use crate::{NcBlitter, NcChannel, NcDim, NcOffset, NcPlane, NcScale};
 
 mod geometry;
 mod methods;
@@ -56,32 +56,3 @@ pub use options::{NcVisualOptions, NcVisualOptionsBuilder};
 /// - [`render`][NcVisual#method.render]
 /// - [`simple_streamer`][NcVisual#method.simple_streamer]
 pub type NcVisual = crate::bindings::ffi::ncvisual;
-
-// NcRgba
-//
-/// Three RGB components plus one alpha component (alias of `u32`).
-///
-/// ## Diagram
-///
-/// ```txt
-/// AAAAAAAA RRRRRRRR GGGGGGGG BBBBBBBB
-/// ```
-/// `type in C: no data type`
-///
-/// See also: [`NcRgb`] and [`NcChannel`] types.
-pub type NcRgba = u32;
-
-// // NcBgra
-// //
-// /// 32 bits broken into 3x 8bpp BGR channels + 8ppp alpha.
-// ///
-// /// ## Diagram
-// ///
-// /// ```txt
-// /// AAAAAAAA BBBBBBBB GGGGGGGG RRRRRRRR
-// /// ```
-// ///
-// /// `type in C: no data type`
-// ///
-// /// See also: [`NcRgba`], [`NcRgb`] and [`NcChannel`] types.
-// pub type NcBgra = u32;

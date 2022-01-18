@@ -5,7 +5,7 @@
 //! [`NcVisual`]: crate::NcVisual
 //! [`NcVisual.blit`]: crate::NcVisual#method.blit
 //
-// - NOTE: The pixel color & alpha [`NcComponent`]s are u8 instead of u32.
+// - NOTE: The pixel color & alpha components are u8 instead of u32.
 //   Because of type enforcing, some runtime checks are now unnecessary.
 //
 // - NOTE: no functions can fail anymore and therefore none returns errors.

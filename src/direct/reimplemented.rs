@@ -3,8 +3,8 @@
 use core::ptr::{null, null_mut};
 
 use crate::{
-    c_api::{self, NcResult_i32},
-    cstring, NcCapabilities, NcChannels, NcDim, NcDirect, NcInput, NcRgb, NcTime,
+    c_api::{self, NcChannels_u64, NcResult_i32, NcRgb_u32},
+    cstring, NcCapabilities, NcDim, NcDirect, NcInput, NcTime,
 };
 
 /// Can we directly specify RGB values per cell, or only use palettes?
@@ -113,7 +113,7 @@ pub fn ncdirect_get_nblock(ncd: &mut NcDirect, input: Option<&mut NcInput>) -> N
 /// *Method: NcDirect.[set_fg_rgb8()][NcDirect#method.set_fg_rgb8].*
 #[inline]
 pub fn ncdirect_set_fg_rgb8(ncd: &mut NcDirect, red: u8, green: u8, blue: u8) -> NcResult_i32 {
-    let rgb = (red as NcRgb) << 16 | (green as NcRgb) << 8 | blue as NcRgb;
+    let rgb = (red as NcRgb_u32) << 16 | (green as NcRgb_u32) << 8 | blue as NcRgb_u32;
     unsafe { c_api::ncdirect_set_fg_rgb(ncd, rgb) }
 }
 
@@ -122,11 +122,11 @@ pub fn ncdirect_set_fg_rgb8(ncd: &mut NcDirect, red: u8, green: u8, blue: u8) ->
 /// *Method: NcDirect.[set_bg_rgb8()][NcDirect#method.set_bg_rgb8].*
 #[inline]
 pub fn ncdirect_set_bg_rgb8(ncd: &mut NcDirect, red: u8, green: u8, blue: u8) -> NcResult_i32 {
-    let rgb = (red as NcRgb) << 16 | (green as NcRgb) << 8 | blue as NcRgb;
+    let rgb = (red as NcRgb_u32) << 16 | (green as NcRgb_u32) << 8 | blue as NcRgb_u32;
     unsafe { c_api::ncdirect_set_bg_rgb(ncd, rgb) }
 }
 
-/// Draws horizontal lines using the specified [`NcChannels`]s, interpolating
+/// Draws horizontal lines using the specified [`NcChannels_u64`]s, interpolating
 /// between them as we go.
 ///
 /// The string at `egc` may not use more than one column.
@@ -143,8 +143,8 @@ pub fn ncdirect_hline_interp(
     ncd: &mut NcDirect,
     egc: &str,
     len: NcDim,
-    h1: NcChannels,
-    h2: NcChannels,
+    h1: NcChannels_u64,
+    h2: NcChannels_u64,
 ) -> NcResult_i32 {
     #[cfg(any(target_arch = "armv7l", target_arch = "i686"))]
     let egc_ptr = cstring![egc] as *const i8;
@@ -154,7 +154,7 @@ pub fn ncdirect_hline_interp(
     unsafe { crate::bindings::ffi::ncdirect_hline_interp(ncd, egc_ptr, len, h1, h2) }
 }
 
-/// Draws horizontal lines using the specified [`NcChannels`]s, interpolating
+/// Draws horizontal lines using the specified [`NcChannels_u64`]s, interpolating
 /// between them as we go.
 ///
 /// The string at `egc` may not use more than one column.
@@ -170,8 +170,8 @@ pub fn ncdirect_vline_interp(
     ncd: &mut NcDirect,
     egc: &str,
     len: NcDim,
-    h1: NcChannels,
-    h2: NcChannels,
+    h1: NcChannels_u64,
+    h2: NcChannels_u64,
 ) -> NcResult_i32 {
     #[cfg(any(target_arch = "armv7l", target_arch = "i686"))]
     let egc_ptr = cstring![egc] as *const i8;

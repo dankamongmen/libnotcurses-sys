@@ -197,20 +197,26 @@ impl NcDirect {
     /// Sets the foreground [`NcRgb`].
     ///
     /// *C style function: [ncdirect_set_fg_rgb()][c_api::ncdirect_set_fg_rgb].*
-    pub fn set_fg_rgb(&mut self, rgb: NcRgb) -> NcResult<()> {
+    pub fn set_fg_rgb<RGB>(&mut self, rgb: RGB) -> NcResult<()>
+    where
+        RGB: Into<NcRgb>,
+    {
         error![
-            unsafe { c_api::ncdirect_set_fg_rgb(self, rgb) },
-            &format!("NcDirect.set_fg_rgb({})", rgb)
+            unsafe { c_api::ncdirect_set_fg_rgb(self, rgb.into().into()) },
+            "NcDirect.set_fg_rgb()"
         ]
     }
 
     /// Sets the background [`NcRgb`].
     ///
     /// *C style function: [ncdirect_set_bg_rgb()][c_api::ncdirect_set_bg_rgb].*
-    pub fn set_bg_rgb(&mut self, rgb: NcRgb) -> NcResult<()> {
+    pub fn set_bg_rgb<RGB>(&mut self, rgb: RGB) -> NcResult<()>
+    where
+        RGB: Into<NcRgb>,
+    {
         error![
-            unsafe { c_api::ncdirect_set_bg_rgb(self, rgb) },
-            &format!("NcDirect.set_bg_rgb({})", rgb)
+            unsafe { c_api::ncdirect_set_bg_rgb(self, rgb.into().into()) },
+            "NcDirect.set_bg_rgb({:?})"
         ]
     }
 
@@ -650,7 +656,7 @@ impl NcDirect {
     /// *C style function: [ncdirect_putstr()][c_api::ncdirect_putstr].*
     pub fn putstr(&mut self, channels: NcChannels, string: &str) -> NcResult<()> {
         error![
-            unsafe { c_api::ncdirect_putstr(self, channels, cstring![string]) },
+            unsafe { c_api::ncdirect_putstr(self, channels.into(), cstring![string]) },
             &format!("NcDirect.putstr({:0X}, {:?})", channels, string)
         ]
     }
@@ -704,7 +710,7 @@ impl NcDirect {
         error![
             unsafe {
                 let wchars = core::mem::transmute(wchars);
-                c_api::ncdirect_box(self, ul, ur, ll, lr, wchars, len_y, len_x, ctlword)
+                c_api::ncdirect_box(self, ul.0, ur.0, ll.0, lr.0, wchars, len_y, len_x, ctlword)
             },
             &format!(
                 "NcDirect.box({:0X}, {:0X}, {:0X}, {:0X}, {:?}, {}, {}, {})",
@@ -726,7 +732,9 @@ impl NcDirect {
         len_x: NcDim,
         ctlword: u32,
     ) -> NcResult<()> {
-        error![unsafe { c_api::ncdirect_double_box(self, ul, ur, ll, lr, len_y, len_x, ctlword) }]
+        error![unsafe {
+            c_api::ncdirect_double_box(self, ul.0, ur.0, ll.0, lr.0, len_y, len_x, ctlword)
+        }]
     }
 
     /// `NcDirect.`[`box`][NcDirect#method.box] with the rounded box-drawing characters.
@@ -742,7 +750,9 @@ impl NcDirect {
         len_x: NcDim,
         ctlword: u32,
     ) -> NcResult<()> {
-        error![unsafe { c_api::ncdirect_rounded_box(self, ul, ur, ll, lr, len_y, len_x, ctlword) }]
+        error![unsafe {
+            c_api::ncdirect_rounded_box(self, ul.0, ur.0, ll.0, lr.0, len_y, len_x, ctlword)
+        }]
     }
 
     /// Draws horizontal lines using the specified [NcChannels]s, interpolating
@@ -764,7 +774,7 @@ impl NcDirect {
         h1: NcChannels,
         h2: NcChannels,
     ) -> NcResult<()> {
-        error![c_api::ncdirect_hline_interp(self, egc, len, h1, h2)]
+        error![c_api::ncdirect_hline_interp(self, egc, len, h1.0, h2.0)]
     }
 
     /// Draws horizontal lines using the specified [NcChannels]s, interpolating
@@ -786,6 +796,6 @@ impl NcDirect {
         h1: NcChannels,
         h2: NcChannels,
     ) -> NcResult<()> {
-        error![c_api::ncdirect_vline_interp(self, egc, len, h1, h2)]
+        error![c_api::ncdirect_vline_interp(self, egc, len, h1.0, h2.0)]
     }
 }

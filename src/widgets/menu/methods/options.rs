@@ -18,12 +18,16 @@ impl NcMenuOptions {
     /// New NcMenuOptions for [`NcMenu`], with all args.
     ///
     /// `sections` must contain at least 1 [`NcMenuSection`].
-    pub fn with_all_args(
+    pub fn with_all_args<CHS1, CHS2>(
         sections: &mut [NcMenuSection],
-        style_header: NcChannels,
-        style_sections: NcChannels,
+        style_header: CHS1,
+        style_sections: CHS2,
         flags: u64,
-    ) -> Self {
+    ) -> Self
+    where
+        CHS1: Into<NcChannels>,
+        CHS2: Into<NcChannels>,
+    {
         assert![!sections.is_empty()];
         Self {
             // array of 'sectioncount' `MenuSection`s
@@ -33,10 +37,10 @@ impl NcMenuOptions {
             sectioncount: sections.len() as i32,
 
             // styling for header
-            headerchannels: style_header,
+            headerchannels: style_header.into().into(),
 
             // styling for sections
-            sectionchannels: style_sections,
+            sectionchannels: style_sections.into().into(),
 
             // flag word of NCMENU_OPTION_*
             flags,
@@ -45,32 +49,33 @@ impl NcMenuOptions {
 }
 
 /// # `NcMenuOptions` methods
+// RETHINK
 impl NcMenuOptions {
     /// Returns the styling for the header.
     ///
     /// *(No equivalent C style function)*
-    pub const fn header_channels(&self) -> NcChannels {
-        self.headerchannels
+    pub fn header_channels(&self) -> NcChannels {
+        self.headerchannels.into()
     }
 
     /// Returns a mutable reference of the styling for the sections.
     ///
     /// *(No equivalent C style function)*
-    pub fn header_channels_mut(&mut self) -> &mut NcChannels {
+    pub fn header_channels_mut(&mut self) -> &mut crate::c_api::NcChannels_u64 {
         &mut self.headerchannels
     }
 
     /// Returns the styling for the sections.
     ///
     /// *(No equivalent C style function)*
-    pub const fn section_channels(&self) -> NcChannels {
-        self.sectionchannels
+    pub fn section_channels(&self) -> NcChannels {
+        self.sectionchannels.into()
     }
 
     /// Returns a mutable reference of the styling for the sections.
     ///
     /// *(No equivalent C style function)*
-    pub fn section_channels_mut(&mut self) -> &mut NcChannels {
+    pub fn section_channels_mut(&mut self) -> &mut crate::c_api::NcChannels_u64 {
         &mut self.sectionchannels
     }
 }

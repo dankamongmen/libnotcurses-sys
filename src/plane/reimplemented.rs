@@ -2,9 +2,9 @@
 
 // TOC:
 // - Alpha
-// - NcChannel
+// - NcChannel_u32
 // - RGB components
-// - NcRgb
+// - NcRgb_u32
 // - Default
 // - put & print
 // - movement, size & alignment
@@ -19,9 +19,11 @@ use core::ptr::null_mut;
 use std::ffi::CString;
 
 use crate::{
-    c_api::{self, nccell_release, NcResult_i32, NCRESULT_ERR, NCRESULT_OK},
-    cstring, NcAlign, NcAlpha, NcBoxMask, NcCell, NcChannel, NcChannels, NcDim, NcOffset, NcPlane,
-    NcRgb, NcStyle,
+    c_api::{
+        self, nccell_release, NcChannel_u32, NcChannels_u64, NcResult_i32, NcRgb_u32, NcStyle_u16,
+        NCRESULT_ERR, NCRESULT_OK,
+    },
+    cstring, NcAlign, NcAlpha, NcBoxMask, NcCell, NcDim, NcOffset, NcPlane,
 };
 
 // Alpha -----------------------------------------------------------------------
@@ -42,55 +44,55 @@ pub fn ncplane_bg_alpha(plane: &NcPlane) -> NcAlpha {
     c_api::ncchannels_bg_alpha(ncplane_channels(plane))
 }
 
-// NcChannel -------------------------------------------------------------------
+// NcChannel_u32 ---------------------------------------------------------------
 
-/// Gets the foreground [`NcChannel`] from an [`NcPlane`].
+/// Gets the foreground [`NcChannel_u32`] from an [`NcPlane`].
 ///
 /// *Method: NcPlane.[fchannel()][NcPlane#method.fchannel].*
 #[inline]
-pub fn ncplane_fchannel(plane: &NcPlane) -> NcChannel {
+pub fn ncplane_fchannel(plane: &NcPlane) -> NcChannel_u32 {
     c_api::ncchannels_fchannel(ncplane_channels(plane))
 }
 
-/// Gets the background [`NcChannel`] from an [`NcPlane`].
+/// Gets the background [`NcChannel_u32`] from an [`NcPlane`].
 ///
 /// *Method: NcPlane.[bchannel()][NcPlane#method.bchannel].*
 #[inline]
-pub fn ncplane_bchannel(plane: &NcPlane) -> NcChannel {
+pub fn ncplane_bchannel(plane: &NcPlane) -> NcChannel_u32 {
     c_api::ncchannels_bchannel(ncplane_channels(plane))
 }
 
-/// Sets the foreground [`NcChannel`] on an [`NcPlane`],
-/// and returns the new [`NcChannels`].
+/// Sets the foreground [`NcChannel_u32`] on an [`NcPlane`],
+/// and returns the new [`NcChannels_u64`].
 ///
 /// *Method: NcPlane.[set_fchannel()][NcPlane#method.set_fchannel].*
 #[inline]
-pub fn ncplane_set_fchannel(plane: &mut NcPlane, channel: NcChannel) -> NcChannels {
+pub fn ncplane_set_fchannel(plane: &mut NcPlane, channel: NcChannel_u32) -> NcChannels_u64 {
     unsafe { c_api::ffi::ncplane_set_fchannel(plane, channel) }
 }
 
-/// Sets the background [`NcChannel`] on an [`NcPlane`],
-/// and returns the new [`NcChannels`].
+/// Sets the background [`NcChannel_u32`] on an [`NcPlane`],
+/// and returns the new [`NcChannels_u64`].
 ///
 /// *Method: NcPlane.[set_bchannel()][NcPlane#method.set_bchannel].*
 #[inline]
-pub fn ncplane_set_bchannel(plane: &mut NcPlane, channel: NcChannel) -> NcChannels {
+pub fn ncplane_set_bchannel(plane: &mut NcPlane, channel: NcChannel_u32) -> NcChannels_u64 {
     unsafe { c_api::ffi::ncplane_set_bchannel(plane, channel) }
 }
 
-/// Gets the [`NcChannels`] of an [`NcPlane`].
+/// Gets the [`NcChannels_u64`] of an [`NcPlane`].
 ///
 /// *Method: NcPlane.[channels()][NcPlane#method.channels].*
 #[inline]
-pub fn ncplane_channels(plane: &NcPlane) -> NcChannels {
+pub fn ncplane_channels(plane: &NcPlane) -> NcChannels_u64 {
     unsafe { c_api::ffi::ncplane_channels(plane) }
 }
 
-/// Sets the [`NcChannels`] of an [`NcPlane`].
+/// Sets the [`NcChannels_u64`] of an [`NcPlane`].
 ///
 /// *Method: NcPlane.[set_channels()][NcPlane#method.set_channels].*
 #[inline]
-pub fn ncplane_set_channels(plane: &mut NcPlane, channels: NcChannels) {
+pub fn ncplane_set_channels(plane: &mut NcPlane, channels: NcChannels_u64) {
     unsafe {
         c_api::ffi::ncplane_set_channels(plane, channels);
     }
@@ -99,38 +101,48 @@ pub fn ncplane_set_channels(plane: &mut NcPlane, channels: NcChannels) {
 // RGB components --------------------------------------------------------------
 
 /// Gets the foreground RGB components from an [`NcPlane`].
-/// and returns the background [`NcChannel`].
+/// and returns the background [`NcChannel_u32`].
 ///
 /// *Method: NcPlane.[fg_rgb8()][NcPlane#method.fg_rgb8].*
 #[inline]
-pub fn ncplane_fg_rgb8(plane: &NcPlane, red: &mut u8, green: &mut u8, blue: &mut u8) -> NcChannel {
+pub fn ncplane_fg_rgb8(
+    plane: &NcPlane,
+    red: &mut u8,
+    green: &mut u8,
+    blue: &mut u8,
+) -> NcChannel_u32 {
     c_api::ncchannels_fg_rgb8(ncplane_channels(plane), red, green, blue)
 }
 
 /// Gets the background RGB componentss from an [`NcPlane`],
-/// and returns the background [`NcChannel`].
+/// and returns the background [`NcChannel_u32`].
 ///
 /// *Method: NcPlane.[bg_rgb8()][NcPlane#method.bg_rgb8].*
 #[inline]
-pub fn ncplane_bg_rgb8(plane: &NcPlane, red: &mut u8, green: &mut u8, blue: &mut u8) -> NcChannel {
+pub fn ncplane_bg_rgb8(
+    plane: &NcPlane,
+    red: &mut u8,
+    green: &mut u8,
+    blue: &mut u8,
+) -> NcChannel_u32 {
     c_api::ncchannels_bg_rgb8(ncplane_channels(plane), red, green, blue)
 }
 
-// NcRgb -----------------------------------------------------------------------
+// NcRgb_u32 -----------------------------------------------------------------------
 
-/// Gets the foreground [`NcRgb`] from an [`NcPlane`], shifted to LSBs.
+/// Gets the foreground [`NcRgb_u32`] from an [`NcPlane`], shifted to LSBs.
 ///
 /// *Method: NcPlane.[fg_rgb()][NcPlane#method.fg_rgb].*
 #[inline]
-pub fn ncplane_fg_rgb(plane: &NcPlane) -> NcRgb {
+pub fn ncplane_fg_rgb(plane: &NcPlane) -> NcRgb_u32 {
     c_api::ncchannels_fg_rgb(ncplane_channels(plane))
 }
 
-/// Gets the background [`NcRgb`] from an [`NcPlane`], shifted to LSBs.
+/// Gets the background [`NcRgb_u32`] from an [`NcPlane`], shifted to LSBs.
 ///
 /// *Method: NcPlane.[bg_rgb()][NcPlane#method.bg_rgb].*
 #[inline]
-pub fn ncplane_bg_rgb(plane: &NcPlane) -> NcRgb {
+pub fn ncplane_bg_rgb(plane: &NcPlane) -> NcRgb_u32 {
     c_api::ncchannels_bg_rgb(ncplane_channels(plane))
 }
 
@@ -153,50 +165,50 @@ pub fn ncplane_bg_default_p(plane: &NcPlane) -> bool {
 }
 
 /// Marks both the foreground and background as using the "default color",
-/// and returns the new [`NcChannels`].
+/// and returns the new [`NcChannels_u64`].
 ///
 /// *Method: NcPlane.[set_default()][NcPlane#method.set_default].*
 //
 // Not in the C API.
 #[inline]
-pub fn ncplane_set_default(plane: &mut NcPlane) -> NcChannels {
+pub fn ncplane_set_default(plane: &mut NcPlane) -> NcChannels_u64 {
     let channels = c_api::ncchannels_set_default(&mut ncplane_channels(plane));
     ncplane_set_channels(plane, channels);
     channels
 }
 
 /// Marks both the foreground and background as NOT using the "default color",
-/// and returns the new [`NcChannels`].
+/// and returns the new [`NcChannels_u64`].
 ///
 /// *Method: NcPlane.[set_not_default()][NcPlane#method.set_not_default].*
 //
 // Not in the C API.
 #[inline]
-pub fn ncplane_set_not_default(plane: &mut NcPlane) -> NcChannels {
+pub fn ncplane_set_not_default(plane: &mut NcPlane) -> NcChannels_u64 {
     let channels = c_api::ncchannels_set_not_default(&mut ncplane_channels(plane));
     c_api::ncplane_set_channels(plane, channels);
     channels
 }
 
 /// Marks the foreground as NOT using the "default color",
-/// and returns the new [`NcChannels`].
+/// and returns the new [`NcChannels_u64`].
 ///
 /// *Method: NcPlane.[set_fg_not_default()][NcPlane#method.set_fg_not_default].*
 //
 // Not in the C API.
 #[inline]
-pub fn ncplane_set_fg_not_default(plane: &NcPlane) -> NcChannels {
+pub fn ncplane_set_fg_not_default(plane: &NcPlane) -> NcChannels_u64 {
     c_api::ncchannels_set_fg_not_default(&mut ncplane_channels(plane))
 }
 
 /// Marks the background as NOT using the "default color",
-/// and returns the new [`NcChannels`].
+/// and returns the new [`NcChannels_u64`].
 ///
 /// *Method: NcPlane.[set_bg_not_default()][NcPlane#method.set_bg_not_default].*
 //
 // Not in the C API.
 #[inline]
-pub fn ncplane_set_bg_not_default(plane: &NcPlane) -> NcChannels {
+pub fn ncplane_set_bg_not_default(plane: &NcPlane) -> NcChannels_u64 {
     c_api::ncchannels_set_bg_not_default(&mut ncplane_channels(plane))
 }
 
@@ -808,8 +820,8 @@ pub fn ncplane_perimeter(
 #[inline]
 pub fn ncplane_perimeter_double(
     plane: &mut NcPlane,
-    stylemask: NcStyle,
-    channels: NcChannels,
+    stylemask: NcStyle_u16,
+    channels: NcChannels_u64,
     boxmask: NcBoxMask,
 ) -> NcResult_i32 {
     if unsafe { c_api::ncplane_cursor_move_yx(plane, 0, 0) } != NCRESULT_OK {
@@ -826,15 +838,7 @@ pub fn ncplane_perimeter_double(
     let mut hl = NcCell::new();
     let mut vl = NcCell::new();
     if c_api::nccells_double_box(
-        plane,
-        stylemask.into(),
-        channels,
-        &mut ul,
-        &mut ur,
-        &mut ll,
-        &mut lr,
-        &mut hl,
-        &mut vl,
+        plane, stylemask, channels, &mut ul, &mut ur, &mut ll, &mut lr, &mut hl, &mut vl,
     ) != NCRESULT_OK
     {
         return NCRESULT_ERR;
@@ -868,8 +872,8 @@ pub fn ncplane_perimeter_double(
 #[inline]
 pub fn ncplane_perimeter_rounded(
     plane: &mut NcPlane,
-    stylemask: NcStyle,
-    channels: NcChannels,
+    stylemask: NcStyle_u16,
+    channels: NcChannels_u64,
     boxmask: NcBoxMask,
 ) -> NcResult_i32 {
     if unsafe { c_api::ncplane_cursor_move_yx(plane, 0, 0) } != NCRESULT_OK {
@@ -886,15 +890,7 @@ pub fn ncplane_perimeter_rounded(
     let mut hl = NcCell::new();
     let mut vl = NcCell::new();
     if c_api::nccells_rounded_box(
-        plane,
-        stylemask.into(),
-        channels,
-        &mut ul,
-        &mut ur,
-        &mut ll,
-        &mut lr,
-        &mut hl,
-        &mut vl,
+        plane, stylemask, channels, &mut ul, &mut ur, &mut ll, &mut lr, &mut hl, &mut vl,
     ) != NCRESULT_OK
     {
         return NCRESULT_ERR;
@@ -930,8 +926,8 @@ pub fn ncplane_perimeter_rounded(
 #[inline]
 pub fn ncplane_ascii_box(
     plane: &mut NcPlane,
-    stylemask: NcStyle,
-    channels: NcChannels,
+    stylemask: NcStyle_u16,
+    channels: NcChannels_u64,
     end_y: NcDim,
     end_x: NcDim,
     boxmask: NcBoxMask,
@@ -948,15 +944,7 @@ pub fn ncplane_ascii_box(
 
     unsafe {
         ret = c_api::nccells_ascii_box(
-            plane,
-            stylemask.into(),
-            channels,
-            &mut ul,
-            &mut ur,
-            &mut ll,
-            &mut lr,
-            &mut hl,
-            &mut vl,
+            plane, stylemask, channels, &mut ul, &mut ur, &mut ll, &mut lr, &mut hl, &mut vl,
         );
         if ret == NCRESULT_OK {
             ret = c_api::ncplane_box(
@@ -1029,8 +1017,8 @@ pub fn ncplane_box_sized(
 #[inline]
 pub fn ncplane_double_box(
     plane: &mut NcPlane,
-    stylemask: NcStyle,
-    channels: NcChannels,
+    stylemask: NcStyle_u16,
+    channels: NcChannels_u64,
     end_y: NcDim,
     end_x: NcDim,
     boxmask: NcBoxMask,
@@ -1047,15 +1035,7 @@ pub fn ncplane_double_box(
 
     unsafe {
         ret = c_api::nccells_double_box(
-            plane,
-            stylemask.into(),
-            channels,
-            &mut ul,
-            &mut ur,
-            &mut ll,
-            &mut lr,
-            &mut hl,
-            &mut vl,
+            plane, stylemask, channels, &mut ul, &mut ur, &mut ll, &mut lr, &mut hl, &mut vl,
         );
         if ret == NCRESULT_OK {
             ret = c_api::ncplane_box(
@@ -1088,8 +1068,8 @@ pub fn ncplane_double_box(
 #[inline]
 pub fn ncplane_double_box_sized(
     plane: &mut NcPlane,
-    stylemask: NcStyle,
-    channels: NcChannels,
+    stylemask: NcStyle_u16,
+    channels: NcChannels_u64,
     len_y: NcDim,
     len_x: NcDim,
     boxmask: NcBoxMask,
@@ -1115,8 +1095,8 @@ pub fn ncplane_double_box_sized(
 #[inline]
 pub fn ncplane_rounded_box(
     plane: &mut NcPlane,
-    stylemask: NcStyle,
-    channels: NcChannels,
+    stylemask: NcStyle_u16,
+    channels: NcChannels_u64,
     end_y: NcDim,
     end_x: NcDim,
     boxmask: NcBoxMask,
@@ -1133,15 +1113,7 @@ pub fn ncplane_rounded_box(
 
     unsafe {
         ret = c_api::nccells_rounded_box(
-            plane,
-            stylemask.into(),
-            channels,
-            &mut ul,
-            &mut ur,
-            &mut ll,
-            &mut lr,
-            &mut hl,
-            &mut vl,
+            plane, stylemask, channels, &mut ul, &mut ur, &mut ll, &mut lr, &mut hl, &mut vl,
         );
         if ret == NCRESULT_OK {
             ret = c_api::ncplane_box(
@@ -1173,8 +1145,8 @@ pub fn ncplane_rounded_box(
 #[inline]
 pub fn ncplane_rounded_box_sized(
     plane: &mut NcPlane,
-    stylemask: NcStyle,
-    channels: NcChannels,
+    stylemask: NcStyle_u16,
+    channels: NcChannels_u64,
     len_y: NcDim,
     len_x: NcDim,
     boxmask: NcBoxMask,
@@ -1205,7 +1177,7 @@ pub fn ncplane_rounded_box_sized(
 /// go through the boundary of the plane in that axis (same as `0`).
 ///
 /// The glyph composed of `egc` and `stylemask` is used for all cells. The
-/// `NcChannels` specified by `ul`, `ur`, `ll`, and `lr` are composed into
+/// `NcChannels_u64` specified by `ul`, `ur`, `ll`, and `lr` are composed into
 /// foreground and background gradients.
 ///
 /// - To do a vertical gradient, `ul` ought equal `ur` and `ll` ought equal `lr`.
@@ -1232,11 +1204,11 @@ pub fn ncplane_gradient(
     len_y: Option<NcDim>,
     len_x: Option<NcDim>,
     egc: &str,
-    stylemask: NcStyle,
-    ul: NcChannels,
-    ur: NcChannels,
-    ll: NcChannels,
-    lr: NcChannels,
+    stylemask: NcStyle_u16,
+    ul: NcChannels_u64,
+    ur: NcChannels_u64,
+    ll: NcChannels_u64,
+    lr: NcChannels_u64,
 ) -> NcResult_i32 {
     #[cfg(any(target_arch = "armv7l", target_arch = "i686"))]
     let egc_ptr = cstring![egc] as *const i8;
@@ -1251,7 +1223,7 @@ pub fn ncplane_gradient(
             len_y.unwrap_or(0),
             len_x.unwrap_or(0),
             egc_ptr,
-            stylemask.into(),
+            stylemask,
             ul,
             ur,
             ll,

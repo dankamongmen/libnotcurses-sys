@@ -26,6 +26,8 @@ impl NcMiceEvents {
 
 /// # Methods
 impl NcMiceEvents {
+    crate::from_primitive![c_api::NcMiceEvents_u32];
+
     /// Returns a new `NcMiceEvents`.
     pub fn new(value: c_api::NcMiceEvents_u32) -> Self {
         Self(value)
@@ -52,6 +54,5 @@ mod std_impl {
     }
 
     crate::unit_impl_from![NcMiceEvents, NcMiceEvents_u32];
-
     crate::unit_impl_ops![bitwise; NcMiceEvents];
 }

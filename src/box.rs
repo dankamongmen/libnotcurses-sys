@@ -66,10 +66,7 @@ impl NcBoxMask {
 
 /// # Methods
 impl NcBoxMask {
-    /// Returns a new `NcBoxMask`.
-    pub fn new(value: c_api::NcBoxMask_u32) -> Self {
-        Self(value)
-    }
+    crate::from_primitive![c_api::NcBoxMask_u32];
 
     /// Returns true if the current style has included the `other_style`.
     pub fn has(&self, other: NcBoxMask) -> bool {
