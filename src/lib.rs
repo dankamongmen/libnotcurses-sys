@@ -122,7 +122,7 @@ pub use capabilities::NcCapabilities;
 pub use cell::NcCell;
 pub use channel::{NcChannel, NcChannels};
 pub use dimension::{NcDim, NcOffset};
-pub use direct::{NcDirect, NcDirectFlags, NcDirectFlagsApi};
+pub use direct::{NcDirect, NcDirectFlags};
 pub use error::{NcError, NcResult};
 pub use fade::{NcFadeCb, NcFadeCtx};
 pub use fd::{NcFdPlane, NcFdPlaneOptions, NcSubproc, NcSubprocOptions};
@@ -181,7 +181,7 @@ pub mod c_api {
     pub use crate::alpha::c_api::*;
     pub use crate::blitter::c_api::*;
     pub use crate::channel::c_api::*;
-    pub use crate::direct::constants::*;
+    pub use crate::direct::c_api::*;
     pub use crate::error::c_api::*;
     pub use crate::input::c_api::*;
     pub use crate::key::constants::*;

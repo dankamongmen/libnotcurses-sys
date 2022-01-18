@@ -44,8 +44,8 @@ fn main() -> NcResult<()> {
         "And", "now", "I", "will", "clear", "the", "screen", ".", ".", ".",
     ];
     for word in sentence {
-        channels.set_fg_rgb(channels.fg_rgb().wrapping_sub(0x050505));
-        channels.set_bg_rgb(channels.bg_rgb().wrapping_add(0x090909));
+        channels.set_fg_rgb(channels.fg_rgb().0.wrapping_sub(0x050505));
+        channels.set_bg_rgb(channels.bg_rgb().0.wrapping_add(0x090909));
         ncd.putstr(channels, &format!["{} ", word])?;
         ncd.flush()?;
         sleep![0, 150];

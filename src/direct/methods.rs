@@ -26,7 +26,7 @@ impl NcDirect {
     ///
     /// *C style function: [ncdirect_init()][c_api::ncdirect_init].*
     pub unsafe fn new<'a>() -> NcResult<&'a mut NcDirect> {
-        Self::with_flags(0)
+        Self::with_flags(NcDirectFlags::None)
     }
 
     /// New `NcDirect` with optional flags.
@@ -38,7 +38,7 @@ impl NcDirect {
     ///
     /// *C style function: [ncdirect_init()][c_api::ncdirect_init].*
     pub unsafe fn with_flags<'a>(flags: NcDirectFlags) -> NcResult<&'a mut NcDirect> {
-        let res = c_api::ncdirect_init(null(), null_mut(), flags);
+        let res = c_api::ncdirect_init(null(), null_mut(), flags.into());
         error_ref_mut![res, "Initializing NcDirect"]
     }
 

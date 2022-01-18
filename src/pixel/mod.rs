@@ -69,7 +69,9 @@ pub struct NcPixel(pub c_api::NcPixel_u32);
 mod std_impls {
     use super::{c_api::NcPixel_u32, NcPixel};
 
+    crate::from_primitive![NcPixel, NcPixel_u32];
     crate::unit_impl_from![NcPixel, NcPixel_u32];
+    crate::unit_impl_fmt![bases+display; NcPixel];
 }
 
 /// Contains the pixel geometry information as returned by the

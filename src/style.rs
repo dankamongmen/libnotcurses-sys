@@ -21,7 +21,6 @@
 ///
 /// [`NcChannels.reverse`]: crate::NcChannels#method.reverse
 /// [`NcPlane.pulse`]: crate::NcPlane#method.pulse
-
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct NcStyle(pub c_api::NcStyle_u16);
 
@@ -51,13 +50,14 @@ impl NcStyle {
 
 mod std_impls {
     use super::{c_api::NcStyle_u16, NcStyle};
-    use std::fmt;
 
     impl Default for NcStyle {
         fn default() -> Self {
             Self::None
         }
     }
+
+    crate::from_primitive![NcStyle, NcStyle_u16];
 
     crate::unit_impl_from![NcStyle, NcStyle_u16];
 
@@ -69,19 +69,11 @@ mod std_impls {
     }
 
     crate::unit_impl_ops![bitwise; NcStyle];
-
-    impl fmt::UpperHex for NcStyle {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            let val = self.0;
-            fmt::UpperHex::fmt(&val, f)
-        }
-    }
+    crate::unit_impl_fmt![bases+display; NcStyle];
 }
 
 /// # Methods
 impl NcStyle {
-    crate::from_primitive![c_api::NcStyle_u16];
-
     /// Returns a `Vec` with all the styles contained in the current style.
     pub fn to_vec(&self) -> Vec<NcStyle> {
         let mut v = vec![];

@@ -522,14 +522,56 @@ macro_rules! unit_impl_ops [
     };
 ];
 
+/// Implements formatting traits for a unit struct containing a primitive.
+#[macro_export]
+#[doc(hidden)]
+macro_rules! unit_impl_fmt [
+    (all; $type:ty) => {
+        crate::unit_impl_fmt![bases+display; $type];
+        crate::unit_impl_fmt![scientific; $type];
+    };
+
+    (bases+display; $type:ty) => {
+        crate::unit_impl_fmt![bases; $type];
+        crate::unit_impl_fmt![display; $type];
+    };
+
+    (bases; $type:ty) => {
+        crate::unit_impl_fmt![single; Binary, $type];
+        crate::unit_impl_fmt![single; Octal, $type];
+        crate::unit_impl_fmt![single; LowerHex, $type];
+        crate::unit_impl_fmt![single; UpperHex, $type];
+    };
+
+    (scientific; $type:ty) => {
+        crate::unit_impl_fmt![single; UpperExp, $type];
+        crate::unit_impl_fmt![single; LowerExp, $type];
+    };
+
+    (display; $type:ty) => {
+        crate::unit_impl_fmt![single; Display, $type];
+    };
+
+    (single; $trait:ident, $type:ty) => {
+        impl std::fmt::$trait for $type {
+            fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                let val = self.0;
+                std::fmt::$trait::fmt(&val, f)
+            }
+        }
+    };
+];
+
 /// Implements a constructor for unit structs from its inner value type,
 /// intended to be called from the `unit_impl_*` macros.
 #[macro_export]
 #[doc(hidden)]
 macro_rules! from_primitive [
-    ($inner:ty) => {
-        pub(crate) fn from_primitive(value: $inner) -> Self {
-            Self(value)
+    ($outer:ty, $inner:ty) => {
+        impl $outer {
+            pub(crate) fn from_primitive(value: $inner) -> Self {
+                Self(value)
+            }
         }
     }
 ];

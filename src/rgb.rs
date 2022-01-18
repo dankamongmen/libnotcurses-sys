@@ -34,22 +34,19 @@ pub struct NcRgb(pub c_api::NcRgb_u32);
 #[derive(Clone, Copy, Debug, PartialEq, Default)]
 pub struct NcRgba(pub c_api::NcRgba_u32);
 
-impl NcRgb {
-    crate::from_primitive![c_api::NcRgba_u32];
-}
-
-impl NcRgba {
-    crate::from_primitive![c_api::NcRgba_u32];
-}
-
 mod std_impls {
     use super::{
         c_api::{NcRgb_u32, NcRgba_u32},
         NcRgb, NcRgba,
     };
 
+    crate::from_primitive![NcRgb, NcRgb_u32];
     crate::unit_impl_from![NcRgb, NcRgb_u32];
+    crate::unit_impl_fmt![bases+display; NcRgb];
+
+    crate::from_primitive![NcRgba, NcRgba_u32];
     crate::unit_impl_from![NcRgba, NcRgba_u32];
+    crate::unit_impl_fmt![bases+display; NcRgba];
 }
 
 pub(crate) mod c_api {

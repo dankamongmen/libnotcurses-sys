@@ -93,7 +93,6 @@ pub struct NcChannels(pub NcChannels_u64);
 
 mod std_impls {
     use super::{NcChannels, NcChannels_u64};
-    use std::fmt;
 
     impl Default for NcChannels {
         fn default() -> Self {
@@ -101,14 +100,9 @@ mod std_impls {
         }
     }
 
+    crate::from_primitive![NcChannels, NcChannels_u64];
     crate::unit_impl_from![NcChannels, NcChannels_u64];
-
-    impl fmt::UpperHex for NcChannels {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            let val = self.0;
-            fmt::UpperHex::fmt(&val, f)
-        }
-    }
+    crate::unit_impl_fmt![bases+display; NcChannels];
 }
 
 /// # NcChannels constants
@@ -136,8 +130,6 @@ impl NcChannels {
 
 /// # NcChannels constructors
 impl NcChannels {
-    crate::from_primitive![c_api::NcChannels_u64];
-
     /// New `NcChannels`, set to black and NOT using the "default color".
     pub fn new() -> Self {
         Self::combine(NcChannel::new(), NcChannel::new())

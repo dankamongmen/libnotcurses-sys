@@ -66,8 +66,6 @@ impl NcBoxMask {
 
 /// # Methods
 impl NcBoxMask {
-    crate::from_primitive![c_api::NcBoxMask_u32];
-
     /// Returns true if the current style has included the `other_style`.
     pub fn has(&self, other: NcBoxMask) -> bool {
         (self.0 & other.0) == other.0
@@ -88,9 +86,10 @@ mod std_impls {
         }
     }
 
+    crate::from_primitive![NcBoxMask, NcBoxMask_u32];
     crate::unit_impl_from![NcBoxMask, NcBoxMask_u32];
-
     crate::unit_impl_ops![bitwise; NcBoxMask];
+    crate::unit_impl_fmt![bases+display; NcBoxMask];
 }
 
 pub(crate) mod c_api {

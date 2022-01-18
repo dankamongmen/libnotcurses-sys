@@ -44,7 +44,9 @@ mod std_impls {
         }
     }
 
+    crate::from_primitive![NcChannel, NcChannel_u32];
     crate::unit_impl_from![NcChannel, NcChannel_u32];
+    crate::unit_impl_fmt![bases+display; NcChannel];
 }
 
 /// # Constants
@@ -78,8 +80,6 @@ impl NcChannel {
 
 /// # Constructors
 impl NcChannel {
-    crate::from_primitive![NcChannel_u32];
-
     /// New `NcChannel`, set to black and NOT using the "default color".
     pub fn new() -> Self {
         Self(c_api::NC_BGDEFAULT_MASK)
