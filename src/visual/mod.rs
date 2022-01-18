@@ -44,7 +44,7 @@ mod methods;
 pub(crate) mod options;
 mod reimplemented;
 
-pub use geometry::{NcVGeom, NcVisualGeometry};
+pub use geometry::NcVisualGeometry;
 pub use options::{NcVisualOptions, NcVisualOptionsBuilder};
 
 /// A visual bit of multimedia.
@@ -56,3 +56,8 @@ pub use options::{NcVisualOptions, NcVisualOptionsBuilder};
 /// - [`render`][NcVisual#method.render]
 /// - [`simple_streamer`][NcVisual#method.simple_streamer]
 pub type NcVisual = crate::bindings::ffi::ncvisual;
+
+pub(crate) mod c_api {
+    pub use super::geometry::c_api::*;
+    pub use super::options::c_api::*;
+}

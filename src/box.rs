@@ -103,6 +103,18 @@ pub(crate) mod c_api {
     /// The drawing of the corners is defined in the second byte,
     /// see [`NCBOXCORNER_MASK`].
     ///
+    /// # Associated `c_api` constants
+    /// - [`NCBOXGRAD_TOP`]
+    /// - [`NCBOXGRAD_RIGHT`]
+    /// - [`NCBOXGRAD_BOTTOM`]
+    /// - [`NCBOXGRAD_LEFT`]
+    /// - [`NCBOXMASK_TOP`]
+    /// - [`NCBOXMASK_RIGHT`]
+    /// - [`NCBOXMASK_BOTTOM`]
+    /// - [`NCBOXMASK_LEFT`]
+    /// - [`NCBOXCORNER_MASK`]
+    /// - [`NCBOXCORNER_SHIFT`]
+    ///
     /// ## Diagram
     ///
     /// ```txt

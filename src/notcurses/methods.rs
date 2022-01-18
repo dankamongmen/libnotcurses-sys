@@ -6,7 +6,7 @@ use crate::{
     c_api::{self, notcurses_init},
     cstring, error, error_ref_mut, rstring, rstring_free, Nc, NcAlign, NcBlitter, NcCapabilities,
     NcChannels, NcDim, NcError, NcFile, NcInput, NcLogLevel, NcMiceEvents, NcOptions, NcPixelImpl,
-    NcPlane, NcReceived, NcResult, NcRgb, NcScale, NcStats, NcStyle, NcTime, NcVGeom, NcVisual,
+    NcPlane, NcReceived, NcResult, NcRgb, NcScale, NcStats, NcStyle, NcTime, NcVisual,
     NcVisualGeometry, NcVisualOptions,
 };
 
@@ -891,7 +891,7 @@ impl Nc {
         visual: Option<&NcVisual>,
         vopts: Option<&NcVisualOptions>,
     ) -> NcResult<NcVisualGeometry> {
-        let mut vg = NcVGeom::new();
+        let mut vg = c_api::NcVGeom::new();
 
         let v_ptr: *const NcVisual;
         if let Some(v) = visual {

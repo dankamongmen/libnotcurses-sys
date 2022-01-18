@@ -88,6 +88,7 @@ pub(crate) mod c_api {
     /// [`NcChannel_u32`]: crate::c_api::NcChannel_u32
     pub type NcRgba_u32 = u32;
 
+    // MAYBE?
     // // NcBgra
     // //
     // /// 32 bits broken into 3x 8bpp BGR channels + 8ppp alpha.

@@ -110,7 +110,7 @@ impl NcDirectFlags {
     /// No flags.
     pub const None: NcDirectFlags = Self(0);
 
-    /// Input may be freely dropped.
+    /// Flag that indicates input may be freely dropped.
     ///
     /// This ought be provided when the program does not intend to handle input.
     /// Otherwise, input can accumulate in internal buffers, eventually preventing
@@ -119,12 +119,12 @@ impl NcDirectFlags {
         Self(c_api::NCDIRECT_OPTION_DRAIN_INPUT as NcDirectFlags_u64);
 
     /// Flag that avoids placing the terminal into cbreak mode
-    /// (disabling echo and line buffering)
+    /// (disabling echo and line buffering).
     ///
     pub const InhibitCbreak: NcDirectFlags =
         Self(c_api::NCDIRECT_OPTION_INHIBIT_CBREAK as NcDirectFlags_u64);
 
-    /// Flag that avoids calling setlocale(LC_ALL, NULL)
+    /// Flag that avoids calling setlocale(LC_ALL, NULL).
     ///
     /// If the result is either "C" or "POSIX", it will print a
     /// diagnostic to stderr, and then call setlocale(LC_ALL, "").
@@ -145,8 +145,9 @@ impl NcDirectFlags {
     pub const Verbose: NcDirectFlags = Self(c_api::NCDIRECT_OPTION_VERBOSE as NcDirectFlags_u64);
 
     /// Flag that enables showing all diagnostics (equivalent to
-    /// [`NcLogLevel::TRACE`][crate::NcLogLevel#associatedconstant.TRACE]).
-    /// Implies [`NcDirectFlags::VERBOSE`][NcDirectFlags].
+    /// [`NcLogLevel::trace`]. Implies [`NcDirectFlags::Verbose`].
+    ///
+    /// [`NcLogLevel::Trace`]: crate::NcLogLevel#associatedconstant.Trace
     pub const VeryVerbose: NcDirectFlags =
         Self(c_api::NCDIRECT_OPTION_VERY_VERBOSE as NcDirectFlags_u64);
 }
@@ -172,23 +173,30 @@ pub(crate) mod c_api {
     /// A bitmask of [`NcDirect`][crate::NcDirect] flags.
     ///
     /// It's recommended to use [`NcDirectFlags`][crate::NcDirectFlags] instead.
+    ///
+    /// # Associated `c_api` constants
+    /// - [`NCDIRECT_OPTION_DRAIN_INPUT`]
+    /// - [`NCDIRECT_OPTION_INHIBIT_CBREAK`]
+    /// - [`NCDIRECT_OPTION_INHIBIT_SETLOCALE`]
+    /// - [`NCDIRECT_OPTION_NO_QUIT_SIGHANDLERS`]
+    /// - [`NCDIRECT_OPTION_VERBOSE`]
+    /// - [`NCDIRECT_OPTION_VERY_VERBOSE`]
     pub type NcDirectFlags_u64 = u64;
 
-    /// Input may be freely dropped.
+    /// [`NcDirectFlags_u64`] flag that indicates input may be freely dropped.
     ///
     /// This ought be provided when the program does not intend to handle input.
-    /// Otherwise, input can accumulate in internal buffers, eventually preventing
-    /// Notcurses from processing terminal messages.
+    /// Otherwise, input can accumulate in internal buffers, eventually
+    /// preventing *notcurses* from processing terminal messages.
     pub const NCDIRECT_OPTION_DRAIN_INPUT: NcDirectFlags_u64 =
         ffi::NCDIRECT_OPTION_DRAIN_INPUT as NcDirectFlags_u64;
 
-    /// Flag that avoids placing the terminal into cbreak mode
-    /// (disabling echo and line buffering)
-    ///
+    /// [`NcDirectFlags_u64`] flag that avoids placing the terminal into cbreak
+    /// mode (disabling echo and line buffering)
     pub const NCDIRECT_OPTION_INHIBIT_CBREAK: NcDirectFlags_u64 =
         ffi::NCDIRECT_OPTION_INHIBIT_CBREAK as NcDirectFlags_u64;
 
-    /// Flag that avoids calling setlocale(LC_ALL, NULL)
+    /// [`NcDirectFlags_u64`] flag that avoids calling setlocale(LC_ALL, NULL)
     ///
     /// If the result is either "C" or "POSIX", it will print a
     /// diagnostic to stderr, and then call setlocale(LC_ALL, "").
@@ -200,18 +208,20 @@ pub(crate) mod c_api {
     pub const NCDIRECT_OPTION_INHIBIT_SETLOCALE: NcDirectFlags_u64 =
         ffi::NCDIRECT_OPTION_INHIBIT_SETLOCALE as NcDirectFlags_u64;
 
-    /// Flag that inhibits registration of the SIGINT, SIGSEGV, SIGABRT & SIGQUIT
-    /// signal handlers.
+    /// [`NcDirectFlags_u64`] flag that inhibits registration of the `SIGINT`,
+    /// `SIGSEGV`, `SIGABRT` & `SIGQUIT` signal handlers.
     pub const NCDIRECT_OPTION_NO_QUIT_SIGHANDLERS: NcDirectFlags_u64 =
         ffi::NCDIRECT_OPTION_NO_QUIT_SIGHANDLERS as NcDirectFlags_u64;
 
-    /// Flag that enables showing detailed information.
+    /// [`NcDirectFlags_u64`] flag that enables showing detailed information.
     pub const NCDIRECT_OPTION_VERBOSE: NcDirectFlags_u64 =
         ffi::NCDIRECT_OPTION_VERBOSE as NcDirectFlags_u64;
 
-    /// Flag that enables showing all diagnostics (equivalent to
-    /// [`NcLogLevel::TRACE`][crate::NcLogLevel#associatedconstant.TRACE]).
+    /// [`NcDirectFlags_u64`] flag that enables showing all diagnostics
+    /// (equivalent to [`NCLOGLEVEL_TRACE`]).
     /// Implies [`NCDIRECT_OPTION_VERBOSE`].
+    ///
+    /// [`NCLOGLEVEL_TRACE`]: crate::c_api::NCLOGLEVEL_TRACE
     pub const NCDIRECT_OPTION_VERY_VERBOSE: NcDirectFlags_u64 =
         ffi::NCDIRECT_OPTION_VERY_VERBOSE as NcDirectFlags_u64;
 }

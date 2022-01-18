@@ -103,6 +103,13 @@ pub(crate) mod c_api {
     ///
     /// It's recommended to use [`NcAlpha`][crate::NcAlpha] instead.
     ///
+    /// # Associated `c_api` constants
+    ///
+    /// - [`NCALPHA_BLEND`]
+    /// - [`NCALPHA_HIGHCONTRAST`]
+    /// - [`NCALPHA_OPAQUE`]
+    /// - [`NCALPHA_TRANSPARENT`]
+    ///
     /// ## Diagram
     ///
     /// ```txt

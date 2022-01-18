@@ -116,6 +116,17 @@ pub(crate) mod c_api {
     ///
     /// It's recommended to use [`NcLogLevel`][crate::NcLogLevel] instead.
     ///
+    /// # Associated `c_api` constants
+    /// - [`NCLOGLEVEL_SILENT`]
+    /// - [`NCLOGLEVEL_PANIC`]
+    /// - [`NCLOGLEVEL_FATAL`]
+    /// - [`NCLOGLEVEL_ERROR`]
+    /// - [`NCLOGLEVEL_WARNING`]
+    /// - [`NCLOGLEVEL_INFO`]
+    /// - [`NCLOGLEVEL_VERBOSE`]
+    /// - [`NCLOGLEVEL_DEBUG`]
+    /// - [`NCLOGLEVEL_TRACE`]
+    ///
     /// These log levels consciously map cleanly to those of libav; notcurses itself
     /// does not use this full granularity. The log level does not affect the opening
     /// and closing banners, which can be disabled via the `NcOptions`
@@ -125,30 +136,30 @@ pub(crate) mod c_api {
     /// rendering, any kind of logging will disrupt the output.
     pub type NcLogLevel_i32 = ffi::ncloglevel_e;
 
-    /// [`NcLogLevel_i32`] this is honestly a bit much.
-    pub const NCLOGLEVEL_DEBUG: NcLogLevel_i32 = ffi::ncloglevel_e_NCLOGLEVEL_DEBUG;
-
-    /// [`NcLogLevel_i32`] we can't keep doin' this, but we can do other things.
-    pub const NCLOGLEVEL_ERROR: NcLogLevel_i32 = ffi::ncloglevel_e_NCLOGLEVEL_ERROR;
-
-    /// [`NcLogLevel_i32`] we're hanging around, but we've had a horrible fault.
-    pub const NCLOGLEVEL_FATAL: NcLogLevel_i32 = ffi::ncloglevel_e_NCLOGLEVEL_FATAL;
-
-    /// [`NcLogLevel_i32`] "detailed information.
-    pub const NCLOGLEVEL_INFO: NcLogLevel_i32 = ffi::ncloglevel_e_NCLOGLEVEL_INFO;
+    /// [`NcLogLevel_i32`] default. print nothing once fullscreen service begins.
+    pub const NCLOGLEVEL_SILENT: NcLogLevel_i32 = ffi::ncloglevel_e_NCLOGLEVEL_SILENT;
 
     /// [`NcLogLevel_i32`] print diagnostics immediately related to crashing.
     pub const NCLOGLEVEL_PANIC: NcLogLevel_i32 = ffi::ncloglevel_e_NCLOGLEVEL_PANIC;
 
-    /// [`NcLogLevel_i32`] default. print nothing once fullscreen service begins.
-    pub const NCLOGLEVEL_SILENT: NcLogLevel_i32 = ffi::ncloglevel_e_NCLOGLEVEL_SILENT;
+    /// [`NcLogLevel_i32`] we're hanging around, but we've had a horrible fault.
+    pub const NCLOGLEVEL_FATAL: NcLogLevel_i32 = ffi::ncloglevel_e_NCLOGLEVEL_FATAL;
 
-    /// [`NcLogLevel_i32`] there's probably a better way to do what you want.
-    pub const NCLOGLEVEL_TRACE: NcLogLevel_i32 = ffi::ncloglevel_e_NCLOGLEVEL_TRACE;
+    /// [`NcLogLevel_i32`] we can't keep doin' this, but we can do other things.
+    pub const NCLOGLEVEL_ERROR: NcLogLevel_i32 = ffi::ncloglevel_e_NCLOGLEVEL_ERROR;
+
+    /// [`NcLogLevel_i32`] you probably don't want what's happening to happen.
+    pub const NCLOGLEVEL_WARNING: NcLogLevel_i32 = ffi::ncloglevel_e_NCLOGLEVEL_WARNING;
+
+    /// [`NcLogLevel_i32`] "detailed information.
+    pub const NCLOGLEVEL_INFO: NcLogLevel_i32 = ffi::ncloglevel_e_NCLOGLEVEL_INFO;
 
     /// [`NcLogLevel_i32`] "detailed information.
     pub const NCLOGLEVEL_VERBOSE: NcLogLevel_i32 = ffi::ncloglevel_e_NCLOGLEVEL_VERBOSE;
 
-    /// [`NcLogLevel_i32`] you probably don't want what's happening to happen.
-    pub const NCLOGLEVEL_WARNING: NcLogLevel_i32 = ffi::ncloglevel_e_NCLOGLEVEL_WARNING;
+    /// [`NcLogLevel_i32`] this is honestly a bit much.
+    pub const NCLOGLEVEL_DEBUG: NcLogLevel_i32 = ffi::ncloglevel_e_NCLOGLEVEL_DEBUG;
+
+    /// [`NcLogLevel_i32`] there's probably a better way to do what you want.
+    pub const NCLOGLEVEL_TRACE: NcLogLevel_i32 = ffi::ncloglevel_e_NCLOGLEVEL_TRACE;
 }

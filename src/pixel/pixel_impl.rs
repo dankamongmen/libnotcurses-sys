@@ -1,7 +1,5 @@
 //!
 
-use super::c_api;
-
 /// Pixel blitting implementations, informative only.
 ///
 /// This is returned by [`Nc.check_pixel_support`].
@@ -34,7 +32,7 @@ pub enum NcPixelImpl {
 }
 
 mod std_impls {
-    use super::{c_api, NcPixelImpl};
+    use super::{c_api::*, NcPixelImpl};
     use std::fmt;
 
     impl Default for NcPixelImpl {
@@ -62,9 +60,9 @@ mod std_impls {
         }
     }
 
-    impl From<c_api::NcPixelImpl_u32> for NcPixelImpl {
-        fn from(alpha: c_api::NcPixelImpl_u32) -> Self {
-            use {c_api::*, NcPixelImpl::*};
+    impl From<NcPixelImpl_u32> for NcPixelImpl {
+        fn from(alpha: NcPixelImpl_u32) -> Self {
+            use NcPixelImpl::*;
             match alpha {
                 NCPIXEL_NONE => NcPixelImpl::None,
                 NCPIXEL_SIXEL => Sixel,
@@ -78,9 +76,9 @@ mod std_impls {
         }
     }
 
-    impl From<NcPixelImpl> for c_api::NcPixelImpl_u32 {
+    impl From<NcPixelImpl> for NcPixelImpl_u32 {
         fn from(alpha: NcPixelImpl) -> Self {
-            use {c_api::*, NcPixelImpl::*};
+            use NcPixelImpl::*;
             match alpha {
                 NcPixelImpl::None => NCPIXEL_NONE,
                 Sixel => NCPIXEL_SIXEL,
@@ -92,4 +90,48 @@ mod std_impls {
             }
         }
     }
+}
+
+pub(crate) mod c_api {
+    use crate::bindings::ffi;
+
+    /// Pixel blitting implementations, informative only.
+    ///
+    /// It's recommended to use [`NcPixelImpl`][crate::NcPixelImpl] instead.
+    ///
+    /// This is returned by [`notcurses_check_pixel_support`]
+    ///
+    /// # Associated `c_api` constants
+    ///
+    /// - [`NCPIXEL_NONE`]
+    /// - [`NCPIXEL_SIXEL`]
+    /// - [`NCPIXEL_LINUXFB`]
+    /// - [`NCPIXEL_ITERM2`]
+    /// - [`NCPIXEL_KITTY_STATIC`]
+    /// - [`NCPIXEL_KITTY_ANIMATED`]
+    /// - [`NCPIXEL_KITTY_SELFREF`]
+    ///
+    /// [`notcurses_check_pixel_support`]: crate::c_api::notcurses::check_pixel_support
+    pub type NcPixelImpl_u32 = ffi::ncpixelimpl_e;
+
+    /// [`NcPixelImpl_u32`] No pixel support.
+    pub const NCPIXEL_NONE: NcPixelImpl_u32 = ffi::ncpixelimpl_e_NCPIXEL_NONE;
+
+    /// [`NcPixelImpl_u32`] Sixel.
+    pub const NCPIXEL_SIXEL: NcPixelImpl_u32 = ffi::ncpixelimpl_e_NCPIXEL_SIXEL;
+
+    /// [`NcPixelImpl_u32`] Linux framebuffer.
+    pub const NCPIXEL_LINUXFB: NcPixelImpl_u32 = ffi::ncpixelimpl_e_NCPIXEL_LINUXFB;
+
+    /// [`NcPixelImpl_u32`] iTerm2.
+    pub const NCPIXEL_ITERM2: NcPixelImpl_u32 = ffi::ncpixelimpl_e_NCPIXEL_ITERM2;
+
+    /// [`NcPixelImpl_u32`] Kitty prior to C=1 and animation.
+    pub const NCPIXEL_KITTY_STATIC: NcPixelImpl_u32 = ffi::ncpixelimpl_e_NCPIXEL_KITTY_STATIC;
+
+    /// [`NcPixelImpl_u32`] Kitty with animation but not reflexive composition.
+    pub const NCPIXEL_KITTY_ANIMATED: NcPixelImpl_u32 = ffi::ncpixelimpl_e_NCPIXEL_KITTY_ANIMATED;
+
+    /// [`NcPixelImpl_u32`] Kitty with reflexive composition.
+    pub const NCPIXEL_KITTY_SELFREF: NcPixelImpl_u32 = ffi::ncpixelimpl_e_NCPIXEL_KITTY_SELFREF;
 }

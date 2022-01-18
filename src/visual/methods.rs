@@ -6,8 +6,7 @@ use libc::c_void;
 use crate::{
     c_api::{self, NcChannel_u32, NcResult_i32, NCRESULT_ERR},
     cstring, error, error_ref_mut, Nc, NcBlitter, NcChannel, NcDim, NcDirect, NcError, NcPixel,
-    NcPlane, NcResult, NcRgba, NcScale, NcTime, NcVGeom, NcVisual, NcVisualGeometry,
-    NcVisualOptions,
+    NcPlane, NcResult, NcRgba, NcScale, NcTime, NcVisual, NcVisualGeometry, NcVisualOptions,
 };
 
 /// # NcVisual Constructors & destructors
@@ -313,7 +312,7 @@ impl NcVisual {
         nc: Option<&Nc>,
         vopts: Option<&NcVisualOptions>,
     ) -> NcResult<NcVisualGeometry> {
-        let mut vg = NcVGeom::new();
+        let mut vg = c_api::NcVGeom::new();
 
         let nc_ptr: *const Nc;
         if let Some(nc) = nc {
@@ -674,10 +673,10 @@ impl NcVisual {
         &mut self,
         ncd: &mut NcDirect,
         options: &NcVisualOptions,
-    ) -> NcResult<NcVGeom> {
-        let mut geom = NcVGeom::new();
+    ) -> NcResult<NcVisualGeometry> {
+        let mut geom = c_api::NcVGeom::new();
 
         let res = unsafe { c_api::ncdirectf_geom(ncd, self, options, &mut geom) };
-        error![res, "NcVisual.ncdirectf_geom()", geom];
+        error![res, "NcVisual.ncdirectf_geom()", geom.into()];
     }
 }

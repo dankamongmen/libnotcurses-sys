@@ -21,7 +21,6 @@ pub(crate) mod reimplemented;
 
 mod input_type;
 pub use input_type::NcInputType;
-
 mod mice_events;
 pub use mice_events::NcMiceEvents;
 
@@ -287,39 +286,6 @@ mod std_impls {
 }
 
 pub(crate) mod c_api {
-    use crate::bindings::ffi;
-
-    /// A bitmask for mice input events.
-    ///
-    /// It's recommended to use [`NcMiceEvents`][crate::NcMiceEvents] instead.
-    pub type NcMiceEvents_u32 = u32;
-
-    /// *Unknown* input type event.
-    pub const NCINTYPE_UNKNOWN: u32 = ffi::ncintype_e_NCTYPE_UNKNOWN;
-
-    /// *Press* input type event.
-    pub const NCINTYPE_PRESS: u32 = ffi::ncintype_e_NCTYPE_PRESS;
-
-    /// *Repeat* input type event.
-    pub const NCINTYPE_REPEAT: u32 = ffi::ncintype_e_NCTYPE_REPEAT;
-
-    /// *Release* input type event.
-    pub const NCINTYPE_RELEASE: u32 = ffi::ncintype_e_NCTYPE_RELEASE;
-
-    // Mice events:
-
-    /// Disables all mice events.
-    pub const NCMICE_NO_EVENTS: NcMiceEvents_u32 = ffi::NCMICE_NO_EVENTS;
-
-    /// Enables mice *move* events
-    pub const NCMICE_MOVE_EVENTS: NcMiceEvents_u32 = ffi::NCMICE_MOVE_EVENT;
-
-    /// Enables mice *button** events
-    pub const NCMICE_BUTTON_EVENTS: NcMiceEvents_u32 = ffi::NCMICE_BUTTON_EVENT;
-
-    /// Enables mice *drag* events
-    pub const NCMICE_DRAG_EVENTS: NcMiceEvents_u32 = ffi::NCMICE_DRAG_EVENT;
-
-    /// Enables all mice events.
-    pub const NCMICE_ALL_EVENTS: NcMiceEvents_u32 = ffi::NCMICE_ALL_EVENTS;
+    pub use super::input_type::c_api::*;
+    pub use super::mice_events::c_api::*;
 }

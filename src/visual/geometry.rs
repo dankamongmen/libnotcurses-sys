@@ -2,8 +2,7 @@
 
 use crate::{NcBlitter, NcDim};
 
-/// Describes all the geometries of an [`NcVisual`], in a more Rust-friendly
-/// struct than [`NcVGeom`] is.
+/// Describes all the geometries of an [`NcVisual`].
 ///
 /// It includes both inherent geometries and those which are dependent upon a
 /// given rendering regime.
@@ -18,8 +17,8 @@ use crate::{NcBlitter, NcDim};
 /// # See also
 ///
 /// - [`NcPixelGeometry`][crate::NcPixelGeometry]
-/// - [`NcVGeom`]
 /// - [`NcVisualOptions`][crate::NcVisualOptions]
+/// - [`NcVGeom`][crate::c_api::NcVGeom]
 ///
 /// [`NcVisual`]: crate::NcVisual
 /// [`ncdirectf_geom`]: crate::NcVisual#method.ncdirectf_geom
@@ -139,6 +138,8 @@ impl NcVisualGeometry {
 /// Each of the following methods return the corresponding [`NcVGeom`] field
 /// with the same name.
 ///
+/// [`NcVGeom`]: crate::c_api::NcVGeom
+///
 impl NcVisualGeometry {
     pub fn pixy(&self) -> NcDim {
         self.pix_yx.unwrap_or((0, 0)).0
@@ -190,112 +191,123 @@ impl NcVisualGeometry {
     }
 }
 
-/// Describes all geometries of an [`NcVisual`]:
-/// those which are inherent, and those dependent upon a given rendering regime.
-///
-/// The inner values are calculated at the time of the call, and a font change
-/// could make all the fields invalid, except for `pixx`/`pixy`.
-///
-/// This type is created by the [`ncvisual_geom`] & [`ncdirectf_geom`] functions.
-///
-/// # See also
-/// - [`NcVisualGeometry`][crate::NcVisualGeometry].
-///
-/// [`NcVisual`]: crate::NcVisual
-/// [`ncdirectf_geom`]: crate::c_api::ncdirectf_geom
-/// [`ncvisual_geom`]: crate::c_api::ncvisual_geom
-pub type NcVGeom = crate::bindings::ffi::ncvgeom;
+mod std_impls {
+    use super::{c_api::NcVGeom, NcBlitter, NcDim, NcVisualGeometry};
 
-/// # Constructors
-impl NcVGeom {
-    /// Returns a new `NcVGeom` with zeroed fields.
-    pub fn new() -> Self {
-        Self {
-            pixy: 0,
-            pixx: 0,
-            cdimy: 0,
-            cdimx: 0,
-            rpixy: 0,
-            rpixx: 0,
-            rcelly: 0,
-            rcellx: 0,
-            scaley: 0,
-            scalex: 0,
-            maxpixely: 0,
-            maxpixelx: 0,
-            begy: 0,
-            begx: 0,
-            leny: 0,
-            lenx: 0,
-            blitter: NcBlitter::Default.into(),
+    impl From<NcVGeom> for NcVisualGeometry {
+        /// Since we don't know the origin of the `NcVGeom` struct, when some fields
+        /// are 0, we can't really know whether that's a valid value or not.
+        /// That should be determined manually by other means.
+        ///
+        /// Specifically [`len_yx`], [`beg_yx`] & [`maxpixel_yx`] wont be `None`
+        /// even if the corresponding `NcVGeom` fields are 0. But they would be
+        /// `None` if the NcVisualGeometry had been created by the
+        ///
+        /// [`len_yx`]: Self#structfield.len_yx
+        /// [`beg_yx`]: Self#structfield.beg_yx
+        /// [`maxpixel_yx`]: Self#structfield.maxpixel_yx
+        /// See: <https://github.com/dankamongmen/notcurses/pull/2320#issuecomment-962170075>
+        fn from(vg: NcVGeom) -> Self {
+            // The following values following values can't have a valid 0 value:
+
+            let (pix_yx, cdim_yx, rpix_yx, rcell_yx, scale_yx, maxpixel_yx);
+
+            if vg.pixy == 0 || vg.pixx == 0 {
+                pix_yx = None;
+            } else {
+                pix_yx = Some((vg.pixy as NcDim, vg.pixx as NcDim));
+            }
+            if vg.cdimy == 0 || vg.cdimx == 0 {
+                cdim_yx = None;
+            } else {
+                cdim_yx = Some((vg.cdimy as NcDim, vg.cdimx as NcDim));
+            }
+            if vg.rpixy == 0 || vg.rpixx == 0 {
+                // MAYBE double CHECK this case
+                rpix_yx = None;
+            } else {
+                rpix_yx = Some((vg.rpixy as NcDim, vg.rpixx as NcDim));
+            }
+            if vg.rcelly == 0 || vg.rcellx == 0 {
+                rcell_yx = None;
+            } else {
+                rcell_yx = Some((vg.rcelly as NcDim, vg.rcellx as NcDim));
+            }
+            if vg.scaley == 0 || vg.scalex == 0 {
+                scale_yx = None;
+            } else {
+                scale_yx = Some((vg.scaley as NcDim, vg.scalex as NcDim));
+            }
+
+            // maxpixel_yx is only defined when using NcBlitter::Pixel
+            if vg.blitter == NcBlitter::Pixel.into() {
+                maxpixel_yx = Some((vg.maxpixely as NcDim, vg.maxpixelx as NcDim));
+            } else {
+                maxpixel_yx = None;
+            }
+
+            NcVisualGeometry {
+                pix_yx,
+                cdim_yx,
+                rpix_yx,
+                rcell_yx,
+                scale_yx,
+                maxpixel_yx,
+
+                len_yx: Some((vg.leny as NcDim, vg.lenx as NcDim)),
+                beg_yx: Some((vg.begy as NcDim, vg.begx as NcDim)),
+
+                blitter: vg.blitter.into(),
+            }
         }
     }
 }
 
-impl From<NcVGeom> for NcVisualGeometry {
-    /// Since we don't know the origin of the `NcVGeom` struct, when some fields
-    /// are 0, we can't really know whether that's a valid value or not.
-    /// That should be determined manually by other means.
+pub(crate) mod c_api {
+    use crate::{bindings::ffi, NcBlitter};
+
+    /// Describes all geometries of an [`NcVisual`].
     ///
-    /// Specifically [`len_yx`], [`beg_yx`] & [`maxpixel_yx`] wont be `None`
-    /// even if the corresponding `NcVGeom` fields are 0. But they would be
-    /// `None` if the NcVisualGeometry had been created by the
+    /// Both those which are inherent,
+    /// and those dependent upon a given rendering regime.
     ///
-    /// [`len_yx`]: Self#structfield.len_yx
-    /// [`beg_yx`]: Self#structfield.beg_yx
-    /// [`maxpixel_yx`]: Self#structfield.maxpixel_yx
-    /// See: <https://github.com/dankamongmen/notcurses/pull/2320#issuecomment-962170075>
-    fn from(vg: NcVGeom) -> Self {
-        // The following values following values can't have a valid 0 value:
+    /// It's recommended to use [`NcVisualGeometry`] instead.
+    ///
+    /// The inner values are calculated at the time of the call, and a font
+    /// change could make all the fields invalid, except for `pixx`/`pixy`.
+    ///
+    /// This type is created by the [`ncvisual_geom`] & [`ncdirectf_geom`]
+    /// functions.
+    ///
+    /// [`NcVisual`]: crate::NcVisual
+    /// [`NcVisualGeometry`]: crate::NcVisualGeometry
+    /// [`ncdirectf_geom`]: crate::c_api::ncdirectf_geom
+    /// [`ncvisual_geom`]: crate::c_api::ncvisual_geom
+    pub type NcVGeom = ffi::ncvgeom;
 
-        let (pix_yx, cdim_yx, rpix_yx, rcell_yx, scale_yx, maxpixel_yx);
-
-        if vg.pixy == 0 || vg.pixx == 0 {
-            pix_yx = None;
-        } else {
-            pix_yx = Some((vg.pixy as NcDim, vg.pixx as NcDim));
-        }
-        if vg.cdimy == 0 || vg.cdimx == 0 {
-            cdim_yx = None;
-        } else {
-            cdim_yx = Some((vg.cdimy as NcDim, vg.cdimx as NcDim));
-        }
-        if vg.rpixy == 0 || vg.rpixx == 0 {
-            // MAYBE double CHECK this case
-            rpix_yx = None;
-        } else {
-            rpix_yx = Some((vg.rpixy as NcDim, vg.rpixx as NcDim));
-        }
-        if vg.rcelly == 0 || vg.rcellx == 0 {
-            rcell_yx = None;
-        } else {
-            rcell_yx = Some((vg.rcelly as NcDim, vg.rcellx as NcDim));
-        }
-        if vg.scaley == 0 || vg.scalex == 0 {
-            scale_yx = None;
-        } else {
-            scale_yx = Some((vg.scaley as NcDim, vg.scalex as NcDim));
-        }
-
-        // maxpixel_yx is only defined when using NcBlitter::Pixel
-        if vg.blitter == NcBlitter::Pixel.into() {
-            maxpixel_yx = Some((vg.maxpixely as NcDim, vg.maxpixelx as NcDim));
-        } else {
-            maxpixel_yx = None;
-        }
-
-        NcVisualGeometry {
-            pix_yx,
-            cdim_yx,
-            rpix_yx,
-            rcell_yx,
-            scale_yx,
-            maxpixel_yx,
-
-            len_yx: Some((vg.leny as NcDim, vg.lenx as NcDim)),
-            beg_yx: Some((vg.begy as NcDim, vg.begx as NcDim)),
-
-            blitter: vg.blitter.into(),
+    /// # Constructors
+    impl NcVGeom {
+        /// Returns a new `NcVGeom` with zeroed fields.
+        pub fn new() -> Self {
+            Self {
+                pixy: 0,
+                pixx: 0,
+                cdimy: 0,
+                cdimx: 0,
+                rpixy: 0,
+                rpixx: 0,
+                rcelly: 0,
+                rcellx: 0,
+                scaley: 0,
+                scalex: 0,
+                maxpixely: 0,
+                maxpixelx: 0,
+                begy: 0,
+                begx: 0,
+                leny: 0,
+                lenx: 0,
+                blitter: NcBlitter::Default.into(),
+            }
         }
     }
 }

@@ -1,7 +1,7 @@
 //!
 
 mod builder;
-pub(crate) mod constants;
+pub(crate) mod c_api;
 pub use builder::NcVisualOptionsBuilder;
 
 use core::ptr::null_mut;

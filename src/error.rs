@@ -53,7 +53,7 @@ mod std_impls {
 }
 
 pub(crate) mod c_api {
-    /// The value used to return errors by the underlying C API.
+    /// The int value used to return errors.
     ///
     /// A value < 0 means error, (usually -1).
     ///

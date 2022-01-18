@@ -142,7 +142,7 @@ pub use stats::NcStats;
 pub use string::NcString;
 pub use style::NcStyle;
 pub use time::NcTime;
-pub use visual::{NcVGeom, NcVisual, NcVisualGeometry, NcVisualOptions, NcVisualOptionsBuilder};
+pub use visual::{NcVisual, NcVisualGeometry, NcVisualOptions, NcVisualOptionsBuilder};
 
 pub mod c_api {
     //! The `C API`, including structs, constants, functions and type aliases.
@@ -195,7 +195,7 @@ pub mod c_api {
     pub use crate::rgb::c_api::*;
     pub use crate::scale::c_api::*;
     pub use crate::style::c_api::*;
-    pub use crate::visual::options::constants::*;
+    pub use crate::visual::c_api::*;
     pub use crate::widgets::menu::constants::*;
     pub use crate::widgets::plot::constants::*;
     pub use crate::widgets::progbar::constants::*;

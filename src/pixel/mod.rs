@@ -79,7 +79,7 @@ mod std_impls {
 ///
 /// If bitmaps are not supported, the fields `max_bitmap_*` will be 0.
 ///
-/// See also [`NcVGeom`][crate::NcVGeom].
+/// See also [`NcVisualGeometry`][crate::NcVisualGeometry].
 #[derive(Clone, Debug)]
 pub struct NcPixelGeometry {
     /// The height in pixels of the display region.
@@ -102,7 +102,7 @@ pub struct NcPixelGeometry {
 }
 
 pub(crate) mod c_api {
-    use crate::bindings::ffi;
+    pub use super::pixel_impl::c_api::*;
 
     /// An ABGR pixel.
     ///
@@ -137,44 +137,4 @@ pub(crate) mod c_api {
     ///
     /// [`NcVisual`]: crate::NcVisual
     pub type NcPixel_u32 = u32;
-
-    /// Pixel blitting implementations, informative only.
-    ///
-    /// It's recommended to use [`NcPixelImpl`][crate::NcPixelImpl] instead.
-    ///
-    /// This is returned by [`notcurses_check_pixel_support`]
-    ///
-    /// # Associated `c_api` constants
-    ///
-    /// - [`NCPIXEL_NONE`]
-    /// - [`NCPIXEL_SIXEL`]
-    /// - [`NCPIXEL_LINUXFB`]
-    /// - [`NCPIXEL_ITERM2`]
-    /// - [`NCPIXEL_KITTY_STATIC`]
-    /// - [`NCPIXEL_KITTY_ANIMATED`]
-    /// - [`NCPIXEL_KITTY_SELFREF`]
-    ///
-    /// [`notcurses_check_pixel_support`]: crate::c_api::notcurses::check_pixel_support
-    pub type NcPixelImpl_u32 = ffi::ncpixelimpl_e;
-
-    /// [`NcPixelImpl_u32`] No pixel support.
-    pub const NCPIXEL_NONE: NcPixelImpl_u32 = ffi::ncpixelimpl_e_NCPIXEL_NONE;
-
-    /// [`NcPixelImpl_u32`] Sixel.
-    pub const NCPIXEL_SIXEL: NcPixelImpl_u32 = ffi::ncpixelimpl_e_NCPIXEL_SIXEL;
-
-    /// [`NcPixelImpl_u32`] Linux framebuffer.
-    pub const NCPIXEL_LINUXFB: NcPixelImpl_u32 = ffi::ncpixelimpl_e_NCPIXEL_LINUXFB;
-
-    /// [`NcPixelImpl_u32`] iTerm2.
-    pub const NCPIXEL_ITERM2: NcPixelImpl_u32 = ffi::ncpixelimpl_e_NCPIXEL_ITERM2;
-
-    /// [`NcPixelImpl_u32`] Kitty prior to C=1 and animation.
-    pub const NCPIXEL_KITTY_STATIC: NcPixelImpl_u32 = ffi::ncpixelimpl_e_NCPIXEL_KITTY_STATIC;
-
-    /// [`NcPixelImpl_u32`] Kitty with animation but not reflexive composition.
-    pub const NCPIXEL_KITTY_ANIMATED: NcPixelImpl_u32 = ffi::ncpixelimpl_e_NCPIXEL_KITTY_ANIMATED;
-
-    /// [`NcPixelImpl_u32`] Kitty with reflexive composition.
-    pub const NCPIXEL_KITTY_SELFREF: NcPixelImpl_u32 = ffi::ncpixelimpl_e_NCPIXEL_KITTY_SELFREF;
 }

@@ -128,7 +128,7 @@ pub(crate) mod c_api {
     /// - [`NCALIGN_BOTTOM`]
     /// - [`NCALIGN_CENTER`]
     /// - [`NCALIGN_UNALIGNED`]
-    pub type NcAlign_u32 = u32; // crate::bindings::ffi::ncalign_e;
+    pub type NcAlign_u32 = crate::bindings::ffi::ncalign_e;
 
     /// [`NcAlign_u32`] Left alignment.
     pub const NCALIGN_LEFT: NcAlign_u32 = ffi::ncalign_e_NCALIGN_LEFT;
