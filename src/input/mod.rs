@@ -16,6 +16,7 @@
 use std::ffi::CStr;
 
 use crate::NcKey;
+use crate::NcKeyMod;
 
 pub(crate) mod reimplemented;
 
@@ -82,7 +83,7 @@ pub type NcInput = crate::bindings::ffi::ncinput;
 /// # Constructors
 impl NcInput {
     /// New empty `NcInput`.
-    pub const fn new_empty() -> NcInput {
+    pub fn new_empty() -> NcInput {
         NcInput {
             id: 0,
             y: 0,
@@ -101,33 +102,31 @@ impl NcInput {
     }
 
     /// New `NcInput`.
-    pub const fn new(id: char) -> NcInput {
-        Self::with_all_args(id, None, None, false, false, false, NcInputType::Unknown)
+    pub fn new(id: char) -> NcInput {
+        Self::with_all_args(id, None, None, NcKeyMod::None, NcInputType::Unknown)
     }
 
     /// New `NcInput` with `alt` key.
-    pub const fn with_alt(id: char) -> NcInput {
-        Self::with_all_args(id, None, None, true, false, false, NcInputType::Unknown)
+    pub fn with_alt(id: char) -> NcInput {
+        Self::with_all_args(id, None, None, NcKeyMod::Alt, NcInputType::Unknown)
     }
 
     /// New `NcInput` with `shift` key.
-    pub const fn with_shift(id: char) -> NcInput {
-        Self::with_all_args(id, None, None, false, true, false, NcInputType::Unknown)
+    pub fn with_shift(id: char) -> NcInput {
+        Self::with_all_args(id, None, None, NcKeyMod::Shift, NcInputType::Unknown)
     }
 
     /// New `NcInput` with `ctrl` key.
-    pub const fn with_ctrl(id: char) -> NcInput {
-        Self::with_all_args(id, None, None, false, false, true, NcInputType::Unknown)
+    pub fn with_ctrl(id: char) -> NcInput {
+        Self::with_all_args(id, None, None, NcKeyMod::Ctrl, NcInputType::Unknown)
     }
 
     /// New `NcInput`, expecting all the arguments (except utf8).
-    pub const fn with_all_args(
+    pub fn with_all_args(
         id: char,
         x: Option<u32>,
         y: Option<u32>,
-        alt: bool,
-        shift: bool,
-        ctrl: bool,
+        modifiers: NcKeyMod,
         evtype: NcInputType,
     ) -> NcInput {
         let (ix, iy);
@@ -147,13 +146,13 @@ impl NcInput {
             y: ix,
             x: iy,
             utf8: [0; 5],
-            alt,
-            shift,
-            ctrl,
+            alt: false,
+            shift: false,
+            ctrl: false,
             evtype: evtype as u32,
             ypx: -1,
             xpx: -1,
-            modifiers: 0,
+            modifiers: modifiers.into(),
         }
     }
 }
