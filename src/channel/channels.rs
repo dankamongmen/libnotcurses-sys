@@ -88,6 +88,7 @@ use crate::{
 /// - [`NcChannels::FG_PALETTE`][NcChannels#associatedconstant.FG_PALETTE]
 /// - [`NcChannels::FG_RGB_MASK`][NcChannels#associatedconstant.FG_RGB_MASK]
 ///
+#[repr(transparent)]
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct NcChannels(pub NcChannels_u64);
 

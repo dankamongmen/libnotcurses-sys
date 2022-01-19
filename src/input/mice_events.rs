@@ -15,6 +15,7 @@
 /// # Used by
 /// - [`Nc.mice_disable`][crate::Nc#method.mice_disable]
 /// - [`Nc.mice_enable`][crate::Nc#method.mice_enable]
+#[repr(transparent)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct NcMiceEvents(pub c_api::NcMiceEvents_u32);
 

@@ -32,6 +32,7 @@ use crate::{
 /// [`NcRgb`]: crate::NcRgb
 /// [`NcRgba`]: crate::NcRgba
 /// [`NcAlpha`]: crate::NcAlpha
+#[repr(transparent)]
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct NcChannel(pub NcChannel_u32);
 

@@ -15,6 +15,7 @@
 /// See also: [`NcRgba`] and [`NcChannel`] types.
 ///
 /// [`NcChannel`]: crate::NcChannel
+#[repr(transparent)]
 #[derive(Clone, Copy, Debug, PartialEq, Default)]
 pub struct NcRgb(pub c_api::NcRgb_u32);
 
@@ -31,6 +32,7 @@ pub struct NcRgb(pub c_api::NcRgb_u32);
 ///
 /// [`NcRgba`]: crate::NcRgba
 /// [`NcChannel`]: crate::NcChannel
+#[repr(transparent)]
 #[derive(Clone, Copy, Debug, PartialEq, Default)]
 pub struct NcRgba(pub c_api::NcRgba_u32);
 

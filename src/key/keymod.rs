@@ -16,6 +16,7 @@
 /// - [`NumLock`][NcKeyMod::NumLock]
 /// - [`None`][NcKeyMod::None]
 /// - [`Mask`][NcKeyMod::Mask]
+#[repr(transparent)]
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct NcKeyMod(pub u32);
 

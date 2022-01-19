@@ -14,6 +14,7 @@
 ///
 /// This is safe, since we needn't convert these synthesized characters
 /// into UTF8 (they would otherwise require more than four bytes).
+#[repr(transparent)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct NcKey(pub u32);
 

@@ -22,6 +22,7 @@
 /// [`NcChannels.reverse`]: crate::NcChannels#method.reverse
 /// [`NcPlane.pulse`]: crate::NcPlane#method.pulse
 /// [`NcPlane`]: crate::NcPlane
+#[repr(transparent)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct NcStyle(pub c_api::NcStyle_u16);
 
