@@ -1,10 +1,24 @@
 //!
 
 /// A bitmask of mice input events.
+///
+/// # Default
+/// *[`NcMiceEvents::None`]
+///
+/// # Flags
+/// - [`Move`][NcMiceEvents::Move]
+/// - [`Button`][NcMiceEvents::Button]
+/// - [`Drag`][NcMiceEvents::Drag]
+/// - [`None`][NcMiceEvents::None]
+/// - [`All`][NcMiceEvents::All]
+///
+/// # Used by
+/// - [`Nc.mice_disable`][crate::Nc#method.mice_disable]
+/// - [`Nc.mice_enable`][crate::Nc#method.mice_enable]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct NcMiceEvents(pub c_api::NcMiceEvents_u32);
 
-/// # Constants
+/// # Flags
 impl NcMiceEvents {
     /// Disables all mice events.
     pub const None: NcMiceEvents = Self(c_api::NCMICE_NO_EVENTS);
@@ -50,7 +64,7 @@ mod std_impl {
     }
     crate::from_primitive![NcMiceEvents, NcMiceEvents_u32];
     crate::unit_impl_from![NcMiceEvents, NcMiceEvents_u32];
-    crate::unit_impl_ops![bitwise; NcMiceEvents];
+    crate::unit_impl_ops![bitwise; NcMiceEvents, NcMiceEvents_u32];
     crate::unit_impl_fmt![bases+display; NcMiceEvents];
 }
 

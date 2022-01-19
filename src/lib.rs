@@ -182,7 +182,7 @@ pub mod c_api {
     pub use crate::direct::c_api::*;
     pub use crate::error::c_api::*;
     pub use crate::input::c_api::*;
-    pub use crate::key::constants::*;
+    pub use crate::key::c_api::*;
     pub use crate::log_level::c_api::*;
     pub use crate::metric::constants::*;
     pub use crate::notcurses::constants::*;

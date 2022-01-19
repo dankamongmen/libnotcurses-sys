@@ -13,6 +13,7 @@
 /// - [`MaskLeft`][NcBoxMask::MaskLeft]
 /// - [`CornerMask`][NcBoxMask::CornerMask]
 /// - [`CornerShift`][NcBoxMask::CornerShift]
+/// - [`None`][NcBoxMask::None]
 ///
 /// # Default
 /// *[`NcBoxMask::None`]
@@ -88,7 +89,7 @@ mod std_impls {
 
     crate::from_primitive![NcBoxMask, NcBoxMask_u32];
     crate::unit_impl_from![NcBoxMask, NcBoxMask_u32];
-    crate::unit_impl_ops![bitwise; NcBoxMask];
+    crate::unit_impl_ops![bitwise; NcBoxMask, NcBoxMask_u32];
     crate::unit_impl_fmt![bases+display; NcBoxMask];
 }
 

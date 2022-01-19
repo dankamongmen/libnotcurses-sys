@@ -1,47 +1,60 @@
 //!
 
-use super::constants;
-use core::ops::{BitAnd, BitOr, Not};
-
-/// [`NcKey`][crate::NcKey] modifiers bitmask.
+/// A bitmask of [`NcKey`][crate::NcKey] modifiers.
+///
+/// # Default
+/// *[`NcKeyMod::None`]
+///
+/// # Flags
+/// - [`Shift`][NcKeyMod::Shift]
+/// - [`Alt`][NcKeyMod::Alt]
+/// - [`Ctrl`][NcKeyMod::Ctrl]
+/// - [`Super`][NcKeyMod::Super]
+/// - [`Hyper`][NcKeyMod::Hyper]
+/// - [`Meta`][NcKeyMod::Meta]
+/// - [`CapsLock`][NcKeyMod::CapsLock]
+/// - [`NumLock`][NcKeyMod::NumLock]
+/// - [`None`][NcKeyMod::None]
+/// - [`Mask`][NcKeyMod::Mask]
 #[derive(Clone, Copy, Debug, PartialEq)]
-pub struct NcKeyMod(u32);
+pub struct NcKeyMod(pub u32);
 
-/// # Constants
+/// # Flags
 impl NcKeyMod {
+    ///
+    pub const Shift: Self = Self(c_api::NCKEY_MOD_SHIFT);
+
+    ///
+    pub const Alt: Self = Self(c_api::NCKEY_MOD_ALT);
+
+    ///
+    pub const Ctrl: Self = Self(c_api::NCKEY_MOD_CTRL);
+
+    ///
+    pub const Super: Self = Self(c_api::NCKEY_MOD_SUPER);
+
+    ///
+    pub const Hyper: Self = Self(c_api::NCKEY_MOD_HYPER);
+
+    ///
+    pub const Meta: Self = Self(c_api::NCKEY_MOD_META);
+
+    ///
+    pub const CapsLock: Self = Self(c_api::NCKEY_MOD_CAPSLOCK);
+
+    ///
+    pub const NumLock: Self = Self(c_api::NCKEY_MOD_NUMLOCK);
+
     /// None of the modifiers (all bits set to 0).
     pub const None: Self = Self(0);
 
     /// The modifier mask (all bits set to 1).
     pub const Mask: Self = Self(u32::MAX);
-
-    ///
-    pub const Shift: Self = Self(constants::NCKEY_MOD_SHIFT);
-
-    ///
-    pub const Alt: Self = Self(constants::NCKEY_MOD_ALT);
-
-    ///
-    pub const Ctrl: Self = Self(constants::NCKEY_MOD_CTRL);
-
-    ///
-    pub const Super: Self = Self(constants::NCKEY_MOD_SUPER);
-
-    ///
-    pub const Hyper: Self = Self(constants::NCKEY_MOD_HYPER);
-
-    ///
-    pub const Meta: Self = Self(constants::NCKEY_MOD_META);
-
-    ///
-    pub const CapsLock: Self = Self(constants::NCKEY_MOD_CAPSLOCK);
-
-    ///
-    pub const NumLock: Self = Self(constants::NCKEY_MOD_NUMLOCK);
 }
 
 /// # Aliases
 impl NcKeyMod {
+    ///
     pub const Control: Self = Self::Ctrl;
 }
 
@@ -93,65 +106,45 @@ impl NcKeyMod {
     }
 }
 
-impl Default for NcKeyMod {
-    fn default() -> Self {
-        Self::None
+mod std_impls {
+    use super::NcKeyMod;
+
+    impl Default for NcKeyMod {
+        fn default() -> Self {
+            Self::None
+        }
     }
+
+    crate::from_primitive![NcKeyMod, u32];
+    crate::unit_impl_from![NcKeyMod, u32];
+
+    crate::unit_impl_ops![bitwise; NcKeyMod, u32];
 }
 
-impl Not for NcKeyMod {
-    type Output = Self;
+pub(crate) mod c_api {
+    use crate::c_api::ffi;
 
-    fn not(self) -> Self::Output {
-        Self(self.0.not())
-    }
-}
+    ///
+    pub const NCKEY_MOD_SHIFT: u32 = ffi::NCKEY_MOD_SHIFT;
 
-impl BitOr for NcKeyMod {
-    type Output = Self;
-    fn bitor(self, rhs: Self) -> Self::Output {
-        Self(self.0 | rhs.0)
-    }
-}
-impl BitOr<u32> for NcKeyMod {
-    type Output = Self;
-    fn bitor(self, rhs: u32) -> Self::Output {
-        Self(self.0 | rhs)
-    }
-}
-impl BitOr<NcKeyMod> for u32 {
-    type Output = NcKeyMod;
-    fn bitor(self, rhs: Self::Output) -> Self::Output {
-        NcKeyMod(self | rhs.0)
-    }
-}
+    ///
+    pub const NCKEY_MOD_ALT: u32 = ffi::NCKEY_MOD_ALT;
 
-impl BitAnd for NcKeyMod {
-    type Output = Self;
-    fn bitand(self, rhs: Self) -> Self::Output {
-        Self(self.0 & rhs.0)
-    }
-}
-impl BitAnd<u32> for NcKeyMod {
-    type Output = Self;
-    fn bitand(self, rhs: u32) -> Self::Output {
-        Self(self.0 & rhs)
-    }
-}
-impl BitAnd<NcKeyMod> for u32 {
-    type Output = NcKeyMod;
-    fn bitand(self, rhs: Self::Output) -> Self::Output {
-        NcKeyMod(self & rhs.0)
-    }
-}
+    ///
+    pub const NCKEY_MOD_CTRL: u32 = ffi::NCKEY_MOD_CTRL;
 
-impl From<NcKeyMod> for u32 {
-    fn from(keymod: NcKeyMod) -> Self {
-        keymod.0
-    }
-}
-impl From<u32> for NcKeyMod {
-    fn from(value: u32) -> Self {
-        Self(value)
-    }
+    ///
+    pub const NCKEY_MOD_SUPER: u32 = ffi::NCKEY_MOD_SUPER;
+
+    ///
+    pub const NCKEY_MOD_HYPER: u32 = ffi::NCKEY_MOD_HYPER;
+
+    ///
+    pub const NCKEY_MOD_META: u32 = ffi::NCKEY_MOD_META;
+
+    ///
+    pub const NCKEY_MOD_CAPSLOCK: u32 = ffi::NCKEY_MOD_CAPSLOCK;
+
+    ///
+    pub const NCKEY_MOD_NUMLOCK: u32 = ffi::NCKEY_MOD_NUMLOCK;
 }

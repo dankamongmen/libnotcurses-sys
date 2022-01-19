@@ -163,7 +163,7 @@ mod std_impls {
 
     crate::from_primitive![NcDirectFlags, NcDirectFlags_u64];
     crate::unit_impl_from![NcDirectFlags, NcDirectFlags_u64];
-    crate::unit_impl_ops![bitwise; NcDirectFlags];
+    crate::unit_impl_ops![bitwise; NcDirectFlags, NcDirectFlags_u64];
     crate::unit_impl_fmt![bases+display; NcDirectFlags];
 }
 

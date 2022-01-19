@@ -17,14 +17,15 @@
 /// # Notes
 /// - if you want reverse video, try [`NcChannels.reverse`]
 /// - if you want blink, try [`NcPlane.pulse`].
-/// - if you want protection, put things on a different `NcPlane`.
+/// - if you want protection, put things on a different [`NcPlane`].
 ///
 /// [`NcChannels.reverse`]: crate::NcChannels#method.reverse
 /// [`NcPlane.pulse`]: crate::NcPlane#method.pulse
+/// [`NcPlane`]: crate::NcPlane
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct NcStyle(pub c_api::NcStyle_u16);
 
-/// # Constants
+/// # Flags
 impl NcStyle {
     /// Bold.
     pub const Bold: Self = Self(c_api::NCSTYLE_BOLD);
@@ -68,7 +69,7 @@ mod std_impls {
         }
     }
 
-    crate::unit_impl_ops![bitwise; NcStyle];
+    crate::unit_impl_ops![bitwise; NcStyle, NcStyle_u16];
     crate::unit_impl_fmt![bases+display; NcStyle];
 }
 

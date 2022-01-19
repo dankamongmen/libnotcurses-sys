@@ -204,7 +204,7 @@ impl Nc {
         Some(rstring_free![egc])
     }
 
-    /// Returns [`NcCapabilities`].
+    /// Returns the detected capabilities of the current terminal.
     ///
     /// *C style function: [notcurses_capabilities()][c_api::notcurses_capabilities].*
     pub fn capabilities(&self) -> NcCapabilities {
