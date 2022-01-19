@@ -19,7 +19,7 @@
 #[derive(Clone, Copy, Debug, PartialEq, Default)]
 pub struct NcRgb(pub c_api::NcRgb_u32);
 
-/// 32 bits broken into 3x RGB components plus one alpha component.
+/// 32 bits broken into 3x RGB components + alpha component.
 ///
 /// ## Diagram
 ///
