@@ -1,19 +1,12 @@
 //!
 
-/// Synthesized input events (any input event we can report that isn't
-/// representative of some Unicode).
+/// A synthesized input event.
 ///
-/// This covers both keyboard and mouse events, as well as signals and even
-/// window events.
+/// This means any input event we can report that isn't representative
+/// of some Unicode. This covers both keyboard and mouse events, as well as
+/// signals and even window events.
 ///
-/// Rather than using one of the Private Use Areas of Unicode, we use the area
-/// beyond the 17 65536-entry Planes (1114112).
-///
-/// We round up to 5000 so that it's trivial to identify synthesized characters.
-/// based on their numeric definition here.
-///
-/// This is safe, since we needn't convert these synthesized characters
-/// into UTF8 (they would otherwise require more than four bytes).
+/// See also [`PRETERUNICODEBASE`][c_api::PRETERUNICODEBASE].
 #[repr(transparent)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct NcKey(pub u32);
@@ -382,12 +375,12 @@ impl NcKey {
 }
 
 pub(crate) mod c_api {
+    /// Offset for `NCKEY_*` values.
+    ///
     /// Rather than using one of the Private Use Areas of Unicode, we use the
     /// area beyond the 17 × 65_536-entry Planes (1_114_112).
-    ///
     /// We round up to 5_000 so that it's trivial to identify synthesized
     /// characters based on their numeric definition here.
-    ///
     /// This is safe, since we needn't convert these synthesized characters
     /// into UTF8 (they would otherwise require more than four bytes).
     pub const PRETERUNICODEBASE: u32 = 1_115_000;

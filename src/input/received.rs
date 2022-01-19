@@ -6,19 +6,18 @@ use crate::NcKey;
 ///
 /// # Default
 /// *[`NcReceived::NoInput`]
-#[non_exhaustive]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum NcReceived {
-    /// A valid [`char`] was received.
-    Char(char),
-    /// A synthesized event was received.
-    Event(NcKey),
     /// No input was received
     ///
     /// A `0x00` (NUL) was received, meaning no input.
     NoInput,
-    /// Something other was received.
-    Other(u32),
+
+    /// A synthesized event was received.
+    Event(NcKey),
+
+    /// A valid [`char`] was received.
+    Char(char),
 }
 
 mod std_impls {
@@ -59,7 +58,6 @@ mod std_impls {
                 Char(c) => c.into(),
                 Event(e) => e.into(),
                 NoInput => 0,
-                Other(o) => o,
             }
         }
     }
@@ -74,7 +72,7 @@ mod std_impls {
             } else if let Some(c) = core::char::from_u32(num) {
                 Char(c)
             } else {
-                Other(num)
+                unreachable!("NcReceived::from({}) not a char", num);
             }
         }
     }

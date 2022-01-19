@@ -46,15 +46,7 @@ fn main() -> NcResult<()> {
                     _ => (),
                 }
             }
-            NcReceived::Other(o) => {
-                putstrln!(
-                    splane,
-                    "other (this shouldn't happen): {0:?} \n{1:?}\n",
-                    o,
-                    input
-                )?;
-            }
-            _ => (),
+            NcReceived::NoInput => (),
         }
     }
 
