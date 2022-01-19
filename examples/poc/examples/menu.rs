@@ -122,7 +122,7 @@ fn run_menu(nc: &mut Nc, menu: &mut NcMenu) -> NcResult<()> {
                     _ => (),
                 },
                 NcReceived::Event(ev) => match ev {
-                    NcKey::ENTER => {
+                    NcKey::Enter => {
                         if let Some(selection) = menu.selected(Some(&mut ni)) {
                             match selection.as_ref() {
                                 "Quit" => {

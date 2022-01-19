@@ -68,7 +68,7 @@ fn main() -> NcResult<()> {
                 }
             }
             NcReceived::Event(ev) => match ev {
-                NcKey::ENTER => break,
+                NcKey::Enter => break,
                 _ => (),
             },
             _ => (),

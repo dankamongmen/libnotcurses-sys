@@ -148,7 +148,7 @@ fn run_selector(nc: &mut Nc, selector: &mut NcSelector) -> NcResult<String> {
                     }
                 }
                 NcReceived::Event(ev) => match ev {
-                    NcKey::ENTER => {
+                    NcKey::Enter => {
                         return selector.selected().ok_or_else(|| NcError::new());
                     }
                     _ => (),

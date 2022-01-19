@@ -8,12 +8,12 @@ use crate::{
 /// Is the event a synthesized mouse event?
 #[inline]
 pub const fn nckey_mouse_p(r: u32) -> bool {
-    r >= NcKey::MOTION.0 && r <= NcKey::BUTTON11.0
+    r >= NcKey::Motion.0 && r <= NcKey::Button11.0
 }
 
 /// Is this `u32` number a synthesized event?
 ///
-/// Includes the 300 numbers from [`NcKey::PRETERUNICODEBASE`] on up and `ESC`.
+/// Includes the 300 numbers from [`PRETERUNICODEBASE`] on up and `ESC`.
 pub const fn nckey_synthesized_p(num: u32) -> bool {
     num >= PRETERUNICODEBASE && num <= NCKEY_EOF
 }
