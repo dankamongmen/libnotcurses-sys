@@ -15,7 +15,6 @@
 
 use std::ffi::CStr;
 
-use crate::NcKey;
 use crate::NcKeyMod;
 
 pub(crate) mod reimplemented;
@@ -24,38 +23,8 @@ mod input_type;
 pub use input_type::NcInputType;
 mod mice_events;
 pub use mice_events::NcMiceEvents;
-
-/// A received character or event.
-#[non_exhaustive]
-#[derive(Debug, Clone, Copy, PartialEq)]
-pub enum NcReceived {
-    /// A valid [`char`] was received.
-    Char(char),
-    /// A synthesized event was received.
-    Event(NcKey),
-    /// No input was received
-    ///
-    /// A `0x00` (NUL) was received, meaning no input.
-    NoInput,
-    /// Something other was received.
-    Other(u32),
-}
-
-/// # Methods
-impl NcReceived {
-    /// New `NcReceived`, from a `u32` number.
-    pub fn new(num: u32) -> Self {
-        if num == 0 {
-            Self::NoInput
-        } else if NcKey::is(num) {
-            Self::Event(NcKey::new(num).unwrap())
-        } else if let Some(c) = core::char::from_u32(num) {
-            Self::Char(c)
-        } else {
-            Self::Other(num)
-        }
-    }
-}
+mod received;
+pub use received::NcReceived;
 
 /// Reads and decodes input events.
 ///
@@ -243,44 +212,6 @@ impl NcInput {
     /// *C style function: [ncinput_equal_p()][crate::c_api::ncinput_equal_p].*
     pub fn equal_p(&self, other: &NcInput) -> bool {
         crate::c_api::ncinput_equal_p(self, other)
-    }
-}
-
-mod std_impls {
-    use super::{NcInput, NcReceived};
-
-    impl From<NcInput> for NcReceived {
-        fn from(i: NcInput) -> Self {
-            Self::new(i.id)
-        }
-    }
-    impl From<&NcInput> for NcReceived {
-        fn from(i: &NcInput) -> Self {
-            Self::new(i.id)
-        }
-    }
-    impl From<&mut NcInput> for NcReceived {
-        fn from(i: &mut NcInput) -> Self {
-            Self::new(i.id)
-        }
-    }
-
-    impl PartialEq for NcInput {
-        fn eq(&self, other: &Self) -> bool {
-            self.equal_p(other)
-        }
-    }
-
-    impl From<NcReceived> for u32 {
-        fn from(r: NcReceived) -> Self {
-            use NcReceived::*;
-            match r {
-                Char(c) => c.into(),
-                Event(e) => e.into(),
-                NoInput => 0,
-                Other(o) => o,
-            }
-        }
     }
 }
 

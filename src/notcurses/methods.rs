@@ -467,7 +467,7 @@ impl Nc {
         if res == c_api::NCRESULT_ERR as u32 {
             Err(NcError::new_msg(&format!["Nc.get({:?})", time]))
         } else {
-            Ok(NcReceived::new(res))
+            Ok(NcReceived::from(res))
         }
     }
 
@@ -483,7 +483,7 @@ impl Nc {
         if res == c_api::NCRESULT_ERR {
             Err(NcError::new_msg("Nc.get_blocking()"))
         } else {
-            Ok(NcReceived::new(res as u32))
+            Ok(NcReceived::from(res as u32))
         }
     }
 
@@ -499,7 +499,7 @@ impl Nc {
         if res == c_api::NCRESULT_ERR {
             Err(NcError::new_msg("Nc.get_nblock()"))
         } else {
-            Ok(NcReceived::new(res as u32))
+            Ok(NcReceived::from(res as u32))
         }
     }
 
