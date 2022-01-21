@@ -3,13 +3,13 @@
 extern crate bindgen;
 extern crate pkg_config;
 
-mod nc_csource;
+mod csource;
 
 /// The notcurses version that we are aiming to support in the current release.
-const NC_VERSION: &str = "3.0.3";
+const NC_VERSION: &str = "3.0.5";
 
 fn main() {
-    let nc_src = nc_csource::NcCSource::new(NC_VERSION);
+    let nc_src = csource::NcCSource::new(NC_VERSION);
 
     // vendor the C source code?
     if cfg!(feature = "vendor_csource") {

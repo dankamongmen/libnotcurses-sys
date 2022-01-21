@@ -6,12 +6,8 @@
 `libnotcurses-sys` is a low-level Rust wrapper for the
 [notcurses C library](https://www.github.com/dankamongmen/notcurses/)
 
-It is built with several layers of zero-overhead abstractions
-over the C functions and pointers, accessed through FFI.
 
 ```rust
-// hello world example
-
 use libnotcurses_sys::*;
 
 fn main() -> NcResult<()> {
@@ -25,7 +21,7 @@ fn main() -> NcResult<()> {
 
 ## Versioning
 
-Current version `3.1.2` is compatible with notcurses `3.0.3`.
+Current version `3.2.0` is compatible with notcurses `3.0.5`.
 
-Current major version `3` is considered a development version, same as if it
-were semver major version `0`.
+*Current major version `3` is considered a development version, same as if it
+were semver major version `0`.*
