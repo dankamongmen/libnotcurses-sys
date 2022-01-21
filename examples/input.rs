@@ -6,7 +6,7 @@ use crate::*;
 use libnotcurses_sys::*;
 
 fn main() -> NcResult<()> {
-    let nc = unsafe { Nc::with_flags(NcOptions::SUPPRESS_BANNERS)? };
+    let nc = unsafe { Nc::with_flags(NcFlags::SuppressBanners)? };
     let splane = unsafe { nc.stdplane() };
     splane.set_scrolling(true);
 

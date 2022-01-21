@@ -125,7 +125,7 @@ pub use file::NcFile;
 pub use input::{NcInput, NcInputType, NcMiceEvents, NcReceived};
 pub use key::{NcKey, NcKeyMod};
 pub use log_level::NcLogLevel;
-pub use notcurses::{Nc, NcOptions};
+pub use notcurses::{Nc, NcFlags, NcOptions};
 pub use palette::{NcPalette, NcPaletteIndex};
 pub use pixel::{NcPixel, NcPixelGeometry, NcPixelImpl};
 pub use plane::{NcPlane, NcPlaneOptions, NcPlaneOptionsBuilder};
