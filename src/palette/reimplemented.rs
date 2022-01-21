@@ -5,6 +5,15 @@ use crate::{
     NcPalette, NcPaletteIndex,
 };
 
+/// Returns the [`NcRgb_u32`] value from an [`NcChannel_u32`] entry inside
+/// an [`NcPalette`].
+///
+/// *Method: NcPalette.[get()][NcPalette#method.get].*
+#[inline]
+pub fn ncpalette_get(palette: &NcPalette, index: NcPaletteIndex) -> NcRgb_u32 {
+    c_api::ncchannel_rgb(palette.chans[index as usize])
+}
+
 /// Extracts the RGB components from an [`NcChannel_u32`] entry inside
 /// an [`NcPalette`], and returns the `NcChannel_u32`.
 ///
@@ -20,7 +29,7 @@ pub fn ncpalette_get_rgb8(
     c_api::ncchannel_rgb8(palette.chans[index as usize], red, green, blue)
 }
 
-/// Sets the [`NcRgb_u32`] value of the [`NcChannel_u32`] entry inside an
+/// Sets the [`NcRgb_u32`] value of an [`NcChannel_u32`] entry inside an
 /// [`NcPalette`].
 ///
 /// *Method: NcPalette.[set()][NcPalette#method.set].*
@@ -29,7 +38,7 @@ pub fn ncpalette_set(palette: &mut NcPalette, index: NcPaletteIndex, rgb: NcRgb_
     c_api::ncchannel_set(&mut palette.chans[index as usize], rgb);
 }
 
-/// Sets the RGB components of the [`NcChannel_u32`] entry inside an
+/// Sets the RGB components of an [`NcChannel_u32`] entry inside an
 /// [`NcPalette`].
 ///
 /// *Method: NcPalette.[set_rgb8()][NcPalette#method.set_rgb8].*
