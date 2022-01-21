@@ -108,9 +108,6 @@ pub mod widgets;
 
 // wrapper types and traits
 //
-// `*Api` traits allows using methods and associated constants over type aliased
-// primitives, like in the case of `NcAlign`, for example.
-//
 // Note that the names of the implemented traits can't coincide for type aliases
 // with the same underlying primitive, like in the case of `NcAlign` & `NcScale`
 // in which case are both aliases over `u32`.
@@ -133,7 +130,7 @@ pub use palette::{NcPalette, NcPaletteIndex};
 pub use pixel::{NcPixel, NcPixelGeometry, NcPixelImpl};
 pub use plane::{NcPlane, NcPlaneOptions, NcPlaneOptionsBuilder};
 pub use r#box::NcBoxMask;
-pub use resizecb::{NcResizeCb, NcResizeCbApi, NcResizeCbUnsafe};
+pub use resizecb::NcResizeCb;
 pub use rgb::{NcRgb, NcRgba};
 pub use scale::NcScale;
 pub use stats::NcStats;
@@ -172,7 +169,6 @@ pub mod c_api {
     pub use crate::palette::reimplemented::*;
     pub use crate::pixel::reimplemented::*;
     pub use crate::plane::reimplemented::*;
-    pub use crate::resizecb::reimplemented::*;
 
     // public re-export of c_api constants & types:
     pub use crate::align::c_api::*;
@@ -185,11 +181,12 @@ pub mod c_api {
     pub use crate::key::c_api::*;
     pub use crate::log_level::c_api::*;
     pub use crate::metric::constants::*;
-    pub use crate::notcurses::constants::*;
+    pub use crate::notcurses::c_api::*;
     pub use crate::palette::constants::*;
     pub use crate::pixel::c_api::*;
     pub use crate::plane::options::constants::*;
     pub use crate::r#box::c_api::*;
+    pub use crate::resizecb::c_api::*;
     pub use crate::rgb::c_api::*;
     pub use crate::scale::c_api::*;
     pub use crate::style::c_api::*;
