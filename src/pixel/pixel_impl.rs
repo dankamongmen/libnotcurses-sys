@@ -93,7 +93,7 @@ mod std_impls {
 }
 
 pub(crate) mod c_api {
-    use crate::bindings::ffi;
+    use crate::c_api::ffi;
 
     /// Pixel blitting implementations, informative only.
     ///

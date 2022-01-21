@@ -24,6 +24,8 @@
 //W+ ncpalette_set
 //W+ ncpalette_set_rgb8
 
+use crate::c_api::ffi;
+
 mod methods;
 pub(crate) mod reimplemented;
 pub use methods::*;
@@ -38,17 +40,19 @@ pub use methods::*;
 /// terminal. If you can limit yourself to 256 colors, that's probably best.
 ///
 /// `type in C: ncncpalette (struct)`
-pub type NcPalette = crate::bindings::ffi::ncpalette;
+pub type NcPalette = ffi::ncpalette;
 
 /// Used for indexing into a [`NcPalette`] (alias of `u8`).
 pub type NcPaletteIndex = u8;
 
 impl NcPalette {
     /// The supported palette-indexed colors number is up to 8 bits.
-    pub const SIZE: u32 = constants::NCPALETTE_SIZE;
+    pub const SIZE: u32 = c_api::NCPALETTE_SIZE;
 }
 
-pub(crate) mod constants {
+pub(crate) mod c_api {
+    use super::ffi;
+
     /// The supported palette-indexed colors number is up to 8 bits.
-    pub const NCPALETTE_SIZE: u32 = crate::bindings::ffi::NCPALETTESIZE;
+    pub const NCPALETTE_SIZE: u32 = ffi::NCPALETTESIZE;
 }

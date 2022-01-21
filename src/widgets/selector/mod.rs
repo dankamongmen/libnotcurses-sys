@@ -17,16 +17,18 @@
 //!
 //! At all times, exactly one item is selected.
 
+use crate::c_api::ffi;
+
 mod builder;
 mod methods;
 
 pub use builder::NcSelectorBuilder;
 
 /// High-level widget for selecting one item from a set.
-pub type NcSelector = crate::bindings::ffi::ncselector;
+pub type NcSelector = ffi::ncselector;
 
 /// Options structure for [`NcSelector`].
-pub type NcSelectorOptions = crate::bindings::ffi::ncselector_options;
+pub type NcSelectorOptions = ffi::ncselector_options;
 
 /// Item structure for [`NcSelector`].
-pub type NcSelectorItem = crate::bindings::ffi::ncselector_item;
+pub type NcSelectorItem = ffi::ncselector_item;

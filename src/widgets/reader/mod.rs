@@ -14,6 +14,8 @@
 //  ncreader_plane
 //  ncreader_write_egc
 
+use crate::c_api::ffi;
+
 mod methods;
 
 /// Provides a freeform input in a (possibly multiline) region
@@ -25,39 +27,41 @@ mod methods;
 /// error (otherwise [`destroy`][NcReader#method.destroy] destroys the plane).
 ///
 /// `type in C: ncreader (struct)`
-pub type NcReader = crate::bindings::ffi::ncreader;
+pub type NcReader = ffi::ncreader;
 
 /// Options struct for [`NcReader`]
 ///
 /// `type in C: ncreader_options (struct)`
-pub type NcReaderOptions = crate::bindings::ffi::ncreader_options;
+pub type NcReaderOptions = ffi::ncreader_options;
 
 impl NcReaderOptions {
     /// Makes the terminal cursor visible across the lifetime of the ncreader, and
     /// have the ncreader manage the cursor's placement.
-    pub const CURSOR: u32 = constants::NCREADER_OPTION_CURSOR;
+    pub const CURSOR: u32 = c_api::NCREADER_OPTION_CURSOR;
 
     /// Enables horizontal scrolling. Virtual lines can then grow arbitrarily long.
-    pub const HORSCROLL: u32 = constants::NCREADER_OPTION_HORSCROLL;
+    pub const HORSCROLL: u32 = c_api::NCREADER_OPTION_HORSCROLL;
 
     /// Disables all editing shortcuts. By default, emacs-style keys are available.
-    pub const NOCMDKEYS: u32 = constants::NCREADER_OPTION_NOCMDKEYS;
+    pub const NOCMDKEYS: u32 = c_api::NCREADER_OPTION_NOCMDKEYS;
 
     /// Enables vertical scrolling. You can then use arbitrarily many virtual lines.
-    pub const VERSCROLL: u32 = constants::NCREADER_OPTION_VERSCROLL;
+    pub const VERSCROLL: u32 = c_api::NCREADER_OPTION_VERSCROLL;
 }
 
-pub(crate) mod constants {
+pub(crate) mod c_api {
+    use super::ffi;
+
     /// Makes the terminal cursor visible across the lifetime of the ncreader, and
     /// have the ncreader manage the cursor's placement.
-    pub const NCREADER_OPTION_CURSOR: u32 = crate::bindings::ffi::NCREADER_OPTION_CURSOR;
+    pub const NCREADER_OPTION_CURSOR: u32 = ffi::NCREADER_OPTION_CURSOR;
 
     /// Enables horizontal scrolling. Virtual lines can then grow arbitrarily long.
-    pub const NCREADER_OPTION_HORSCROLL: u32 = crate::bindings::ffi::NCREADER_OPTION_HORSCROLL;
+    pub const NCREADER_OPTION_HORSCROLL: u32 = ffi::NCREADER_OPTION_HORSCROLL;
 
     /// Disables all editing shortcuts. By default, emacs-style keys are available.
-    pub const NCREADER_OPTION_NOCMDKEYS: u32 = crate::bindings::ffi::NCREADER_OPTION_NOCMDKEYS;
+    pub const NCREADER_OPTION_NOCMDKEYS: u32 = ffi::NCREADER_OPTION_NOCMDKEYS;
 
     /// Enables vertical scrolling. You can then use arbitrarily many virtual lines.
-    pub const NCREADER_OPTION_VERSCROLL: u32 = crate::bindings::ffi::NCREADER_OPTION_VERSCROLL;
+    pub const NCREADER_OPTION_VERSCROLL: u32 = ffi::NCREADER_OPTION_VERSCROLL;
 }

@@ -55,7 +55,7 @@ pub use options::{NcVisualOptions, NcVisualOptionsBuilder};
 /// - [`geom`][NcVisual#method.geom]
 /// - [`render`][NcVisual#method.render]
 /// - [`simple_streamer`][NcVisual#method.simple_streamer]
-pub type NcVisual = crate::bindings::ffi::ncvisual;
+pub type NcVisual = crate::c_api::ffi::ncvisual;
 
 pub(crate) mod c_api {
     pub use super::geometry::c_api::*;

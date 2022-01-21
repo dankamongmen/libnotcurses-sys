@@ -1,6 +1,6 @@
 //!
 
-use crate::{bindings::ffi, NcVisualOptions};
+use crate::{c_api::ffi, NcVisualOptions};
 
 /// Treats as transparent the color specified in the `transcolor` field.
 pub const NCVISUAL_OPTION_ADDALPHA: u32 = ffi::NCVISUAL_OPTION_ADDALPHA;

@@ -19,6 +19,8 @@
 //W ncmenu_selected
 //W ncmenu_unroll
 
+use crate::c_api::ffi;
+
 mod methods;
 
 /// menus on the top or bottom rows
@@ -40,32 +42,33 @@ mod methods;
 ///     removes a menu bar, and frees all associated resources.
 ///
 /// `type in C: ncmenu (struct)`
-pub type NcMenu = crate::bindings::ffi::ncmenu;
+pub type NcMenu = ffi::ncmenu;
 
 /// Options struct for [`NcMenu`].
-pub type NcMenuOptions = crate::bindings::ffi::ncmenu_options;
+pub type NcMenuOptions = ffi::ncmenu_options;
 
 /// Item for [`NcMenu`].
-pub type NcMenuItem = crate::bindings::ffi::ncmenu_item;
+pub type NcMenuItem = ffi::ncmenu_item;
 
 /// Section for [`NcMenu`].
-pub type NcMenuSection = crate::bindings::ffi::ncmenu_section;
+pub type NcMenuSection = ffi::ncmenu_section;
 
 impl NcMenuOptions {
     /// [`NcMenuOptions`] flag: Bottom row (as opposed to top row).
-    pub const BOTTOM: u64 = constants::NCMENU_OPTION_BOTTOM as u64;
+    pub const BOTTOM: u64 = c_api::NCMENU_OPTION_BOTTOM as u64;
 
     /// [`NcMenuOptions`] flag: Hides the menu when not unrolled.
-    pub const HIDING: u64 = constants::NCMENU_OPTION_HIDING as u64;
+    pub const HIDING: u64 = c_api::NCMENU_OPTION_HIDING as u64;
 }
 
-pub(crate) mod constants {
+pub(crate) mod c_api {
+    use super::ffi;
     #[allow(unused_imports)]
     use super::NcMenuOptions;
 
     /// [`NcMenuOptions`] flag: Bottom row (as opposed to top row).
-    pub const NCMENU_OPTION_BOTTOM: u64 = crate::bindings::ffi::NCMENU_OPTION_BOTTOM as u64;
+    pub const NCMENU_OPTION_BOTTOM: u64 = ffi::NCMENU_OPTION_BOTTOM as u64;
 
     /// [`NcMenuOptions`] flag: Hides the menu when not unrolled.
-    pub const NCMENU_OPTION_HIDING: u64 = crate::bindings::ffi::NCMENU_OPTION_HIDING as u64;
+    pub const NCMENU_OPTION_HIDING: u64 = ffi::NCMENU_OPTION_HIDING as u64;
 }

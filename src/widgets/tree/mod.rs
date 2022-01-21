@@ -20,7 +20,7 @@
 use cty::c_int;
 use std::ffi::c_void;
 
-use crate::NcPlane;
+use crate::{c_api::ffi, NcPlane};
 
 mod methods;
 
@@ -41,15 +41,15 @@ mod methods;
 /// elements to come and go across the lifetime of the widget.
 ///
 /// `type in C: nctree (struct)`
-pub type NcTree = crate::bindings::ffi::nctree;
+pub type NcTree = ffi::nctree;
 
 /// Item for [`NcTree`].
 ///
 /// each item has a curry, and zero or more subitems.
-pub type NcTreeItem = crate::bindings::ffi::nctree_item;
+pub type NcTreeItem = ffi::nctree_item;
 
 /// Options struct for [`NcTree`].
-pub type NcTreeOptions = crate::bindings::ffi::nctree_options;
+pub type NcTreeOptions = ffi::nctree_options;
 
 // e.g.:
 //

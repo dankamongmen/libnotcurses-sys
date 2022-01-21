@@ -264,7 +264,7 @@ mod std_impls {
 }
 
 pub(crate) mod c_api {
-    use crate::{bindings::ffi, NcBlitter};
+    use crate::{c_api::ffi, NcBlitter};
 
     /// Describes all geometries of an [`NcVisual`].
     ///

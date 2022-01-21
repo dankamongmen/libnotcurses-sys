@@ -11,6 +11,8 @@
 //W ncprogbar_progress,
 //W ncprogbar_set_progress,
 
+use crate::c_api::ffi;
+
 mod methods;
 
 /// Progress bars. They proceed linearly in any of four directions.
@@ -32,20 +34,23 @@ mod methods;
 ///
 /// `type in C: ncprogbar (struct)`
 ///
-pub type NcProgBar = crate::bindings::ffi::ncprogbar;
+pub type NcProgBar = ffi::ncprogbar;
 
 /// Options struct for [`NcProgBar`]
 ///
 /// `type in C: ncprogbar_options (struct)`
 ///
-pub type NcProgBarOptions = crate::bindings::ffi::ncprogbar_options;
+pub type NcProgBarOptions = ffi::ncprogbar_options;
 
 impl NcProgBarOptions {
     /// proceeds left/down
-    pub const RETROGRADE: u32 = constants::NCPROGBAR_OPTION_RETROGRADE;
+    pub const RETROGRADE: u32 = c_api::NCPROGBAR_OPTION_RETROGRADE;
 }
 
-pub(crate) mod constants {
-    /// proceeds left/down
-    pub const NCPROGBAR_OPTION_RETROGRADE: u32 = crate::bindings::ffi::NCPROGBAR_OPTION_RETROGRADE;
+pub(crate) mod c_api {
+    use super::ffi;
+
+    /// [`NcProgBarOptions`][super::NcProgBarOptions] flag
+    /// to indicate proceeding left/down.
+    pub const NCPROGBAR_OPTION_RETROGRADE: u32 = ffi::NCPROGBAR_OPTION_RETROGRADE;
 }

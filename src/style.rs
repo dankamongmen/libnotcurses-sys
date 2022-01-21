@@ -107,7 +107,7 @@ impl NcStyle {
 }
 
 pub(crate) mod c_api {
-    use crate::bindings::ffi;
+    use crate::c_api::ffi;
 
     /// Styling attribute flags.
     ///

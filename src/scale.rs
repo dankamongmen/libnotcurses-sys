@@ -103,7 +103,7 @@ mod std_impls {
 }
 
 pub(crate) mod c_api {
-    use crate::bindings::ffi;
+    use crate::c_api::ffi;
 
     /// Indicates how to scale an [`NcVisual`][crate::NcVisual] during rendering.
     ///
@@ -131,7 +131,7 @@ pub(crate) mod c_api {
     /// [`NcVisual.resize`][crate::NcVisual#method.resize] and
     /// [`NcVisual.resize_noninterpolative`][crate::NcVisual#method.resize_noninterpolative]
     /// are changing that original frame.
-    pub type NcScale_u32 = crate::bindings::ffi::ncscale_e;
+    pub type NcScale_u32 = ffi::ncscale_e;
 
     /// [`NcScale_u32`] mode that maintains the original size.
     pub const NCSCALE_NONE: NcScale_u32 = ffi::ncscale_e_NCSCALE_NONE;

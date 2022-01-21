@@ -95,6 +95,8 @@ mod std_impls {
 }
 
 pub(crate) mod c_api {
+    use crate::c_api::ffi;
+
     /// Controls the drawing of borders, gradients and corners.
     ///
     /// It's recommended to use [`NcBoxMask`][crate::NcBoxMask] instead.
@@ -137,28 +139,28 @@ pub(crate) mod c_api {
     pub type NcBoxMask_u32 = u32;
 
     /// [`NcBoxMask_u32`] top gradient mask.
-    pub const NCBOXGRAD_TOP: NcBoxMask_u32 = crate::bindings::ffi::NCBOXGRAD_TOP;
+    pub const NCBOXGRAD_TOP: NcBoxMask_u32 = ffi::NCBOXGRAD_TOP;
 
     /// [`NcBoxMask_u32`] right gradient mask.
-    pub const NCBOXGRAD_RIGHT: NcBoxMask_u32 = crate::bindings::ffi::NCBOXGRAD_RIGHT;
+    pub const NCBOXGRAD_RIGHT: NcBoxMask_u32 = ffi::NCBOXGRAD_RIGHT;
 
     /// [`NcBoxMask_u32`] bottom gradient mask.
-    pub const NCBOXGRAD_BOTTOM: NcBoxMask_u32 = crate::bindings::ffi::NCBOXGRAD_BOTTOM;
+    pub const NCBOXGRAD_BOTTOM: NcBoxMask_u32 = ffi::NCBOXGRAD_BOTTOM;
 
     /// [`NcBoxMask_u32`] left gradient mask.
-    pub const NCBOXGRAD_LEFT: NcBoxMask_u32 = crate::bindings::ffi::NCBOXGRAD_LEFT;
+    pub const NCBOXGRAD_LEFT: NcBoxMask_u32 = ffi::NCBOXGRAD_LEFT;
 
     /// [`NcBoxMask_u32`] top border mask.
-    pub const NCBOXMASK_TOP: NcBoxMask_u32 = crate::bindings::ffi::NCBOXMASK_TOP;
+    pub const NCBOXMASK_TOP: NcBoxMask_u32 = ffi::NCBOXMASK_TOP;
 
     /// [`NcBoxMask_u32`] right border mask.
-    pub const NCBOXMASK_RIGHT: NcBoxMask_u32 = crate::bindings::ffi::NCBOXMASK_RIGHT;
+    pub const NCBOXMASK_RIGHT: NcBoxMask_u32 = ffi::NCBOXMASK_RIGHT;
 
     /// [`NcBoxMask_u32`] bottom border mask.
-    pub const NCBOXMASK_BOTTOM: NcBoxMask_u32 = crate::bindings::ffi::NCBOXMASK_BOTTOM;
+    pub const NCBOXMASK_BOTTOM: NcBoxMask_u32 = ffi::NCBOXMASK_BOTTOM;
 
     /// [`NcBoxMask_u32`] left border mask.
-    pub const NCBOXMASK_LEFT: NcBoxMask_u32 = crate::bindings::ffi::NCBOXMASK_LEFT;
+    pub const NCBOXMASK_LEFT: NcBoxMask_u32 = ffi::NCBOXMASK_LEFT;
 
     /// [`NcBoxMask_u32`] corner mask to control the drawing of boxes corners.
     ///
@@ -168,8 +170,8 @@ pub(crate) mod c_api {
     ///
     /// At 0 (the default), corners are always drawn. At 3, corners are never
     /// drawn (since at most 2 edges can touch a box's corner).
-    pub const NCBOXCORNER_MASK: NcBoxMask_u32 = crate::bindings::ffi::NCBOXCORNER_MASK;
+    pub const NCBOXCORNER_MASK: NcBoxMask_u32 = ffi::NCBOXCORNER_MASK;
 
     /// [`NcBoxMask_u32`] the number of bits [`NCBOXCORNER_MASK`] is shifted.
-    pub const NCBOXCORNER_SHIFT: NcBoxMask_u32 = crate::bindings::ffi::NCBOXCORNER_SHIFT;
+    pub const NCBOXCORNER_SHIFT: NcBoxMask_u32 = ffi::NCBOXCORNER_SHIFT;
 }

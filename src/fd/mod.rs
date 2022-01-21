@@ -33,29 +33,26 @@
 //! It is essential that the destroy function be called once and only once,
 //! whether it is from within the thread's context, or external to that context.
 
-#![allow(dead_code)]
-
-#[allow(unused_imports)] // for doc comments
-use crate::NcPlane;
+use crate::c_api::ffi;
 
 mod methods;
 
-/// I/O wrapper to dump file descriptor to [`NcPlane`].
+/// I/O wrapper to dump file descriptor to [`NcPlane`][crate::NcPlane].
 ///
 /// `type in C: ncfdplane (struct)`
-pub type NcFdPlane = crate::bindings::ffi::ncfdplane;
+pub type NcFdPlane = ffi::ncfdplane;
 
 /// Options struct for [`NcFdPlane`].
 ///
 /// `type in C: ncfdplane_options (struct)`
-pub type NcFdPlaneOptions = crate::bindings::ffi::ncfdplane_options;
+pub type NcFdPlaneOptions = ffi::ncfdplane_options;
 
 /// [`NcFdPlane`] wrapper with subprocess management.
 ///
 /// `type in C: ncsubproc (struct)`
-pub type NcSubproc = crate::bindings::ffi::ncsubproc;
+pub type NcSubproc = ffi::ncsubproc;
 
 /// Options struct for [`NcSubproc`]
 ///
 /// `type in C: ncsubproc_options (struct)`
-pub type NcSubprocOptions = crate::bindings::ffi::ncsubproc_options;
+pub type NcSubprocOptions = ffi::ncsubproc_options;

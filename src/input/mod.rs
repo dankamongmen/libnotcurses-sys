@@ -47,7 +47,7 @@ pub use received::NcReceived;
 // ncinput.
 //
 // We encompass single Unicode codepoints, not complete EGCs.
-pub type NcInput = crate::bindings::ffi::ncinput;
+pub type NcInput = crate::c_api::ffi::ncinput;
 
 /// # Constructors
 impl NcInput {

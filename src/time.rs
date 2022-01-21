@@ -2,7 +2,7 @@
 
 ///
 // Expected by [`notcurses_get`] & [`notcurses_get_nblock`]
-pub type NcTime = crate::bindings::ffi::timespec;
+pub type NcTime = crate::c_api::ffi::timespec;
 
 impl NcTime {
     /// New NcTime with the specified seconds and nanoseconds.

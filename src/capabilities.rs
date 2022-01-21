@@ -3,7 +3,7 @@
 use crate::Nc;
 
 /// Capabilities, derived from terminfo, environment variables, and queries.
-pub type NcCapabilities = crate::bindings::ffi::nccapabilities;
+pub type NcCapabilities = crate::c_api::ffi::nccapabilities;
 
 impl NcCapabilities {
     ///

@@ -58,7 +58,7 @@ pub(crate) mod reimplemented {
     }
 }
 
-pub(crate) mod constants {
+pub(crate) mod c_api {
     use crate::c_api::ffi;
 
     // The number of columns is one fewer, as the STRLEN expressions must leave

@@ -180,23 +180,23 @@ pub mod c_api {
     pub use crate::input::c_api::*;
     pub use crate::key::c_api::*;
     pub use crate::log_level::c_api::*;
-    pub use crate::metric::constants::*;
+    pub use crate::metric::c_api::*;
     pub use crate::notcurses::c_api::*;
-    pub use crate::palette::constants::*;
+    pub use crate::palette::c_api::*;
     pub use crate::pixel::c_api::*;
-    pub use crate::plane::options::constants::*;
+    pub use crate::plane::options::c_api::*;
     pub use crate::r#box::c_api::*;
     pub use crate::resizecb::c_api::*;
     pub use crate::rgb::c_api::*;
     pub use crate::scale::c_api::*;
     pub use crate::style::c_api::*;
     pub use crate::visual::c_api::*;
-    pub use crate::widgets::menu::constants::*;
-    pub use crate::widgets::plot::constants::*;
-    pub use crate::widgets::progbar::constants::*;
-    pub use crate::widgets::reader::constants::*;
-    pub use crate::widgets::reel::constants::*;
-    pub use crate::widgets::tabbed::constants::*;
+    pub use crate::widgets::menu::c_api::*;
+    pub use crate::widgets::plot::c_api::*;
+    pub use crate::widgets::progbar::c_api::*;
+    pub use crate::widgets::reader::c_api::*;
+    pub use crate::widgets::reel::c_api::*;
+    pub use crate::widgets::tabbed::c_api::*;
 
     // private re-export of helper functions for testing:
     mod helpers {

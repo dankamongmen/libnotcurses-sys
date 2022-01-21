@@ -26,7 +26,7 @@ pub type NcFadeCb =
     Option<unsafe extern "C" fn(*mut Nc, *mut NcPlane, *const NcTime, *mut c_void) -> NcResult_i32>;
 
 /// Context for a palette fade operation
-pub type NcFadeCtx = crate::bindings::ffi::ncfadectx;
+pub type NcFadeCtx = crate::c_api::ffi::ncfadectx;
 
 impl NcFadeCtx {
     /// `NcFadeCtx` constructor.

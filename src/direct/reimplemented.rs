@@ -64,7 +64,7 @@ pub fn ncdirect_canbraille(ncd: &NcDirect) -> bool {
 /// Returns the detected [`NcCapabilities`].
 #[inline]
 pub fn ncdirect_capabilities(ncd: &NcDirect) -> NcCapabilities {
-    unsafe { *crate::bindings::ffi::ncdirect_capabilities(ncd) }
+    unsafe { *crate::c_api::ffi::ncdirect_capabilities(ncd) }
 }
 
 /// Reads input blocking until an event is processed or a signal is received.
@@ -151,7 +151,7 @@ pub fn ncdirect_hline_interp(
     #[cfg(not(any(target_arch = "armv7l", target_arch = "i686")))]
     let egc_ptr = cstring![egc];
 
-    unsafe { crate::bindings::ffi::ncdirect_hline_interp(ncd, egc_ptr, len, h1, h2) }
+    unsafe { crate::c_api::ffi::ncdirect_hline_interp(ncd, egc_ptr, len, h1, h2) }
 }
 
 /// Draws horizontal lines using the specified [`NcChannels_u64`]s, interpolating
@@ -178,5 +178,5 @@ pub fn ncdirect_vline_interp(
     #[cfg(not(any(target_arch = "armv7l", target_arch = "i686")))]
     let egc_ptr = cstring![egc];
 
-    unsafe { crate::bindings::ffi::ncdirect_vline_interp(ncd, egc_ptr, len, h1, h2) }
+    unsafe { crate::c_api::ffi::ncdirect_vline_interp(ncd, egc_ptr, len, h1, h2) }
 }

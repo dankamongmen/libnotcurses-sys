@@ -1,10 +1,12 @@
 //!
 
+use crate::c_api::ffi;
+
 mod builder;
-pub(crate) mod constants;
+pub(crate) mod c_api;
 pub use builder::NcPlaneOptionsBuilder;
 
-use crate::{c_api, NcAlign, NcResizeCb};
+use crate::{NcAlign, NcResizeCb};
 
 use std::ptr::{null, null_mut};
 
@@ -27,23 +29,23 @@ use std::ptr::{null, null_mut};
 /// - [`margin_b`]: bottom margin (requires the [`MARGINALIZED`] flag).
 /// - [`margin_r`]: right margin (requires the [`MARGINALIZED`]).
 ///
-/// [`y`]: crate::c_api::ffi::ncplane_options#structfield.y
-/// [`x`]: crate::c_api::ffi::ncplane_options#structfield.x
-/// [`rows`]: crate::c_api::ffi::ncplane_options#structfield.rows
-/// [`cols`]: crate::c_api::ffi::ncplane_options#structfield.cols
-/// [`userptr`]: crate::c_api::ffi::ncplane_options#structfield.userptr
-/// [`name`]: crate::c_api::ffi::ncplane_options#structfield.name
-/// [`resizecb`]: crate::c_api::ffi::ncplane_options#structfield.resizecb
-/// [`flags`]: crate::c_api::ffi::ncplane_options#structfield.flags
-/// [`margin_b`]: crate::c_api::ffi::ncplane_options#structfield.margin_b
-/// [`margin_r`]: crate::c_api::ffi::ncplane_options#structfield.margin_r
+/// [`y`]: ffi::ncplane_options#structfield.y
+/// [`x`]: ffi::ncplane_options#structfield.x
+/// [`rows`]: ffi::ncplane_options#structfield.rows
+/// [`cols`]: ffi::ncplane_options#structfield.cols
+/// [`userptr`]: ffi::ncplane_options#structfield.userptr
+/// [`name`]: ffi::ncplane_options#structfield.name
+/// [`resizecb`]: ffi::ncplane_options#structfield.resizecb
+/// [`flags`]: ffi::ncplane_options#structfield.flags
+/// [`margin_b`]: ffi::ncplane_options#structfield.margin_b
+/// [`margin_r`]: ffi::ncplane_options#structfield.margin_r
 /// [`VERALIGNED`]:NcPlaneOptions#associatedconstant.VERALIGNED
 /// [`HORALIGNED`]: NcPlaneOptions#associatedconstant.HORALIGNED
 /// [`MARGINALIZED`]: NcPlaneOptions#associatedconstant.MARGINALIZED
 /// [`FIXED`]: NcPlaneOptions#associatedconstant.FIXED
 /// [`AUTOGROW`]: NcPlaneOptions#associatedconstant.AUTOGROW
 /// [`VSCROLL`]: NcPlaneOptions#associatedconstant.VSCROLL
-pub type NcPlaneOptions = crate::bindings::ffi::ncplane_options;
+pub type NcPlaneOptions = ffi::ncplane_options;
 
 /// # Constructors
 impl NcPlaneOptions {
@@ -85,7 +87,7 @@ impl NcPlaneOptions {
             cols,
             userptr: null_mut(),
             name: null(),
-            resizecb: c_api::ncresizecb_to_c(resizecb),
+            resizecb: crate::c_api::ncresizecb_to_c(resizecb),
             flags,
             margin_b,
             margin_r,
@@ -113,7 +115,7 @@ impl NcPlaneOptions {
             cols,
             userptr: null_mut(),
             name: null(),
-            resizecb: c_api::ncresizecb_to_c(resizecb),
+            resizecb: crate::c_api::ncresizecb_to_c(resizecb),
             flags,
             margin_b: 0,
             margin_r: 0,

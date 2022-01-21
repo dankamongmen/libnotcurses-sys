@@ -56,7 +56,7 @@ mod std_impls {
 }
 
 pub(crate) mod c_api {
-    use crate::bindings::ffi;
+    use crate::c_api::ffi;
 
     /// The type of the [`NcInput`][crate::NcInput] event.
     ///

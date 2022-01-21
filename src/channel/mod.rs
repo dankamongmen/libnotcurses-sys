@@ -75,7 +75,7 @@ pub(crate) mod reimplemented;
 pub use {channel::NcChannel, channels::NcChannels};
 
 pub(crate) mod c_api {
-    use crate::bindings::ffi;
+    use crate::c_api::ffi;
 
     #[allow(unused_imports)]
     use crate::{NcAlpha, NcChannel, NcChannels};

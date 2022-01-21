@@ -156,7 +156,7 @@ mod std_impls {
 }
 
 pub(crate) mod c_api {
-    use crate::bindings::ffi;
+    use crate::c_api::ffi;
 
     /// The blitter mode to use for rasterizing an [`NcVisual`][crate::NcVisual].
     ///
@@ -173,7 +173,7 @@ pub(crate) mod c_api {
     /// - [`NCBLIT_8x1`]
     /// - [`NCBLIT_BRAILLE`]
     /// - [`NCBLIT_PIXEL`]
-    pub type NcBlitter_u32 = crate::bindings::ffi::ncblitter_e;
+    pub type NcBlitter_u32 = ffi::ncblitter_e;
 
     /// [`NcBlitter_u32`] mode where the blitter is automatically chosen.
     pub const NCBLIT_DEFAULT: NcBlitter_u32 = ffi::ncblitter_e_NCBLIT_DEFAULT;

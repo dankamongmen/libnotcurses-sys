@@ -87,7 +87,7 @@ pub(crate) mod reimplemented;
 use c_api::NcDirectFlags_u64;
 
 /// Minimal notcurses instance for styling text.
-pub type NcDirect = crate::bindings::ffi::ncdirect;
+pub type NcDirect = crate::c_api::ffi::ncdirect;
 
 /// A bitmask of [`NcDirect`][crate::NcDirect] flags.
 ///
@@ -168,7 +168,7 @@ mod std_impls {
 }
 
 pub(crate) mod c_api {
-    use crate::bindings::ffi;
+    use crate::c_api::ffi;
 
     /// A bitmask of [`NcDirect`][crate::NcDirect] flags.
     ///
@@ -191,12 +191,12 @@ pub(crate) mod c_api {
     pub const NCDIRECT_OPTION_DRAIN_INPUT: NcDirectFlags_u64 =
         ffi::NCDIRECT_OPTION_DRAIN_INPUT as NcDirectFlags_u64;
 
-    /// [`NcDirectFlags_u64`] flag that avoids placing the terminal into cbreak
+    /// [`NcDirectFlags_u64`] flag to avoid placing the terminal into cbreak
     /// mode (disabling echo and line buffering)
     pub const NCDIRECT_OPTION_INHIBIT_CBREAK: NcDirectFlags_u64 =
         ffi::NCDIRECT_OPTION_INHIBIT_CBREAK as NcDirectFlags_u64;
 
-    /// [`NcDirectFlags_u64`] flag that avoids calling setlocale(LC_ALL, NULL)
+    /// [`NcDirectFlags_u64`] flag to avoid calling setlocale(LC_ALL, NULL)
     ///
     /// If the result is either "C" or "POSIX", it will print a
     /// diagnostic to stderr, and then call setlocale(LC_ALL, "").

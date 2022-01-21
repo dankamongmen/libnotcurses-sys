@@ -70,7 +70,7 @@ mod std_impl {
 }
 
 pub(crate) mod c_api {
-    use crate::bindings::ffi;
+    use crate::c_api::ffi;
 
     /// A bitmask for mice input events.
     ///

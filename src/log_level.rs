@@ -110,7 +110,7 @@ mod std_impls {
 }
 
 pub(crate) mod c_api {
-    use crate::bindings::ffi;
+    use crate::c_api::ffi;
 
     /// Log level for [`NcOptions`][crate::NcOptions].
     ///

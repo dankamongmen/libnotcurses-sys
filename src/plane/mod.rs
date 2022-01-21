@@ -283,4 +283,4 @@ pub use options::{NcPlaneOptions, NcPlaneOptionsBuilder};
 /// [`NcPlane.render`]: crate::NcPlane#method.render
 /// [`NcPlane.rasterize`]: crate::NcPlane#method.render
 /// [`Nc.refresh`]: crate::Nc#method.refresh
-pub type NcPlane = crate::bindings::ffi::ncplane;
+pub type NcPlane = crate::c_api::ffi::ncplane;

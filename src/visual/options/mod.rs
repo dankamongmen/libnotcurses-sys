@@ -107,7 +107,7 @@ use crate::{NcBlitter, NcPlane, NcRgba, NcScale};
 /// [`VERALIGNED`]:NcVisualOptions#associatedconstant.VERALIGNED
 /// [`HORALIGNED`]: NcVisualOptions#associatedconstant.HORALIGNED
 /// [`NOINTERPOLATE`]: NcVisualOptions#associatedconstant.NOINTERPOLATE
-pub type NcVisualOptions = crate::bindings::ffi::ncvisual_options;
+pub type NcVisualOptions = crate::c_api::ffi::ncvisual_options;
 
 /// # Constructors
 impl<'ncplane> NcVisualOptions {
