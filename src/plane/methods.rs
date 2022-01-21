@@ -2092,16 +2092,16 @@ impl NcPlane {
         )]
     }
 
-    /// Returns this `NcPlane`'s current resize callback.
+    /// Returns this `NcPlane`'s current resize callback, or `None` if not set.
     ///
     /// *C style function: [ncplane_resizecb()][c_api::ncplane_resizecb].*
     pub fn resizecb(&self) -> Option<NcResizeCb> {
         unsafe { c_api::ncresizecb_to_rust(c_api::ncplane_resizecb(self)) }
     }
 
-    /// Replaces this `NcPlane`'s existing resize callback (which may be [None]).
+    /// Replaces this `NcPlane`'s existing resize callback (may be `None`)
     ///
-    /// The standard plane's resizecb may not be changed.
+    /// The standard plane's resize callback may not be changed.
     ///
     /// *C style function: [ncplane_set_resizecb()][c_api::ncplane_set_resizecb].*
     pub fn set_resizecb(&mut self, resizecb: Option<NcResizeCb>) {
