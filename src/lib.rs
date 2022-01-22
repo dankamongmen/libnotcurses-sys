@@ -128,7 +128,7 @@ pub use log_level::NcLogLevel;
 pub use notcurses::{Nc, NcFlags, NcOptions};
 pub use palette::{NcPalette, NcPaletteIndex};
 pub use pixel::{NcPixel, NcPixelGeometry, NcPixelImpl};
-pub use plane::{NcPlane, NcPlaneOptions, NcPlaneOptionsBuilder};
+pub use plane::{NcPlane, NcPlaneFlags, NcPlaneOptions, NcPlaneOptionsBuilder};
 pub use r#box::NcBoxMask;
 pub use resizecb::NcResizeCb;
 pub use rgb::{NcRgb, NcRgba};
@@ -137,7 +137,9 @@ pub use stats::NcStats;
 pub use string::NcString;
 pub use style::NcStyle;
 pub use time::NcTime;
-pub use visual::{NcVisual, NcVisualGeometry, NcVisualOptions, NcVisualOptionsBuilder};
+pub use visual::{
+    NcVisual, NcVisualFlags, NcVisualGeometry, NcVisualOptions, NcVisualOptionsBuilder,
+};
 
 pub mod c_api {
     //! The `C API`, including structs, constants, functions and type aliases.

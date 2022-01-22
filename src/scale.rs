@@ -34,11 +34,11 @@ pub enum NcScale {
 
     /// Like `None`, maintains the original size, while admitting
     /// high-resolution blitters that don't preserve the aspect ratio.
-    NoneHires = c_api::NCSCALE_NONE_HIRES,
+    NoneHiRes = c_api::NCSCALE_NONE_HIRES,
 
     /// Like `Scale`, maintains the aspect ratio, while admitting
     /// high-resolution blitters that don't preserve the aspect ratio.
-    ScaleHires = c_api::NCSCALE_SCALE_HIRES,
+    ScaleHiRes = c_api::NCSCALE_SCALE_HIRES,
 
     /// Throws away aspect ratio.
     ///
@@ -66,8 +66,8 @@ mod std_impls {
                 match self {
                     None => "None",
                     Scale => "Scale",
-                    NoneHires => "NoneHires",
-                    ScaleHires => "ScaleHires",
+                    NoneHiRes => "NoneHiRes",
+                    ScaleHiRes => "ScaleHiRes",
                     Stretch => "Stretch",
                 }
             )
@@ -80,8 +80,8 @@ mod std_impls {
             match scale {
                 NCSCALE_NONE => None,
                 NCSCALE_SCALE => Scale,
-                NCSCALE_NONE_HIRES => NoneHires,
-                NCSCALE_SCALE_HIRES => ScaleHires,
+                NCSCALE_NONE_HIRES => NoneHiRes,
+                NCSCALE_SCALE_HIRES => ScaleHiRes,
                 NCSCALE_STRETCH => Stretch,
                 _ => Self::default(),
             }
@@ -94,8 +94,8 @@ mod std_impls {
             match scale {
                 None => NCSCALE_NONE,
                 Scale => NCSCALE_SCALE,
-                NoneHires => NCSCALE_NONE_HIRES,
-                ScaleHires => NCSCALE_SCALE_HIRES,
+                NoneHiRes => NCSCALE_NONE_HIRES,
+                ScaleHiRes => NCSCALE_SCALE_HIRES,
                 Stretch => NCSCALE_STRETCH,
             }
         }

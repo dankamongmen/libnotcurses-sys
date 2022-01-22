@@ -1,6 +1,8 @@
 //! `ncvisual_*` reimplemented functions
 
-use crate::{Nc, NcError, NcPlane, NcPlaneOptions, NcResult, NcVisual, NcVisualOptions};
+use crate::{
+    Nc, NcError, NcPlane, NcPlaneOptions, NcResult, NcVisual, NcVisualFlags, NcVisualOptions,
+};
 
 /// Creates a new plane as prescribed in `opts`, either as a child
 /// or the root of a new pile.
@@ -34,7 +36,7 @@ pub fn ncvisualplane_create<'a>(
     if let Some(vo) = vopts {
         if vo.n.is_null() {
             plane = NcPlane::new_pile(nc, opts)?;
-        } else if vo.flags & NcVisualOptions::CHILDPLANE as u64 != 0 {
+        } else if vo.flags & NcVisualFlags::ChildPlane != NcVisualFlags::None {
             return Err(NcError::new_msg("ncvisualplane_create() ERR"));
         } else {
             plane = NcPlane::new_child(unsafe { &mut *vo.n }, opts)?;

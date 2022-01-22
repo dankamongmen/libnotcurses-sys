@@ -192,7 +192,7 @@ pub(crate) mod reimplemented;
 #[cfg(test)]
 pub(crate) mod test;
 
-pub use options::{NcPlaneOptions, NcPlaneOptionsBuilder};
+pub use options::{NcPlaneFlags, NcPlaneOptions, NcPlaneOptionsBuilder};
 
 // NcPlane
 //
