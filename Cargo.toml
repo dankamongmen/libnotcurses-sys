@@ -54,7 +54,6 @@ cty = "^0.2.1"
 
 [dev-dependencies]
 serial_test = "^0.5.1"
-serial_test_derive = "^0.5.1"
 
 # for the examples
 rand = "^0.8"
