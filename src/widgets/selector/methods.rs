@@ -74,9 +74,9 @@ impl NcSelector {
         // MAYBE turn this into a macro (option_str![])
         let res = unsafe { c_api::ncselector_selected(self) };
         if res.is_null() {
-            Some(crate::rstring!(res).to_string())
-        } else {
             None
+        } else {
+            Some(crate::rstring!(res).to_string())
         }
     }
 
