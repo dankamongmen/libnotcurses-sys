@@ -255,32 +255,47 @@ impl NcChannels {
 impl NcChannels {
     // NcChannel
 
-    /// Extracts the foreground [`NcChannel`].
+    /// Gets the foreground alpha and coloring bits as an [`NcChannel`].
     ///
     /// *C style function: [ncchannels_fchannel()][c_api::ncchannels_fchannel].*
     pub fn fchannel(&self) -> NcChannel {
         c_api::ncchannels_fchannel(self.0).into()
     }
 
-    /// Extracts the background [`NcChannel`].
+    /// Gets the background alpha and coloring bits as an [`NcChannel`].
     ///
     /// *C style function: [ncchannels_bchannel()][c_api::ncchannels_bchannel].*
     pub fn bchannel(&self) -> NcChannel {
         c_api::ncchannels_bchannel(self.0).into()
     }
 
-    /// Sets the foreground [`NcChannel`].
+    /// Sets the foreground alpha and coloring bits from an [`NcChannel`].
     ///
     /// *C style function: [ncchannels_set_fchannel()][c_api::ncchannels_set_fchannel].*
     pub fn set_fchannel(&mut self, fchannel: NcChannel) -> Self {
         c_api::ncchannels_set_fchannel(&mut self.0, fchannel.0).into()
     }
 
-    /// Sets the background [`NcChannel`].
+    /// Sets the background alpha and coloring bits from an [`NcChannel`].
     ///
     /// *C style function: [ncchannels_set_bchannel()][c_api::ncchannels_set_bchannel].*
     pub fn set_bchannel(&mut self, bchannel: NcChannel) -> Self {
         c_api::ncchannels_set_bchannel(&mut self.0, bchannel.0).into()
+    }
+
+    /// Gets the alpha and coloring bits as an [`NcChannels`].
+    ///
+    /// *C style function: [ncchannels_bchannel()][c_api::ncchannels_bchannel].*
+    pub fn channels(&self) -> NcChannels {
+        c_api::ncchannels_channels(self.0).into()
+    }
+
+    /// Sets the foreground alpha and coloring bits as an [`NcChannels`],
+    /// from another [`NcChannels`].
+    ///
+    /// *C style function: [ncchannels_set_fchannel()][c_api::ncchannels_set_fchannel].*
+    pub fn set_channels(&mut self, from: NcChannels) -> Self {
+        c_api::ncchannels_set_channels(&mut self.0, from.0).into()
     }
 
     // Alpha
@@ -561,14 +576,14 @@ impl NcChannels {
 
     // NcPaletteIndex
 
-    /// Extracts the [`NcPaletteIndex`] from the foreground [`NcChannel`].
+    /// Gets the [`NcPaletteIndex`] from the foreground [`NcChannel`].
     ///
     /// *C style function: [channels_fg_palindex()][c_api::ncchannels_fg_palindex].*
     pub fn fg_palindex(&self) -> NcPaletteIndex {
         c_api::ncchannels_fg_palindex(self.0)
     }
 
-    /// Extracts the [`NcPaletteIndex`] from the background [`NcChannel`].
+    /// Gets the [`NcPaletteIndex`] from the background [`NcChannel`].
     ///
     /// *C style function: [channels_bg_palindex()][c_api::ncchannels_bg_palindex].*
     pub fn bg_palindex(&self) -> NcPaletteIndex {

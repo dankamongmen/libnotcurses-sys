@@ -13,12 +13,12 @@
 //   - `channels_set_bg_rgb8_clipped()`
 // -----------------------------------------------------------------------------
 //
-// functions manually reimplemented: 44
+// functions manually reimplemented: 46
 // ------------------------------------------
 // (X) wont:  3
-// (+) done: 36 / 0
+// (+) done: 39
 // (#) test: 21
-// (W) wrap: 41
+// (W) wrap: 43
 // ------------------------------------------
 //W# channel_alpha
 //W# channel_b
@@ -39,6 +39,7 @@
 //W# channels_bg_palindex_p
 //W+ channels_bg_rgb
 //W+ channels_bg_rgb8
+//W+ channels_channels
 //W# channels_combine
 //W# channels_fchannel
 //W+ channels_fg_alpha
@@ -54,6 +55,7 @@
 //W+ channels_set_bg_rgb
 //W+ channels_set_bg_rgb8
 // X channels_set_bg_rgb8_clipped    // not needed
+//W+ channels_set_channels
 //W  channels_set_default            // not in the original C API
 //W# channels_set_fchannel
 //W+ channels_set_fg_alpha

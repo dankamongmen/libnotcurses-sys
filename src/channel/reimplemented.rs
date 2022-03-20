@@ -88,15 +88,21 @@ pub fn ncchannels_set_bg_alpha(channels: &mut NcChannels_u64, alpha: NcAlpha) ->
 
 // Channels --------------------------------------------------------------------
 
-/// Extracts the background [`NcChannel_u32`] from a [`NcChannels_u64`].
+/// Gets the background alpha and coloring bits as an [`NcChannel_u32`]
+/// from a [`NcChannels_u64`].
 ///
 /// *Method: NcChannels.[bchannel()][NcChannels#method.bchannel]*
 #[inline]
 pub const fn ncchannels_bchannel(channels: NcChannels_u64) -> NcChannel_u32 {
-    (channels & 0xffffffff_u64) as NcChannel_u32
+    (channels
+        & (c_api::NC_BG_RGB_MASK
+            | c_api::NC_BG_PALETTE
+            | c_api::NC_BGDEFAULT_MASK
+            | c_api::NC_BG_ALPHA_MASK) as NcChannels_u64) as NcChannel_u32
 }
 
-/// Extracts the foreground [`NcChannel_u32`] from an [`NcChannels_u64`].
+/// Gets the foreground alpha and coloring bits as an [`NcChannel_u32`]
+/// from an [`NcChannels_u64`].
 ///
 /// *Method: NcChannels.[fchannel()][NcChannels#method.fchannel]*
 #[inline]
@@ -104,7 +110,17 @@ pub const fn ncchannels_fchannel(channels: NcChannels_u64) -> NcChannel_u32 {
     ncchannels_bchannel(channels >> 32)
 }
 
-/// Sets the background [`NcChannel_u32`] of an [`NcChannels_u64`].
+/// Gets the alpha and coloring bits as an [`NcChannels_u64`].
+///
+/// *Method: NcChannels.[channels()][NcChannels#method.channels]*
+#[inline]
+pub const fn ncchannels_channels(channels: NcChannels_u64) -> NcChannels_u64 {
+    ncchannels_bchannel(channels) as NcChannels_u64
+        | (ncchannels_fchannel(channels) as NcChannels_u64) << 32
+}
+
+/// Sets the background alpha and coloring bits of the [`NcChannels_u64`]
+/// from an [`NcChannel_u32`].
 ///
 /// *Method: NcChannels.[set_bchannel()][NcChannels#method.set_bchannel]*
 #[inline]
@@ -112,11 +128,14 @@ pub fn ncchannels_set_bchannel(
     channels: &mut NcChannels_u64,
     bchannel: NcChannel_u32,
 ) -> NcChannels_u64 {
-    *channels = (*channels & 0xffffffff00000000_u64) | bchannel as NcChannels_u64;
+    // drop the background color and alpha bit
+    *channels &= (0xffffffff_u64 << 32) | c_api::NC_NOBACKGROUND_MASK;
+    *channels |= bchannel as NcChannels_u64 & !c_api::NC_NOBACKGROUND_MASK;
     *channels
 }
 
-/// Sets the foreground [`NcChannel_u32`] of an [`NcChannels_u64`].
+/// Sets the foreground alpha and coloring bits of the [`NcChannels_u64`]
+/// from an [`NcChannel_u32`].
 ///
 /// *Method: NcChannels.[set_fchannel()][NcChannels#method.set_fchannel]*
 #[inline]
@@ -124,7 +143,25 @@ pub fn ncchannels_set_fchannel(
     channels: &mut NcChannels_u64,
     fchannel: NcChannel_u32,
 ) -> NcChannels_u64 {
-    *channels = (*channels & 0xffffffff_u64) | (fchannel as NcChannels_u64) << 32;
+    // drop the background color and alpha bit
+    *channels &= 0xffffffff_u64 | (c_api::NC_NOBACKGROUND_MASK << 32);
+    *channels |= fchannel as NcChannels_u64 & !(c_api::NC_NOBACKGROUND_MASK << 32);
+    *channels
+}
+
+/// Sets the alpha and coloring bits of an [`NcChannels_u64`] from another [`NcChannel_u64`].
+///
+/// *Method: NcChannels.[set_fchannel()][NcChannels#method.set_channels]*
+#[inline]
+pub fn ncchannels_set_channels(
+    channels: &mut NcChannels_u64,
+    other_channels: NcChannels_u64,
+) -> NcChannels_u64 {
+    ncchannels_set_bchannel(channels, (other_channels & 0xffffffff_u64) as NcChannel_u32);
+    ncchannels_set_fchannel(
+        channels,
+        ((other_channels >> 32) & 0xffffffff_u64) as NcChannel_u32,
+    );
     *channels
 }
 
@@ -541,7 +578,7 @@ pub fn ncchannels_set_not_default(channels: &mut NcChannels_u64) -> NcChannels_u
 
 // Palette ---------------------------------------------------------------------
 
-/// Extracts the [`NcPaletteIndex`] from the [`NcChannel_u32`].
+/// Gets the [`NcPaletteIndex`] from the [`NcChannel_u32`].
 ///
 /// The channel must be palette-indexed, or the return value is meaningless.
 /// Verify palette indexing with [`ncchannel_palindex_p`].
@@ -571,7 +608,7 @@ pub const fn ncchannel_palindex_p(channel: NcChannel_u32) -> bool {
     !(ncchannel_default_p(channel) && (channel & c_api::NC_BG_PALETTE) == 0)
 }
 
-/// Extracts the [`NcPaletteIndex`] from the foreground [`NcChannel_u32`].
+/// Gets the [`NcPaletteIndex`] from the foreground [`NcChannel_u32`].
 ///
 /// *Method: NcChannels.[fg_palindex()][NcChannels#method.fg_palindex]*
 #[inline]
@@ -579,7 +616,7 @@ pub const fn ncchannels_fg_palindex(channels: NcChannels_u64) -> NcPaletteIndex 
     ncchannel_palindex(ncchannels_fchannel(channels))
 }
 
-/// Extracts the [`NcPaletteIndex`] from the background [`NcChannel_u32`].
+/// Gets the [`NcPaletteIndex`] from the background [`NcChannel_u32`].
 ///
 /// *Method: NcChannels.[bg_palindex()][NcChannels#method.bg_palindex]*
 #[inline]

@@ -46,7 +46,7 @@ pub fn ncplane_bg_alpha(plane: &NcPlane) -> NcAlpha {
 
 // NcChannel_u32 ---------------------------------------------------------------
 
-/// Gets the foreground [`NcChannel_u32`] from an [`NcPlane`].
+/// Gets the foreground alpha and coloring bits from an [`NcPlane`] as an [`NcChannel_u32`].
 ///
 /// *Method: NcPlane.[fchannel()][NcPlane#method.fchannel].*
 #[inline]
@@ -54,7 +54,7 @@ pub fn ncplane_fchannel(plane: &NcPlane) -> NcChannel_u32 {
     c_api::ncchannels_fchannel(ncplane_channels(plane))
 }
 
-/// Gets the background [`NcChannel_u32`] from an [`NcPlane`].
+/// Gets the background alpha and coloring bits from an [`NcPlane`] as an [`NcChannel_u32`].
 ///
 /// *Method: NcPlane.[bchannel()][NcPlane#method.bchannel].*
 #[inline]
@@ -62,7 +62,7 @@ pub fn ncplane_bchannel(plane: &NcPlane) -> NcChannel_u32 {
     c_api::ncchannels_bchannel(ncplane_channels(plane))
 }
 
-/// Sets the foreground [`NcChannel_u32`] on an [`NcPlane`],
+/// Sets the background alpha and coloring bits of an [`NcPlane`] from an [`NcChannel_u32`],
 /// and returns the new [`NcChannels_u64`].
 ///
 /// *Method: NcPlane.[set_fchannel()][NcPlane#method.set_fchannel].*
@@ -71,7 +71,7 @@ pub fn ncplane_set_fchannel(plane: &mut NcPlane, channel: NcChannel_u32) -> NcCh
     unsafe { c_api::ffi::ncplane_set_fchannel(plane, channel) }
 }
 
-/// Sets the background [`NcChannel_u32`] on an [`NcPlane`],
+/// Sets the background alpha and coloring bits of an [`NcPlane`] from an [`NcChannel_u32`],
 /// and returns the new [`NcChannels_u64`].
 ///
 /// *Method: NcPlane.[set_bchannel()][NcPlane#method.set_bchannel].*

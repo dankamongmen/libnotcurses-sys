@@ -63,7 +63,7 @@ fn constructors() -> crate::NcResult<()> {
         )?
     ];
     assert_eq![NcStyle::Underline, cell.styles()];
-    assert_eq![NcChannels::from_rgb_both(0x112233), cell.channels(plane)];
+    assert_eq![NcChannels::from_rgb_both(0x112233), cell.channels()];
 
     // cleanup
     cell.release(plane);

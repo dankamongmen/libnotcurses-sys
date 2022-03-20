@@ -199,11 +199,11 @@ fn channels_combine() {
     let bc: NcChannel_u32 = 0x112233;
     let fc: NcChannel_u32 = 0x445566;
     let mut cp1: NcChannels_u64 = 0;
-    let mut _cp2: NcChannels_u64 = 0;
+    let mut cp2: NcChannels_u64 = 0;
     c_api::ncchannels_set_bchannel(&mut cp1, bc);
     c_api::ncchannels_set_fchannel(&mut cp1, fc);
-    _cp2 = c_api::ncchannels_combine(fc, bc);
-    assert_eq!(cp1, _cp2);
+    cp2 = c_api::ncchannels_combine(fc, bc);
+    assert_eq!(cp1, cp2);
 }
 
 ///

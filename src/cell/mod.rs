@@ -2,7 +2,7 @@
 
 // functions already exported by bindgen : 5
 // -----------------------------------------
-// (W) wrap: 6
+// (W) wrap: 4
 // (#) test: 3
 // ------------------------------------------
 //W  nccell_extended_gcluster
@@ -11,11 +11,11 @@
 //W# nccell_release
 //   ncstrwidth_valid
 //
-// functions manually reimplemented: 48
+// functions manually reimplemented: 50
 // ------------------------------------------
 // (X) wont:  2
-// (+) done: 43
-// (W) wrap: 43
+// (+) done: 48
+// (W) wrap: 48
 // (#) test: 30
 // ------------------------------------------
 //W# nccell_bg_alpha
@@ -24,6 +24,7 @@
 //W# nccell_bg_palindex_p
 //W# nccell_bg_rgb
 //W# nccell_bg_rgb8
+//W+ nccell_channels
 //W+ nccell_cols
 //W+ nccell_double_wide_p
 //W# nccell_extract
@@ -46,6 +47,7 @@
 //W# nccell_set_bg_rgb
 //W# nccell_set_bg_rgb8
 // X nccell_set_bg_rgb8_clipped   // unneeded
+//W+ nccell_set_channels
 //W# nccell_set_fchannel
 //W# nccell_set_fg_alpha
 //W# nccell_set_fg_default

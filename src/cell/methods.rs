@@ -2,12 +2,9 @@
 
 use crate::{
     c_api::{self, nccell_load, NcChannels_u64, NCRESULT_ERR},
-    cstring, error, rstring, NcAlpha, NcCell, NcChannels, NcError, NcPaletteIndex, NcPlane,
+    cstring, error, rstring, NcAlpha, NcCell, NcChannel, NcChannels, NcError, NcPaletteIndex, NcPlane,
     NcResult, NcRgb, NcStyle,
 };
-
-#[allow(unused_imports)] // for doc comments
-use crate::NcChannel;
 
 /// # NcCell constructors
 impl NcCell {
@@ -125,16 +122,55 @@ impl NcCell {
 // -----------------------------------------------------------------------------
 /// ## NcCell methods: bg|fg `NcChannel`s manipulation.
 impl NcCell {
-    /// Returns the [`NcChannels`] of this `NcCell`.
+
+    /// Gets the background alpha and coloring bits from the cell [`NcChannels`]
+    /// as an [`NcChannel`].
     ///
-    /// *(No equivalent C style function)*
-    pub fn channels(&mut self, plane: &mut NcPlane) -> NcChannels {
-        let (mut styles, mut channels) = (0, 0);
-        let _egc = c_api::nccell_extract(plane, self, &mut styles, &mut channels);
-        channels.into()
+    /// *C style function: [nccell_bchannel()][c_api::nccell_bchannel].*
+    pub fn bchannel(&self) -> NcChannel {
+        c_api::nccell_bchannel(self).into()
     }
 
-    /// Extracts the background [`NcAlpha`] (shifted to LSBs).
+    /// Gets the foreground alpha and coloring bits from the cell [`NcChannels`]
+    /// as an [`NcChannel`].
+    ///
+    /// *C style function: [nccell_fchannel()][c_api::nccell_fchannel].*
+    pub fn fchannel(&self) -> NcChannel {
+        c_api::nccell_fchannel(self).into()
+    }
+
+    /// Gets the alpha and coloring bits from the cell [`NcChannels`].
+    ///
+    /// *C style function: [nccell_channels()][c_api::nccell_channels].*
+    pub fn channels(&self) -> NcChannels {
+        c_api::nccell_channels(self).into()
+    }
+
+    /// Sets the background alpha and coloring bits of the cell [`NcChannels`],
+    /// returning the new [`NcChannels_u64`].
+    ///
+    /// *C style function: [nccell_bchannel()][c_api::nccell_bchannel].*
+    pub fn set_bchannel(&mut self, from: NcChannel) -> NcChannels {
+        c_api::nccell_set_bchannel(self, from.into()).into()
+    }
+
+    /// Sets the foreground alpha and coloring bits from the cell [`NcChannels`],
+    /// returning the new [`NcChannels_u64`].
+    ///
+    /// *C style function: [nccell_set_fchannel()][c_api::nccell_set_fchannel].*
+    pub fn set_fchannel(&mut self, from: NcChannel) -> NcChannels {
+        c_api::nccell_set_fchannel(self, from.into()).into()
+    }
+
+    /// Sets the alpha and coloring bits of the cell [`NcChannels`]
+    /// from another [`NcChannels`], returning the new [`NcChannels`].
+    ///
+    /// *C style function: [nccell_set_channels()][c_api::nccell_set_channels].*
+    pub fn set_channels(&mut self, from: NcChannels) -> NcChannels {
+        c_api::nccell_set_channels(self, from.into()).into()
+    }
+
+    /// Gets the background [`NcAlpha`] (shifted to LSBs).
     ///
     /// *C style function: [nccell_bg_alpha()][c_api::nccell_bg_alpha].*
     pub fn bg_alpha(&self) -> NcAlpha {
@@ -179,7 +215,7 @@ impl NcCell {
         (r, g, b)
     }
 
-    /// Extracts the foreground [`NcAlpha`] (shifted to LSBs).
+    /// Gets the foreground [`NcAlpha`] (shifted to LSBs).
     ///
     /// *C style function: [nccell_fg_alpha()][c_api::nccell_fg_alpha].*
     pub fn fg_alpha(&self) -> NcAlpha {

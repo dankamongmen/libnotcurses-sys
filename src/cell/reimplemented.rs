@@ -18,9 +18,64 @@ const NCBOXDOUBLE: &str = "╔╗╚╝═║";
 const NCBOXASCII: &str = "/\\\\/-|";
 const NCBOXOUTER: &str = "🭽🭾🭼🭿▁🭵🭶🭰";
 
+// Channels -----------------------------------------------------------------------
+
+/// Gets the background alpha and coloring bits from the cell [`NcChannels_u64`]
+/// as an [`NcChannel_u32`].
+///
+/// *Method: NcCell.[bchannel()][NcCell#method.bchannel].*
+#[inline]
+pub fn nccell_bchannel(cell: &NcCell) -> NcChannel_u32 {
+    c_api::ncchannels_bchannel(cell.channels)
+}
+
+/// Gets the foreground alpha and coloring bits from the cell [`NcChannels_u64`]
+/// as an [`NcChannel_u32`].
+///
+/// *Method: NcCell.[fchannel()][NcCell#method.fchannel].*
+#[inline]
+pub fn nccell_fchannel(cell: &NcCell) -> NcChannel_u32 {
+    c_api::ncchannels_fchannel(cell.channels)
+}
+
+/// Gets the alpha and coloring bits from the cell [`NcChannel_u64`].
+///
+/// *Method: NcCell.[channels()][NcCell#method.channels].*
+#[inline]
+pub fn nccell_channels(cell: &NcCell) -> NcChannels_u64 {
+    c_api::ncchannels_channels(cell.channels)
+}
+
+/// Sets the background alpha and coloring bits of the cell from an [`NcChannel_u32`],
+/// returning the new [`NcChannels_u64`].
+///
+/// *Method: NcCell.[set_bchannel()][NcCell#method.set_bchannel].*
+#[inline]
+pub fn nccell_set_bchannel(cell: &mut NcCell, bchannel: NcChannel_u32) -> NcChannels_u64 {
+    c_api::ncchannels_set_bchannel(&mut cell.channels, bchannel)
+}
+
+/// Sets the foreground alpha and coloring bits of the cell from an [`NcChannel_u32`],
+/// returning the new [`NcChannels_u64`].
+///
+/// *Method: NcCell.[set_fchannel()][NcCell#method.set_fchannel].*
+#[inline]
+pub fn nccell_set_fchannel(cell: &mut NcCell, fchannel: NcChannel_u32) -> NcChannels_u64 {
+    c_api::ncchannels_set_fchannel(&mut cell.channels, fchannel)
+}
+
+/// Sets the alpha and coloring bits of the cell from an [`NcChannel_u64`],
+/// returning the new [`NcChannels_u64`].
+///
+/// *Method: NcCell.[set_fchannel()][NcCell#method.set_fchannel].*
+#[inline]
+pub fn nccell_set_channels(cell: &mut NcCell, channels: NcChannels_u64) -> NcChannels_u64 {
+    c_api::ncchannels_set_channels(&mut cell.channels, channels)
+}
+
 // Alpha -----------------------------------------------------------------------
 
-/// Extracts the foreground [`NcAlpha`] from an [`NcCell`] (shifted to LSBs).
+/// Gets the foreground [`NcAlpha`] from an [`NcCell`] (shifted to LSBs).
 ///
 /// *Method: NcCell.[fg_alpha()][NcCell#method.fg_alpha].*
 #[inline]
@@ -28,7 +83,7 @@ pub fn nccell_fg_alpha(cell: &NcCell) -> NcAlpha {
     c_api::ncchannels_fg_alpha(cell.channels)
 }
 
-/// Extracts the background [`NcAlpha`] from an [`NcCell`] (shifted to LSBs).
+/// Gets the background [`NcAlpha`] from an [`NcCell`] (shifted to LSBs).
 ///
 /// *Method: NcCell.[bg_alpha()][NcCell#method.bg_alpha].*
 #[inline]
@@ -235,7 +290,7 @@ pub fn nccell_set_bg_palindex(cell: &mut NcCell, index: NcPaletteIndex) {
 
 // Styles ----------------------------------------------------------------------
 
-/// Extracts the [`NcStyle_u16`] bits from an [`NcCell`].
+/// Gets the [`NcStyle_u16`] bits from an [`NcCell`].
 ///
 /// *Method: NcCell.[cell_styles()][NcCell#method.cell_styles].*
 #[inline]
