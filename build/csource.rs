@@ -323,7 +323,7 @@ impl NcCSource {
     fn run(command: &mut Command) {
         println!(
             "cargo:warning=Running: {:?}",
-            format!["{:?}", command].replace("\"", "")
+            format!["{:?}", command].replace('"', "")
         );
         match command.status() {
             Ok(status) => {

@@ -76,12 +76,7 @@ pub fn ncdirect_capabilities(ncd: &NcDirect) -> NcCapabilities {
 /// *Method: NcDirect.[get_blocking()][NcDirect#method.get_blocking].*
 #[inline]
 pub fn ncdirect_get_blocking(ncd: &mut NcDirect, input: Option<&mut NcInput>) -> NcResult_i32 {
-    let input_ptr;
-    if let Some(i) = input {
-        input_ptr = i as *mut _;
-    } else {
-        input_ptr = null_mut();
-    }
+    let input_ptr = if let Some(i) = input { i as *mut _ } else { null_mut() };
     unsafe { c_api::ncdirect_get(ncd, null(), input_ptr) as NcResult_i32 }
 }
 
@@ -96,12 +91,7 @@ pub fn ncdirect_get_blocking(ncd: &mut NcDirect, input: Option<&mut NcInput>) ->
 /// *Method: NcDirect.[get_nblock()][NcDirect#method.get_nblock].*
 #[inline]
 pub fn ncdirect_get_nblock(ncd: &mut NcDirect, input: Option<&mut NcInput>) -> NcResult_i32 {
-    let input_ptr;
-    if let Some(i) = input {
-        input_ptr = i as *mut _;
-    } else {
-        input_ptr = null_mut();
-    }
+    let input_ptr = if let Some(i) = input { i as *mut _ } else { null_mut() };
     unsafe {
         let ts = NcTime::new(0, 0);
         c_api::ncdirect_get(ncd, &ts, input_ptr) as NcResult_i32

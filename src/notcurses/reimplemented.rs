@@ -116,12 +116,7 @@ pub fn notcurses_cansextant(nc: &Nc) -> bool {
 /// *Method: Nc.[get_blocking()][Nc#method.get_blocking].*
 #[inline]
 pub fn notcurses_get_blocking(nc: &mut Nc, input: Option<&mut NcInput>) -> NcResult_i32 {
-    let input_ptr;
-    if let Some(i) = input {
-        input_ptr = i as *mut _;
-    } else {
-        input_ptr = null_mut();
-    }
+    let input_ptr = if let Some(i) = input { i as *mut _ } else { null_mut() };
     unsafe { c_api::notcurses_get(nc, null(), input_ptr) as NcResult_i32 }
 }
 
@@ -136,12 +131,7 @@ pub fn notcurses_get_blocking(nc: &mut Nc, input: Option<&mut NcInput>) -> NcRes
 /// *Method: Nc.[get_nblock()][Nc#method.get_nblock].*
 #[inline]
 pub fn notcurses_get_nblock(nc: &mut Nc, input: Option<&mut NcInput>) -> NcResult_i32 {
-    let input_ptr;
-    if let Some(i) = input {
-        input_ptr = i as *mut _;
-    } else {
-        input_ptr = null_mut();
-    }
+    let input_ptr = if let Some(i) = input { i as *mut _ } else { null_mut() };
     unsafe {
         let ts = NcTime::new(0, 0);
         c_api::notcurses_get(nc, &ts, input_ptr) as NcResult_i32

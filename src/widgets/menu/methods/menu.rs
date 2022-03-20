@@ -63,12 +63,7 @@ impl NcMenu {
         click: NcInput,
         shortcut: Option<&mut NcInput>,
     ) -> NcResult<String> {
-        let ninput;
-        if let Some(i) = shortcut {
-            ninput = i as *mut _;
-        } else {
-            ninput = null_mut();
-        }
+        let ninput = if let Some(i) = shortcut { i as *mut _ } else { null_mut() };
         error_str![
             unsafe { c_api::ncmenu_mouse_selected(self, &click, ninput) },
             "Getting NcMenuItem description"
@@ -155,12 +150,7 @@ impl NcMenu {
     ///
     /// *C style function: [ncmenu_selected()][c_api::ncmenu_selected].*
     pub fn selected(&mut self, shortcut: Option<&mut NcInput>) -> Option<String> {
-        let ninput;
-        if let Some(i) = shortcut {
-            ninput = i as *mut _;
-        } else {
-            ninput = null_mut();
-        }
+        let ninput = if let Some(i) = shortcut { i as *mut _ } else { null_mut() };
         let res = unsafe { c_api::ncmenu_selected(self, ninput) };
         if !res.is_null() {
             Some(rstring![&*res].to_string())

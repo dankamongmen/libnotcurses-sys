@@ -587,18 +587,8 @@ impl NcDirect {
     /// *C style function: [ncdirect_get()][c_api::ncdirect_get].*
     // CHECK returns 0 on a timeout.
     pub fn get(&mut self, time: Option<NcTime>, input: Option<&mut NcInput>) -> NcResult<char> {
-        let ntime;
-        if let Some(time) = time {
-            ntime = &time as *const _;
-        } else {
-            ntime = null();
-        }
-        let ninput;
-        if let Some(input) = input {
-            ninput = input as *mut _;
-        } else {
-            ninput = null_mut();
-        }
+        let ntime = if let Some(time) = time { &time as *const _ } else { null() };
+        let ninput = if let Some(input) = input { input as *mut _ } else { null_mut() };
 
         let res = unsafe { c_api::ncdirect_get(self, ntime, ninput) };
         core::char::from_u32(res)

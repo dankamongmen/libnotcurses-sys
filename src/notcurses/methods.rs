@@ -444,19 +444,8 @@ impl Nc {
         time: Option<NcTime>,
         input: Option<&mut NcInput>,
     ) -> NcResult<NcReceived> {
-        let ntime;
-        if let Some(time) = time {
-            ntime = &time as *const _;
-        } else {
-            ntime = null();
-        }
-
-        let ninput;
-        if let Some(input) = input {
-            ninput = input as *mut _;
-        } else {
-            ninput = null_mut();
-        }
+        let ntime = if let Some(time) = time { &time as *const _ } else { null() };
+        let ninput = if let Some(input) = input { input as *mut _ } else { null_mut() };
 
         let res = unsafe { c_api::notcurses_get(self, ntime, ninput) };
         if res == c_api::NCRESULT_ERR as u32 {
@@ -509,12 +498,7 @@ impl Nc {
         ni: &mut Vec<NcInput>,
         vcount: u32,
     ) -> NcResult<u32> {
-        let ntime;
-        if let Some(time) = time {
-            ntime = &time as *const _;
-        } else {
-            ntime = null();
-        }
+        let ntime = if let Some(time) = time { &time as *const _ } else { null() };
         let nivec = ni.as_mut_ptr() as *mut NcInput;
 
         let res = unsafe { c_api::notcurses_getvec(self, ntime, nivec, vcount as i32) };
@@ -888,19 +872,9 @@ impl Nc {
     ) -> NcResult<NcVisualGeometry> {
         let mut vg = c_api::NcVGeom::new();
 
-        let v_ptr: *const NcVisual;
-        if let Some(v) = visual {
-            v_ptr = v;
-        } else {
-            v_ptr = null();
-        }
-        let vo_ptr: *const NcVisualOptions;
-        if let Some(o) = vopts {
-            vo_ptr = o;
-        } else {
-            let vo = NcVisualOptions::default();
-            vo_ptr = &vo;
-        }
+        let v_ptr: *const NcVisual = if let Some(v) = visual { v } else { null() };
+        let vo_ptr: *const NcVisualOptions =
+            if let Some(o) = vopts { o } else { &NcVisualOptions::default() };
 
         let res = unsafe { crate::c_api::ncvisual_geom(self, v_ptr, vo_ptr, &mut vg) };
         if res <= c_api::NCRESULT_ERR {

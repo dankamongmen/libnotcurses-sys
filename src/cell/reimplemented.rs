@@ -417,9 +417,7 @@ pub fn nccells_load_box(
     // TODO: CHECK: mutable copy for pointer arithmetics:
     let mut gclu = cstring![gcluster];
 
-    let mut ulen: NcResult_i32;
-
-    ulen = nccell_prime(plane, ul, gcluster, style, channels);
+    let mut ulen: NcResult_i32 = nccell_prime(plane, ul, gcluster, style, channels);
 
     if ulen > 0 {
         gclu = unsafe { gclu.offset(ulen as isize) };

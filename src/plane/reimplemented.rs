@@ -299,13 +299,7 @@ pub fn ncplane_putchar_stained(plane: &mut NcPlane, ch: char) -> NcResult_i32 {
 /// *Method: NcPlane.[putegc()][NcPlane#method.putegc].*
 #[inline]
 pub fn ncplane_putegc(plane: &mut NcPlane, egc: &str, sbytes: Option<&mut usize>) -> NcResult_i32 {
-    let sbytes_ptr;
-    if let Some(sb) = sbytes {
-        sbytes_ptr = sb as *mut _;
-    } else {
-        sbytes_ptr = null_mut();
-    }
-
+    let sbytes_ptr = if let Some(sb) = sbytes { sb as *mut _ } else { null_mut() };
     unsafe { c_api::ffi::ncplane_putegc_yx(plane, -1, -1, cstring![egc], sbytes_ptr) }
 }
 
@@ -330,12 +324,7 @@ pub fn ncplane_putegc_yx(
     egc: &str,
     sbytes: Option<&mut usize>,
 ) -> NcResult_i32 {
-    let sbytes_ptr;
-    if let Some(sb) = sbytes {
-        sbytes_ptr = sb as *mut _;
-    } else {
-        sbytes_ptr = null_mut();
-    }
+    let sbytes_ptr = if let Some(sb) = sbytes { sb as *mut _ } else { null_mut() };
 
     unsafe {
         c_api::ffi::ncplane_putegc_yx(
@@ -367,12 +356,7 @@ pub fn ncplane_putegc_stained(
     egc: &str,
     sbytes: Option<&mut usize>,
 ) -> NcResult_i32 {
-    let sbytes_ptr;
-    if let Some(sb) = sbytes {
-        sbytes_ptr = sb as *mut _;
-    } else {
-        sbytes_ptr = null_mut();
-    }
+    let sbytes_ptr = if let Some(sb) = sbytes { sb as *mut _ } else { null_mut() };
 
     unsafe { c_api::ffi::ncplane_putegc_stained(plane, cstring![egc], sbytes_ptr) }
 }

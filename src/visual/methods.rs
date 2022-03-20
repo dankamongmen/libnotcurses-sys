@@ -310,19 +310,9 @@ impl NcVisual {
     ) -> NcResult<NcVisualGeometry> {
         let mut vg = c_api::NcVGeom::new();
 
-        let nc_ptr: *const Nc;
-        if let Some(nc) = nc {
-            nc_ptr = nc;
-        } else {
-            nc_ptr = null();
-        }
-        let vo_ptr: *const NcVisualOptions;
-        if let Some(o) = vopts {
-            vo_ptr = o;
-        } else {
-            let vo = NcVisualOptions::default();
-            vo_ptr = &vo;
-        }
+        let nc_ptr: *const Nc = if let Some(nc) = nc { nc } else { null() };
+        let vo_ptr: *const NcVisualOptions =
+            if let Some(o) = vopts { o } else { &NcVisualOptions::default() };
 
         let res = unsafe { crate::c_api::ncvisual_geom(nc_ptr, self, vo_ptr, &mut vg) };
         if res <= c_api::NCRESULT_ERR {
