@@ -144,8 +144,8 @@ pub fn ncchannels_set_fchannel(
     fchannel: NcChannel_u32,
 ) -> NcChannels_u64 {
     // drop the background color and alpha bit
-    *channels &= 0xffffffff_u64 | (c_api::NC_NOBACKGROUND_MASK << 32);
-    *channels |= fchannel as NcChannels_u64 & !(c_api::NC_NOBACKGROUND_MASK << 32);
+    *channels &= 0xffffffff_u64 | c_api::NC_NOBACKGROUND_MASK << 32;
+    *channels |= (fchannel as NcChannels_u64 & !c_api::NC_NOBACKGROUND_MASK) << 32;
     *channels
 }
 

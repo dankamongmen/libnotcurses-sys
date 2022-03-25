@@ -64,7 +64,7 @@ fn ncplane_channels() {
         assert_eq![channels, 0];
 
         c_api::ncplane_set_channels(plane, 0x1122334455667788);
-        assert_eq![0x1122334455667788, c_api::ncplane_channels(plane)];
+        assert_eq![0x1022334450667788, c_api::ncplane_channels(plane)];
 
         notcurses_stop(nc);
     }
@@ -79,12 +79,11 @@ fn ncplane_fchannel() {
 
         c_api::ncplane_set_channels(plane, 0x1122334455667788);
         let channels = c_api::ncplane_channels(plane);
-        assert_eq![0x11223344, c_api::ncchannels_fchannel(channels)];
+        assert_eq![0x10223344, c_api::ncchannels_fchannel(channels)];
 
-        let channels = c_api::ncplane_set_fchannel(plane, 0x10203040);
-        assert_eq![0x10203040, c_api::ncchannels_fchannel(channels)];
-        assert_eq![0x1020304055667788, channels];
-
+        let channels = c_api::ncplane_set_fchannel(plane, 0x44332211);
+        assert_eq![0x40332211, c_api::ncchannels_fchannel(channels)];
+        assert_eq![0x4433221155667788, channels];
         notcurses_stop(nc);
     }
 }
@@ -98,7 +97,7 @@ fn ncplane_bchannel() {
 
         c_api::ncplane_set_channels(plane, 0x1122334455667788);
         let channels = c_api::ncplane_channels(plane);
-        assert_eq![0x55667788, c_api::ncchannels_bchannel(channels)];
+        assert_eq![0x50667788, c_api::ncchannels_bchannel(channels)];
 
         // BUG? ncplane_set_bchannel and ncplane_set_fchannel don't get
         // applied unless they are assigned to a variable. Weird.
