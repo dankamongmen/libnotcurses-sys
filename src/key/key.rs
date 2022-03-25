@@ -20,7 +20,7 @@ impl From<NcKey> for u32 {
 /// # Constants
 impl NcKey {
     pub const Invalid: NcKey = NcKey(c_api::NCKEY_INVALID);
-    /// we received SIGWINCH
+    /// we received `SIGWINCH`.
     pub const Resize: NcKey = NcKey(c_api::NCKEY_RESIZE);
     pub const Up: NcKey = NcKey(c_api::NCKEY_UP);
     pub const Right: NcKey = NcKey(c_api::NCKEY_RIGHT);

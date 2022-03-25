@@ -38,7 +38,7 @@ pub fn nccell_fchannel(cell: &NcCell) -> NcChannel_u32 {
     c_api::ncchannels_fchannel(cell.channels)
 }
 
-/// Gets the alpha and coloring bits from the cell [`NcChannel_u64`].
+/// Gets the alpha and coloring bits from the cell [`NcChannels_u64`].
 ///
 /// *Method: NcCell.[channels()][NcCell#method.channels].*
 #[inline]
@@ -64,7 +64,7 @@ pub fn nccell_set_fchannel(cell: &mut NcCell, fchannel: NcChannel_u32) -> NcChan
     c_api::ncchannels_set_fchannel(&mut cell.channels, fchannel)
 }
 
-/// Sets the alpha and coloring bits of the cell from an [`NcChannel_u64`],
+/// Sets the alpha and coloring bits of the cell from an [`NcChannels_u64`],
 /// returning the new [`NcChannels_u64`].
 ///
 /// *Method: NcCell.[set_fchannel()][NcCell#method.set_fchannel].*

@@ -149,7 +149,7 @@ pub fn ncchannels_set_fchannel(
     *channels
 }
 
-/// Sets the alpha and coloring bits of an [`NcChannels_u64`] from another [`NcChannel_u64`].
+/// Sets the alpha and coloring bits of an [`NcChannels_u64`] from another [`NcChannels_u64`].
 ///
 /// *Method: NcChannels.[set_fchannel()][NcChannels#method.set_channels]*
 #[inline]

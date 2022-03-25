@@ -103,6 +103,7 @@ pub type NcOptions = crate::c_api::ffi::notcurses_options;
 /// - [`PreserveCursor`][NcFlags::PreserveCursor]
 /// - [`Scrolling`][NcFlags::Scrolling]
 /// - [`CliMode`][NcFlags::CliMode]
+/// - [`SuppressBanners`][NcFlags::SuppressBanners]
 ///
 /// # Default
 /// *[`NcFlags::None`]
@@ -161,11 +162,13 @@ impl NcFlags {
     /// With this flag, the handler will not be installed.
     pub const NoQuitSigHandlers: Self = Self(c_api::NCOPTION_NO_QUIT_SIGHANDLERS);
 
-    /// Do not handle SIGWINCH.
+    /// Do not handle `SIGWINCH`.
     ///
-    /// A signal handler will usually be installed for SIGWINCH, resulting in
-    /// NCKEY_RESIZE events being generated on input.
-    /// With this flag, the handler will not be installed.
+    /// A signal handler will usually be installed for `SIGWINCH`, resulting in
+    /// [`Nckey::Resize`] events being generated on input. With this flag,
+    /// the handler will not be installed.
+    ///
+    /// [`Nckey::Resize`]: crate::NcKey#associatedconstant.Resize
     pub const NoWinchSigHandler: Self = Self(c_api::NCOPTION_NO_WINCH_SIGHANDLER);
 
     /// Initializes the standard plane's virtual cursor to match the physical
@@ -178,7 +181,9 @@ impl NcFlags {
     pub const PreserveCursor: Self = Self(c_api::NCOPTION_PRESERVE_CURSOR);
 
     /// Prepares the standard plane in scrolling mode, useful for CLIs. This is
-    /// equivalent to calling ncplane_set_scrolling(notcurses_stdplane(nc), true).
+    /// equivalent to calling [`ncplane_set_scrolling`]`(notcurses_stdplane(nc), true)`.
+    ///
+    /// [`ncplane_set_scrolling`]: crate::c_api::ncplane_set_scrolling
     pub const Scrolling: Self = Self(c_api::NCOPTION_SCROLLING);
 
     /// "CLI mode" is just setting these four options:
@@ -196,8 +201,8 @@ impl NcFlags {
 
     /// Do not print banners.
     ///
-    /// Notcurses typically prints version info in notcurses_init() and performance
-    /// info in notcurses_stop(). This inhibits that output.
+    /// Notcurses typically prints version info in `notcurses_init` and
+    /// performance info in `notcurses_stop`. This inhibits that output.
     pub const SuppressBanners: Self = Self(c_api::NCOPTION_SUPPRESS_BANNERS);
 }
 
@@ -305,8 +310,9 @@ pub(crate) mod c_api {
 
     /// [`NcFlags_u64`] flag to prepare the standard plane in scrolling mode,
     /// useful for CLIs. This is equivalent to calling
-    /// [`ncplane_set_scrolling][crate::c_api::ncplane_set_scrolling]
-    /// `(notcurses_stdplane(nc), true)`.
+    /// [`ncplane_set_scrolling`]`(notcurses_stdplane(nc), true)`.
+    ///
+    /// [`ncplane_set_scrolling`]: crate::c_api::ncplane_set_scrolling
     pub const NCOPTION_SCROLLING: NcFlags_u64 = ffi::NCOPTION_SCROLLING as NcFlags_u64;
 
     /// [`NcFlags_u64`] flag set composed of `NCOPTION_NO_ALTERNATE_SCREEN` |
