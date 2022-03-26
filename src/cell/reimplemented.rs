@@ -6,9 +6,10 @@ use libc::strcmp;
 
 use crate::{
     c_api::{
-        self, nccell_release, NcChannel_u32, NcChannels_u64, NcResult_i32, NcRgb_u32, NcStyle_u16,
+        self, nccell_release, NcAlpha_u32, NcChannel_u32, NcChannels_u64, NcResult_i32, NcRgb_u32,
+        NcStyle_u16,
     },
-    cstring, rstring, NcAlpha, NcCell, NcPaletteIndex, NcPlane,
+    cstring, rstring, NcCell, NcPaletteIndex, NcPlane,
 };
 
 const NCBOXLIGHT: &str = "┌┐└┘─│";
@@ -51,8 +52,11 @@ pub fn nccell_channels(cell: &NcCell) -> NcChannels_u64 {
 ///
 /// *Method: NcCell.[set_bchannel()][NcCell#method.set_bchannel].*
 #[inline]
-pub fn nccell_set_bchannel(cell: &mut NcCell, bchannel: NcChannel_u32) -> NcChannels_u64 {
-    c_api::ncchannels_set_bchannel(&mut cell.channels, bchannel)
+pub fn nccell_set_bchannel(
+    cell: &mut NcCell,
+    bchannel: impl Into<NcChannel_u32>,
+) -> NcChannels_u64 {
+    c_api::ncchannels_set_bchannel(&mut cell.channels, bchannel.into())
 }
 
 /// Sets the foreground alpha and coloring bits of the cell from an [`NcChannel_u32`],
@@ -60,8 +64,11 @@ pub fn nccell_set_bchannel(cell: &mut NcCell, bchannel: NcChannel_u32) -> NcChan
 ///
 /// *Method: NcCell.[set_fchannel()][NcCell#method.set_fchannel].*
 #[inline]
-pub fn nccell_set_fchannel(cell: &mut NcCell, fchannel: NcChannel_u32) -> NcChannels_u64 {
-    c_api::ncchannels_set_fchannel(&mut cell.channels, fchannel)
+pub fn nccell_set_fchannel(
+    cell: &mut NcCell,
+    fchannel: impl Into<NcChannel_u32>,
+) -> NcChannels_u64 {
+    c_api::ncchannels_set_fchannel(&mut cell.channels, fchannel.into())
 }
 
 /// Sets the alpha and coloring bits of the cell from an [`NcChannels_u64`],
@@ -69,42 +76,45 @@ pub fn nccell_set_fchannel(cell: &mut NcCell, fchannel: NcChannel_u32) -> NcChan
 ///
 /// *Method: NcCell.[set_fchannel()][NcCell#method.set_fchannel].*
 #[inline]
-pub fn nccell_set_channels(cell: &mut NcCell, channels: NcChannels_u64) -> NcChannels_u64 {
-    c_api::ncchannels_set_channels(&mut cell.channels, channels)
+pub fn nccell_set_channels(
+    cell: &mut NcCell,
+    channels: impl Into<NcChannels_u64>,
+) -> NcChannels_u64 {
+    c_api::ncchannels_set_channels(&mut cell.channels, channels.into())
 }
 
 // Alpha -----------------------------------------------------------------------
 
-/// Gets the foreground [`NcAlpha`] from an [`NcCell`] (shifted to LSBs).
+/// Gets the foreground [`NcAlpha_u32`] from an [`NcCell`] (shifted to LSBs).
 ///
 /// *Method: NcCell.[fg_alpha()][NcCell#method.fg_alpha].*
 #[inline]
-pub fn nccell_fg_alpha(cell: &NcCell) -> NcAlpha {
+pub fn nccell_fg_alpha(cell: &NcCell) -> NcAlpha_u32 {
     c_api::ncchannels_fg_alpha(cell.channels)
 }
 
-/// Gets the background [`NcAlpha`] from an [`NcCell`] (shifted to LSBs).
+/// Gets the background [`NcAlpha_u32`] from an [`NcCell`] (shifted to LSBs).
 ///
 /// *Method: NcCell.[bg_alpha()][NcCell#method.bg_alpha].*
 #[inline]
-pub fn nccell_bg_alpha(cell: &NcCell) -> NcAlpha {
+pub fn nccell_bg_alpha(cell: &NcCell) -> NcAlpha_u32 {
     c_api::ncchannels_bg_alpha(cell.channels)
 }
 
-/// Sets the foreground [`NcAlpha`] of an [`NcCell`].
+/// Sets the foreground [`NcAlpha_u32`] of an [`NcCell`].
 ///
 /// *Method: NcCell.[set_fg_alpha()][NcCell#method.set_fg_alpha].*
 #[inline]
-pub fn nccell_set_fg_alpha(cell: &mut NcCell, alpha: NcAlpha) {
-    c_api::ncchannels_set_fg_alpha(&mut cell.channels, alpha);
+pub fn nccell_set_fg_alpha(cell: &mut NcCell, alpha: impl Into<NcAlpha_u32>) {
+    c_api::ncchannels_set_fg_alpha(&mut cell.channels, alpha.into());
 }
 
-/// Sets the background [`NcAlpha`] of an [`NcCell`].
+/// Sets the background [`NcAlpha_u32`] of an [`NcCell`].
 ///
 /// *Method: NcCell.[set_bg_alpha()][NcCell#method.set_bg_alpha].*
 #[inline]
-pub fn nccell_set_bg_alpha(cell: &mut NcCell, alpha: NcAlpha) {
-    c_api::ncchannels_set_bg_alpha(&mut cell.channels, alpha);
+pub fn nccell_set_bg_alpha(cell: &mut NcCell, alpha: impl Into<NcAlpha_u32>) {
+    c_api::ncchannels_set_bg_alpha(&mut cell.channels, alpha.into());
 }
 
 // u8 ---------------------------------------------------------------------
@@ -168,8 +178,8 @@ pub fn nccell_bg_rgb(cell: &NcCell) -> NcRgb_u32 {
 ///
 /// *Method: NcCell.[set_fg_rgb()][NcCell#method.set_fg_rgb].*
 #[inline]
-pub fn nccell_set_fg_rgb(cell: &mut NcCell, rgb: NcRgb_u32) {
-    c_api::ncchannels_set_fg_rgb(&mut cell.channels, rgb);
+pub fn nccell_set_fg_rgb(cell: &mut NcCell, rgb: impl Into<NcRgb_u32>) {
+    c_api::ncchannels_set_fg_rgb(&mut cell.channels, rgb.into());
 }
 
 /// Sets the background [`NcRgb_u32`] of an [`NcCell`],
@@ -177,8 +187,8 @@ pub fn nccell_set_fg_rgb(cell: &mut NcCell, rgb: NcRgb_u32) {
 ///
 /// *Method: NcCell.[set_bg_rgb()][NcCell#method.set_bg_rgb].*
 #[inline]
-pub fn nccell_set_bg_rgb(cell: &mut NcCell, rgb: NcRgb_u32) {
-    c_api::ncchannels_set_bg_rgb(&mut cell.channels, rgb);
+pub fn nccell_set_bg_rgb(cell: &mut NcCell, rgb: impl Into<NcRgb_u32>) {
+    c_api::ncchannels_set_bg_rgb(&mut cell.channels, rgb.into());
 }
 
 // Default ---------------------------------------------------------------------
@@ -262,30 +272,36 @@ pub const fn nccell_bg_palindex(cell: &NcCell) -> NcPaletteIndex {
 
 /// Sets an [`NcCell`]'s foreground [`NcPaletteIndex`].
 ///
-/// Also sets [`NcChannels_u64::FG_PALETTE`][NcChannels_u64#associatedconstant.FG_PALETTE]
-/// and [`NcAlpha::OPAQUE`][NcAlpha#associatedconstant::OPAQUE], and clears out
-/// [`NcChannels_u64::FG_DEFAULT_MASK`][NcChannels_u64#associatedconstant.FG_DEFAULT_MASK].
+/// Also sets [`NcChannels_u64::FG_PALETTE`] and [`NCALPHA_OPAQUE`],
+/// and clears out [`NcChannels_u64::FG_DEFAULT_MASK`].
 ///
 /// Note: Unlike the original C function, this one can't fail.
 ///
+/// [`NCALPHA_OPAQUE`]: c_api::NCALPHA_OPAQUE
+/// [`NcChannels_u64::FG_PALETTE`]: NcChannels_u64#associatedconstant.FG_PALETTE
+/// [`NcChannels_u64::FG_DEFAULT_MASK`]: NcChannels_u64#associatedconstant.FG_DEFAULT_MASK
+///
 /// *Method: NcCell.[set_fg_palindex()][NcCell#method.set_fg_palindex].*
 #[inline]
-pub fn nccell_set_fg_palindex(cell: &mut NcCell, index: NcPaletteIndex) {
-    c_api::ncchannels_set_fg_palindex(&mut cell.channels, index)
+pub fn nccell_set_fg_palindex(cell: &mut NcCell, index: impl Into<NcPaletteIndex>) {
+    c_api::ncchannels_set_fg_palindex(&mut cell.channels, index.into())
 }
 
 /// Sets an [`NcCell`]'s background [`NcPaletteIndex`].
 ///
-/// Also sets [`NcChannels_u64::BG_PALETTE`][NcChannels_u64#associatedconstant.BG_PALETTE]
-/// and [`NcAlpha::OPAQUE`][NcAlpha#associatedconstant::OPAQUE], and clears out
-/// [`NcChannels_u64::BG_DEFAULT_MASK`][NcChannels_u64#associatedconstant.BG_DEFAULT_MASK].
+/// Also sets [`NcChannels_u64::BG_PALETTE`] and [`NCALPHA_OPAQUE`],
+/// and clears out [`NcChannels_u64::BG_DEFAULT_MASK`].
 ///
 /// Note: Unlike the original C function, this one can't fail.
 ///
+/// [`NCALPHA_OPAQUE`]: c_api::NCALPHA_OPAQUE
+/// [`NcChannels_u64::BG_PALETTE`]: NcChannels_u64#associatedconstant.BG_PALETTE
+/// [`NcChannels_u64::BG_DEFAULT_MASK`]: NcChannels_u64#associatedconstant.BG_DEFAULT_MASK
+///
 /// *Method: NcCell.[set_bg_palindex()][NcCell#method.set_bg_palindex].*
 #[inline]
-pub fn nccell_set_bg_palindex(cell: &mut NcCell, index: NcPaletteIndex) {
-    c_api::ncchannels_set_bg_palindex(&mut cell.channels, index)
+pub fn nccell_set_bg_palindex(cell: &mut NcCell, index: impl Into<NcPaletteIndex>) {
+    c_api::ncchannels_set_bg_palindex(&mut cell.channels, index.into())
 }
 
 // Styles ----------------------------------------------------------------------
@@ -303,16 +319,16 @@ pub const fn nccell_styles(cell: &NcCell) -> NcStyle_u16 {
 ///
 /// *Method: NcCell.[styles_on()][NcCell#method.styles_on].*
 #[inline]
-pub fn nccell_on_styles(cell: &mut NcCell, stylebits: NcStyle_u16) {
-    cell.stylemask |= stylebits & c_api::NCSTYLE_MASK as u16;
+pub fn nccell_on_styles(cell: &mut NcCell, stylebits: impl Into<NcStyle_u16>) {
+    cell.stylemask |= stylebits.into() & c_api::NCSTYLE_MASK as u16;
 }
 
 /// Removes the specified [`NcStyle_u16`] bits from an [`NcCell`]'s existing spec.
 ///
 /// *Method: NcCell.[styles_off()][NcCell#method.styles_off].*
 #[inline]
-pub fn nccell_off_styles(cell: &mut NcCell, stylebits: NcStyle_u16) {
-    cell.stylemask &= !(stylebits & c_api::NCSTYLE_MASK as u16);
+pub fn nccell_off_styles(cell: &mut NcCell, stylebits: impl Into<NcStyle_u16>) {
+    cell.stylemask &= !(stylebits.into() & c_api::NCSTYLE_MASK as u16);
 }
 
 /// Sets *just* the specified [`NcStyle_u16`] bits for an [`NcCell`],
@@ -320,8 +336,8 @@ pub fn nccell_off_styles(cell: &mut NcCell, stylebits: NcStyle_u16) {
 ///
 /// *Method: NcCell.[styles_set()][NcCell#method.styles_set].*
 #[inline]
-pub fn nccell_set_styles(cell: &mut NcCell, stylebits: NcStyle_u16) {
-    cell.stylemask = stylebits & c_api::NCSTYLE_MASK as u16;
+pub fn nccell_set_styles(cell: &mut NcCell, stylebits: impl Into<NcStyle_u16>) {
+    cell.stylemask = stylebits.into() & c_api::NCSTYLE_MASK as u16;
 }
 
 // Chars -----------------------------------------------------------------------
@@ -437,11 +453,11 @@ pub fn nccell_prime(
     plane: &mut NcPlane,
     cell: &mut NcCell,
     gcluster: &str,
-    style: NcStyle_u16,
-    channels: NcChannels_u64,
+    style: impl Into<NcStyle_u16>,
+    channels: impl Into<NcChannels_u64>,
 ) -> NcResult_i32 {
-    cell.stylemask = style;
-    cell.channels = channels;
+    cell.stylemask = style.into();
+    cell.channels = channels.into();
     unsafe { c_api::nccell_load(plane, cell, cstring![gcluster]) }
 }
 
@@ -457,8 +473,8 @@ pub fn nccell_prime(
 #[inline]
 pub fn nccells_load_box(
     plane: &mut NcPlane,
-    style: NcStyle_u16,
-    channels: NcChannels_u64,
+    style: impl Into<NcStyle_u16> + Copy,
+    channels: impl Into<NcChannels_u64> + Copy,
     ul: &mut NcCell,
     ur: &mut NcCell,
     ll: &mut NcCell,
@@ -472,27 +488,27 @@ pub fn nccells_load_box(
     // TODO: CHECK: mutable copy for pointer arithmetics:
     let mut gclu = cstring![gcluster];
 
-    let mut ulen: NcResult_i32 = nccell_prime(plane, ul, gcluster, style, channels);
+    let mut ulen: NcResult_i32 = nccell_prime(plane, ul, gcluster, style.into(), channels.into());
 
     if ulen > 0 {
         gclu = unsafe { gclu.offset(ulen as isize) };
-        ulen = nccell_prime(plane, ur, gcluster, style, channels);
+        ulen = nccell_prime(plane, ur, gcluster, style.into(), channels.into());
 
         if ulen > 0 {
             gclu = unsafe { gclu.offset(ulen as isize) };
-            ulen = nccell_prime(plane, ll, gcluster, style, channels);
+            ulen = nccell_prime(plane, ll, gcluster, style.into(), channels.into());
 
             if ulen > 0 {
                 gclu = unsafe { gclu.offset(ulen as isize) };
-                ulen = nccell_prime(plane, lr, gcluster, style, channels);
+                ulen = nccell_prime(plane, lr, gcluster, style.into(), channels.into());
 
                 if ulen > 0 {
                     gclu = unsafe { gclu.offset(ulen as isize) };
-                    ulen = nccell_prime(plane, hl, gcluster, style, channels);
+                    ulen = nccell_prime(plane, hl, gcluster, style.into(), channels.into());
 
                     if ulen > 0 {
                         let _gclu = unsafe { gclu.offset(ulen as isize) };
-                        ulen = nccell_prime(plane, vl, gcluster, style, channels);
+                        ulen = nccell_prime(plane, vl, gcluster, style.into(), channels.into());
 
                         if ulen > 0 {
                             return c_api::NCRESULT_OK;
@@ -526,8 +542,8 @@ pub fn nccells_load_box(
 #[inline]
 pub fn nccells_ascii_box(
     plane: &mut NcPlane,
-    style: NcStyle_u16,
-    channels: NcChannels_u64,
+    style: impl Into<NcStyle_u16>,
+    channels: impl Into<NcChannels_u64>,
     ul: &mut NcCell,
     ur: &mut NcCell,
     ll: &mut NcCell,
@@ -535,7 +551,18 @@ pub fn nccells_ascii_box(
     hl: &mut NcCell,
     vl: &mut NcCell,
 ) -> NcResult_i32 {
-    nccells_load_box(plane, style, channels, ul, ur, ll, lr, hl, vl, NCBOXASCII)
+    nccells_load_box(
+        plane,
+        style.into(),
+        channels.into(),
+        ul,
+        ur,
+        ll,
+        lr,
+        hl,
+        vl,
+        NCBOXASCII,
+    )
 }
 
 /// [`nccells_load_box`] with double line box-drawing characters.
@@ -544,8 +571,8 @@ pub fn nccells_ascii_box(
 #[inline]
 pub fn nccells_double_box(
     plane: &mut NcPlane,
-    style: NcStyle_u16,
-    channels: NcChannels_u64,
+    style: impl Into<NcStyle_u16>,
+    channels: impl Into<NcChannels_u64>,
     ul: &mut NcCell,
     ur: &mut NcCell,
     ll: &mut NcCell,
@@ -553,7 +580,18 @@ pub fn nccells_double_box(
     hl: &mut NcCell,
     vl: &mut NcCell,
 ) -> NcResult_i32 {
-    nccells_load_box(plane, style, channels, ul, ur, ll, lr, hl, vl, NCBOXDOUBLE)
+    nccells_load_box(
+        plane,
+        style.into(),
+        channels.into(),
+        ul,
+        ur,
+        ll,
+        lr,
+        hl,
+        vl,
+        NCBOXDOUBLE,
+    )
 }
 
 /// [`nccells_load_box`] with heavy line box-drawing characters.
@@ -562,8 +600,8 @@ pub fn nccells_double_box(
 #[inline]
 pub fn nccells_heavy_box(
     plane: &mut NcPlane,
-    style: NcStyle_u16,
-    channels: NcChannels_u64,
+    style: impl Into<NcStyle_u16>,
+    channels: impl Into<NcChannels_u64>,
     ul: &mut NcCell,
     ur: &mut NcCell,
     ll: &mut NcCell,
@@ -571,7 +609,18 @@ pub fn nccells_heavy_box(
     hl: &mut NcCell,
     vl: &mut NcCell,
 ) -> NcResult_i32 {
-    nccells_load_box(plane, style, channels, ul, ur, ll, lr, hl, vl, NCBOXHEAVY)
+    nccells_load_box(
+        plane,
+        style.into(),
+        channels.into(),
+        ul,
+        ur,
+        ll,
+        lr,
+        hl,
+        vl,
+        NCBOXHEAVY,
+    )
 }
 
 /// [`nccells_load_box`] with light line box-drawing characters.
@@ -580,8 +629,8 @@ pub fn nccells_heavy_box(
 #[inline]
 pub fn nccells_light_box(
     plane: &mut NcPlane,
-    style: NcStyle_u16,
-    channels: NcChannels_u64,
+    style: impl Into<NcStyle_u16>,
+    channels: impl Into<NcChannels_u64>,
     ul: &mut NcCell,
     ur: &mut NcCell,
     ll: &mut NcCell,
@@ -589,7 +638,18 @@ pub fn nccells_light_box(
     hl: &mut NcCell,
     vl: &mut NcCell,
 ) -> NcResult_i32 {
-    nccells_load_box(plane, style, channels, ul, ur, ll, lr, hl, vl, NCBOXLIGHT)
+    nccells_load_box(
+        plane,
+        style.into(),
+        channels.into(),
+        ul,
+        ur,
+        ll,
+        lr,
+        hl,
+        vl,
+        NCBOXLIGHT,
+    )
 }
 
 /// [`nccells_load_box`] with round line box-drawing characters.
@@ -598,8 +658,8 @@ pub fn nccells_light_box(
 #[inline]
 pub fn nccells_rounded_box(
     plane: &mut NcPlane,
-    style: NcStyle_u16,
-    channels: NcChannels_u64,
+    style: impl Into<NcStyle_u16>,
+    channels: impl Into<NcChannels_u64>,
     ul: &mut NcCell,
     ur: &mut NcCell,
     ll: &mut NcCell,
@@ -607,5 +667,16 @@ pub fn nccells_rounded_box(
     hl: &mut NcCell,
     vl: &mut NcCell,
 ) -> NcResult_i32 {
-    nccells_load_box(plane, style, channels, ul, ur, ll, lr, hl, vl, NCBOXROUND)
+    nccells_load_box(
+        plane,
+        style.into(),
+        channels.into(),
+        ul,
+        ur,
+        ll,
+        lr,
+        hl,
+        vl,
+        NCBOXROUND,
+    )
 }

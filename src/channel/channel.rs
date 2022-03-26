@@ -92,23 +92,30 @@ impl NcChannel {
     }
 
     /// New `NcChannel`, expects [`NcRgb`].
-    pub fn from_rgb<RGB: Into<NcRgb>>(rgb: RGB) -> Self {
+    pub fn from_rgb(rgb: impl Into<NcRgb>) -> Self {
         Self::new().set(rgb.into())
     }
 
     /// New `NcChannel`, expects [`NcRgb`] & [`NcAlpha`].
-    pub fn from_rgb_alpha<RGB: Into<NcRgb>>(rgb: RGB, alpha: NcAlpha) -> Self {
+    pub fn from_rgb_alpha(rgb: impl Into<NcRgb>, alpha: NcAlpha) -> Self {
         Self::new().set(rgb.into()).set_alpha(alpha)
     }
 
     /// New `NcChannel`, expects three RGB component components.
-    pub fn from_rgb8(r: u8, g: u8, b: u8) -> Self {
-        Self::new().set_rgb8(r, g, b)
+    pub fn from_rgb8(r: impl Into<u8>, g: impl Into<u8>, b: impl Into<u8>) -> Self {
+        Self::new().set_rgb8(r.into(), g.into(), b.into())
     }
 
     /// New `NcChannel`, expects three RGB component components & [`NcAlpha`].
-    pub fn from_rgb8_alpha(r: u8, g: u8, b: u8, alpha: NcAlpha) -> Self {
-        Self::new().set_rgb8(r, g, b).set_alpha(alpha)
+    pub fn from_rgb8_alpha(
+        r: impl Into<u8>,
+        g: impl Into<u8>,
+        b: impl Into<u8>,
+        alpha: impl Into<NcAlpha>,
+    ) -> Self {
+        Self::new()
+            .set_rgb8(r.into(), g.into(), b.into())
+            .set_alpha(alpha.into())
     }
 }
 
@@ -122,8 +129,8 @@ impl NcChannel {
     /// *C style function: [channels_combine()][c_api::ncchannels_combine].*
     //
     // Not in the C API
-    pub fn fcombine(&self, bchannel: NcChannel) -> NcChannels {
-        c_api::ncchannels_combine(self.0, bchannel.0).into()
+    pub fn fcombine(&self, bchannel: impl Into<NcChannel>) -> NcChannels {
+        c_api::ncchannels_combine(self.0, bchannel.into().0).into()
     }
 
     /// Combines this [`NcChannel`] as background, with another as foreground
@@ -132,8 +139,8 @@ impl NcChannel {
     /// *C style function: [channels_combine()][c_api::ncchannels_combine].*
     //
     // Not in the C API
-    pub fn bcombine(&self, fchannel: NcChannel) -> NcChannels {
-        c_api::ncchannels_combine(fchannel.0, self.0).into()
+    pub fn bcombine(&self, fchannel: impl Into<NcChannel>) -> NcChannels {
+        c_api::ncchannels_combine(fchannel.into().0, self.0).into()
     }
 
     // Alpha
@@ -142,14 +149,14 @@ impl NcChannel {
     ///
     /// *C style function: [ncchannel_alpha()][c_api::ncchannel_alpha].*
     pub fn alpha(&self) -> NcAlpha {
-        c_api::ncchannel_alpha(self.0)
+        c_api::ncchannel_alpha(self.0).into()
     }
 
     /// Sets the [`NcAlpha`].
     ///
     /// *C style function: [ncchannel_set_alpha()][c_api::ncchannel_set_alpha].*
-    pub fn set_alpha(&mut self, alpha: NcAlpha) -> Self {
-        c_api::ncchannel_set_alpha(&mut self.0, alpha);
+    pub fn set_alpha(&mut self, alpha: impl Into<NcAlpha>) -> Self {
+        c_api::ncchannel_set_alpha(&mut self.0, alpha.into());
         *self
     }
 
@@ -175,8 +182,8 @@ impl NcChannel {
     /// "default color", retaining the other bits unchanged.
     ///
     /// *C style function: [ncchannel_set()][c_api::ncchannel_set].*
-    pub fn set<RGB: Into<NcRgb>>(&mut self, rgb: RGB) -> Self {
-        c_api::ncchannel_set(&mut self.0, rgb.into().into());
+    pub fn set(&mut self, rgb: impl Into<NcRgb>) -> Self {
+        c_api::ncchannel_set(&mut self.0, rgb.into());
         *self
     }
 
@@ -195,8 +202,8 @@ impl NcChannel {
     /// marks the NcChannel as NOT using the "default color".
     ///
     /// *C style function: [ncchannel_set_rgb8()][c_api::ncchannel_set_rgb8].*
-    pub fn set_rgb8(&mut self, r: u8, g: u8, b: u8) -> Self {
-        c_api::ncchannel_set_rgb8(&mut self.0, r, g, b);
+    pub fn set_rgb8(&mut self, r: impl Into<u8>, g: impl Into<u8>, b: impl Into<u8>) -> Self {
+        c_api::ncchannel_set_rgb8(&mut self.0, r.into(), g.into(), b.into());
         *self
     }
 
@@ -226,8 +233,8 @@ impl NcChannel {
     /// *C style function: [ncchannel_set_r()][c_api::ncchannel_set_r].*
     //
     // Not in the C API
-    pub fn set_r(&mut self, r: u8) -> Self {
-        c_api::ncchannel_set_r(&mut self.0, r).into()
+    pub fn set_r(&mut self, r: impl Into<u8>) -> Self {
+        c_api::ncchannel_set_r(&mut self.0, r.into()).into()
     }
 
     /// Sets the green component, and returns the new `NcChannel`.
@@ -235,8 +242,8 @@ impl NcChannel {
     /// *C style function: [ncchannel_set_g()][c_api::ncchannel_set_g].*
     //
     // Not in the C API
-    pub fn set_g(&mut self, g: u8) -> Self {
-        c_api::ncchannel_set_g(&mut self.0, g).into()
+    pub fn set_g(&mut self, g: impl Into<u8>) -> Self {
+        c_api::ncchannel_set_g(&mut self.0, g.into()).into()
     }
 
     /// Sets the blue component, and returns the new `NcChannel`.
@@ -244,8 +251,8 @@ impl NcChannel {
     /// *C style function: [ncchannel_set_b()][c_api::ncchannel_set_b].*
     //
     // Not in the C API
-    pub fn set_b(&mut self, b: u8) -> Self {
-        c_api::ncchannel_set_b(&mut self.0, b).into()
+    pub fn set_b(&mut self, b: impl Into<u8>) -> Self {
+        c_api::ncchannel_set_b(&mut self.0, b.into()).into()
     }
 
     // default color
@@ -291,7 +298,7 @@ impl NcChannel {
         c_api::ncchannel_palindex(self.0)
     }
 
-    /// Is this NcChannel using palette-indexed color rather than RGB?
+    /// Is this NcChannel using palette-indexed color rather a than RGB?
     ///
     /// *C style function: [ncchannel_palindex_p()][c_api::ncchannel_palindex_p].*
     pub fn palindex_p(&self) -> bool {
@@ -302,8 +309,8 @@ impl NcChannel {
     /// palette-indexed mode.
     ///
     /// *C style function: [ncchannel_set_palindex()][c_api::ncchannel_set_palindex].*
-    pub fn set_palindex(&mut self, index: NcPaletteIndex) -> Self {
-        c_api::ncchannel_set_palindex(&mut self.0, index);
+    pub fn set_palindex(&mut self, index: impl Into<NcPaletteIndex>) -> Self {
+        c_api::ncchannel_set_palindex(&mut self.0, index.into());
         *self
     }
 }

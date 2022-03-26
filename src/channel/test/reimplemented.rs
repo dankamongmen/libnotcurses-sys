@@ -57,9 +57,9 @@ fn channel_set_rgb8() {
 
     c_api::ncchannel_set_rgb8(&mut c, 0x11, 0x22, 0x33);
 
-    assert_eq!(c_api::ncchannel_r(c), 0x11);
-    assert_eq!(c_api::ncchannel_g(c), 0x22);
-    assert_eq!(c_api::ncchannel_b(c), 0x33);
+    assert_eq!(c_api::ncchannel_r(c), 0x11_u8);
+    assert_eq!(c_api::ncchannel_g(c), 0x22_u8);
+    assert_eq!(c_api::ncchannel_b(c), 0x33_u8);
 
     // now it shoud be marked as NOT using the default color
     assert_eq!(false, c_api::ncchannel_default_p(c));
@@ -73,7 +73,7 @@ fn channel_set() {
     // by default it uses the default color
     assert_eq!(true, c_api::ncchannel_default_p(c));
 
-    c_api::ncchannel_set(&mut c, 0x112233);
+    c_api::ncchannel_set(&mut c, 0x112233_u32);
     println!("\n {:08x}", c); // DEBUG
 
     assert_eq!(c_api::ncchannel_r(c), 0x11);
@@ -89,10 +89,10 @@ fn channel_set() {
 #[serial]
 fn channel_alpha() {
     let c: NcChannel_u32 = 0x112233;
-    assert_ne!(c_api::ncchannel_alpha(c), NcAlpha::Transparent);
+    assert_ne!(c_api::ncchannel_alpha(c), c_api::NCALPHA_TRANSPARENT);
 
     let c: NcChannel_u32 = 0x112233 | NcAlpha_u32::from(NcAlpha::Transparent);
-    assert_eq!(c_api::ncchannel_alpha(c), NcAlpha::Transparent);
+    assert_eq!(c_api::ncchannel_alpha(c), c_api::NCALPHA_TRANSPARENT);
 }
 
 /// sets the alpha component
@@ -101,16 +101,16 @@ fn channel_alpha() {
 fn channel_set_alpha() {
     let mut c: NcChannel_u32 = 0x112233;
     c_api::ncchannel_set_alpha(&mut c, NcAlpha::HighContrast);
-    assert_eq!(NcAlpha::HighContrast, c_api::ncchannel_alpha(c));
+    assert_eq!(c_api::NCALPHA_HIGHCONTRAST, c_api::ncchannel_alpha(c));
 
     c_api::ncchannel_set_alpha(&mut c, NcAlpha::Transparent);
-    assert_eq!(NcAlpha::Transparent, c_api::ncchannel_alpha(c));
+    assert_eq!(c_api::NCALPHA_TRANSPARENT, c_api::ncchannel_alpha(c));
 
     c_api::ncchannel_set_alpha(&mut c, NcAlpha::Blend);
-    assert_eq!(NcAlpha::Blend, c_api::ncchannel_alpha(c));
+    assert_eq!(c_api::NCALPHA_BLEND, c_api::ncchannel_alpha(c));
 
     c_api::ncchannel_set_alpha(&mut c, NcAlpha::Opaque);
-    assert_eq!(NcAlpha::Opaque, c_api::ncchannel_alpha(c));
+    assert_eq!(c_api::NCALPHA_OPAQUE, c_api::ncchannel_alpha(c));
 }
 
 /// sets the channel as using the default color
@@ -164,7 +164,7 @@ fn channel_default_p() {
     let _ = c_api::ncchannel_set_alpha(&mut c, NcAlpha::Opaque);
     assert_eq!(true, c_api::ncchannel_default_p(c));
 
-    c_api::ncchannel_set(&mut c, 0x112233);
+    c_api::ncchannel_set(&mut c, 0x112233_u32);
     assert_eq!(false, c_api::ncchannel_default_p(c));
 }
 

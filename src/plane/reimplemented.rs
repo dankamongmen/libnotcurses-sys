@@ -20,27 +20,27 @@ use std::ffi::CString;
 
 use crate::{
     c_api::{
-        self, nccell_release, NcChannel_u32, NcChannels_u64, NcResult_i32, NcRgb_u32, NcStyle_u16,
-        NCRESULT_ERR, NCRESULT_OK,
+        self, nccell_release, NcAlpha_u32, NcChannel_u32, NcChannels_u64, NcResult_i32, NcRgb_u32,
+        NcStyle_u16, NCRESULT_ERR, NCRESULT_OK,
     },
-    cstring, NcAlign, NcAlpha, NcBoxMask, NcCell, NcPlane,
+    cstring, NcAlign, NcBoxMask, NcCell, NcPlane,
 };
 
 // Alpha -----------------------------------------------------------------------
 
-/// Gets the foreground [`NcAlpha`] from the [`NcPlane`], shifted to LSBs.
+/// Gets the foreground [`NcAlpha_u32`] from the [`NcPlane`], shifted to LSBs.
 ///
 /// *Method: NcPlane.[fg_alpha()][NcPlane#method.fg_alpha].*
 #[inline]
-pub fn ncplane_fg_alpha(plane: &NcPlane) -> NcAlpha {
+pub fn ncplane_fg_alpha(plane: &NcPlane) -> NcAlpha_u32 {
     c_api::ncchannels_fg_alpha(ncplane_channels(plane))
 }
 
-/// Gets the background [`NcAlpha`] from the [`NcPlane`], shifted to LSBs.
+/// Gets the background [`NcAlpha_u32`] from the [`NcPlane`], shifted to LSBs.
 ///
 /// *Method: NcPlane.[bg_alpha()][NcPlane#method.bg_alpha].*
 #[inline]
-pub fn ncplane_bg_alpha(plane: &NcPlane) -> NcAlpha {
+pub fn ncplane_bg_alpha(plane: &NcPlane) -> NcAlpha_u32 {
     c_api::ncchannels_bg_alpha(ncplane_channels(plane))
 }
 

@@ -13,9 +13,9 @@ fn rgb() {
     assert_eq![0, c_api::nccell_fg_rgb(&c1)];
     assert_eq![0, c_api::nccell_bg_rgb(&c1)];
 
-    c_api::nccell_set_fg_rgb(&mut c1, 0x99112233);
+    c_api::nccell_set_fg_rgb(&mut c1, 0x99112233_u32);
     assert_eq![0x112233, c_api::nccell_fg_rgb(&c1)];
-    c_api::nccell_set_bg_rgb(&mut c1, 0x99445566);
+    c_api::nccell_set_bg_rgb(&mut c1, 0x99445566_u32);
     assert_eq![0x445566, c_api::nccell_bg_rgb(&c1)];
 
     // rgb8
@@ -38,14 +38,14 @@ fn rgb() {
 #[serial]
 fn alpha() {
     let mut c1 = NcCell::new();
-    assert_eq![NcAlpha::Opaque, c_api::nccell_fg_alpha(&c1)];
-    assert_eq![NcAlpha::Opaque, c_api::nccell_bg_alpha(&c1)];
+    assert_eq![c_api::NCALPHA_OPAQUE, c_api::nccell_fg_alpha(&c1)];
+    assert_eq![c_api::NCALPHA_OPAQUE, c_api::nccell_bg_alpha(&c1)];
 
     c_api::nccell_set_fg_alpha(&mut c1, NcAlpha::Transparent);
-    assert_eq![crate::NcAlpha::Transparent, c_api::nccell_fg_alpha(&c1)];
+    assert_eq![c_api::NCALPHA_TRANSPARENT, c_api::nccell_fg_alpha(&c1)];
 
     c_api::nccell_set_bg_alpha(&mut c1, crate::NcAlpha::Blend);
-    assert_eq![crate::NcAlpha::Blend, c_api::nccell_bg_alpha(&c1)];
+    assert_eq![c_api::NCALPHA_BLEND, c_api::nccell_bg_alpha(&c1)];
 }
 
 #[test]
@@ -56,8 +56,8 @@ fn default() {
     assert_eq![true, c_api::nccell_bg_default_p(&c1)];
 
     // rgb
-    c_api::nccell_set_fg_rgb(&mut c1, 0x112233);
-    c_api::nccell_set_bg_rgb(&mut c1, 0x445566);
+    c_api::nccell_set_fg_rgb(&mut c1, 0x112233_u32);
+    c_api::nccell_set_bg_rgb(&mut c1, 0x445566_u32);
     assert_eq![false, c_api::nccell_fg_default_p(&c1)];
     assert_eq![false, c_api::nccell_bg_default_p(&c1)];
 
