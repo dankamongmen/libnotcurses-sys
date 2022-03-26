@@ -16,7 +16,7 @@
 //! constructors, and error handling with the `NcResult` enum:
 //!
 //! ### Example
-#![doc = concat!["```ignore\n", include_str!("../examples/hello-world-rust.rs"), "\n```" ]]
+#![doc = concat!["```\n", include_str!("../examples/hello-world-rust.rs"), "\n```" ]]
 //!
 //! ### Notes on the Rust API
 //!
@@ -58,7 +58,7 @@
 //! or in case of receiving a pointer, by comparing it to `null_mut()`.
 //!
 //! ### Example
-#![doc = concat!["```ignore\n", include_str!("../examples/hello-world-c.rs"), "\n```" ]]
+#![doc = concat!["```\n", include_str!("../examples/hello-world-c.rs"), "\n```" ]]
 //!
 //! ### The `notcurses` C API docs
 //!

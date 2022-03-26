@@ -164,7 +164,7 @@ macro_rules! printf {
 /// without including newlines.
 ///
 /// # Example
-/// ```ignore
+/// ```
 /// # use libnotcurses_sys::*;
 /// # fn main() -> NcResult<()> {
 /// let nc = unsafe { Nc::new_cli()? };
@@ -204,11 +204,11 @@ macro_rules! putstr {
 /// without including newlines.
 ///
 /// # Example
-/// ```ignore
+/// ```
 /// # use libnotcurses_sys::*;
 /// # fn main() -> NcResult<()> {
 /// let nc = unsafe { Nc::new_cli()? };
-/// let splane = nc.stdplane();
+/// let splane = unsafe { nc.stdplane() };
 /// splane.set_scrolling(true);
 /// putstrln!(splane, "hello world")?;
 /// putstrln!(splane, "formatted text: {:?}", (0, 1.0, "two") )?;
