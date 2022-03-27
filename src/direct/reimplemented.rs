@@ -136,10 +136,12 @@ pub fn ncdirect_hline_interp(
     h1: impl Into<NcChannels_u64>,
     h2: impl Into<NcChannels_u64>,
 ) -> NcResult_i32 {
+    let cs = cstring![egc];
+
     #[cfg(any(target_arch = "armv7l", target_arch = "i686"))]
-    let egc_ptr = cstring![egc] as *const i8;
+    let egc_ptr = cs.as_ptr() as *const i8;
     #[cfg(not(any(target_arch = "armv7l", target_arch = "i686")))]
-    let egc_ptr = cstring![egc];
+    let egc_ptr = cs.as_ptr();
 
     unsafe { crate::c_api::ffi::ncdirect_hline_interp(ncd, egc_ptr, len, h1.into(), h2.into()) }
 }
@@ -163,10 +165,12 @@ pub fn ncdirect_vline_interp(
     h1: impl Into<NcChannels_u64>,
     h2: impl Into<NcChannels_u64>,
 ) -> NcResult_i32 {
+    let cs = cstring![egc];
+
     #[cfg(any(target_arch = "armv7l", target_arch = "i686"))]
-    let egc_ptr = cstring![egc] as *const i8;
+    let egc_ptr = cs.as_ptr() as *const i8;
     #[cfg(not(any(target_arch = "armv7l", target_arch = "i686")))]
-    let egc_ptr = cstring![egc];
+    let egc_ptr = cs.as_ptr();
 
     unsafe { crate::c_api::ffi::ncdirect_vline_interp(ncd, egc_ptr, len, h1.into(), h2.into()) }
 }

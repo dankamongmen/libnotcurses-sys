@@ -100,10 +100,11 @@ impl NcDirect {
         max_y: u32,
         max_x: u32,
     ) -> NcResult<&'a mut NcPlane> {
+        let cs = cstring![filename];
         let res = unsafe {
             c_api::ncdirect_render_frame(
                 self,
-                cstring![filename],
+                cs.as_ptr(),
                 blitter.into().into(),
                 scale.into().into(),
                 max_y as i32,
@@ -138,11 +139,12 @@ impl NcDirect {
         blitter: impl Into<NcBlitter> + Copy,
         scale: impl Into<NcScale> + Copy,
     ) -> NcResult<()> {
+        let cs = cstring![filename];
         error![
             unsafe {
                 c_api::ncdirect_render_image(
                     self,
-                    cstring![filename],
+                    cs.as_ptr(),
                     align.into().into(),
                     blitter.into().into(),
                     scale.into().into(),
@@ -624,8 +626,9 @@ impl NcDirect {
     ///
     /// *C style function: [ncdirect_putstr()][c_api::ncdirect_putstr].*
     pub fn putstr(&mut self, channels: impl Into<NcChannels> + Copy, string: &str) -> NcResult<()> {
+        let cs = cstring![string];
         error![
-            unsafe { c_api::ncdirect_putstr(self, channels.into().into(), cstring![string]) },
+            unsafe { c_api::ncdirect_putstr(self, channels.into().into(), cs.as_ptr()) },
             &format!("NcDirect.putstr({:0X}, {:?})", channels.into(), string)
         ]
     }
@@ -641,9 +644,10 @@ impl NcDirect {
     ///
     /// *C style function: [ncdirect_readline()][c_api::ncdirect_readline].*
     //
-    // FIXME: memory leak still reported by valgrind
+    // CHECK if memory leak still reported by valgrind
     pub fn readline(&mut self, prompt: &str) -> NcResult<String> {
-        let res = unsafe { c_api::ncdirect_readline(self, cstring![prompt]) };
+        let cs = cstring![prompt];
+        let res = unsafe { c_api::ncdirect_readline(self, cs.as_ptr()) };
         if !res.is_null() {
             return Ok(rstring_free![res]);
         } else {

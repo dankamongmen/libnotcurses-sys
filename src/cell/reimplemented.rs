@@ -458,7 +458,8 @@ pub fn nccell_prime(
 ) -> NcResult_i32 {
     cell.stylemask = style.into();
     cell.channels = channels.into();
-    unsafe { c_api::nccell_load(plane, cell, cstring![gcluster]) }
+    let cs = cstring![gcluster];
+    unsafe { c_api::nccell_load(plane, cell, cs.as_ptr()) }
 }
 
 /// Loads up six cells with the `EGC`s necessary to draw a box.
@@ -485,8 +486,10 @@ pub fn nccells_load_box(
 ) -> NcResult_i32 {
     assert![gcluster.len() >= 6]; // DEBUG
 
-    // TODO: CHECK: mutable copy for pointer arithmetics:
-    let mut gclu = cstring![gcluster];
+    // CHECK: mutable copy for pointer arithmetics
+
+    let cs = cstring![gcluster];
+    let mut gclu = cs.as_ptr();
 
     let mut ulen: NcResult_i32 = nccell_prime(plane, ul, gcluster, style.into(), channels.into());
 

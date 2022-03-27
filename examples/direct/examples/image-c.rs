@@ -27,7 +27,7 @@ fn render_image(ncd: &mut NcDirect, blit: NcBlitter) {
     unsafe {
         if ncdirect_render_image(
             ncd,
-            cstring![image_path],
+            cstring![image_path].as_ptr(),
             NCALIGN_CENTER,
             blit.into(),
             NCSCALE_NONE,

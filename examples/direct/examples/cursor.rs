@@ -23,16 +23,16 @@ fn main() -> NcResult<()> {
     for _n in 0..40 {
         ncd.flush()?;
         sleep![0, 30];
-        channels.set_fg_rgb8(
+        channels.set_fg_rgb([
             rng.gen_range(0x66..=0xEE),
             rng.gen_range(0x66..=0xEE),
             rng.gen_range(0x66..=0xEE),
-        );
-        channels.set_bg_rgb8(
+        ]);
+        channels.set_bg_rgb([
             rng.gen_range(0..=0x9),
             rng.gen_range(0..=0x9),
             rng.gen_range(0..=0x9),
-        );
+        ]);
         ncd.putstr(channels, ".")?;
     }
 

@@ -1,7 +1,7 @@
 //! `NcMenu*` methods and associated functions.
 
 use super::{NcMenuItem, NcMenuSection};
-use crate::{cstring_mut, NcInput};
+use crate::{cstring, NcInput};
 use core::ptr::null_mut;
 
 #[allow(unused_imports)] // for doc comments
@@ -17,9 +17,10 @@ pub use options::*;
 impl NcMenuItem {
     /// New NcMenuItem for [`NcMenu`].
     pub fn new(desc: &str, shortcut: NcInput) -> Self {
+        let cs = cstring![desc];
         Self {
             // utf-8 menu item, NULL for horizontal separator
-            desc: cstring_mut![desc],
+            desc: cs.into_raw(),
 
             // ´NcInput´ shortcut, all should be distinct
             shortcut,
@@ -38,9 +39,10 @@ impl NcMenuItem {
 impl NcMenuSection {
     /// New `NcMenuSection` for [`NcMenu`].
     pub fn new(name: &str, items: &mut [NcMenuItem], shortcut: NcInput) -> Self {
+        let cs = cstring![name];
         Self {
             // utf-8 name string
-            name: cstring_mut![name],
+            name: cs.into_raw(),
 
             // array of itemcount `NcMenuItem`s
             items: items.as_mut_ptr(),

@@ -30,7 +30,8 @@ impl NcCell {
     #[inline]
     pub fn from_char(plane: &mut NcPlane, ch: char) -> NcResult<Self> {
         let mut cell = Self::new();
-        let res = unsafe { nccell_load(plane, &mut cell, cstring![ch.to_string()]) };
+        let cs = cstring![ch.to_string()];
+        let res = unsafe { nccell_load(plane, &mut cell, cs.as_ptr()) };
         if res == NCRESULT_ERR {
             return Err(NcError::new());
         }
@@ -43,7 +44,8 @@ impl NcCell {
     #[inline]
     pub fn from_str(plane: &mut NcPlane, string: &str) -> NcResult<Self> {
         let mut cell = Self::new();
-        let res = unsafe { nccell_load(plane, &mut cell, cstring![string]) };
+        let cs = cstring![string];
+        let res = unsafe { nccell_load(plane, &mut cell, cs.as_ptr()) };
         if res == NCRESULT_ERR {
             return Err(NcError::new());
         }
@@ -62,7 +64,8 @@ impl NcCell {
     /// The styling of the cell is left untouched, but any resources are released.
     /// *C style function: [nccell_load()][c_api::nccell_load].*
     pub fn load(plane: &mut NcPlane, cell: &mut NcCell, egc: &str) -> NcResult<u32> {
-        let bytes = unsafe { c_api::nccell_load(plane, cell, cstring![egc]) };
+        let cs = cstring![egc];
+        let bytes = unsafe { c_api::nccell_load(plane, cell, cs.as_ptr()) };
         error![
             bytes,
             &format!["NcCell.load(NcPlane, NcCell, {:?})", egc],

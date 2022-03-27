@@ -533,8 +533,9 @@ impl Nc {
     /// *C style function: [notcurses_lex_blitter()][c_api::notcurses_lex_blitter].*
     pub fn lex_blitter(blitter_str: &str) -> NcResult<NcBlitter> {
         let mut blitter = 0;
+        let cs = cstring![blitter_str];
         error![
-            unsafe { c_api::notcurses_lex_blitter(cstring![blitter_str], &mut blitter) },
+            unsafe { c_api::notcurses_lex_blitter(cs.as_ptr(), &mut blitter) },
             "Invalid blitter name",
             blitter.into()
         ]
@@ -547,7 +548,8 @@ impl Nc {
     ///
     /// *C style function: [notcurses_lex_margins()][c_api::notcurses_lex_margins].*
     pub fn lex_margins(margins_str: &str, options: &mut NcOptions) -> NcResult<()> {
-        error![unsafe { c_api::notcurses_lex_margins(cstring![margins_str], options) }]
+        let cs = cstring![margins_str];
+        error![unsafe { c_api::notcurses_lex_margins(cs.as_ptr(), options) }]
     }
 
     /// Returns an [`NcScale`] from a string representation.
@@ -555,8 +557,9 @@ impl Nc {
     /// *C style function: [notcurses_lex_scalemode()][c_api::notcurses_lex_scalemode].*
     pub fn lex_scalemode(scale_str: &str) -> NcResult<NcScale> {
         let mut scale = 0;
+        let cs = cstring![scale_str];
         error![
-            unsafe { c_api::notcurses_lex_scalemode(cstring![scale_str], &mut scale) },
+            unsafe { c_api::notcurses_lex_scalemode(cs.as_ptr(), &mut scale) },
             "",
             scale.into()
         ]

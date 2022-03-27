@@ -306,7 +306,10 @@ pub fn ncplane_putchar_stained(plane: &mut NcPlane, ch: char) -> NcResult_i32 {
 #[inline]
 pub fn ncplane_putegc(plane: &mut NcPlane, egc: &str, sbytes: Option<&mut usize>) -> NcResult_i32 {
     let sbytes_ptr = if let Some(sb) = sbytes { sb as *mut _ } else { null_mut() };
-    unsafe { c_api::ffi::ncplane_putegc_yx(plane, -1, -1, cstring![egc], sbytes_ptr) }
+    let cs = cstring![egc];
+    let egc_ptr = cs.as_ptr() as *const i8; // CHECK why is this needed only here
+
+    unsafe { c_api::ffi::ncplane_putegc_yx(plane, -1, -1, egc_ptr, sbytes_ptr) }
 }
 
 /// Replaces the [`NcCell`] at the specified coordinates with the provided `egc`,
@@ -331,13 +334,14 @@ pub fn ncplane_putegc_yx(
     sbytes: Option<&mut usize>,
 ) -> NcResult_i32 {
     let sbytes_ptr = if let Some(sb) = sbytes { sb as *mut _ } else { null_mut() };
+    let cs = cstring![egc];
 
     unsafe {
         c_api::ffi::ncplane_putegc_yx(
             plane,
             y.unwrap_or(u32::MAX) as i32,
             x.unwrap_or(u32::MAX) as i32,
-            cstring![egc],
+            cs.as_ptr(),
             sbytes_ptr,
         )
     }
@@ -364,7 +368,8 @@ pub fn ncplane_putegc_stained(
 ) -> NcResult_i32 {
     let sbytes_ptr = if let Some(sb) = sbytes { sb as *mut _ } else { null_mut() };
 
-    unsafe { c_api::ffi::ncplane_putegc_stained(plane, cstring![egc], sbytes_ptr) }
+    let cs = cstring![egc];
+    unsafe { c_api::ffi::ncplane_putegc_stained(plane, cs.as_ptr(), sbytes_ptr) }
 }
 
 /// Writes a string to the current location, using the current style.
@@ -403,20 +408,20 @@ pub fn ncplane_putstr_yx(
     x: Option<u32>,
     string: &str,
 ) -> NcResult_i32 {
-    let cstring = CString::new(string).unwrap();
-    let mut cstring_ptr = cstring.as_ptr();
+    let cs = cstring![string];
+    let mut cs_ptr = cs.as_ptr();
 
     let (mut y, mut x) = (y, x);
     let mut ret = 0;
 
-    while unsafe { cstring_ptr.read() != 0 } {
+    while unsafe { cs_ptr.read() != 0 } {
         let mut wcs = 0;
         let cols = unsafe {
             c_api::ffi::ncplane_putegc_yx(
                 plane,
                 y.unwrap_or(u32::MAX) as i32,
                 x.unwrap_or(u32::MAX) as i32,
-                cstring_ptr,
+                cs_ptr,
                 &mut wcs,
             )
         };
@@ -431,7 +436,7 @@ pub fn ncplane_putstr_yx(
         y = None;
         x = None;
 
-        cstring_ptr = unsafe { cstring_ptr.add(wcs) };
+        cs_ptr = unsafe { cs_ptr.add(wcs) };
         ret += cols;
     }
     ret
@@ -458,10 +463,11 @@ pub fn ncplane_putstr_aligned(
     string: &str,
 ) -> NcResult_i32 {
     let (mut validbytes, mut validwidth) = (0, 0);
+    let cs = cstring![string];
 
     // we'll want to do the partial write if there's an error somewhere within
     unsafe {
-        c_api::ncstrwidth(cstring![string], &mut validbytes, &mut validwidth);
+        c_api::ncstrwidth(cs.as_ptr(), &mut validbytes, &mut validwidth);
     }
 
     let xpos = ncplane_halign(plane, align.into(), validwidth as u32);
@@ -1208,10 +1214,12 @@ pub fn ncplane_gradient(
     ll: impl Into<NcChannels_u64>,
     lr: impl Into<NcChannels_u64>,
 ) -> NcResult_i32 {
+    let cs = cstring![egc];
+
     #[cfg(any(target_arch = "armv7l", target_arch = "i686"))]
-    let egc_ptr = cstring![egc] as *const i8;
+    let egc_ptr = cs.as_ptr() as *const i8;
     #[cfg(not(any(target_arch = "armv7l", target_arch = "i686")))]
-    let egc_ptr = cstring![egc];
+    let egc_ptr = cs.as_ptr();
 
     unsafe {
         c_api::ffi::ncplane_gradient(

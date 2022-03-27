@@ -100,24 +100,7 @@ macro_rules! visual_render_sleep {
 #[doc(hidden)]
 macro_rules! cstring {
     ($s:expr) => {
-        // NOTE: The returned pointer will be valid for as long as self is
-        // CHECK does this live long enough in all circumstances?
-        std::ffi::CString::new($s).unwrap().as_ptr()
-    };
-}
-
-/// Converts an `&str` into `*mut c_char`.
-///
-/// See [`Cstring`].
-#[macro_export]
-#[doc(hidden)]
-macro_rules! cstring_mut {
-    ($s:expr) => {
-        // we can't use this without taking the responsibility of deallocating:
-        std::ffi::CString::new($s).unwrap().into_raw()
-
-        // another option:
-        // unsafe { crate::c_api::libc::strdup(crate::cstring![$s]) }
+        std::ffi::CString::new($s).unwrap()
     };
 }
 
@@ -150,10 +133,12 @@ macro_rules! rstring_free {
 #[doc(hidden)]
 macro_rules! printf {
     ($s:expr) => {
-        unsafe { crate::c_api::libc::printf(cstring![$s]) }
+        let cs = cstring![$s];
+        unsafe { crate::c_api::libc::printf(cs.as_ptr()) }
     };
     ($s:expr $(, $opt:expr)*) => {
-        unsafe { crate::c_api::libc::printf(cstring![$s], $($opt),*) }
+        let cs = cstring![$s];
+        unsafe { crate::c_api::libc::printf(cs.as_ptr(), $($opt),*) }
     };
 }
 

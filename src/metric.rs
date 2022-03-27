@@ -1,7 +1,7 @@
 //! `NcMetric`
 
 pub(crate) mod reimplemented {
-    use crate::{c_api::ffi, cstring_mut, rstring, NcError, NcResult};
+    use crate::{c_api::ffi, cstring, rstring, NcError, NcResult};
 
     // TODO: clarify, update and visibilize doc-comments
 
@@ -44,13 +44,14 @@ pub(crate) mod reimplemented {
         mult: u64,
         uprefix: i32,
     ) -> NcResult<&str> {
-        let buf = cstring_mut![buf];
-        let res = unsafe { ffi::ncnmetric(val, s, decimal, buf, omitdec, mult, uprefix) };
+        let cbuf = cstring![buf];
+        let res =
+            unsafe { ffi::ncnmetric(val, s, decimal, cbuf.into_raw(), omitdec, mult, uprefix) };
 
         if res.is_null() {
             Err(NcError::new_msg(&format![
-                "ncmetric({}, {}, {}, {:?}, {}, {}, {})",
-                val, s, decimal, buf, omitdec, mult, uprefix
+                "ncmetric({}, {}, {:?}, {}, {}, {})",
+                val, s, decimal, omitdec, mult, uprefix
             ]))
         } else {
             Ok(rstring![res])

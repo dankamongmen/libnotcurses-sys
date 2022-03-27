@@ -37,9 +37,11 @@ impl NcMenu {
     ///
     /// *C style function: [ncmenu_item_set_status()][c_api::ncmenu_item_set_status].*
     pub fn item_set_status(&mut self, section: &str, item: &str, enabled: bool) -> NcResult<()> {
+        let csection = cstring![section];
+        let citem = cstring![item];
         error![
             unsafe {
-                c_api::ncmenu_item_set_status(self, cstring![section], cstring![item], enabled)
+                c_api::ncmenu_item_set_status(self, csection.as_ptr(), citem.as_ptr(), enabled)
             },
             &format!(
                 ".item_set_status({:?}, {:?}, {:?}, {})",

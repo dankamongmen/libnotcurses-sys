@@ -41,8 +41,9 @@ impl NcVisual {
     ///
     /// *C style function: [ncvisual_from_file()][c_api::ncvisual_from_file].*
     pub fn from_file<'a>(file: &str) -> NcResult<&'a mut NcVisual> {
+        let cs = cstring![file];
         error_ref_mut![
-            unsafe { c_api::ncvisual_from_file(cstring![file]) },
+            unsafe { c_api::ncvisual_from_file(cs.as_ptr()) },
             &format!("NcVisual::from_file({})", file)
         ]
     }
@@ -99,8 +100,9 @@ impl NcVisual {
     ///
     /// *C style function: [ncvisual_from_sixel()][c_api::ncvisual_from_sixel].*
     pub fn from_sixel<'a>(sequence: &str, len_y: u32, len_x: u32) -> NcResult<&'a mut NcVisual> {
+        let cs = cstring![sequence];
         error_ref_mut![
-            unsafe { c_api::ncvisual_from_file(cstring![sequence]) },
+            unsafe { c_api::ncvisual_from_file(cs.as_ptr()) },
             &format!("NcVisual::from_sixel({}, {}, {})", sequence, len_y, len_x)
         ]
     }
@@ -617,8 +619,9 @@ impl NcVisual {
     ///
     /// *C style function: [ncdirectf_from_file()][c_api::ncdirectf_from_file].*
     pub fn ncdirectf_from_file<'a>(ncd: &mut NcDirect, file: &str) -> NcResult<&'a mut NcVisual> {
+        let cs = cstring![file];
         error_ref_mut![
-            unsafe { c_api::ncdirectf_from_file(ncd, cstring![file]) },
+            unsafe { c_api::ncdirectf_from_file(ncd, cs.as_ptr()) },
             &format!("NcVisual::ncdirectf_from_file(ncd, {})", file)
         ]
     }

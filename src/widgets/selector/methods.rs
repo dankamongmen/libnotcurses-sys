@@ -61,8 +61,9 @@ impl NcSelector {
     ///
     /// *C style function: [ncselector_delitem()][c_api::ncselector_delitem].*
     pub fn delitem(&mut self, item: &str) -> NcResult<i32> {
+        let cs = cstring![item];
         error![
-            unsafe { c_api::ncselector_delitem(self, cstring![item]) },
+            unsafe { c_api::ncselector_delitem(self, cs.as_ptr()) },
             "Calling selector.delitem", -1
         ]
     }

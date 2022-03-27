@@ -33,10 +33,10 @@ fn main() -> NcResult<()> {
 
     let mut mopts = NcMenuOptions::new(&mut sections);
     // FIXME: better API
-    c_api::ncchannels_set_fg_rgb(&mut mopts.headerchannels, 0x00ff00);
-    c_api::ncchannels_set_bg_rgb(&mut mopts.headerchannels, 0x440000);
-    c_api::ncchannels_set_fg_rgb(&mut mopts.sectionchannels, 0xb0d700);
-    c_api::ncchannels_set_bg_rgb(&mut mopts.sectionchannels, 0x002200);
+    c_api::ncchannels_set_fg_rgb(&mut mopts.headerchannels, 0x00ff00_u32);
+    c_api::ncchannels_set_bg_rgb(&mut mopts.headerchannels, 0x440000_u32);
+    c_api::ncchannels_set_fg_rgb(&mut mopts.sectionchannels, 0xb0d700_u32);
+    c_api::ncchannels_set_bg_rgb(&mut mopts.sectionchannels, 0x002200_u32);
 
     let stdplane = unsafe { nc.stdplane() };
     let (dim_y, _dim_x) = stdplane.dim_yx();

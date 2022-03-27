@@ -600,10 +600,11 @@ impl NcPlane {
         stylemask: impl Into<NcStyle> + Copy,
         channels: impl Into<NcChannels> + Copy,
     ) -> NcResult<u32> {
+        let cs = cstring![egc];
         let res = unsafe {
             c_api::ncplane_set_base(
                 self,
-                cstring![egc],
+                cs.as_ptr(),
                 stylemask.into().into(),
                 channels.into().0,
             )
@@ -929,14 +930,9 @@ impl NcPlane {
     ///
     /// *C style function: [ncplane_puttext()][c_api::ncplane_puttext].*
     pub fn puttext(&mut self, y: u32, align: impl Into<NcAlign>, string: &str) -> NcResult<u32> {
+        let cs = cstring![string];
         let res = unsafe {
-            c_api::ncplane_puttext(
-                self,
-                y as i32,
-                align.into().into(),
-                cstring![string],
-                null_mut(),
-            )
+            c_api::ncplane_puttext(self, y as i32, align.into().into(), cs.as_ptr(), null_mut())
         };
         error![res, &format!("NcPlane.puttext({:?})", string), res as u32]
     }
@@ -1156,13 +1152,14 @@ impl NcPlane {
         num_bytes: usize,
         string: &str,
     ) -> NcResult<u32> {
+        let cs = cstring![string];
         let res = unsafe {
             c_api::ncplane_putnstr_aligned(
                 self,
                 y as i32,
                 align.into().into(),
                 num_bytes,
-                cstring![string],
+                cs.as_ptr(),
             )
         };
         error![
