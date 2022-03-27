@@ -46,6 +46,41 @@ mod std_impls {
     crate::unit_impl_from![NcRgb, NcRgb_u32];
     crate::unit_impl_fmt![bases+display; NcRgb];
 
+    impl From<[u8; 3]> for NcRgb {
+        fn from(array: [u8; 3]) -> Self {
+            Self(
+                (array[0] as NcRgb_u32) << 16
+                    | (array[1] as NcRgb_u32) << 8
+                    | array[2] as NcRgb_u32,
+            )
+        }
+    }
+    impl From<NcRgb> for [u8; 3] {
+        #[inline]
+        fn from(rgb: NcRgb) -> Self {
+            [
+                ((rgb.0 & 0xff0000) >> 16) as u8,
+                ((rgb.0 & 0x00ff00) >> 8) as u8,
+                (rgb.0 & 0x0000ff) as u8,
+            ]
+        }
+    }
+    impl From<NcRgb> for (u8, u8, u8) {
+        #[inline]
+        fn from(rgb: NcRgb) -> Self {
+            (
+                ((rgb.0 & 0xff0000) >> 16) as u8,
+                ((rgb.0 & 0x00ff00) >> 8) as u8,
+                (rgb.0 & 0x0000ff) as u8,
+            )
+        }
+    }
+    impl From<(u8, u8, u8)> for NcRgb {
+        fn from(tuple: (u8, u8, u8)) -> Self {
+            Self((tuple.0 as NcRgb_u32) << 16 | (tuple.1 as NcRgb_u32) << 8 | tuple.2 as NcRgb_u32)
+        }
+    }
+
     crate::from_primitive![NcRgba, NcRgba_u32];
     crate::unit_impl_from![NcRgba, NcRgba_u32];
     crate::unit_impl_fmt![bases+display; NcRgba];

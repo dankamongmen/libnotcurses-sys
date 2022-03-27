@@ -37,11 +37,11 @@ impl NcPalette {
     /// Returns the individual RGB color components from an
     /// [`NcChannel`][crate::NcChannel] entry inside this `NcPalette`.
     ///
-    /// *C style function: [ncpalette_get_rgb()][c_api::ncpalette_get_rgb8].*
-    pub fn get_rgb8(&self, index: impl Into<NcPaletteIndex>) -> (u8, u8, u8) {
+    /// *C style function: [ncpalette_get_rgb8()][c_api::ncpalette_get_rgb8].*
+    pub fn get_rgb(&self, index: impl Into<NcPaletteIndex>) -> NcRgb {
         let (mut r, mut g, mut b) = (0, 0, 0);
         c_api::ncpalette_get_rgb8(self, index.into(), &mut r, &mut g, &mut b);
-        (r, g, b)
+        (r, g, b).into()
     }
 
     /// Sets the [`NcRgb`] value of the [`NcChannel`][crate::NcChannel] entry
@@ -57,13 +57,12 @@ impl NcPalette {
     ///
     /// *C style function: [ncpalette_set_rgb8()][c_api::ncpalette_set_rgb8].*
     #[inline]
-    pub fn set_rgb8(
+    pub fn set_rgb(
         palette: &mut NcPalette,
         index: impl Into<NcPaletteIndex>,
-        red: u8,
-        green: u8,
-        blue: u8,
+        rgb: impl Into<NcRgb>,
     ) {
-        c_api::ncpalette_set_rgb8(palette, index.into(), red, green, blue)
+        let (r, g, b) = rgb.into().into();
+        c_api::ncpalette_set_rgb8(palette, index.into(), r, g, b)
     }
 }

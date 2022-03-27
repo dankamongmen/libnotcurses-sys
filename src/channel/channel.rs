@@ -100,23 +100,6 @@ impl NcChannel {
     pub fn from_rgb_alpha(rgb: impl Into<NcRgb>, alpha: NcAlpha) -> Self {
         Self::new().set(rgb.into()).set_alpha(alpha)
     }
-
-    /// New `NcChannel`, expects three RGB component components.
-    pub fn from_rgb8(r: impl Into<u8>, g: impl Into<u8>, b: impl Into<u8>) -> Self {
-        Self::new().set_rgb8(r.into(), g.into(), b.into())
-    }
-
-    /// New `NcChannel`, expects three RGB component components & [`NcAlpha`].
-    pub fn from_rgb8_alpha(
-        r: impl Into<u8>,
-        g: impl Into<u8>,
-        b: impl Into<u8>,
-        alpha: impl Into<NcAlpha>,
-    ) -> Self {
-        Self::new()
-            .set_rgb8(r.into(), g.into(), b.into())
-            .set_alpha(alpha.into())
-    }
 }
 
 /// # Methods
@@ -202,8 +185,9 @@ impl NcChannel {
     /// marks the NcChannel as NOT using the "default color".
     ///
     /// *C style function: [ncchannel_set_rgb8()][c_api::ncchannel_set_rgb8].*
-    pub fn set_rgb8(&mut self, r: impl Into<u8>, g: impl Into<u8>, b: impl Into<u8>) -> Self {
-        c_api::ncchannel_set_rgb8(&mut self.0, r.into(), g.into(), b.into());
+    pub fn set_rgb(&mut self, rgb: impl Into<NcRgb>) -> Self {
+        let (r, g, b) = rgb.into().into();
+        c_api::ncchannel_set_rgb8(&mut self.0, r, g, b);
         *self
     }
 
@@ -277,7 +261,7 @@ impl NcChannel {
     /// The following methods also marks the channel as NOT using the "default color":
     /// - [`new`][NcChannel#method.new]
     /// - [`set`][NcChannel#method.set]
-    /// - [`set_rgb8`][NcChannel#method.set_rgb8]
+    /// - [`set_rgb`][NcChannel#method.set_rgb]
     ///
     /// *C style function: [ncchannel_set_not_default()][c_api::ncchannel_set_not_default].*
     //

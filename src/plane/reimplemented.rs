@@ -109,7 +109,7 @@ pub fn ncplane_set_channels(plane: &mut NcPlane, channels: impl Into<NcChannels_
 /// Gets the foreground RGB components from an [`NcPlane`].
 /// and returns the background [`NcChannel_u32`].
 ///
-/// *Method: NcPlane.[fg_rgb8()][NcPlane#method.fg_rgb8].*
+/// *Method: NcPlane.[fg_rgb()][NcPlane#method.fg_rgb].*
 #[inline]
 pub fn ncplane_fg_rgb8(
     plane: &NcPlane,
@@ -123,7 +123,7 @@ pub fn ncplane_fg_rgb8(
 /// Gets the background RGB componentss from an [`NcPlane`],
 /// and returns the background [`NcChannel_u32`].
 ///
-/// *Method: NcPlane.[bg_rgb8()][NcPlane#method.bg_rgb8].*
+/// *Method: NcPlane.[bg_rgb()][NcPlane#method.bg_rgb].*
 #[inline]
 pub fn ncplane_bg_rgb8(
     plane: &NcPlane,

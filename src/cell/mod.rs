@@ -15,7 +15,7 @@
 // ------------------------------------------
 // (X) wont:  2
 // (+) done: 48
-// (W) wrap: 48
+// (W) wrap: 44
 // (#) test: 30
 // ------------------------------------------
 //W# nccell_bg_alpha
@@ -23,7 +23,7 @@
 //W# nccell_bg_palindex
 //W# nccell_bg_palindex_p
 //W# nccell_bg_rgb
-//W# nccell_bg_rgb8
+// # nccell_bg_rgb8               // unneeded method
 //W+ nccell_channels
 //W+ nccell_cols
 //W+ nccell_double_wide_p
@@ -34,7 +34,7 @@
 //W# nccell_fg_palindex
 //W# nccell_fg_palindex_p
 //W# nccell_fg_rgb
-//W# nccell_fg_rgb8
+// # nccell_fg_rgb8               // unneeded method
 //W# nccell_init
 //W# nccell_load_char
 //W+ nccell_off_styles
@@ -45,7 +45,7 @@
 //W# nccell_set_bg_default
 //W# nccell_set_bg_palindex
 //W# nccell_set_bg_rgb
-//W# nccell_set_bg_rgb8
+// # nccell_set_bg_rgb8           // unneeded method
 // X nccell_set_bg_rgb8_clipped   // unneeded
 //W+ nccell_set_channels
 //W# nccell_set_fchannel
@@ -53,7 +53,7 @@
 //W# nccell_set_fg_default
 //W# nccell_set_fg_palindex
 //W# nccell_set_fg_rgb
-//W# nccell_set_fg_rgb8
+// # nccell_set_fg_rgb8           // unneeded method
 // X nccell_set_fg_rgb8_clipped   // unneeded
 //W+ nccell_set_styles
 //W+ nccell_strdup

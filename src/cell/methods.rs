@@ -205,15 +205,6 @@ impl NcCell {
         c_api::nccell_bg_rgb(self).into()
     }
 
-    /// Gets the background RGB components.
-    ///
-    /// *C style function: [nccell_bg_rgb8()][c_api::nccell_bg_rgb8].*
-    pub fn bg_rgb8(&self) -> (u8, u8, u8) {
-        let (mut r, mut g, mut b) = (0, 0, 0);
-        c_api::nccell_bg_rgb8(self, &mut r, &mut g, &mut b);
-        (r, g, b)
-    }
-
     /// Gets the foreground [`NcAlpha`] (shifted to LSBs).
     ///
     /// *C style function: [nccell_fg_alpha()][c_api::nccell_fg_alpha].*
@@ -250,15 +241,6 @@ impl NcCell {
         c_api::nccell_fg_rgb(self).into()
     }
 
-    /// Gets the foreground RGB components.
-    ///
-    /// *C style function: [nccell_fg_rgb8()][c_api::nccell_fg_rgb8].*
-    pub fn fg_rgb8(&self) -> (u8, u8, u8) {
-        let (mut r, mut g, mut b) = (0, 0, 0);
-        c_api::nccell_fg_rgb8(self, &mut r, &mut g, &mut b);
-        (r, g, b)
-    }
-
     /// Sets the background [`NcAlpha`].
     ///
     /// *C style function: [nccell_set_bg_alpha()][c_api::nccell_set_bg_alpha].*
@@ -293,14 +275,6 @@ impl NcCell {
         c_api::nccell_set_bg_rgb(self, rgb.into().0);
     }
 
-    /// Sets the background RGB components, and marks it as not using
-    /// the "default color".
-    ///
-    /// *C style function: [nccell_set_bg_rgb8()][c_api::nccell_set_bg_rgb8].*
-    pub fn set_bg_rgb8(&mut self, red: u8, green: u8, blue: u8) {
-        c_api::nccell_set_bg_rgb8(self, red, green, blue);
-    }
-
     /// Sets the foreground [`NcAlpha`].
     ///
     /// *C style function: [nccell_set_fg_alpha()][c_api::nccell_set_fg_alpha].*
@@ -333,14 +307,6 @@ impl NcCell {
     /// *C style function: [nccell_set_fg_rgb()][c_api::nccell_set_fg_rgb].*
     pub fn set_fg_rgb(&mut self, rgb: impl Into<NcRgb>) {
         c_api::nccell_set_fg_rgb(self, rgb.into().0);
-    }
-
-    /// Sets the foreground RGB components, and marks it as not using
-    /// the "default color".
-    ///
-    /// *C style function: [nccell_set_fg_rgb8()][c_api::nccell_set_fg_rgb8].*
-    pub fn set_fg_rgb8(&mut self, red: u8, green: u8, blue: u8) {
-        c_api::nccell_set_fg_rgb8(self, red, green, blue);
     }
 }
 

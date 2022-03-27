@@ -9,7 +9,7 @@
 // (w)  1 : safely wrapped ffi function
 // (r) 11 : static function manually reimplemented
 //
-// (m) 56 : method implemented
+// (m) 54 : method implemented
 //
 // (t)  0 : unit test done for the function
 // (T)  0 : unit test done also for the method
@@ -73,8 +73,8 @@
 // f   ncdirect_styles
 // f   ncdirect_supported_styles
 // fm  ncdirect_vline_interp
-// rm  ncdirect_bg_rgb8
-// rm  ncdirect_fg_rgb8
+// r   ncdirect_bg_rgb8           // unneeded method
+// r   ncdirect_fg_rgb8           // unneeded method
 // rm  ncdirect_get_blocking
 // rm  ncdirect_get_nblock
 

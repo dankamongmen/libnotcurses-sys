@@ -1,4 +1,4 @@
-use crate::{c_api, NcPixel};
+use crate::{c_api, NcPixel, NcRgb};
 
 impl NcPixel {
     /// Returns a new `NcPixel`.
@@ -7,8 +7,9 @@ impl NcPixel {
     }
 
     /// Constructs a libav-compatible ABGR pixel from RGB components.
-    pub fn from_rgb8(red: u8, green: u8, blue: u8) -> Self {
-        c_api::ncpixel(red, green, blue).into()
+    pub fn from_rgb(rgb: impl Into<NcRgb>) -> Self {
+        let (r, g, b) = rgb.into().into();
+        c_api::ncpixel(r, g, b).into()
     }
 
     /// Extracts the 8-bit alpha component from an ABGR pixel.
@@ -52,7 +53,8 @@ impl NcPixel {
     }
 
     /// Sets the RGB components of an ABGR pixel.
-    pub fn set_rgb8(&mut self, red: u8, green: u8, blue: u8) {
-        c_api::ncpixel_set_rgb8(self.into(), red, green, blue);
+    pub fn set_rgb(&mut self, rgb: impl Into<NcRgb>) {
+        let (r, g, b) = rgb.into().into();
+        c_api::ncpixel_set_rgb8(self.into(), r, g, b);
     }
 }

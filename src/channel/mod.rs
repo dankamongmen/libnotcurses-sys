@@ -15,10 +15,10 @@
 //
 // functions manually reimplemented: 46
 // ------------------------------------------
-// (X) wont:  3
+// (X) wont:  9
 // (+) done: 39
 // (#) test: 21
-// (W) wrap: 43
+// (W) wrap: 37
 // ------------------------------------------
 //W# channel_alpha
 //W# channel_b
@@ -26,19 +26,19 @@
 //W# channel_g
 //W# channel_palindex_p
 //W# channel_r
-//W# channel_rgb8
+// # channel_rgb8                    // unneeded method
 //W# channel_set
 //W# channel_set_alpha
 //W# channel_set_default
 //W# channel_set_not_default         // not in the original C API
-//W# channel_set_rgb8
+// # channel_set_rgb8                // unneeded method
 // X channel_set_rgb_clipped         // not needed
 //W# channels_bchannel
 //W+ channels_bg_alpha
 //W+ channels_bg_default_p
 //W# channels_bg_palindex_p
 //W+ channels_bg_rgb
-//W+ channels_bg_rgb8
+// + channels_bg_rgb8                // unneeded method
 //W+ channels_channels
 //W# channels_combine
 //W# channels_fchannel
@@ -46,14 +46,14 @@
 //W+ channels_fg_default_p
 //W# channels_fg_palindex_p
 //W+ channels_fg_rgb
-//W+ channels_fg_rgb8
+// + channels_fg_rgb8                // unneeded method
 //W# channels_set_bchannel
 //W+ channels_set_bg_alpha
 //W+ channels_set_bg_default
 //W  channels_set_bg_not_default     // not in the original C API
 //W# channels_set_bg_palindex
 //W+ channels_set_bg_rgb
-//W+ channels_set_bg_rgb8
+// + channels_set_bg_rgb8            // unneeded method
 // X channels_set_bg_rgb8_clipped    // not needed
 //W+ channels_set_channels
 //W  channels_set_default            // not in the original C API
@@ -63,7 +63,7 @@
 //W  channels_set_fg_not_default     // not in the original C API
 //W# channels_set_fg_palindex
 //W+ channels_set_fg_rgb
-//W+ channels_set_fg_rgb8
+// + channels_set_fg_rgb8            // unneeded method
 // X channels_set_fg_rgb8_clipped    // not needed
 //W  channels_set_not_default        // not in the original C API
 

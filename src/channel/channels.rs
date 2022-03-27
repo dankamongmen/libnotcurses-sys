@@ -180,60 +180,6 @@ impl NcChannels {
         Self::combine(channel, channel)
     }
 
-    /// New `NcChannels`, expects three RGB component components
-    /// for each channel.
-    pub fn from_rgb8(
-        fg_r: impl Into<u8>,
-        fg_g: impl Into<u8>,
-        fg_b: impl Into<u8>,
-        bg_r: impl Into<u8>,
-        bg_g: impl Into<u8>,
-        bg_b: impl Into<u8>,
-    ) -> Self {
-        Self::combine(
-            NcChannel::from_rgb8(fg_r.into(), fg_g.into(), fg_b.into()),
-            NcChannel::from_rgb8(bg_r.into(), bg_g.into(), bg_b.into()),
-        )
-    }
-
-    /// New `NcChannels`, expects three RGB component components for
-    /// both the foreground and background channels.
-    pub fn from_rgb8_both(r: u8, g: u8, b: u8) -> Self {
-        let channel = NcChannel::new().set_rgb8(r, g, b);
-        Self::combine(channel, channel)
-    }
-
-    /// New `NcChannels`, expects three RGB components and
-    /// [`NcAlpha`], for both the foreground and background channels.
-    pub fn from_rgb8_alpha(
-        fg_r: impl Into<u8>,
-        fg_g: impl Into<u8>,
-        fg_b: impl Into<u8>,
-        fg_alpha: impl Into<NcAlpha>,
-        bg_r: impl Into<u8>,
-        bg_g: impl Into<u8>,
-        bg_b: impl Into<u8>,
-        bg_alpha: impl Into<NcAlpha>,
-    ) -> Self {
-        Self::combine(
-            NcChannel::from_rgb8_alpha(fg_r, fg_g, fg_b, fg_alpha),
-            NcChannel::from_rgb8_alpha(bg_r, bg_g, bg_b, bg_alpha),
-        )
-    }
-
-    /// New `NcChannel`, expects three RGB components.
-    pub fn from_rgb8_alpha_both(
-        r: impl Into<u8>,
-        g: impl Into<u8>,
-        b: impl Into<u8>,
-        alpha: impl Into<NcAlpha>,
-    ) -> Self {
-        let channel = NcChannel::new()
-            .set_rgb8(r.into(), g.into(), b.into())
-            .set_alpha(alpha.into());
-        Self::combine(channel, channel)
-    }
-
     // Combine & Reverse
 
     /// Combines two [`NcChannel`]s into an [`NcChannels`].
@@ -385,42 +331,6 @@ impl NcChannels {
         *self
     }
 
-    // u8
-
-    /// Gets the three foreground RGB components (r, g, b).
-    ///
-    /// *C style function: [channels_fg_rgb8()][c_api::ncchannels_fg_rgb8].*
-    pub fn fg_rgb8(&self) -> (u8, u8, u8) {
-        let (mut r, mut g, mut b) = (0, 0, 0);
-        c_api::ncchannels_fg_rgb8(self.0, &mut r, &mut g, &mut b);
-        (r, g, b)
-    }
-
-    /// Gets the three background RGB components (r, g, b).
-    ///
-    /// *C style function: [channels_bg_rgb8()][c_api::ncchannels_bg_rgb8].*
-    pub fn bg_rgb8(&self) -> (u8, u8, u8) {
-        let (mut r, mut g, mut b) = (0, 0, 0);
-        c_api::ncchannels_bg_rgb8(self.0, &mut r, &mut g, &mut b);
-        (r, g, b)
-    }
-
-    /// Sets the three foreground RGB components (r, g, b), and
-    /// marks the foreground [`NcChannel`] as not using the "default color".
-    ///
-    /// *C style function: [channels_set_fg_rgb8()][c_api::ncchannels_set_fg_rgb8].*
-    pub fn set_fg_rgb8(&mut self, r: impl Into<u8>, g: impl Into<u8>, b: impl Into<u8>) -> Self {
-        c_api::ncchannels_set_fg_rgb8(&mut self.0, r.into(), g.into(), b.into()).into()
-    }
-
-    /// Sets the three background RGB components (r, g, b), and
-    /// marks the background [`NcChannel`] as not using the "default color".
-    ///
-    /// *C style function: [channels_set_bg_rgb8()][c_api::ncchannels_set_bg_rgb8].*
-    pub fn set_bg_rgb8(&mut self, r: impl Into<u8>, g: impl Into<u8>, b: impl Into<u8>) -> Self {
-        c_api::ncchannels_set_bg_rgb8(&mut self.0, r.into(), g.into(), b.into()).into()
-    }
-
     /// Gets the foreground red component.
     ///
     /// *(No equivalent C style function)*
@@ -467,7 +377,7 @@ impl NcChannels {
     ///
     /// *(No equivalent C style function)*
     pub fn fg_set_r(&mut self, r: impl Into<u8>) -> Self {
-        let (_, g, b) = self.bg_rgb8();
+        let (_, g, b) = self.bg_rgb().into();
         c_api::ncchannels_set_fg_rgb8(&mut self.0, r.into(), g, b).into()
     }
 
@@ -475,7 +385,7 @@ impl NcChannels {
     ///
     /// *(No equivalent C style function)*
     pub fn fg_set_g(&mut self, g: impl Into<u8>) -> Self {
-        let (r, _, b) = self.bg_rgb8();
+        let (r, _, b) = self.bg_rgb().into();
         c_api::ncchannels_set_fg_rgb8(&mut self.0, r, g.into(), b).into()
     }
 
@@ -483,7 +393,7 @@ impl NcChannels {
     ///
     /// *(No equivalent C style function)*
     pub fn fg_set_b(&mut self, b: impl Into<u8>) -> Self {
-        let (r, g, _) = self.bg_rgb8();
+        let (r, g, _) = self.bg_rgb().into();
         c_api::ncchannels_set_fg_rgb8(&mut self.0, r, g, b.into()).into()
     }
 
@@ -491,7 +401,7 @@ impl NcChannels {
     ///
     /// *(No equivalent C style function)*
     pub fn bg_set_r(&mut self, r: impl Into<u8>) -> Self {
-        let (_, g, b) = self.bg_rgb8();
+        let (_, g, b) = self.bg_rgb().into();
         c_api::ncchannels_set_bg_rgb8(&mut self.0, r.into(), g, b).into()
     }
 
@@ -499,7 +409,7 @@ impl NcChannels {
     ///
     /// *(No equivalent C style function)*
     pub fn bg_set_g(&mut self, g: impl Into<u8>) -> Self {
-        let (r, _, b) = self.bg_rgb8();
+        let (r, _, b) = self.bg_rgb().into();
         c_api::ncchannels_set_bg_rgb8(&mut self.0, r, g.into(), b).into()
     }
 
@@ -507,7 +417,7 @@ impl NcChannels {
     ///
     /// *(No equivalent C style function)*
     pub fn bg_set_b(&mut self, b: impl Into<u8>) -> Self {
-        let (r, g, _) = self.bg_rgb8();
+        let (r, g, _) = self.bg_rgb().into();
         c_api::ncchannels_set_bg_rgb8(&mut self.0, r, g, b.into()).into()
     }
 

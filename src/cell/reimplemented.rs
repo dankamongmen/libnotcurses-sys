@@ -122,7 +122,7 @@ pub fn nccell_set_bg_alpha(cell: &mut NcCell, alpha: impl Into<NcAlpha_u32>) {
 /// Gets the foreground components of an [`NcCell`],
 /// and returns the [`NcChannel_u32`] (which can have some extra bits set).
 ///
-/// *Method: NcCell.[fg_rgb8()][NcCell#method.fg_rgb8].*
+/// *Method: NcCell.[fg_rgb()][NcCell#method.fg_rgb].*
 #[inline]
 pub fn nccell_fg_rgb8(cell: &NcCell, red: &mut u8, green: &mut u8, blue: &mut u8) -> NcChannel_u32 {
     c_api::ncchannels_fg_rgb8(cell.channels, red, green, blue)
@@ -131,7 +131,7 @@ pub fn nccell_fg_rgb8(cell: &NcCell, red: &mut u8, green: &mut u8, blue: &mut u8
 /// Gets the background components of an [`NcCell`],
 /// and returns the [`NcChannel_u32`] (which can have some extra bits set).
 ///
-/// *Method: NcCell.[bg_rgb8()][NcCell#method.bg_rgb8].*
+/// *Method: NcCell.[bg_rgb()][NcCell#method.bg_rgb].*
 #[inline]
 pub fn nccell_bg_rgb8(cell: &NcCell, red: &mut u8, green: &mut u8, blue: &mut u8) -> NcChannel_u32 {
     c_api::ncchannels_bg_rgb8(cell.channels, red, green, blue)
@@ -140,7 +140,7 @@ pub fn nccell_bg_rgb8(cell: &NcCell, red: &mut u8, green: &mut u8, blue: &mut u8
 /// Sets the foreground components of the [`NcCell`],
 /// and marks it as not using the "default color".
 ///
-/// *Method: NcCell.[set_fg_rgb8()][NcCell#method.set_fg_rgb8].*
+/// *Method: NcCell.[set_fg_rgb()][NcCell#method.set_fg_rgb].*
 #[inline]
 pub fn nccell_set_fg_rgb8(cell: &mut NcCell, red: u8, green: u8, blue: u8) {
     c_api::ncchannels_set_fg_rgb8(&mut cell.channels, red, green, blue);
@@ -149,7 +149,7 @@ pub fn nccell_set_fg_rgb8(cell: &mut NcCell, red: u8, green: u8, blue: u8) {
 /// Sets the background components of the [`NcCell`],
 /// and marks it as not using the "default color".
 ///
-/// *Method: NcCell.[set_bg_rgb8()][NcCell#method.set_bg_rgb8].*
+/// *Method: NcCell.[set_bg_rgb()][NcCell#method.set_bg_rgb].*
 #[inline]
 pub fn nccell_set_bg_rgb8(cell: &mut NcCell, red: u8, green: u8, blue: u8) {
     c_api::ncchannels_set_bg_rgb8(&mut cell.channels, red, green, blue);

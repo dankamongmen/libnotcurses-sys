@@ -12,7 +12,7 @@
 //
 // functions manually reimplemented: 10
 // ------------------------------------------
-// (+) done: 10 /  0
+// (+) done:  9
 // (#) test:  0
 // (W) wrap: 10
 // ------------------------------------------
@@ -25,7 +25,7 @@
 //W+ ncpixel_set_b
 //W+ ncpixel_set_g
 //W+ ncpixel_set_r
-//W+ ncpixel_set_rgb8
+//X  ncpixel_set_rgb8
 
 mod methods;
 pub(crate) mod reimplemented;

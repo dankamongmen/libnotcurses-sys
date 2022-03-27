@@ -3,7 +3,7 @@
 // functions already exported by bindgen : 100
 // -------------------------------------------
 // (#) test: 9
-// (W) wrap: 93
+// (W) wrap: 91
 // -------------------------------------------
 //W  ncpile_bottom
 //W# ncpile_create
@@ -86,12 +86,12 @@
 //W  ncplane_set_bg_default
 //W  ncplane_set_bg_palindex
 //W  ncplane_set_bg_rgb
-//W  ncplane_set_bg_rgb8
+//   ncplane_set_bg_rgb8           // unneeded method
 //W  ncplane_set_fg_alpha
 //W  ncplane_set_fg_default
 //W  ncplane_set_fg_palindex
 //W  ncplane_set_fg_rgb
-//W  ncplane_set_fg_rgb8
+//   ncplane_set_fg_rgb8           // unneeded method
 //W  ncplane_set_resizecb
 //W  ncplane_set_scrolling
 //W  ncplane_set_styles

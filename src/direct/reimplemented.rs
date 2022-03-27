@@ -100,7 +100,7 @@ pub fn ncdirect_get_nblock(ncd: &mut NcDirect, input: Option<&mut NcInput>) -> N
 
 /// Sets the foreground component components.
 ///
-/// *Method: NcDirect.[set_fg_rgb8()][NcDirect#method.set_fg_rgb8].*
+/// *Method: NcDirect.[set_fg_rgb()][NcDirect#method.set_fg_rgb].*
 #[inline]
 pub fn ncdirect_set_fg_rgb8(ncd: &mut NcDirect, red: u8, green: u8, blue: u8) -> NcResult_i32 {
     let rgb = (red as NcRgb_u32) << 16 | (green as NcRgb_u32) << 8 | blue as NcRgb_u32;
@@ -109,7 +109,7 @@ pub fn ncdirect_set_fg_rgb8(ncd: &mut NcDirect, red: u8, green: u8, blue: u8) ->
 
 /// Sets the background component components.
 ///
-/// *Method: NcDirect.[set_bg_rgb8()][NcDirect#method.set_bg_rgb8].*
+/// *Method: NcDirect.[set_bg_rgb()][NcDirect#method.set_bg_rgb].*
 #[inline]
 pub fn ncdirect_set_bg_rgb8(ncd: &mut NcDirect, red: u8, green: u8, blue: u8) -> NcResult_i32 {
     let rgb = (red as NcRgb_u32) << 16 | (green as NcRgb_u32) << 8 | blue as NcRgb_u32;

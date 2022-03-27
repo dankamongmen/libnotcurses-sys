@@ -286,7 +286,7 @@ pub fn ncchannel_set_b(channel: &mut NcChannel_u32, b: u8) -> NcChannel_u32 {
 ///
 /// Only valid if `ncchannel_rgb_p` would return true for the channel.
 ///
-/// *Method: NcChannel.[rgb8()][NcChannel#method.rgb8]*
+/// *Method: NcChannel.[rgb()][NcChannel#method.rgb]*
 #[inline]
 pub fn ncchannel_rgb8(
     channel: impl Into<NcChannel_u32> + Copy,
@@ -305,7 +305,7 @@ pub fn ncchannel_rgb8(
 ///
 /// Note: Unlike the original C function, this one can't fail.
 ///
-/// *Method: NcChannel.[set_rgb8()][NcChannel#method.set_rgb8]*
+/// *Method: NcChannel.[set_rgb()][NcChannel#method.set_rgb]*
 #[inline]
 pub fn ncchannel_set_rgb8(channel: &mut NcChannel_u32, r: u8, g: u8, b: u8) {
     let rgb: NcRgb_u32 =
@@ -318,7 +318,7 @@ pub fn ncchannel_set_rgb8(channel: &mut NcChannel_u32, r: u8, g: u8, b: u8) {
 /// Gets the three foreground RGB components from an [`NcChannels_u64`], and
 /// returns the foreground [`NcChannel_u32`] (which can have some extra bits set).
 ///
-/// *Method: NcChannels.[fg_rgb8()][NcChannels#method.fg_rgb8]*
+/// *Method: NcChannels.[fg_rgb()][NcChannels#method.fg_rgb]*
 #[inline]
 pub fn ncchannels_fg_rgb8(
     channels: impl Into<NcChannels_u64>,
@@ -332,7 +332,7 @@ pub fn ncchannels_fg_rgb8(
 /// Gets the three background RGB components from an [`NcChannels_u64`], and
 /// returns the background [`NcChannel_u32`] (which can have some extra bits set).
 ///
-/// *Method: NcChannels.[bg_rgb8()][NcChannels#method.bg_rgb8]*
+/// *Method: NcChannels.[bg_rgb()][NcChannels#method.bg_rgb]*
 #[inline]
 pub fn ncchannels_bg_rgb8(
     channels: impl Into<NcChannels_u64>,
@@ -348,7 +348,7 @@ pub fn ncchannels_bg_rgb8(
 ///
 /// Note: Unlike the original C function, this one returns the new `NcChannels_u64`.
 ///
-/// *Method: NcChannels.[set_fg_rgb8()][NcChannels#method.set_fg_rgb8]*
+/// *Method: NcChannels.[set_fg_rgb()][NcChannels#method.set_fg_rgb]*
 #[inline]
 pub fn ncchannels_set_fg_rgb8(
     channels: &mut NcChannels_u64,
@@ -367,7 +367,7 @@ pub fn ncchannels_set_fg_rgb8(
 ///
 /// Note: Unlike the original C function, this one returns the new `NcChannels_u64`.
 ///
-/// *Method: NcChannels.[set_bg_rgb8()][NcChannels#method.set_bg_rgb8]*
+/// *Method: NcChannels.[set_bg_rgb()][NcChannels#method.set_bg_rgb]*
 #[inline]
 pub fn ncchannels_set_bg_rgb8(
     channels: &mut NcChannels_u64,

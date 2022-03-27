@@ -20,9 +20,11 @@
 // (W) wrap: 3 / 0
 // -----------------------------------------
 //W+ ncpalette_get
-//W+ ncpalette_get_rgb8
+//W  ncpalette_get_rgb
+// + ncpalette_get_rgb8   // unneeded method
 //W+ ncpalette_set
-//W+ ncpalette_set_rgb8
+//W  ncpalette_set_rgb
+// + ncpalette_set_rgb8   // unneeded method
 
 use crate::c_api::ffi;
 

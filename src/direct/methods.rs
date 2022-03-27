@@ -219,26 +219,6 @@ impl NcDirect {
         ]
     }
 
-    /// Sets the foreground individual RGB components.
-    ///
-    /// *C style function: [ncdirect_set_fg_rgb8()][c_api::ncdirect_set_fg_rgb8].*
-    pub fn set_fg_rgb8(&mut self, red: u8, green: u8, blue: u8) -> NcResult<()> {
-        error![
-            c_api::ncdirect_set_fg_rgb8(self, red, green, blue),
-            &format!("NcDirect.set_fg_rgb8({}, {}, {})", red, green, blue)
-        ]
-    }
-
-    /// Sets the background individual RGB components.
-    ///
-    /// *C style function: [ncdirect_set_bg_rgb()][c_api::ncdirect_set_bg_rgb].*
-    pub fn set_bg_rgb8(&mut self, red: u8, green: u8, blue: u8) -> NcResult<()> {
-        error![
-            c_api::ncdirect_set_bg_rgb8(self, red, green, blue),
-            &format!("NcDirect.set_bg_rgb8({}, {}, {})", red, green, blue)
-        ]
-    }
-
     /// Returns the current styling.
     ///
     /// *C style function: [ncdirect_styles()][c_api::ncdirect_styles].*
