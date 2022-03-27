@@ -104,6 +104,37 @@ mod std_impls {
     crate::from_primitive![NcChannels, NcChannels_u64];
     crate::unit_impl_from![NcChannels, NcChannels_u64];
     crate::unit_impl_fmt![bases+display; NcChannels];
+
+    // Different background and foreground:
+
+    impl From<NcChannels> for [u8; 6] {
+        #[inline]
+        fn from(rgb: NcChannels) -> Self {
+            let fg: (u8, u8, u8) = rgb.fg_rgb().into();
+            let bg: (u8, u8, u8) = rgb.bg_rgb().into();
+            [fg.0, fg.1, fg.2, bg.0, bg.1, bg.2]
+        }
+    }
+    impl From<[u8; 6]> for NcChannels {
+        #[inline]
+        fn from(a: [u8; 6]) -> Self {
+            Self::from_rgb((a[0], a[1], a[2]), (a[3], a[4], a[5]))
+        }
+    }
+
+    impl From<NcChannels> for (u8, u8, u8, u8, u8, u8) {
+        #[inline]
+        fn from(rgb: NcChannels) -> Self {
+            let fg: (u8, u8, u8) = rgb.fg_rgb().into();
+            let bg: (u8, u8, u8) = rgb.bg_rgb().into();
+            (fg.0, fg.1, fg.2, bg.0, bg.1, bg.2)
+        }
+    }
+    impl From<(u8, u8, u8, u8, u8, u8)> for NcChannels {
+        fn from(t: (u8, u8, u8, u8, u8, u8)) -> Self {
+            Self::from_rgb([t.0, t.1, t.2], [t.3, t.4, t.5])
+        }
+    }
 }
 
 /// # NcChannels constants

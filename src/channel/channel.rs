@@ -45,6 +45,30 @@ mod std_impls {
         }
     }
 
+    impl From<NcChannel> for [u8; 3] {
+        #[inline]
+        fn from(rgb: NcChannel) -> Self {
+            rgb.into()
+        }
+    }
+    impl From<[u8; 3]> for NcChannel {
+        fn from(array: [u8; 3]) -> Self {
+            Self::from_rgb(array)
+        }
+    }
+
+    impl From<NcChannel> for (u8, u8, u8) {
+        #[inline]
+        fn from(rgb: NcChannel) -> Self {
+            rgb.into()
+        }
+    }
+    impl From<(u8, u8, u8)> for NcChannel {
+        fn from(tuple: (u8, u8, u8)) -> Self {
+            Self::from_rgb(tuple)
+        }
+    }
+
     crate::from_primitive![NcChannel, NcChannel_u32];
     crate::unit_impl_from![NcChannel, NcChannel_u32];
     crate::unit_impl_fmt![bases+display; NcChannel];
