@@ -5,8 +5,8 @@ use core::ptr::{null, null_mut};
 use crate::{
     c_api::{self, notcurses_init},
     cstring, error, error_ref_mut, rstring, rstring_free, Nc, NcAlign, NcBlitter, NcCapabilities,
-    NcChannels, NcError, NcFile, NcFlags, NcInput, NcLogLevel, NcMiceEvents, NcOptions,
-    NcPixelImpl, NcPlane, NcReceived, NcResult, NcRgb, NcScale, NcStats, NcStyle, NcTime, NcVisual,
+    NcChannels, NcError, NcFile, NcFlag, NcInput, NcLogLevel, NcMiceEvents, NcOptions, NcPixelImpl,
+    NcPlane, NcReceived, NcResult, NcRgb, NcScale, NcStats, NcStyle, NcTime, NcVisual,
     NcVisualGeometry, NcVisualOptions,
 };
 
@@ -14,16 +14,16 @@ use crate::{
 impl NcOptions {
     /// New `NcOptions`.
     pub fn new() -> Self {
-        Self::with_all_options(NcLogLevel::Silent, 0, 0, 0, 0, NcFlags::None)
+        Self::with_all_options(NcLogLevel::Silent, 0, 0, 0, 0, NcFlag::None)
     }
 
     /// New `NcOptions`, with margins.
     pub fn with_margins(top: u32, right: u32, bottom: u32, left: u32) -> Self {
-        Self::with_all_options(NcLogLevel::Silent, top, right, bottom, left, NcFlags::None)
+        Self::with_all_options(NcLogLevel::Silent, top, right, bottom, left, NcFlag::None)
     }
 
     /// New `NcOptions`, with flags.
-    pub fn with_flags(flags: impl Into<NcFlags>) -> Self {
+    pub fn with_flags(flags: impl Into<NcFlag>) -> Self {
         Self::with_all_options(NcLogLevel::Silent, 0, 0, 0, 0, flags.into())
     }
 
@@ -56,7 +56,7 @@ impl NcOptions {
         margin_r: u32,
         margin_b: u32,
         margin_l: u32,
-        flags: impl Into<NcFlags>,
+        flags: impl Into<NcFlag>,
     ) -> Self {
         Self {
             termtype: null(),
@@ -81,23 +81,23 @@ impl Nc {
     /// the same thread. You must [`stop`][Nc#method.stop] the current one
     /// before creating a new one.
     pub unsafe fn new<'a>() -> NcResult<&'a mut Nc> {
-        Self::with_flags(NcFlags::SuppressBanners)
+        Self::with_flags(NcFlag::SuppressBanners)
     }
 
     /// New notcurses context in CLI mode.
     ///
     /// It has the following flags:
-    /// - [`NcFlags::SuppressBanners`][NcFlags#associatedconstant.SuppressBanners]
-    /// - [`NcFlags::NoAlternateScreen`][NcFlags#associatedconstant.NoAlternateScreen]
-    /// - [`NcFlags::NoClearBitmaps`][NcFlags#associatedconstant.NoClearBitmaps]
-    /// - [`NcFlags::PreserveCursor`][NcFlags#associatedconstant.PreserveCursor]
+    /// - [`NcFlag::SuppressBanners`][NcFlag#associatedconstant.SuppressBanners]
+    /// - [`NcFlag::NoAlternateScreen`][NcFlag#associatedconstant.NoAlternateScreen]
+    /// - [`NcFlag::NoClearBitmaps`][NcFlag#associatedconstant.NoClearBitmaps]
+    /// - [`NcFlag::PreserveCursor`][NcFlag#associatedconstant.PreserveCursor]
     ///
     /// # Safety
     /// You must not create multiple `Nc` instances at the same time, on
     /// the same thread. You must [`stop`][Nc#method.stop] the current one
     /// before creating a new one.
     pub unsafe fn new_cli<'a>() -> NcResult<&'a mut Nc> {
-        Self::with_flags(NcFlags::CliMode)
+        Self::with_flags(NcFlag::CliMode)
     }
 
     /// New notcurses context, with banners.
@@ -109,7 +109,7 @@ impl Nc {
     /// the same thread. You must [`stop`][Nc#method.stop] the current one
     /// before creating a new one.
     pub unsafe fn with_banners<'a>() -> NcResult<&'a mut Nc> {
-        Self::with_flags(NcFlags::None)
+        Self::with_flags(NcFlag::None)
     }
 
     /// New notcurses context, without an alternate screen (nor banners).
@@ -117,16 +117,16 @@ impl Nc {
     #[deprecated]
     #[doc(hidden)]
     pub unsafe fn without_altscreen<'a>() -> NcResult<&'a mut Nc> {
-        Self::with_flags(NcFlags::NoAlternateScreen | NcFlags::SuppressBanners)
+        Self::with_flags(NcFlag::NoAlternateScreen | NcFlag::SuppressBanners)
     }
 
-    /// New notcurses context, expects [`NcFlags`].
+    /// New notcurses context, expects [`NcFlag`].
     ///
     /// # Safety
     /// You must not create multiple `Nc` instances at the same time, on
     /// the same thread. You must [`stop`][Nc#method.stop] the current one
     /// before creating a new one.
-    pub unsafe fn with_flags<'a>(flags: impl Into<NcFlags>) -> NcResult<&'a mut Nc> {
+    pub unsafe fn with_flags<'a>(flags: impl Into<NcFlag>) -> NcResult<&'a mut Nc> {
         Self::with_options(NcOptions::with_flags(flags.into()))
     }
 
@@ -149,7 +149,7 @@ impl Nc {
     /// before creating a new one.
     pub unsafe fn with_debug<'a>(
         loglevel: impl Into<NcLogLevel>,
-        flags: impl Into<NcFlags>,
+        flags: impl Into<NcFlag>,
     ) -> NcResult<&'a mut Nc> {
         Self::with_options(NcOptions::with_all_options(
             loglevel.into(),

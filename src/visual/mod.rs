@@ -45,7 +45,7 @@ pub(crate) mod options;
 mod reimplemented;
 
 pub use geometry::NcVisualGeometry;
-pub use options::{NcVisualFlags, NcVisualOptions, NcVisualOptionsBuilder};
+pub use options::{NcVisualFlag, NcVisualOptions, NcVisualOptionsBuilder};
 
 /// A visual bit of multimedia.
 ///

@@ -51,7 +51,7 @@ pub use builder::NcVisualOptionsBuilder;
 ///
 /// * [`blitter`] - [`NcBlitter`] glyph set to use for blitting.
 ///
-/// * [`flags`] - [`NcVisualFlags`].
+/// * [`flags`] - [`NcVisualFlag`].
 ///
 /// * [`transcolor`] - treats this color as transparent when the [`AddAlpha`]
 ///   flag is active.
@@ -90,10 +90,10 @@ pub use builder::NcVisualOptionsBuilder;
 /// [`transcolor`]: crate::c_api::ffi::ncvisual_options#structfield.transcolor
 /// [`pxoffy`]: crate::c_api::ffi::ncvisual_options#structfield.pxoffy
 /// [`pxoffx`]: crate::c_api::ffi::ncvisual_options#structfield.pxoffx
-/// [`AddAlpha`]: NcVisualFlags#associatedconstant.AddAlpha
-/// [`Childplane`]: NcVisualFlags#associatedconstant.Childplane
-/// [`VerAligned`]:NcVisualFlags#associatedconstant.VerAligned
-/// [`HorAligned`]: NcVisualFlags#associatedconstant.HorAligned
+/// [`AddAlpha`]: NcVisualFlag#associatedconstant.AddAlpha
+/// [`Childplane`]: NcVisualFlag#associatedconstant.Childplane
+/// [`VerAligned`]:NcVisualFlag#associatedconstant.VerAligned
+/// [`HorAligned`]: NcVisualFlag#associatedconstant.HorAligned
 pub type NcVisualOptions = crate::c_api::ffi::ncvisual_options;
 
 /// # Constructors
@@ -147,7 +147,7 @@ impl<'ncplane> NcVisualOptions {
     ///
     /// * `blitter` - [`NcBlitter`] glyph set to use for blitting.
     ///
-    /// * `flags` - [`NcVisualFlags`].
+    /// * `flags` - [`NcVisualFlag`].
     ///
     /// * `transcolor` - treats this color as transparent when the [`AddAlpha`]
     ///   flag is active
@@ -162,10 +162,10 @@ impl<'ncplane> NcVisualOptions {
     /// [`NcPixelGeometry.cell_y`]: crate::NcPixelGeometry#structfield.cell_y
     /// [`NcPixelGeometry.cell_x`]: crate::NcPixelGeometry#structfield.cell_x
     /// [`NcVisualGeometry.cdim_yx`]: crate::NcVisualGeometry#structfield.cdim_yx
-    /// [`AddAlpha`]: NcVisualFlags#associatedconstant.AddAlpha
-    /// [`Childplane`]: NcVisualFlags#associatedconstant.Childplane
-    /// [`VerAligned`]:NcVisualFlags#associatedconstant.VerALigned
-    /// [`HorAligned`]: NcVisualFlags#associatedconstant.HorALigned
+    /// [`AddAlpha`]: NcVisualFlag#associatedconstant.AddAlpha
+    /// [`Childplane`]: NcVisualFlag#associatedconstant.Childplane
+    /// [`VerAligned`]:NcVisualFlag#associatedconstant.VerALigned
+    /// [`HorAligned`]: NcVisualFlag#associatedconstant.HorALigned
     pub fn new(
         plane: Option<&mut NcPlane>,
         scale: impl Into<NcScale>,
@@ -174,7 +174,7 @@ impl<'ncplane> NcVisualOptions {
         section_yx_lenyx: Option<(u32, u32, u32, u32)>,
         cell_offset_yx: Option<(u32, u32)>,
         blitter: impl Into<NcBlitter>,
-        flags: impl Into<NcVisualFlags>,
+        flags: impl Into<NcVisualFlag>,
         transcolor: impl Into<NcRgba>,
     ) -> Self {
         let plane_ptr = if let Some(p) = plane { p } else { null_mut() };
@@ -208,22 +208,22 @@ impl<'ncplane> NcVisualOptions {
 
 /// A bitmask of flags for [`NcVisualOptions`].
 ///
-/// # Flags
-/// - [`None`][NcVisualFlags::None]
-/// - [`AddAlpha`][NcVisualFlags::AddAlpha]
-/// - [`Blend`][NcVisualFlags::Blend]
-/// - [`ChildPlane`][NcVisualFlags::ChildPlane]
-/// - [`NoDegrade`][NcVisualFlags::NoDegrade]
-/// - [`HorAligned`][NcVisualFlags::HorAligned]
-/// - [`VerAligned`][NcVisualFlags::VerAligned]
-/// - [`NoInterpolate`][NcVisualFlags::NoInterpolate]
+/// # Flag
+/// - [`None`][NcVisualFlag::None]
+/// - [`AddAlpha`][NcVisualFlag::AddAlpha]
+/// - [`Blend`][NcVisualFlag::Blend]
+/// - [`ChildPlane`][NcVisualFlag::ChildPlane]
+/// - [`NoDegrade`][NcVisualFlag::NoDegrade]
+/// - [`HorAligned`][NcVisualFlag::HorAligned]
+/// - [`VerAligned`][NcVisualFlag::VerAligned]
+/// - [`NoInterpolate`][NcVisualFlag::NoInterpolate]
 ///
 /// # Default
-/// *[`NcVisualFlags::None`]
+/// *[`NcVisualFlag::None`]
 #[derive(Copy, Clone, Debug, PartialEq)]
-pub struct NcVisualFlags(pub c_api::NcVisualFlags_u64);
+pub struct NcVisualFlag(pub c_api::NcVisualFlag_u64);
 
-impl NcVisualFlags {
+impl NcVisualFlag {
     /// No flags.
     pub const None: Self = Self(0);
 
@@ -257,61 +257,61 @@ impl NcVisualFlags {
 }
 
 mod std_impls {
-    use super::{c_api::NcVisualFlags_u64, NcVisualFlags};
+    use super::{c_api::NcVisualFlag_u64, NcVisualFlag};
 
-    impl Default for NcVisualFlags {
+    impl Default for NcVisualFlag {
         fn default() -> Self {
             Self::None
         }
     }
 
-    crate::from_primitive![NcVisualFlags, NcVisualFlags_u64];
-    crate::unit_impl_from![NcVisualFlags, NcVisualFlags_u64];
-    crate::unit_impl_ops![bitwise; NcVisualFlags, NcVisualFlags_u64];
-    crate::unit_impl_fmt![bases+display; NcVisualFlags];
+    crate::from_primitive![NcVisualFlag, NcVisualFlag_u64];
+    crate::unit_impl_from![NcVisualFlag, NcVisualFlag_u64];
+    crate::unit_impl_ops![bitwise; NcVisualFlag, NcVisualFlag_u64];
+    crate::unit_impl_fmt![bases+display; NcVisualFlag];
 }
 
 pub(crate) mod c_api {
     use super::ffi;
 
-    pub type NcVisualFlags_u64 = u64;
+    pub type NcVisualFlag_u64 = u64;
 
-    /// [`NcVisualFlags_u64`] flag to treat as transparent the color specified
+    /// [`NcVisualFlag_u64`] flag to treat as transparent the color specified
     /// in the `transcolor` field.
-    pub const NCVISUAL_OPTION_ADDALPHA: NcVisualFlags_u64 =
-        ffi::NCVISUAL_OPTION_ADDALPHA as NcVisualFlags_u64;
+    pub const NCVISUAL_OPTION_ADDALPHA: NcVisualFlag_u64 =
+        ffi::NCVISUAL_OPTION_ADDALPHA as NcVisualFlag_u64;
 
-    /// [`NcVisualFlags_u64`] flag uses [`NcAlpha::Blend`] with the `NcVisual`.
+    /// [`NcVisualFlag_u64`] flag uses [`NcAlpha::Blend`] with the `NcVisual`.
     ///
     /// [`NcAlpha::Blend`]: crate::NcAlpha#associatedconstant.Blend
-    pub const NCVISUAL_OPTION_BLEND: NcVisualFlags_u64 =
-        ffi::NCVISUAL_OPTION_BLEND as NcVisualFlags_u64;
+    pub const NCVISUAL_OPTION_BLEND: NcVisualFlag_u64 =
+        ffi::NCVISUAL_OPTION_BLEND as NcVisualFlag_u64;
 
-    /// [`NcVisualFlags_u64`] flag to indicate that the `n` field of
+    /// [`NcVisualFlag_u64`] flag to indicate that the `n` field of
     /// `ncvisual_options` refers not to the plane onto which you'd like to blit,
     /// but the parent of a new plane.
     ///
     /// A plane will be created using the other parameters in the ncvisual_options,
     /// as a child of this parent. This means things like, say, vertically centering
     /// a sprixel relative to the standard plane can be done in one step.
-    pub const NCVISUAL_OPTION_CHILDPLANE: NcVisualFlags_u64 =
-        ffi::NCVISUAL_OPTION_CHILDPLANE as NcVisualFlags_u64;
+    pub const NCVISUAL_OPTION_CHILDPLANE: NcVisualFlag_u64 =
+        ffi::NCVISUAL_OPTION_CHILDPLANE as NcVisualFlag_u64;
 
-    /// [`NcVisualFlags_u64`] flag to fail rather than gracefully degrade.
+    /// [`NcVisualFlag_u64`] flag to fail rather than gracefully degrade.
     ///
     /// See [`NcBlitter`][crate::NcBlitter].
-    pub const NCVISUAL_OPTION_NODEGRADE: NcVisualFlags_u64 =
-        ffi::NCVISUAL_OPTION_NODEGRADE as NcVisualFlags_u64;
+    pub const NCVISUAL_OPTION_NODEGRADE: NcVisualFlag_u64 =
+        ffi::NCVISUAL_OPTION_NODEGRADE as NcVisualFlag_u64;
 
-    /// [`NcVisualFlags_u64`] flag to indicate Y is an alignment, not absolute.
-    pub const NCVISUAL_OPTION_VERALIGNED: NcVisualFlags_u64 =
-        ffi::NCVISUAL_OPTION_VERALIGNED as NcVisualFlags_u64;
+    /// [`NcVisualFlag_u64`] flag to indicate Y is an alignment, not absolute.
+    pub const NCVISUAL_OPTION_VERALIGNED: NcVisualFlag_u64 =
+        ffi::NCVISUAL_OPTION_VERALIGNED as NcVisualFlag_u64;
 
-    /// [`NcVisualFlags_u64`] flag to indicate X is an alignment, not absolute.
-    pub const NCVISUAL_OPTION_HORALIGNED: NcVisualFlags_u64 =
-        ffi::NCVISUAL_OPTION_HORALIGNED as NcVisualFlags_u64;
+    /// [`NcVisualFlag_u64`] flag to indicate X is an alignment, not absolute.
+    pub const NCVISUAL_OPTION_HORALIGNED: NcVisualFlag_u64 =
+        ffi::NCVISUAL_OPTION_HORALIGNED as NcVisualFlag_u64;
 
-    /// [`NcVisualFlags_u64`] flag to use non-interpolative scaling.
-    pub const NCVISUAL_OPTION_NOINTERPOLATE: NcVisualFlags_u64 =
-        ffi::NCVISUAL_OPTION_NOINTERPOLATE as NcVisualFlags_u64;
+    /// [`NcVisualFlag_u64`] flag to use non-interpolative scaling.
+    pub const NCVISUAL_OPTION_NOINTERPOLATE: NcVisualFlag_u64 =
+        ffi::NCVISUAL_OPTION_NOINTERPOLATE as NcVisualFlag_u64;
 }

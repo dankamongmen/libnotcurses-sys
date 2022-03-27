@@ -1,6 +1,6 @@
 //!
 
-use crate::{NcAlign, NcBlitter, NcPlane, NcRgba, NcScale, NcVisualFlags, NcVisualOptions};
+use crate::{NcAlign, NcBlitter, NcPlane, NcRgba, NcScale, NcVisualFlag, NcVisualOptions};
 
 /// Builder object for [`NcVisualOptions`].
 ///
@@ -16,7 +16,7 @@ pub struct NcVisualOptionsBuilder<'ncplane> {
     region_yx_lenyx: Option<(u32, u32, u32, u32)>,
     cell_offset_yx: Option<(u32, u32)>,
     blitter: NcBlitter,
-    flags: NcVisualFlags,
+    flags: NcVisualFlag,
     transcolor: NcRgba,
 }
 
@@ -59,9 +59,9 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
     /// [`parent`]: NcVisualOptionsBuilder#method.parent
     pub fn child(mut self, child: bool) -> Self {
         if child {
-            self.flags |= NcVisualFlags::ChildPlane;
+            self.flags |= NcVisualFlag::ChildPlane;
         } else {
-            self.flags &= !NcVisualFlags::ChildPlane;
+            self.flags &= !NcVisualFlag::ChildPlane;
         }
         self
     }
@@ -77,7 +77,7 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
     /// [`child`]: NcVisualOptionsBuilder#method.child
     pub fn parent(mut self, plane: &'ncplane mut NcPlane) -> Self {
         self.plane = Some(plane);
-        self.flags |= NcVisualFlags::ChildPlane;
+        self.flags |= NcVisualFlag::ChildPlane;
         self
     }
 
@@ -90,7 +90,7 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
     /// [`CHILDPLANE`]: NcVisualOptions#associatedconstant.CHILDPLANE
     pub fn no_plane(mut self) -> Self {
         self.plane = None;
-        self.flags &= !NcVisualFlags::ChildPlane;
+        self.flags &= !NcVisualFlag::ChildPlane;
         self
     }
 
@@ -111,7 +111,7 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
     /// [`VerAligned`]: NcVisualOptions#associatedconstant.VerAligned
     pub fn y(mut self, y: i32) -> Self {
         self.y = y;
-        self.flags &= !NcVisualFlags::VerAligned;
+        self.flags &= !NcVisualFlag::VerAligned;
         self
     }
 
@@ -124,7 +124,7 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
     /// [`HorAligned`]: NcVisualOptions#associatedconstant.HorAligned
     pub fn x(mut self, x: i32) -> Self {
         self.x = x;
-        self.flags &= !NcVisualFlags::HorAligned;
+        self.flags &= !NcVisualFlag::HorAligned;
         self
     }
 
@@ -140,8 +140,8 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
     pub fn yx(mut self, y: i32, x: i32) -> Self {
         self.y = y;
         self.x = x;
-        self.flags &= !NcVisualFlags::VerAligned;
-        self.flags &= !NcVisualFlags::HorAligned;
+        self.flags &= !NcVisualFlag::VerAligned;
+        self.flags &= !NcVisualFlag::HorAligned;
         self
     }
 
@@ -154,7 +154,7 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
     /// [`VerAligned`]: NcVisualOptions#associatedconstant.VerAligned
     pub fn valign(mut self, valign: impl Into<NcAlign>) -> Self {
         self.y = valign.into().into();
-        self.flags |= NcVisualFlags::VerAligned;
+        self.flags |= NcVisualFlag::VerAligned;
         self
     }
 
@@ -167,7 +167,7 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
     /// [`VerAligned`]: NcVisualOptions#associatedconstant.VerAligned
     pub fn halign(mut self, halign: impl Into<NcAlign>) -> Self {
         self.x = halign.into().into();
-        self.flags |= NcVisualFlags::HorAligned;
+        self.flags |= NcVisualFlag::HorAligned;
         self
     }
 
@@ -181,8 +181,8 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
     pub fn align(mut self, valign: impl Into<NcAlign>, halign: impl Into<NcAlign>) -> Self {
         self.y = valign.into().into();
         self.x = halign.into().into();
-        self.flags |= NcVisualFlags::VerAligned;
-        self.flags |= NcVisualFlags::HorAligned;
+        self.flags |= NcVisualFlag::VerAligned;
+        self.flags |= NcVisualFlag::HorAligned;
         self
     }
 
@@ -211,9 +211,9 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
         // if color.is_none() {
         if let Some(color) = color {
             self.transcolor = color.into();
-            self.flags |= NcVisualFlags::AddAlpha;
+            self.flags |= NcVisualFlag::AddAlpha;
         } else {
-            self.flags &= !NcVisualFlags::AddAlpha;
+            self.flags &= !NcVisualFlag::AddAlpha;
         }
         self
     }
@@ -231,9 +231,9 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
     /// [`NcVisual`]: crate::NcVisual
     pub fn blend(mut self, blend: bool) -> Self {
         if blend {
-            self.flags |= NcVisualFlags::Blend;
+            self.flags |= NcVisualFlag::Blend;
         } else {
-            self.flags &= !NcVisualFlags::Blend;
+            self.flags &= !NcVisualFlag::Blend;
         }
         self
     }
@@ -251,9 +251,9 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
     /// [*rules of degradation*]: NcBlitter#degradation
     pub fn degrade(mut self, degrade: bool) -> Self {
         if degrade {
-            self.flags &= !NcVisualFlags::NoDegrade;
+            self.flags &= !NcVisualFlag::NoDegrade;
         } else {
-            self.flags |= NcVisualFlags::NoDegrade;
+            self.flags |= NcVisualFlag::NoDegrade;
         }
         self
     }
@@ -264,9 +264,9 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
     ///
     pub fn interpolate(mut self, interpolate: bool) -> Self {
         if interpolate {
-            self.flags &= !NcVisualFlags::NoInterpolate;
+            self.flags &= !NcVisualFlag::NoInterpolate;
         } else {
-            self.flags |= NcVisualFlags::NoInterpolate;
+            self.flags |= NcVisualFlag::NoInterpolate;
         }
         self
     }

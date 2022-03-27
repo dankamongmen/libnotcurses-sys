@@ -8,9 +8,9 @@
 /// does not use this full granularity.
 ///
 /// The log level does not affect the opening and closing banners,
-/// which can be disabled via [`NcFlags::SuppressBanners`]
+/// which can be disabled via [`NcFlag::SuppressBanners`]
 ///
-/// [`NcFlags::SuppressBanners`]: crate::NcFlags#associatedconstant.SuppressBanners
+/// [`NcFlag::SuppressBanners`]: crate::NcFlag#associatedconstant.SuppressBanners
 ///
 /// Note that if stderr is connected to the same terminal on which we're
 /// rendering, any kind of logging will disrupt the output.

@@ -4,8 +4,8 @@ use core::ptr::{null, null_mut};
 
 use crate::{
     c_api, cstring, error, error_ref_mut, rstring_free, NcAlign, NcBlitter, NcCapabilities,
-    NcChannels, NcDirect, NcDirectFlags, NcError, NcInput, NcPaletteIndex, NcPlane, NcResult,
-    NcRgb, NcScale, NcStyle, NcTime,
+    NcChannels, NcDirect, NcDirectFlag, NcError, NcInput, NcPaletteIndex, NcPlane, NcResult, NcRgb,
+    NcScale, NcStyle, NcTime,
 };
 
 /// # `NcDirect` constructors and destructors
@@ -26,7 +26,7 @@ impl NcDirect {
     ///
     /// *C style function: [ncdirect_init()][c_api::ncdirect_init].*
     pub unsafe fn new<'a>() -> NcResult<&'a mut NcDirect> {
-        Self::with_flags(NcDirectFlags::None)
+        Self::with_flags(NcDirectFlag::None)
     }
 
     /// New `NcDirect` with optional flags.
@@ -37,7 +37,7 @@ impl NcDirect {
     /// before creating a new one.
     ///
     /// *C style function: [ncdirect_init()][c_api::ncdirect_init].*
-    pub unsafe fn with_flags<'a>(flags: impl Into<NcDirectFlags>) -> NcResult<&'a mut NcDirect> {
+    pub unsafe fn with_flags<'a>(flags: impl Into<NcDirectFlag>) -> NcResult<&'a mut NcDirect> {
         let res = c_api::ncdirect_init(null(), null_mut(), flags.into().into());
         error_ref_mut![res, "Initializing NcDirect"]
     }
@@ -635,9 +635,9 @@ impl NcDirect {
     /// Initializes Readline the first time it's called.
     ///
     /// For input to be echoed to the terminal, it is necessary that the flag
-    /// [`NcDirectFlags::INHIBIT_CBREAK`][0] be provided to the constructor.
+    /// [`NcDirectFlag::INHIBIT_CBREAK`][0] be provided to the constructor.
     ///
-    /// [0]: NcDirectFlags#associatedconstant.INHIBIT_CBREAK
+    /// [0]: NcDirectFlag#associatedconstant.INHIBIT_CBREAK
     ///
     /// *C style function: [ncdirect_readline()][c_api::ncdirect_readline].*
     //

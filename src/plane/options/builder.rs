@@ -1,6 +1,6 @@
 //!
 
-use crate::{c_api, NcAlign, NcPlaneFlags, NcPlaneOptions, NcResizeCb};
+use crate::{c_api, NcAlign, NcPlaneFlag, NcPlaneOptions, NcResizeCb};
 
 use std::{
     fmt,
@@ -79,7 +79,7 @@ impl Default for NcPlaneOptionsBuilder {
             rows: 0,
             cols: 0,
             resizecb: None,
-            flags: NcPlaneFlags::Marginalized.into(),
+            flags: NcPlaneFlag::Marginalized.into(),
             margin_b: 0,
             margin_r: 0,
         }
@@ -178,10 +178,10 @@ impl NcPlaneOptionsBuilder {
     ///
     /// Effect: Sets the *y* coordinate and unsets the [`VerAligned`] flag.
     ///
-    /// [`VerAligned`]: NcPlaneFlags#associatedconstant.VerAligned
+    /// [`VerAligned`]: NcPlaneFlag#associatedconstant.VerAligned
     pub fn y(mut self, y: i32) -> Self {
         self.y = y;
-        self.flags &= !NcPlaneFlags::VerAligned;
+        self.flags &= !NcPlaneFlag::VerAligned;
         self
     }
 
@@ -191,10 +191,10 @@ impl NcPlaneOptionsBuilder {
     ///
     /// Effect: Sets the *x* coordinate and unsets the [`HorAligned`] flag.
     ///
-    /// [`HorAligned`]: NcPlaneFlags#associatedconstant.HorAligned
+    /// [`HorAligned`]: NcPlaneFlag#associatedconstant.HorAligned
     pub fn x(mut self, x: i32) -> Self {
         self.x = x;
-        self.flags &= !NcPlaneFlags::HorAligned;
+        self.flags &= !NcPlaneFlag::HorAligned;
         self
     }
 
@@ -205,13 +205,13 @@ impl NcPlaneOptionsBuilder {
     ///
     /// Default: *`(0, 0)`*.
     ///
-    /// [`VerAligned`]: NcPlaneFlags#associatedconstant.VerAligned
-    /// [`HorAligned`]: NcPlaneFlags#associatedconstant.HorAligned
+    /// [`VerAligned`]: NcPlaneFlag#associatedconstant.VerAligned
+    /// [`HorAligned`]: NcPlaneFlag#associatedconstant.HorAligned
     pub fn yx(mut self, y: i32, x: i32) -> Self {
         self.y = y;
         self.x = x;
-        self.flags &= !NcPlaneFlags::VerAligned;
-        self.flags &= !NcPlaneFlags::HorAligned;
+        self.flags &= !NcPlaneFlag::VerAligned;
+        self.flags &= !NcPlaneFlag::HorAligned;
         self
     }
 
@@ -221,10 +221,10 @@ impl NcPlaneOptionsBuilder {
     ///
     /// Effect: Sets the *`y`* alignment and the [`VerAligned`] flag.
     ///
-    /// [`VerAligned`]: NcPlaneFlags#associatedconstant.VerAligned
+    /// [`VerAligned`]: NcPlaneFlag#associatedconstant.VerAligned
     pub fn valign(mut self, valign: impl Into<NcAlign>) -> Self {
         self.y = valign.into().into();
-        self.flags |= NcPlaneFlags::VerAligned;
+        self.flags |= NcPlaneFlag::VerAligned;
         self
     }
 
@@ -234,10 +234,10 @@ impl NcPlaneOptionsBuilder {
     ///
     /// Effect: Sets the *`x`* alignment and the [`HorAligned`] flag.
     ///
-    /// [`HorAligned`]: NcPlaneFlags#associatedconstant.HorAligned
+    /// [`HorAligned`]: NcPlaneFlag#associatedconstant.HorAligned
     pub fn halign(mut self, halign: impl Into<NcAlign>) -> Self {
         self.y = halign.into().into();
-        self.flags |= NcPlaneFlags::HorAligned;
+        self.flags |= NcPlaneFlag::HorAligned;
         self
     }
 
@@ -248,11 +248,11 @@ impl NcPlaneOptionsBuilder {
     /// Effect: Sets the *`y` & `x`* alignments and the [`VerAligned`]
     /// & [`HorAligned`] flags.
     ///
-    /// [`VerAligned`]: NcPlaneFlags#associatedconstant.VerAligned
-    /// [`HorAligned`]: NcPlaneFlags#associatedconstant.HorAligned
+    /// [`VerAligned`]: NcPlaneFlag#associatedconstant.VerAligned
+    /// [`HorAligned`]: NcPlaneFlag#associatedconstant.HorAligned
     pub fn align(mut self, halign: impl Into<NcAlign>) -> Self {
         self.y = halign.into().into();
-        self.flags |= NcPlaneFlags::VerAligned;
+        self.flags |= NcPlaneFlag::VerAligned;
         self
     }
 
@@ -264,10 +264,10 @@ impl NcPlaneOptionsBuilder {
     ///
     /// Effect: sets the *rows* field and unsets the [`Marginalized`] flag.
     ///
-    /// [`Marginalized`]: NcPlaneFlags#associatedconstant.Marginalized
+    /// [`Marginalized`]: NcPlaneFlag#associatedconstant.Marginalized
     pub fn rows(mut self, rows: u32) -> Self {
         self.rows = rows;
-        self.flags &= !NcPlaneFlags::Marginalized;
+        self.flags &= !NcPlaneFlag::Marginalized;
         self
     }
 
@@ -279,10 +279,10 @@ impl NcPlaneOptionsBuilder {
     ///
     /// Effect: sets the *cols* field and unsets the [`Marginalized`] flag.
     ///
-    /// [`Marginalized`]: NcPlaneFlags#associatedconstant.Marginalized
+    /// [`Marginalized`]: NcPlaneFlag#associatedconstant.Marginalized
     pub fn cols(mut self, cols: u32) -> Self {
         self.cols = cols;
-        self.flags &= !NcPlaneFlags::Marginalized;
+        self.flags &= !NcPlaneFlag::Marginalized;
         self
     }
 
@@ -295,11 +295,11 @@ impl NcPlaneOptionsBuilder {
     /// Effect: sets the *rows* & *cols* fields and unsets the [`MARGINALIZED`]
     /// flag.
     ///
-    /// [`MARGINALIZED`]: NcPlaneFlags#associatedconstant.MARGINALIZED
+    /// [`MARGINALIZED`]: NcPlaneFlag#associatedconstant.MARGINALIZED
     pub fn rows_cols(mut self, rows: u32, cols: u32) -> Self {
         self.rows = rows;
         self.cols = cols;
-        self.flags &= !NcPlaneFlags::Marginalized;
+        self.flags &= !NcPlaneFlag::Marginalized;
         self
     }
 
@@ -310,11 +310,11 @@ impl NcPlaneOptionsBuilder {
     /// Effect: sets the `margin_b` & `margin_r` fields and the [`MARGINALIZED`]
     /// flag.
     ///
-    /// [`MARGINALIZED`]: NcPlaneFlags#associatedconstant.MARGINALIZED
+    /// [`MARGINALIZED`]: NcPlaneFlag#associatedconstant.MARGINALIZED
     pub fn margins(mut self, bottom: u32, right: u32) -> Self {
         self.margin_b = bottom;
         self.margin_r = right;
-        self.flags |= NcPlaneFlags::Marginalized;
+        self.flags |= NcPlaneFlag::Marginalized;
         self
     }
 
@@ -324,12 +324,12 @@ impl NcPlaneOptionsBuilder {
     ///
     /// Effect: (un)sets the [`Fixed`] flag.
     ///
-    /// [`Fixed`]: NcPlaneFlags#associatedconstant.Fixed
+    /// [`Fixed`]: NcPlaneFlag#associatedconstant.Fixed
     pub fn fixed(mut self, fixed: bool) -> Self {
         if fixed {
-            self.flags |= NcPlaneFlags::Fixed;
+            self.flags |= NcPlaneFlag::Fixed;
         } else {
-            self.flags &= !NcPlaneFlags::Fixed;
+            self.flags &= !NcPlaneFlag::Fixed;
         }
         self
     }
@@ -346,13 +346,13 @@ impl NcPlaneOptionsBuilder {
     /// See also: [`AutoGrow`].
     ///
     /// [`set_scrolling(true)`]: crate::NcPlane#method.set_scrolling
-    /// [`AutoGrow`]: NcPlaneFlags#associatedconstant.AutoGrow
-    /// [`VScroll`]: NcPlaneFlags#associatedconstant.VScroll
+    /// [`AutoGrow`]: NcPlaneFlag#associatedconstant.AutoGrow
+    /// [`VScroll`]: NcPlaneFlag#associatedconstant.VScroll
     pub fn vscroll(mut self, vscroll: bool) -> Self {
         if vscroll {
-            self.flags |= NcPlaneFlags::VScroll;
+            self.flags |= NcPlaneFlag::VScroll;
         } else {
-            self.flags &= !NcPlaneFlags::VScroll;
+            self.flags &= !NcPlaneFlag::VScroll;
         }
         self
     }
@@ -366,13 +366,13 @@ impl NcPlaneOptionsBuilder {
     /// Note that just setting `AutoGrow` makes the `NcPlane` grow to the right,
     /// and setting `AutoGrow` + [`VScroll`] makes the `NcPlane` grow down.
     ///
-    /// [`AutoGrow`]: NcPlaneFlags#associatedconstant.AutoGrow
-    /// [`VScroll`]: NcPlaneFlags#associatedconstant.VScroll
+    /// [`AutoGrow`]: NcPlaneFlag#associatedconstant.AutoGrow
+    /// [`VScroll`]: NcPlaneFlag#associatedconstant.VScroll
     pub fn autogrow(mut self, autogrow: bool) -> Self {
         if autogrow {
-            self.flags |= NcPlaneFlags::AutoGrow;
+            self.flags |= NcPlaneFlag::AutoGrow;
         } else {
-            self.flags &= !NcPlaneFlags::AutoGrow;
+            self.flags &= !NcPlaneFlag::AutoGrow;
         }
         self
     }

@@ -20,7 +20,7 @@ use std::ptr::{null, null_mut};
 /// - [`userptr`]: optional user curry.
 /// - [`name`]: optional string identifier for debugging.
 /// - [`resizecb`]: callback when parent is resized.
-/// - [`flags`]: [`NcPlaneFlags`].
+/// - [`flags`]: [`NcPlaneFlag`].
 /// - [`margin_b`]: bottom margin (requires the [`Marginalized`] flag).
 /// - [`margin_r`]: right margin (requires the [`Marginalized`]).
 ///
@@ -34,14 +34,14 @@ use std::ptr::{null, null_mut};
 /// [`flags`]: ffi::ncplane_options#structfield.flags
 /// [`margin_b`]: ffi::ncplane_options#structfield.margin_b
 /// [`margin_r`]: ffi::ncplane_options#structfield.margin_r
-/// [`MARGINALIZED`]: NcPlaneFlags#associatedconstant.Marginalized
+/// [`MARGINALIZED`]: NcPlaneFlag#associatedconstant.Marginalized
 pub type NcPlaneOptions = ffi::ncplane_options;
 
 /// # Constructors
 impl NcPlaneOptions {
     /// New NcPlaneOptions using the horizontal x.
     pub fn new(y: i32, x: i32, rows: u32, cols: u32) -> Self {
-        Self::with_flags(y, x, rows, cols, None, NcPlaneFlags::None, 0, 0)
+        Self::with_flags(y, x, rows, cols, None, NcPlaneFlag::None, 0, 0)
     }
 
     /// Returns a default builder object for `NcPlaneOptions`.
@@ -56,7 +56,7 @@ impl NcPlaneOptions {
 
     /// New NcPlaneOptions with horizontal alignment.
     pub fn new_aligned(y: i32, align: impl Into<NcAlign>, rows: u32, cols: u32) -> Self {
-        Self::with_flags_aligned(y, align.into(), rows, cols, None, NcPlaneFlags::HorAligned)
+        Self::with_flags_aligned(y, align.into(), rows, cols, None, NcPlaneFlag::HorAligned)
     }
 
     /// New NcPlaneOptions, with flags.
@@ -66,7 +66,7 @@ impl NcPlaneOptions {
         rows: u32,
         cols: u32,
         resizecb: Option<NcResizeCb>,
-        flags: impl Into<NcPlaneFlags>,
+        flags: impl Into<NcPlaneFlag>,
         margin_b: u32,
         margin_r: u32,
     ) -> Self {
@@ -95,9 +95,9 @@ impl NcPlaneOptions {
         rows: u32,
         cols: u32,
         resizecb: Option<NcResizeCb>,
-        flags: impl Into<NcPlaneFlags>,
+        flags: impl Into<NcPlaneFlag>,
     ) -> Self {
-        let flags = NcPlaneFlags::HorAligned | flags.into();
+        let flags = NcPlaneFlag::HorAligned | flags.into();
         NcPlaneOptions {
             y: y as i32,
             x: align.into().into(),
@@ -117,64 +117,64 @@ impl NcPlaneOptions {
 impl NcPlaneOptions {
     /// Returns `true` if it has the [`VerAligned`] flag set.
     ///
-    /// [`VerAligned`]: NcPlaneFlags#associatedconstant.VerAligned
+    /// [`VerAligned`]: NcPlaneFlag#associatedconstant.VerAligned
     pub fn is_veraligned(&self) -> bool {
-        self.flags & NcPlaneFlags::VerAligned != NcPlaneFlags::None
+        self.flags & NcPlaneFlag::VerAligned != NcPlaneFlag::None
     }
 
     /// Returns `true` if it has the [`HorAligned`] flag set.
     ///
-    /// [`HorAligned`]: NcPlaneFlags#associatedconstant.HorAligned
+    /// [`HorAligned`]: NcPlaneFlag#associatedconstant.HorAligned
     pub fn is_horaligned(&self) -> bool {
-        self.flags & NcPlaneFlags::HorAligned != NcPlaneFlags::None
+        self.flags & NcPlaneFlag::HorAligned != NcPlaneFlag::None
     }
 
     /// Returns `true` if it has the [`Marginalized`] flag set.
     ///
-    /// [`Marginalized`]: NcPlaneFlags#associatedconstant.Marginalized
+    /// [`Marginalized`]: NcPlaneFlag#associatedconstant.Marginalized
     pub fn is_marginalized(&self) -> bool {
-        self.flags & NcPlaneFlags::Marginalized != NcPlaneFlags::None
+        self.flags & NcPlaneFlag::Marginalized != NcPlaneFlag::None
     }
 
     /// Returns `true` if it has the [`Fixed`] flag set.
     ///
-    /// [`Fixed`]: NcPlaneFlags#associatedconstant.Fixed
+    /// [`Fixed`]: NcPlaneFlag#associatedconstant.Fixed
     pub fn is_fixed(&self) -> bool {
-        self.flags & NcPlaneFlags::Fixed != NcPlaneFlags::None
+        self.flags & NcPlaneFlag::Fixed != NcPlaneFlag::None
     }
 
     /// Returns `true` if it has the [`AutoGrow`] flag set.
     ///
-    /// [`AutoGrow`]: NcPlaneFlags#associatedconstant.AutoGrow
+    /// [`AutoGrow`]: NcPlaneFlag#associatedconstant.AutoGrow
     pub fn is_autogrow(&self) -> bool {
-        self.flags & NcPlaneFlags::AutoGrow != NcPlaneFlags::None
+        self.flags & NcPlaneFlag::AutoGrow != NcPlaneFlag::None
     }
 
     /// Returns `true` if it has the [`VScroll`] flag set.
     ///
-    /// [`VScroll`]: NcPlaneFlags#associatedconstant.VScroll
+    /// [`VScroll`]: NcPlaneFlag#associatedconstant.VScroll
     pub fn is_vscroll(&self) -> bool {
-        self.flags & NcPlaneFlags::VScroll != NcPlaneFlags::None
+        self.flags & NcPlaneFlag::VScroll != NcPlaneFlag::None
     }
 }
 
 /// A bitmask of flags for [`NcPlaneOptions`].
 ///
-/// # Flags
-/// - [`None`][NcPlaneFlags::None]
-/// - [`HorAligned`][NcPlaneFlags::HorAligned]
-/// - [`VerAligned`][NcPlaneFlags::VerAligned]
-/// - [`Marginalized`][NcPlaneFlags::Marginalized]
-/// - [`Fixed`][NcPlaneFlags::Fixed]
-/// - [`AutoGrow`][NcPlaneFlags::AutoGrow]
-/// - [`VScroll`][NcPlaneFlags::VScroll]
+/// # Flag
+/// - [`None`][NcPlaneFlag::None]
+/// - [`HorAligned`][NcPlaneFlag::HorAligned]
+/// - [`VerAligned`][NcPlaneFlag::VerAligned]
+/// - [`Marginalized`][NcPlaneFlag::Marginalized]
+/// - [`Fixed`][NcPlaneFlag::Fixed]
+/// - [`AutoGrow`][NcPlaneFlag::AutoGrow]
+/// - [`VScroll`][NcPlaneFlag::VScroll]
 ///
 /// # Default
-/// *[`NcPlaneFlags::None`]
+/// *[`NcPlaneFlag::None`]
 #[derive(Copy, Clone, Debug, PartialEq)]
-pub struct NcPlaneFlags(pub c_api::NcPlaneFlags_u64);
+pub struct NcPlaneFlag(pub c_api::NcPlaneFlag_u64);
 
-impl NcPlaneFlags {
+impl NcPlaneFlag {
     /// No flags.
     pub const None: Self = Self(0);
 
@@ -222,18 +222,18 @@ impl NcPlaneFlags {
 }
 
 mod std_impls {
-    use super::{c_api::NcPlaneFlags_u64, NcPlaneFlags};
+    use super::{c_api::NcPlaneFlag_u64, NcPlaneFlag};
 
-    impl Default for NcPlaneFlags {
+    impl Default for NcPlaneFlag {
         fn default() -> Self {
             Self::None
         }
     }
 
-    crate::from_primitive![NcPlaneFlags, NcPlaneFlags_u64];
-    crate::unit_impl_from![NcPlaneFlags, NcPlaneFlags_u64];
-    crate::unit_impl_ops![bitwise; NcPlaneFlags, NcPlaneFlags_u64];
-    crate::unit_impl_fmt![bases+display; NcPlaneFlags];
+    crate::from_primitive![NcPlaneFlag, NcPlaneFlag_u64];
+    crate::unit_impl_from![NcPlaneFlag, NcPlaneFlag_u64];
+    crate::unit_impl_ops![bitwise; NcPlaneFlag, NcPlaneFlag_u64];
+    crate::unit_impl_fmt![bases+display; NcPlaneFlag];
 }
 
 pub(crate) mod c_api {
@@ -241,7 +241,7 @@ pub(crate) mod c_api {
 
     /// A bitmask of flags for [`NcPlaneOptions`][crate::NcPlaneOptions].
     ///
-    /// It's recommended to use [`NcPlaneFlags`][crate::NcPlaneFlags] instead.
+    /// It's recommended to use [`NcPlaneFlag`][crate::NcPlaneFlag] instead.
     ///
     /// # Associated `c_api` constants
     /// - [`NCPLANE_OPTION_HORALIGNED`]
@@ -250,22 +250,22 @@ pub(crate) mod c_api {
     /// - [`NCPLANE_OPTION_FIXED`]
     /// - [`NCPLANE_OPTION_AUTOGROW`]
     /// - [`NCPLANE_OPTION_VSCROLL`]
-    pub type NcPlaneFlags_u64 = u64;
+    pub type NcPlaneFlag_u64 = u64;
 
-    /// [`NcPlaneFlags_u64`] Horizontal alignment relative to the parent plane.
+    /// [`NcPlaneFlag_u64`] Horizontal alignment relative to the parent plane.
     ///
     /// Use `NcAlign_u32` for 'x'.
-    pub const NCPLANE_OPTION_HORALIGNED: NcPlaneFlags_u64 =
-        ffi::NCPLANE_OPTION_HORALIGNED as NcPlaneFlags_u64;
+    pub const NCPLANE_OPTION_HORALIGNED: NcPlaneFlag_u64 =
+        ffi::NCPLANE_OPTION_HORALIGNED as NcPlaneFlag_u64;
 
-    /// [`NcPlaneFlags_u64`] flag for vertical alignment relative to the parent
+    /// [`NcPlaneFlag_u64`] flag for vertical alignment relative to the parent
     /// plane.
     ///
     /// Use `NcAlign_u32` for 'y'.
-    pub const NCPLANE_OPTION_VERALIGNED: NcPlaneFlags_u64 =
-        ffi::NCPLANE_OPTION_VERALIGNED as NcPlaneFlags_u64;
+    pub const NCPLANE_OPTION_VERALIGNED: NcPlaneFlag_u64 =
+        ffi::NCPLANE_OPTION_VERALIGNED as NcPlaneFlag_u64;
 
-    /// [`NcPlaneFlags_u64`] flag to maximize relative to the parent plane,
+    /// [`NcPlaneFlag_u64`] flag to maximize relative to the parent plane,
     /// modulo the provided margins.
     ///
     /// The margins are best-effort; the plane will always be at least 1 column by
@@ -273,30 +273,29 @@ pub(crate) mod c_api {
     /// remaining space. 'y' and 'x' are overloaded as the top and left margins
     /// when this flag is used. 'rows' and 'cols' must be 0 when this flag is
     /// used. This flag is exclusive with both of the alignment flags.
-    pub const NCPLANE_OPTION_MARGINALIZED: NcPlaneFlags_u64 =
-        ffi::NCPLANE_OPTION_MARGINALIZED as NcPlaneFlags_u64;
+    pub const NCPLANE_OPTION_MARGINALIZED: NcPlaneFlag_u64 =
+        ffi::NCPLANE_OPTION_MARGINALIZED as NcPlaneFlag_u64;
 
-    /// [`NcPlaneFlags_u64`] flag to avoid scrolling alongside its parent.
+    /// [`NcPlaneFlag_u64`] flag to avoid scrolling alongside its parent.
     ///
     /// If this plane is bound to a scrolling plane, it ought *not* scroll along
     /// with the parent (it will still move with the parent, maintaining its
     /// relative position, if the parent is moved to a new location).
-    pub const NCPLANE_OPTION_FIXED: NcPlaneFlags_u64 =
-        ffi::NCPLANE_OPTION_FIXED as NcPlaneFlags_u64;
+    pub const NCPLANE_OPTION_FIXED: NcPlaneFlag_u64 = ffi::NCPLANE_OPTION_FIXED as NcPlaneFlag_u64;
 
-    /// [`NcPlaneFlags_u64`] flag that enables automatic growth of the plane to
+    /// [`NcPlaneFlag_u64`] flag that enables automatic growth of the plane to
     /// accommodate output.
     ///
     /// Creating a plane with this flag is equivalent to immediately calling
     /// `ncplane_set_autogrow(p, true)` following plane creation.
-    pub const NCPLANE_OPTION_AUTOGROW: NcPlaneFlags_u64 =
-        ffi::NCPLANE_OPTION_AUTOGROW as NcPlaneFlags_u64;
+    pub const NCPLANE_OPTION_AUTOGROW: NcPlaneFlag_u64 =
+        ffi::NCPLANE_OPTION_AUTOGROW as NcPlaneFlag_u64;
 
-    /// [`NcPlaneFlags_u64`] flag that enables vertical scrolling of the plane
+    /// [`NcPlaneFlag_u64`] flag that enables vertical scrolling of the plane
     /// to accommodate output.
     ///
     /// Creating a plane with this flag is equivalent to immediately calling
     /// `ncplane_set_scrolling(p, true)` following plane creation.
-    pub const NCPLANE_OPTION_VSCROLL: NcPlaneFlags_u64 =
-        ffi::NCPLANE_OPTION_VSCROLL as NcPlaneFlags_u64;
+    pub const NCPLANE_OPTION_VSCROLL: NcPlaneFlag_u64 =
+        ffi::NCPLANE_OPTION_VSCROLL as NcPlaneFlag_u64;
 }

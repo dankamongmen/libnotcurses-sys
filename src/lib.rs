@@ -117,7 +117,7 @@ pub use blitter::NcBlitter;
 pub use capabilities::NcCapabilities;
 pub use cell::NcCell;
 pub use channel::{NcChannel, NcChannels};
-pub use direct::{NcDirect, NcDirectFlags};
+pub use direct::{NcDirect, NcDirectFlag};
 pub use error::{NcError, NcResult};
 pub use fade::{NcFadeCb, NcFadeCtx};
 pub use fd::{NcFdPlane, NcFdPlaneOptions, NcSubproc, NcSubprocOptions};
@@ -125,10 +125,10 @@ pub use file::NcFile;
 pub use input::{NcInput, NcInputType, NcMiceEvents, NcReceived};
 pub use key::{NcKey, NcKeyMod};
 pub use log_level::NcLogLevel;
-pub use notcurses::{Nc, NcFlags, NcOptions};
+pub use notcurses::{Nc, NcFlag, NcOptions};
 pub use palette::{NcPalette, NcPaletteIndex};
 pub use pixel::{NcPixel, NcPixelGeometry, NcPixelImpl};
-pub use plane::{NcPlane, NcPlaneFlags, NcPlaneOptions, NcPlaneOptionsBuilder};
+pub use plane::{NcPlane, NcPlaneFlag, NcPlaneOptions, NcPlaneOptionsBuilder};
 pub use r#box::NcBoxMask;
 pub use resizecb::NcResizeCb;
 pub use rgb::{NcRgb, NcRgba};
@@ -138,7 +138,7 @@ pub use string::NcString;
 pub use style::NcStyle;
 pub use time::NcTime;
 pub use visual::{
-    NcVisual, NcVisualFlags, NcVisualGeometry, NcVisualOptions, NcVisualOptionsBuilder,
+    NcVisual, NcVisualFlag, NcVisualGeometry, NcVisualOptions, NcVisualOptionsBuilder,
 };
 
 pub mod c_api {

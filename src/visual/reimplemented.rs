@@ -1,7 +1,7 @@
 //! `ncvisual_*` reimplemented functions
 
 use crate::{
-    Nc, NcError, NcPlane, NcPlaneOptions, NcResult, NcVisual, NcVisualFlags, NcVisualOptions,
+    Nc, NcError, NcPlane, NcPlaneOptions, NcResult, NcVisual, NcVisualFlag, NcVisualOptions,
 };
 
 /// Creates a new plane as prescribed in `opts`, either as a child
@@ -36,7 +36,7 @@ pub fn ncvisualplane_create<'a>(
     if let Some(vo) = vopts {
         if vo.n.is_null() {
             plane = NcPlane::new_pile(nc, opts)?;
-        } else if vo.flags & NcVisualFlags::ChildPlane != NcVisualFlags::None {
+        } else if vo.flags & NcVisualFlag::ChildPlane != NcVisualFlag::None {
             return Err(NcError::new_msg("ncvisualplane_create() ERR"));
         } else {
             plane = NcPlane::new_child(unsafe { &mut *vo.n }, opts)?;
