@@ -48,7 +48,7 @@ pub fn ncchannel_set_alpha(
 ///
 /// *Method: NcChannels.[fg_alpha()][NcChannels#method.fg_alpha]*
 #[inline]
-pub fn ncchannels_fg_alpha(channels: NcChannels_u64) -> NcAlpha_u32 {
+pub fn ncchannels_fg_alpha(channels: impl Into<NcChannels_u64>) -> NcAlpha_u32 {
     ncchannel_alpha(ncchannels_fchannel(channels))
 }
 
@@ -56,7 +56,7 @@ pub fn ncchannels_fg_alpha(channels: NcChannels_u64) -> NcAlpha_u32 {
 ///
 /// *Method: NcChannels.[bg_alpha()][NcChannels#method.bg_alpha]*
 #[inline]
-pub fn ncchannels_bg_alpha(channels: NcChannels_u64) -> NcAlpha_u32 {
+pub fn ncchannels_bg_alpha(channels: impl Into<NcChannels_u64>) -> NcAlpha_u32 {
     ncchannel_alpha(ncchannels_bchannel(channels))
 }
 

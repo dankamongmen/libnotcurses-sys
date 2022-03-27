@@ -67,7 +67,7 @@ impl NcVisual {
     /// *C style function: [ncvisual_from_plane()][c_api::ncvisual_from_plane].*
     pub fn from_plane<'a>(
         plane: &NcPlane,
-        blitter: NcBlitter,
+        blitter: impl Into<NcBlitter> + Copy,
         beg_y: Option<u32>,
         beg_x: Option<u32>,
         len_y: Option<u32>,
@@ -77,7 +77,7 @@ impl NcVisual {
             unsafe {
                 c_api::ncvisual_from_plane(
                     plane,
-                    blitter.into(),
+                    blitter.into().into(),
                     beg_y.unwrap_or(u32::MAX) as i32,
                     beg_x.unwrap_or(u32::MAX) as i32,
                     len_y.unwrap_or(0),
@@ -86,7 +86,11 @@ impl NcVisual {
             },
             &format!(
                 "NcVisual::from_file(plane, {}, {:?}, {:?}, {:?}, {:?})",
-                blitter, beg_y, beg_x, len_y, len_x
+                blitter.into(),
+                beg_y,
+                beg_x,
+                len_y,
+                len_x
             )
         ]
     }
@@ -413,17 +417,14 @@ impl NcVisual {
     /// [`Half`]: NcBlitter::Half
     /// [`Quadrant`]: NcBlitter::Quadrant
     /// [`Sextant`]: NcBlitter::Sextant
-    pub fn media_defblitter(nc: &Nc, scale: NcScale) -> NcBlitter {
-        unsafe { c_api::ncvisual_media_defblitter(nc, scale.into()).into() }
+    pub fn media_defblitter(nc: &Nc, scale: impl Into<NcScale>) -> NcBlitter {
+        unsafe { c_api::ncvisual_media_defblitter(nc, scale.into().into()).into() }
     }
 
     /// Polyfills at the specified location using `rgba`.
     ///
     /// *C style function: [ncvisual_polyfill_yx()][c_api::ncvisual_polyfill_yx].*
-    pub fn polyfill_yx<RGBA>(&mut self, y: u32, x: u32, rgba: RGBA) -> NcResult<()>
-    where
-        RGBA: Into<NcRgba>,
-    {
+    pub fn polyfill_yx(&mut self, y: u32, x: u32, rgba: impl Into<NcRgba>) -> NcResult<()> {
         error![
             unsafe { c_api::ncvisual_polyfill_yx(self, y, x, rgba.into().into()) },
             &format!["NcVisual.polyfill_yx({}, {}, rgba)", y, x]
@@ -515,10 +516,10 @@ impl NcVisual {
     /// Sets the specified pixel.
     ///
     /// *C style function: [ncvisual_set_yx()][c_api::ncvisual_set_yx].*
-    pub fn set_yx(&mut self, y: u32, x: u32, pixel: NcPixel) -> NcResult<()> {
+    pub fn set_yx(&mut self, y: u32, x: u32, pixel: impl Into<NcPixel> + Copy) -> NcResult<()> {
         error![
-            unsafe { c_api::ncvisual_set_yx(self, y, x, pixel.into()) },
-            &format!["NcVisual.set_yx({}, {}, {:?})", y, x, pixel]
+            unsafe { c_api::ncvisual_set_yx(self, y, x, pixel.into().into()) },
+            &format!["NcVisual.set_yx({}, {}, {:?})", y, x, pixel.into()]
         ]
     }
 

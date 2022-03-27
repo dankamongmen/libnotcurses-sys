@@ -1216,7 +1216,7 @@ impl NcPlane {
     pub fn putnstr_aligned(
         &mut self,
         y: u32,
-        align: NcAlign,
+        align: impl Into<NcAlign> + Copy,
         num_bytes: usize,
         string: &str,
     ) -> NcResult<u32> {
@@ -1224,7 +1224,7 @@ impl NcPlane {
             c_api::ncplane_putnstr_aligned(
                 self,
                 y as i32,
-                align.into(),
+                align.into().into(),
                 num_bytes,
                 cstring![string],
             )
@@ -1233,7 +1233,10 @@ impl NcPlane {
             res,
             &format!(
                 "NcPlane.putnstr_aligned({}, {}, {}, {:?})",
-                y, align, num_bytes, string
+                y,
+                align.into(),
+                num_bytes,
+                string
             ),
             res as u32
         ]
@@ -2339,7 +2342,7 @@ impl NcPlane {
         vline: &NcCell,
         stop_y: u32,
         stop_x: u32,
-        boxmask: NcBoxMask,
+        boxmask: impl Into<NcBoxMask>,
     ) -> NcResult<()> {
         error![unsafe {
             c_api::ncplane_box(
@@ -2352,7 +2355,7 @@ impl NcPlane {
                 vline,
                 stop_y,
                 stop_x,
-                boxmask.into(),
+                boxmask.into().0,
             )
         }]
     }
@@ -2375,10 +2378,19 @@ impl NcPlane {
         vline: &NcCell,
         len_y: u32,
         len_x: u32,
-        boxmask: NcBoxMask,
+        boxmask: impl Into<NcBoxMask>,
     ) -> NcResult<()> {
         error![c_api::ncplane_box_sized(
-            self, ul, ur, ll, lr, hline, vline, len_y, len_x, boxmask
+            self,
+            ul,
+            ur,
+            ll,
+            lr,
+            hline,
+            vline,
+            len_y,
+            len_x,
+            boxmask.into()
         )]
     }
 
@@ -2388,19 +2400,19 @@ impl NcPlane {
     #[inline]
     pub fn ascii_box(
         &mut self,
-        stylemask: NcStyle,
-        channels: NcChannels,
+        stylemask: impl Into<NcStyle>,
+        channels: impl Into<NcChannels>,
         stop_y: u32,
         stop_x: u32,
-        boxmask: NcBoxMask,
+        boxmask: impl Into<NcBoxMask>,
     ) -> NcResult<()> {
         error![c_api::ncplane_ascii_box(
             self,
-            stylemask.into(),
-            channels.into(),
+            stylemask.into().0,
+            channels.into().0,
             stop_y,
             stop_x,
-            boxmask
+            boxmask.into()
         )]
     }
 
@@ -2410,19 +2422,19 @@ impl NcPlane {
     #[inline]
     pub fn double_box(
         &mut self,
-        stylemask: NcStyle,
-        channels: NcChannels,
+        stylemask: impl Into<NcStyle>,
+        channels: impl Into<NcChannels>,
         stop_y: u32,
         stop_x: u32,
-        boxmask: NcBoxMask,
+        boxmask: impl Into<NcBoxMask>,
     ) -> NcResult<()> {
         error![c_api::ncplane_double_box(
             self,
-            stylemask.into(),
-            channels.into(),
+            stylemask.into().0,
+            channels.into().0,
             stop_y,
             stop_x,
-            boxmask
+            boxmask.into()
         )]
     }
 
@@ -2433,19 +2445,19 @@ impl NcPlane {
     #[inline]
     pub fn double_box_sized(
         &mut self,
-        stylemask: NcStyle,
-        channels: NcChannels,
+        stylemask: impl Into<NcStyle>,
+        channels: impl Into<NcChannels>,
         len_y: u32,
         len_x: u32,
-        boxmask: NcBoxMask,
+        boxmask: impl Into<NcBoxMask>,
     ) -> NcResult<()> {
         error![c_api::ncplane_double_box(
             self,
-            stylemask.into(),
-            channels.into(),
+            stylemask.into().0,
+            channels.into().0,
             len_y,
             len_x,
-            boxmask
+            boxmask.into()
         )]
     }
 
@@ -2461,10 +2473,17 @@ impl NcPlane {
         lr: &NcCell,
         hline: &NcCell,
         vline: &NcCell,
-        boxmask: NcBoxMask,
+        boxmask: impl Into<NcBoxMask>,
     ) -> NcResult<()> {
         error![c_api::ncplane_perimeter(
-            self, ul, ur, ll, lr, hline, vline, boxmask
+            self,
+            ul,
+            ur,
+            ll,
+            lr,
+            hline,
+            vline,
+            boxmask.into()
         )]
     }
 
@@ -2474,15 +2493,15 @@ impl NcPlane {
     #[inline]
     pub fn perimeter_double(
         &mut self,
-        stylemask: NcStyle,
-        channels: NcChannels,
-        boxmask: NcBoxMask,
+        stylemask: impl Into<NcStyle>,
+        channels: impl Into<NcChannels>,
+        boxmask: impl Into<NcBoxMask>,
     ) -> NcResult<()> {
         error![c_api::ncplane_perimeter_double(
             self,
-            stylemask.into(),
-            channels.into(),
-            boxmask
+            stylemask.into().0,
+            channels.into().0,
+            boxmask.into()
         )]
     }
 
@@ -2492,15 +2511,15 @@ impl NcPlane {
     #[inline]
     pub fn perimeter_rounded(
         &mut self,
-        stylemask: NcStyle,
-        channels: NcChannels,
-        boxmask: NcBoxMask,
+        stylemask: impl Into<NcStyle>,
+        channels: impl Into<NcChannels>,
+        boxmask: impl Into<NcBoxMask>,
     ) -> NcResult<()> {
         error![c_api::ncplane_perimeter_rounded(
             self,
-            stylemask.into(),
-            channels.into(),
-            boxmask
+            stylemask.into().0,
+            channels.into().0,
+            boxmask.into()
         )]
     }
 }
@@ -2601,11 +2620,11 @@ impl NcPlane {
         stop_y: Option<u32>,
         stop_x: Option<u32>,
         egc: &str,
-        stylemask: NcStyle,
-        ul: NcChannels,
-        ur: NcChannels,
-        ll: NcChannels,
-        lr: NcChannels,
+        stylemask: impl Into<NcStyle>,
+        ul: impl Into<NcChannels>,
+        ur: impl Into<NcChannels>,
+        ll: impl Into<NcChannels>,
+        lr: impl Into<NcChannels>,
     ) -> NcResult<u32> {
         let res = c_api::ncplane_gradient(
             self,
@@ -2615,10 +2634,10 @@ impl NcPlane {
             stop_x,
             egc,
             stylemask.into(),
-            ul.into(),
-            ur.into(),
-            ll.into(),
-            lr.into(),
+            ul.into().0,
+            ur.into().0,
+            ll.into().0,
+            lr.into().0,
         );
         error![res, "", res as u32]
     }
@@ -2643,10 +2662,10 @@ impl NcPlane {
         x: Option<u32>,
         len_y: Option<u32>,
         len_x: Option<u32>,
-        ul: NcChannel,
-        ur: NcChannel,
-        ll: NcChannel,
-        lr: NcChannel,
+        ul: impl Into<NcChannel>,
+        ur: impl Into<NcChannel>,
+        ll: impl Into<NcChannel>,
+        lr: impl Into<NcChannel>,
     ) -> NcResult<u32> {
         let res = unsafe {
             c_api::ncplane_gradient2x1(
@@ -2655,10 +2674,10 @@ impl NcPlane {
                 x.unwrap_or(u32::MAX) as i32, // "
                 len_y.unwrap_or(0),
                 len_x.unwrap_or(0),
-                ul.into(),
-                ur.into(),
-                ll.into(),
-                lr.into(),
+                ul.into().0,
+                ur.into().0,
+                ll.into().0,
+                lr.into().0,
             )
         };
         error![res, "", res as u32]

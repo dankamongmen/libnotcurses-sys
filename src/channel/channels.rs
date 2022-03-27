@@ -226,11 +226,11 @@ impl NcChannels {
         r: impl Into<u8>,
         g: impl Into<u8>,
         b: impl Into<u8>,
-        alpha: NcAlpha,
+        alpha: impl Into<NcAlpha>,
     ) -> Self {
         let channel = NcChannel::new()
             .set_rgb8(r.into(), g.into(), b.into())
-            .set_alpha(alpha);
+            .set_alpha(alpha.into());
         Self::combine(channel, channel)
     }
 

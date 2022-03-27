@@ -166,16 +166,16 @@ impl<'ncplane> NcVisualOptions {
     /// [`Childplane`]: NcVisualFlags#associatedconstant.Childplane
     /// [`VerAligned`]:NcVisualFlags#associatedconstant.VerALigned
     /// [`HorAligned`]: NcVisualFlags#associatedconstant.HorALigned
-    pub fn new<RGBA: Into<NcRgba>>(
+    pub fn new(
         plane: Option<&mut NcPlane>,
-        scale: NcScale,
+        scale: impl Into<NcScale>,
         y: i32,
         x: i32,
         section_yx_lenyx: Option<(u32, u32, u32, u32)>,
         cell_offset_yx: Option<(u32, u32)>,
-        blitter: NcBlitter,
-        flags: NcVisualFlags,
-        transcolor: RGBA,
+        blitter: impl Into<NcBlitter>,
+        flags: impl Into<NcVisualFlags>,
+        transcolor: impl Into<NcRgba>,
     ) -> Self {
         let plane_ptr = if let Some(p) = plane { p } else { null_mut() };
         let (begy, begx, leny, lenx) =
@@ -184,7 +184,7 @@ impl<'ncplane> NcVisualOptions {
 
         Self {
             n: plane_ptr,
-            scaling: scale.into(),
+            scaling: scale.into().into(),
 
             y,
             x,
@@ -194,9 +194,9 @@ impl<'ncplane> NcVisualOptions {
             leny,
             lenx,
 
-            blitter: blitter.into(),
+            blitter: blitter.into().into(),
 
-            flags: flags.into(),
+            flags: flags.into().into(),
 
             transcolor: transcolor.into().into(),
 

@@ -111,12 +111,12 @@ impl NcPlaneOptionsBuilder {
 
         // y,x
         if options.is_veraligned() {
-            builder = builder.valign(options.y.into());
+            builder = builder.valign(options.y);
         } else {
             builder = builder.y(options.y);
         }
         if options.is_horaligned() {
-            builder = builder.halign(options.x.into());
+            builder = builder.halign(options.x);
         } else {
             builder = builder.x(options.x);
         }
@@ -222,8 +222,8 @@ impl NcPlaneOptionsBuilder {
     /// Effect: Sets the *`y`* alignment and the [`VerAligned`] flag.
     ///
     /// [`VerAligned`]: NcPlaneFlags#associatedconstant.VerAligned
-    pub fn valign(mut self, valign: NcAlign) -> Self {
-        self.y = valign.into();
+    pub fn valign(mut self, valign: impl Into<NcAlign>) -> Self {
+        self.y = valign.into().into();
         self.flags |= NcPlaneFlags::VerAligned;
         self
     }
@@ -235,8 +235,8 @@ impl NcPlaneOptionsBuilder {
     /// Effect: Sets the *`x`* alignment and the [`HorAligned`] flag.
     ///
     /// [`HorAligned`]: NcPlaneFlags#associatedconstant.HorAligned
-    pub fn halign(mut self, halign: NcAlign) -> Self {
-        self.y = halign.into();
+    pub fn halign(mut self, halign: impl Into<NcAlign>) -> Self {
+        self.y = halign.into().into();
         self.flags |= NcPlaneFlags::HorAligned;
         self
     }
@@ -250,8 +250,8 @@ impl NcPlaneOptionsBuilder {
     ///
     /// [`VerAligned`]: NcPlaneFlags#associatedconstant.VerAligned
     /// [`HorAligned`]: NcPlaneFlags#associatedconstant.HorAligned
-    pub fn align(mut self, halign: NcAlign) -> Self {
-        self.y = halign.into();
+    pub fn align(mut self, halign: impl Into<NcAlign>) -> Self {
+        self.y = halign.into().into();
         self.flags |= NcPlaneFlags::VerAligned;
         self
     }

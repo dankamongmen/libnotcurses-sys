@@ -69,13 +69,13 @@ impl NcBoxMask {
 /// # Methods
 impl NcBoxMask {
     /// Returns true if the current style has included the `other_style`.
-    pub fn has(&self, other: NcBoxMask) -> bool {
-        (self.0 & other.0) == other.0
+    pub fn has(&self, other: impl Into<NcBoxMask> + Copy) -> bool {
+        (self.0 & other.into().0) == other.into().0
     }
 
     /// Adds the `other_style` to the current style.
-    pub fn add(&mut self, other: NcBoxMask) {
-        self.0 |= other.0
+    pub fn add(&mut self, other: impl Into<NcBoxMask>) {
+        self.0 |= other.into().0
     }
 }
 

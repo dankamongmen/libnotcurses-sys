@@ -3,8 +3,8 @@
 use core::ptr::{null, null_mut};
 
 use crate::{
-    c_api::{self, NcResult_i32, NCRESULT_ERR},
-    Nc, NcAlign, NcError, NcInput, NcPlane, NcResult, NcTime,
+    c_api::{self, NcAlign_u32, NcResult_i32, NCRESULT_ERR},
+    Nc, NcError, NcInput, NcPlane, NcResult, NcTime,
 };
 
 /// Returns the offset into `avail_u` at which `u` ought be output given
@@ -15,14 +15,14 @@ use crate::{
 ///
 /// *Method: Nc.[align()][Nc#method.align].*
 #[inline]
-pub fn notcurses_align(avail_u: u32, align: NcAlign, u: u32) -> NcResult_i32 {
-    if align == NcAlign::Left || align == NcAlign::Top {
+pub fn notcurses_align(avail_u: u32, align: impl Into<NcAlign_u32> + Copy, u: u32) -> NcResult_i32 {
+    if align.into() == c_api::NCALIGN_LEFT || align.into() == c_api::NCALIGN_TOP {
         return 0;
     }
-    if align == NcAlign::Center {
+    if align.into() == c_api::NCALIGN_CENTER {
         return ((avail_u - u) / 2) as NcResult_i32;
     }
-    if align == NcAlign::Right || align == NcAlign::Bottom {
+    if align.into() == c_api::NCALIGN_RIGHT || align.into() == c_api::NCALIGN_BOTTOM {
         return (avail_u - u) as NcResult_i32;
     }
     -NcResult_i32::MAX

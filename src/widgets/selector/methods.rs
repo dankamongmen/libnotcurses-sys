@@ -32,8 +32,8 @@ impl NcSelector {
     /// - a mouse scrollwheel event.
     /// - a mouse click on the scrolling arrows.
     /// - up, down, pgup, or pgdown on an unrolled menu (navigates among items).
-    pub fn offer_input(&mut self, input: NcInput) -> bool {
-        unsafe { c_api::ncselector_offer_input(self, &input) }
+    pub fn offer_input(&mut self, input: impl Into<NcInput>) -> bool {
+        unsafe { c_api::ncselector_offer_input(self, &input.into()) }
     }
 
     /// Destroys the `NcSelector`.
@@ -141,11 +141,11 @@ impl NcSelectorOptions {
         items: &[NcSelectorItem],
         default: u32,
         max_display: u32,
-        opchannels: NcChannels,
-        descchannels: NcChannels,
-        titlechannels: NcChannels,
-        footchannels: NcChannels,
-        boxchannels: NcChannels,
+        opchannels: impl Into<NcChannels>,
+        descchannels: impl Into<NcChannels>,
+        titlechannels: impl Into<NcChannels>,
+        footchannels: impl Into<NcChannels>,
+        boxchannels: impl Into<NcChannels>,
     ) -> Self {
         assert![!items.is_empty()]; // DEBUG
 
@@ -165,11 +165,11 @@ impl NcSelectorOptions {
             // 0 to use all available space
             maxdisplay: max_display,
             // exhaustive styling options
-            opchannels: opchannels.into(),
-            descchannels: descchannels.into(),
-            titlechannels: titlechannels.into(),
-            footchannels: footchannels.into(),
-            boxchannels: boxchannels.into(),
+            opchannels: opchannels.into().into(),
+            descchannels: descchannels.into().into(),
+            titlechannels: titlechannels.into().into(),
+            footchannels: footchannels.into().into(),
+            boxchannels: boxchannels.into().into(),
             flags: 0x0,
         }
     }

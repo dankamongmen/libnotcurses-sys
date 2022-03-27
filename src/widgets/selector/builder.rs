@@ -74,38 +74,48 @@ impl NcSelectorBuilder {
     /// Sets all the `NcChannels`.
     pub fn all_channels(
         mut self,
-        item_opt: NcChannels,
-        item_desc: NcChannels,
-        seltitle: NcChannels,
-        selfooter: NcChannels,
-        selbox: NcChannels,
+        item_opt: impl Into<NcChannels>,
+        item_desc: impl Into<NcChannels>,
+        seltitle: impl Into<NcChannels>,
+        selfooter: impl Into<NcChannels>,
+        selbox: impl Into<NcChannels>,
     ) -> Self {
-        self.channels = [item_opt, item_desc, seltitle, selfooter, selbox];
+        self.channels = [
+            item_opt.into(),
+            item_desc.into(),
+            seltitle.into(),
+            selfooter.into(),
+            selbox.into(),
+        ];
         self
     }
 
     /// Sets the `NcChannels` for the item.
-    pub fn item_channels(mut self, opt: NcChannels, desc: NcChannels) -> Self {
-        self.channels[0] = opt;
-        self.channels[1] = desc;
+    pub fn item_channels(
+        mut self,
+        opt: impl Into<NcChannels>,
+        desc: impl Into<NcChannels>,
+    ) -> Self {
+        self.channels[0] = opt.into();
+        self.channels[1] = desc.into();
         self
     }
 
     /// Sets the `NcChannels` for the title.
-    pub fn title_channels(mut self, title: NcChannels) -> Self {
-        self.channels[2] = title;
+    pub fn title_channels(mut self, title: impl Into<NcChannels>) -> Self {
+        self.channels[2] = title.into();
         self
     }
 
     /// Sets the `NcChannels` for the secondary title and the footer.
-    pub fn secondary_channels(mut self, secondary: NcChannels) -> Self {
-        self.channels[3] = secondary;
+    pub fn secondary_channels(mut self, secondary: impl Into<NcChannels>) -> Self {
+        self.channels[3] = secondary.into();
         self
     }
 
     /// Sets the `NcChannels` for the box title.
-    pub fn box_channels(mut self, r#box: NcChannels) -> Self {
-        self.channels[4] = r#box;
+    pub fn box_channels(mut self, r#box: impl Into<NcChannels>) -> Self {
+        self.channels[4] = r#box.into();
         self
     }
 

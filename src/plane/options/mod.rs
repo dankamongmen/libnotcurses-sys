@@ -55,8 +55,8 @@ impl NcPlaneOptions {
     }
 
     /// New NcPlaneOptions with horizontal alignment.
-    pub fn new_aligned(y: i32, align: NcAlign, rows: u32, cols: u32) -> Self {
-        Self::with_flags_aligned(y, align, rows, cols, None, NcPlaneFlags::HorAligned)
+    pub fn new_aligned(y: i32, align: impl Into<NcAlign>, rows: u32, cols: u32) -> Self {
+        Self::with_flags_aligned(y, align.into(), rows, cols, None, NcPlaneFlags::HorAligned)
     }
 
     /// New NcPlaneOptions, with flags.
@@ -66,7 +66,7 @@ impl NcPlaneOptions {
         rows: u32,
         cols: u32,
         resizecb: Option<NcResizeCb>,
-        flags: NcPlaneFlags,
+        flags: impl Into<NcPlaneFlags>,
         margin_b: u32,
         margin_r: u32,
     ) -> Self {
@@ -78,7 +78,7 @@ impl NcPlaneOptions {
             userptr: null_mut(),
             name: null(),
             resizecb: crate::c_api::ncresizecb_to_c(resizecb),
-            flags: flags.into(),
+            flags: flags.into().into(),
             margin_b,
             margin_r,
         }
@@ -91,16 +91,16 @@ impl NcPlaneOptions {
     /// flag.
     pub fn with_flags_aligned(
         y: i32,
-        align: NcAlign,
+        align: impl Into<NcAlign>,
         rows: u32,
         cols: u32,
         resizecb: Option<NcResizeCb>,
-        flags: NcPlaneFlags,
+        flags: impl Into<NcPlaneFlags>,
     ) -> Self {
-        let flags = NcPlaneFlags::HorAligned | flags;
+        let flags = NcPlaneFlags::HorAligned | flags.into();
         NcPlaneOptions {
             y: y as i32,
-            x: align.into(),
+            x: align.into().into(),
             rows,
             cols,
             userptr: null_mut(),

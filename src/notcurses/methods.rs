@@ -23,8 +23,8 @@ impl NcOptions {
     }
 
     /// New `NcOptions`, with flags.
-    pub fn with_flags(flags: NcFlags) -> Self {
-        Self::with_all_options(NcLogLevel::Silent, 0, 0, 0, 0, flags)
+    pub fn with_flags(flags: impl Into<NcFlags>) -> Self {
+        Self::with_all_options(NcLogLevel::Silent, 0, 0, 0, 0, flags.into())
     }
 
     /// New `NcOptions`, with all the options.
@@ -51,21 +51,21 @@ impl NcOptions {
     ///   can be added without reshaping the struct.
     ///   Undefined bits must be set to 0.
     pub fn with_all_options(
-        loglevel: NcLogLevel,
+        loglevel: impl Into<NcLogLevel>,
         margin_t: u32,
         margin_r: u32,
         margin_b: u32,
         margin_l: u32,
-        flags: NcFlags,
+        flags: impl Into<NcFlags>,
     ) -> Self {
         Self {
             termtype: null(),
-            loglevel: loglevel.into(),
+            loglevel: loglevel.into().into(),
             margin_t,
             margin_r,
             margin_b,
             margin_l,
-            flags: flags.into(),
+            flags: flags.into().into(),
         }
     }
 }
@@ -126,8 +126,8 @@ impl Nc {
     /// You must not create multiple `Nc` instances at the same time, on
     /// the same thread. You must [`stop`][Nc#method.stop] the current one
     /// before creating a new one.
-    pub unsafe fn with_flags<'a>(flags: NcFlags) -> NcResult<&'a mut Nc> {
-        Self::with_options(NcOptions::with_flags(flags))
+    pub unsafe fn with_flags<'a>(flags: impl Into<NcFlags>) -> NcResult<&'a mut Nc> {
+        Self::with_options(NcOptions::with_flags(flags.into()))
     }
 
     /// New notcurses context, expects [NcOptions].
@@ -147,8 +147,18 @@ impl Nc {
     /// You must not create multiple `Nc` instances at the same time, on
     /// the same thread. You must [`stop`][Nc#method.stop] the current one
     /// before creating a new one.
-    pub unsafe fn with_debug<'a>(loglevel: NcLogLevel, flags: NcFlags) -> NcResult<&'a mut Nc> {
-        Self::with_options(NcOptions::with_all_options(loglevel, 0, 0, 0, 0, flags))
+    pub unsafe fn with_debug<'a>(
+        loglevel: impl Into<NcLogLevel>,
+        flags: impl Into<NcFlags>,
+    ) -> NcResult<&'a mut Nc> {
+        Self::with_options(NcOptions::with_all_options(
+            loglevel.into(),
+            0,
+            0,
+            0,
+            0,
+            flags.into(),
+        ))
     }
 
     /// Destroys the notcurses context.
@@ -171,11 +181,11 @@ impl Nc {
     /// [`NcAlign::Unaligned`].
     ///
     /// *C style function: [notcurses_align()][c_api::notcurses_align].*
-    pub fn align(availcols: u32, align: NcAlign, cols: u32) -> NcResult<u32> {
-        let res = c_api::notcurses_align(availcols, align, cols);
+    pub fn align(availcols: u32, align: impl Into<NcAlign> + Copy, cols: u32) -> NcResult<u32> {
+        let res = c_api::notcurses_align(availcols, align.into(), cols);
         error![
             res,
-            &format!("NcPlane.valign({:?}, {})", align, cols),
+            &format!("NcPlane.align({:?}, {})", align.into(), cols),
             res as u32
         ]
     }
@@ -760,23 +770,23 @@ impl Nc {
     /// Gets the name of an [`NcBlitter`] blitter.
     ///
     /// *C style function: [notcurses_str_blitter()][c_api::notcurses_str_blitter].*
-    pub fn str_blitter(blitter: NcBlitter) -> String {
-        rstring![c_api::notcurses_str_blitter(blitter.into())].to_string()
+    pub fn str_blitter(blitter: impl Into<NcBlitter>) -> String {
+        rstring![c_api::notcurses_str_blitter(blitter.into().into())].to_string()
     }
 
     /// Gets the name of an [`NcScale`] scaling mode.
     ///
     /// *C style function: [notcurses_str_scalemode()][c_api::notcurses_str_scalemode].*
-    pub fn str_scalemode(scale: NcScale) -> String {
-        rstring![c_api::notcurses_str_scalemode(scale.into())].to_string()
+    pub fn str_scalemode(scale: impl Into<NcScale>) -> String {
+        rstring![c_api::notcurses_str_scalemode(scale.into().into())].to_string()
     }
 
     /// Gets the lowercase name (or names) of the styles included in an [`NcStyle`].
     ///
     /// *(No equivalent C style function)*
-    pub fn str_styles(style: NcStyle) -> String {
+    pub fn str_styles(style: impl Into<NcStyle>) -> String {
         let mut string = String::new();
-        for s in style.to_vec() {
+        for s in style.into().to_vec() {
             string.push_str(match s {
                 NcStyle::Italic => "italic",
                 NcStyle::Underline => "underline",

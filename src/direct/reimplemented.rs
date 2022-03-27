@@ -133,15 +133,15 @@ pub fn ncdirect_hline_interp(
     ncd: &mut NcDirect,
     egc: &str,
     len: u32,
-    h1: NcChannels_u64,
-    h2: NcChannels_u64,
+    h1: impl Into<NcChannels_u64>,
+    h2: impl Into<NcChannels_u64>,
 ) -> NcResult_i32 {
     #[cfg(any(target_arch = "armv7l", target_arch = "i686"))]
     let egc_ptr = cstring![egc] as *const i8;
     #[cfg(not(any(target_arch = "armv7l", target_arch = "i686")))]
     let egc_ptr = cstring![egc];
 
-    unsafe { crate::c_api::ffi::ncdirect_hline_interp(ncd, egc_ptr, len, h1, h2) }
+    unsafe { crate::c_api::ffi::ncdirect_hline_interp(ncd, egc_ptr, len, h1.into(), h2.into()) }
 }
 
 /// Draws horizontal lines using the specified [`NcChannels_u64`]s, interpolating
@@ -160,13 +160,13 @@ pub fn ncdirect_vline_interp(
     ncd: &mut NcDirect,
     egc: &str,
     len: u32,
-    h1: NcChannels_u64,
-    h2: NcChannels_u64,
+    h1: impl Into<NcChannels_u64>,
+    h2: impl Into<NcChannels_u64>,
 ) -> NcResult_i32 {
     #[cfg(any(target_arch = "armv7l", target_arch = "i686"))]
     let egc_ptr = cstring![egc] as *const i8;
     #[cfg(not(any(target_arch = "armv7l", target_arch = "i686")))]
     let egc_ptr = cstring![egc];
 
-    unsafe { crate::c_api::ffi::ncdirect_vline_interp(ncd, egc_ptr, len, h1, h2) }
+    unsafe { crate::c_api::ffi::ncdirect_vline_interp(ncd, egc_ptr, len, h1.into(), h2.into()) }
 }

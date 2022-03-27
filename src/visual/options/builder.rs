@@ -97,8 +97,8 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
     /// Sets the `NcScale`.
     ///
     /// Default: *[`NcScale::NOSCALE`][crate::NcScale#associatedconstant.NOSCALE]*.
-    pub fn scale(mut self, scale: NcScale) -> Self {
-        self.scale = scale;
+    pub fn scale(mut self, scale: impl Into<NcScale>) -> Self {
+        self.scale = scale.into();
         self
     }
 
@@ -152,8 +152,8 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
     /// Effect: Sets the *y* alignment and the [`VerAligned`] flag.
     ///
     /// [`VerAligned`]: NcVisualOptions#associatedconstant.VerAligned
-    pub fn valign(mut self, valign: NcAlign) -> Self {
-        self.y = valign.into();
+    pub fn valign(mut self, valign: impl Into<NcAlign>) -> Self {
+        self.y = valign.into().into();
         self.flags |= NcVisualFlags::VerAligned;
         self
     }
@@ -165,8 +165,8 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
     /// Effect: Sets the *`x`* alignment and the [`VerAligned`] flag.
     ///
     /// [`VerAligned`]: NcVisualOptions#associatedconstant.VerAligned
-    pub fn halign(mut self, halign: NcAlign) -> Self {
-        self.x = halign.into();
+    pub fn halign(mut self, halign: impl Into<NcAlign>) -> Self {
+        self.x = halign.into().into();
         self.flags |= NcVisualFlags::HorAligned;
         self
     }
@@ -178,9 +178,9 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
     /// Effect: Sets the *`y` & `x`* alignments and the [`VerAligned`] flag.
     ///
     /// [`VerAligned`]: NcVisualOptions#associatedconstant.VerAligned
-    pub fn align(mut self, valign: NcAlign, halign: NcAlign) -> Self {
-        self.y = valign.into();
-        self.x = halign.into();
+    pub fn align(mut self, valign: impl Into<NcAlign>, halign: impl Into<NcAlign>) -> Self {
+        self.y = valign.into().into();
+        self.x = halign.into().into();
         self.flags |= NcVisualFlags::VerAligned;
         self.flags |= NcVisualFlags::HorAligned;
         self
@@ -189,8 +189,8 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
     /// Choose the `NcBlitter`.
     ///
     /// Default: *[`NcBlitter::Default`]*.
-    pub fn blitter(mut self, blitter: NcBlitter) -> Self {
-        self.blitter = blitter;
+    pub fn blitter(mut self, blitter: impl Into<NcBlitter>) -> Self {
+        self.blitter = blitter.into();
         self
     }
 
@@ -207,9 +207,10 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
     /// Efect: (Un)Sets the transparent color, and the [`ADDALPHA`] flag.
     ///
     /// [`ADDALPHA`]: NcVisualOptions#associatedconstant.ADDALPHA
-    pub fn transcolor(mut self, color: Option<NcRgba>) -> Self {
+    pub fn transcolor(mut self, color: Option<impl Into<NcRgba>>) -> Self {
+        // if color.is_none() {
         if let Some(color) = color {
-            self.transcolor = color;
+            self.transcolor = color.into();
             self.flags |= NcVisualFlags::AddAlpha;
         } else {
             self.flags &= !NcVisualFlags::AddAlpha;
