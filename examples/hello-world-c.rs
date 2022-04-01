@@ -20,7 +20,7 @@ fn main() {
             exit(1);
         }
         let plane = notcurses_stdplane(nc);
-        let cols = ncplane_putstr(&mut *plane, "hello world");
+        let cols = ncplane_putstr(&mut *plane, "\nhello world!\n");
 
         if cols < NCRESULT_OK {
             notcurses_stop(nc);
