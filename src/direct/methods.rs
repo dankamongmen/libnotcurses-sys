@@ -4,8 +4,8 @@ use core::ptr::{null, null_mut};
 
 use crate::{
     c_api, cstring, error, error_ref_mut, rstring_free, NcAlign, NcBlitter, NcCapabilities,
-    NcChannels, NcDirect, NcDirectFlag, NcError, NcInput, NcPaletteIndex, NcPlane, NcResult, NcRgb,
-    NcScale, NcStyle, NcTime,
+    NcChannels, NcDirect, NcDirectFlag, NcError, NcFd, NcInput, NcPaletteIndex, NcPlane, NcResult,
+    NcRgb, NcScale, NcStyle, NcTime,
 };
 
 /// # `NcDirect` constructors and destructors
@@ -611,8 +611,9 @@ impl NcDirect {
     /// with stdin (but it might be!).
     ///
     /// *C style function: [ncdirect_inputready_fd()][c_api::ncdirect_inputready_fd].*
-    pub fn inputready_fd(&mut self) -> NcResult<()> {
-        error![unsafe { c_api::ncdirect_inputready_fd(self) }]
+    pub fn inputready_fd(&mut self) -> NcResult<NcFd> {
+        let res = unsafe { c_api::ncdirect_inputready_fd(self) };
+        error![res, "", res]
     }
 
     /// Outputs the `string` according to the `channels`, and

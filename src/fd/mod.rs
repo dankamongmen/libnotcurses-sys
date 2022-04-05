@@ -37,6 +37,13 @@ use crate::c_api::ffi;
 
 mod methods;
 
+/// A raw file descriptor, as returned by [`Nc.inputready_fd`] and
+/// [`NcDirect.inputready_fd`].
+///
+/// [`Nc.inputready_fd`]: crate::Nc#method.inputready_fd
+/// [`NcDirect.inputready_fd`]: crate::Nc#method.inputready_fd
+pub type NcFd = i32;
+
 /// I/O wrapper to dump file descriptor to [`NcPlane`][crate::NcPlane].
 ///
 /// `type in C: ncfdplane (struct)`

@@ -120,7 +120,7 @@ pub use channel::{NcChannel, NcChannels};
 pub use direct::{NcDirect, NcDirectFlag};
 pub use error::{NcError, NcResult};
 pub use fade::{NcFadeCb, NcFadeCtx};
-pub use fd::{NcFdPlane, NcFdPlaneOptions, NcSubproc, NcSubprocOptions};
+pub use fd::{NcFd, NcFdPlane, NcFdPlaneOptions, NcSubproc, NcSubprocOptions};
 pub use file::NcFile;
 pub use input::{NcInput, NcInputType, NcMiceEvents, NcReceived};
 pub use key::{NcKey, NcKeyMod};

@@ -5,8 +5,8 @@ use core::ptr::{null, null_mut};
 use crate::{
     c_api::{self, notcurses_init},
     cstring, error, error_ref_mut, rstring, rstring_free, Nc, NcAlign, NcBlitter, NcCapabilities,
-    NcChannels, NcError, NcFile, NcFlag, NcInput, NcLogLevel, NcMiceEvents, NcOptions, NcPixelImpl,
-    NcPlane, NcReceived, NcResult, NcRgb, NcScale, NcStats, NcStyle, NcTime, NcVisual,
+    NcChannels, NcError, NcFd, NcFile, NcFlag, NcInput, NcLogLevel, NcMiceEvents, NcOptions,
+    NcPixelImpl, NcPlane, NcReceived, NcResult, NcRgb, NcScale, NcStats, NcStyle, NcTime, NcVisual,
     NcVisualGeometry, NcVisualOptions,
 };
 
@@ -515,8 +515,9 @@ impl Nc {
     /// with stdin (but it might be!).
     ///
     /// *C style function: [notcurses_inputready_fd()][c_api::notcurses_inputready_fd].*
-    pub fn inputready_fd(&mut self) -> NcResult<()> {
-        error![unsafe { c_api::notcurses_inputready_fd(self) }]
+    pub fn inputready_fd(&mut self) -> NcResult<NcFd> {
+        let res = unsafe { c_api::notcurses_inputready_fd(self) };
+        error![res, "", res]
     }
 
     /// Returns an [`NcBlitter`] from a string representation.
