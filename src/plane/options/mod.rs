@@ -44,7 +44,7 @@ impl NcPlaneOptions {
         Self::with_flags(y, x, rows, cols, None, NcPlaneFlag::None, 0, 0)
     }
 
-    /// Returns a default builder object for `NcPlaneOptions`.
+    /// Returns a default `NcPlaneOptionsBuilder`.
     pub fn builder() -> NcPlaneOptionsBuilder {
         NcPlaneOptionsBuilder::default()
     }

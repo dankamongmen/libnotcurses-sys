@@ -20,6 +20,15 @@ pub struct NcVisualOptionsBuilder<'ncplane> {
     transcolor: NcRgba,
 }
 
+/// # Constructors
+impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
+    /// New default `NcVisualOptionsBuilder`.
+    pub fn new() -> Self {
+        Self::default()
+    }
+}
+
+/// # Methods (chainable)
 impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
     /// Sets the `NcPlane` where the blitting will be done.
     ///

@@ -105,6 +105,13 @@ impl fmt::Debug for NcPlaneOptionsBuilder {
 
 /// # Constructors
 impl NcPlaneOptionsBuilder {
+    /// New `NcPlaneOptionsBuilder` with the [`MARGINALIZED`] flag set.
+    ///
+    /// [`MARGINALIZED`]: NcPlaneOptions#associatedconstant.MARGINALIZED
+    pub fn new() -> Self {
+        Self::default()
+    }
+
     /// New builder from pre-existing options.
     pub fn from_options(options: &NcPlaneOptions) -> Self {
         let mut builder = Self::default(); // MARGINALIZED by default
@@ -170,7 +177,7 @@ impl NcPlaneOptionsBuilder {
     }
 }
 
-/// # Methods
+/// # Methods (chainable)
 impl NcPlaneOptionsBuilder {
     /// Sets the vertical placement relative to parent plane.
     ///

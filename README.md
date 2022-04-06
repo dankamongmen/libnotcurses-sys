@@ -21,7 +21,6 @@ fn main() -> NcResult<()> {
 
 ## Versioning
 
-Current version `3.3.0` is compatible with notcurses `3.0.7`.
+Current version `3.4.0` is compatible with notcurses `3.0.8`.
 
-*Current major version `3` is considered a development version, same as if it
-were semver major version `0`.*
+*Current major version `3` is considered a development version*

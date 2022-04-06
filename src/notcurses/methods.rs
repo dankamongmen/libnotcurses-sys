@@ -131,7 +131,7 @@ impl Nc {
     /// You can't have multiple simultaneous `Nc` instances in the same thread.
     pub unsafe fn with_options<'a>(options: NcOptions) -> NcResult<&'a mut Nc> {
         let res = notcurses_init(&options, null_mut());
-        error_ref_mut![res, "Nc.with_options()"]
+        error_ref_mut![res, &format!["Nc.with_options({:?})", options]]
     }
 
     /// New notcurses context, expects [NcLogLevel] and flags.
