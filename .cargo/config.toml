@@ -2,6 +2,7 @@
 
 # CHECK
 cl = "clippy"
+clq = "clippy --quiet"
 
 # DOC
 d = "doc --no-deps"

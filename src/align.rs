@@ -1,6 +1,6 @@
 //! `NcAlign`
 
-/// Alignment within an [`NcPlane`][crate::NcPlane] or terminal.
+/// Alignment within a plane or terminal.
 ///
 /// - `Left`|`Right` justified (horizontally).
 /// - `Top`|`Down` justified (vertically).

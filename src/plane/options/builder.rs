@@ -2,21 +2,18 @@
 
 use crate::{c_api, NcAlign, NcPlaneFlag, NcPlaneOptions, NcResizeCb};
 
-use std::{
-    fmt,
-    ptr::{null, null_mut},
-};
+use std::ptr::{null, null_mut};
 
 /// Builder object for [`NcPlaneOptions`].
 ///
 /// Can be constructed by calling [`NcPlaneOptions::builder()`].
 ///
-/// By [*default*] it has the [`MARGINALIZED`] flag already set, alongside `(0, 0)`
+/// By [*default*] it has the [`Marginalized`] flag already set, alongside `(0, 0)`
 /// margins, so that it automatically fills the parent plane.
 ///
 /// [*default*]: NcPlaneOptionsBuilder#method.default
 /// [`NcPlaneOptions::builder()`]: NcPlaneOptions#method.builder
-/// [`MARGINALIZED`]: NcPlaneOptions#associatedconstant.MARGINALIZED
+/// [`Marginalized`]: NcPlaneFlag#associatedconstant.Marginalized
 #[derive(Clone)]
 pub struct NcPlaneOptionsBuilder {
     pub(crate) y: i32,
@@ -35,86 +32,91 @@ pub struct NcPlaneOptionsBuilder {
     pub(crate) margin_r: u32,
 }
 
-//
-impl From<NcPlaneOptionsBuilder> for NcPlaneOptions {
-    fn from(builder: NcPlaneOptionsBuilder) -> NcPlaneOptions {
-        builder.build()
-    }
-}
-impl From<&NcPlaneOptionsBuilder> for NcPlaneOptions {
-    fn from(builder: &NcPlaneOptionsBuilder) -> Self {
-        builder.clone().build()
-    }
-}
-impl From<&mut NcPlaneOptionsBuilder> for NcPlaneOptions {
-    fn from(builder: &mut NcPlaneOptionsBuilder) -> Self {
-        builder.clone().build()
-    }
-}
-//
-impl From<NcPlaneOptions> for NcPlaneOptionsBuilder {
-    fn from(options: NcPlaneOptions) -> NcPlaneOptionsBuilder {
-        Self::from_options(&options)
-    }
-}
-impl From<&NcPlaneOptions> for NcPlaneOptionsBuilder {
-    fn from(options: &NcPlaneOptions) -> Self {
-        Self::from_options(options)
-    }
-}
-impl From<&mut NcPlaneOptions> for NcPlaneOptionsBuilder {
-    fn from(options: &mut NcPlaneOptions) -> Self {
-        Self::from_options(options)
-    }
-}
+mod std_impls {
+    use super::{NcPlaneFlag, NcPlaneOptions, NcPlaneOptionsBuilder};
+    use std::fmt;
 
-impl Default for NcPlaneOptionsBuilder {
-    /// New `NcPlaneOptionsBuilder` with the [`MARGINALIZED`] flag set.
-    ///
-    /// [`MARGINALIZED`]: NcPlaneOptions#associatedconstant.MARGINALIZED
-    fn default() -> Self {
-        Self {
-            y: 0,
-            x: 0,
-            rows: 0,
-            cols: 0,
-            resizecb: None,
-            flags: NcPlaneFlag::Marginalized.into(),
-            margin_b: 0,
-            margin_r: 0,
+    //
+    impl From<NcPlaneOptionsBuilder> for NcPlaneOptions {
+        fn from(builder: NcPlaneOptionsBuilder) -> NcPlaneOptions {
+            builder.build()
         }
     }
-}
+    impl From<&NcPlaneOptionsBuilder> for NcPlaneOptions {
+        fn from(builder: &NcPlaneOptionsBuilder) -> Self {
+            builder.clone().build()
+        }
+    }
+    impl From<&mut NcPlaneOptionsBuilder> for NcPlaneOptions {
+        fn from(builder: &mut NcPlaneOptionsBuilder) -> Self {
+            builder.clone().build()
+        }
+    }
+    //
+    impl From<NcPlaneOptions> for NcPlaneOptionsBuilder {
+        fn from(options: NcPlaneOptions) -> NcPlaneOptionsBuilder {
+            Self::from_options(&options)
+        }
+    }
+    impl From<&NcPlaneOptions> for NcPlaneOptionsBuilder {
+        fn from(options: &NcPlaneOptions) -> Self {
+            Self::from_options(options)
+        }
+    }
+    impl From<&mut NcPlaneOptions> for NcPlaneOptionsBuilder {
+        fn from(options: &mut NcPlaneOptions) -> Self {
+            Self::from_options(options)
+        }
+    }
 
-impl fmt::Debug for NcPlaneOptionsBuilder {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let resizecb_str =
-            if self.resizecb.is_some() { String::from("Some") } else { String::from("None") };
-        f.debug_struct("NcPlaneOptionsBuilder")
-            .field("y", &self.y)
-            .field("x", &self.x)
-            .field("rows", &self.rows)
-            .field("cols", &self.cols)
-            .field("resizecb", &resizecb_str)
-            .field("flags", &self.flags)
-            .field("margin_b", &self.margin_b)
-            .field("margin_r", &self.margin_r)
-            .finish()
+    impl Default for NcPlaneOptionsBuilder {
+        /// New `NcPlaneOptionsBuilder` with the [`Marginalized`] flag set.
+        ///
+        /// [`Marginalized`]: NcPlaneFlag#associatedconstant.Marginalized
+        fn default() -> Self {
+            Self {
+                y: 0,
+                x: 0,
+                rows: 0,
+                cols: 0,
+                resizecb: None,
+                flags: NcPlaneFlag::Marginalized.into(),
+                margin_b: 0,
+                margin_r: 0,
+            }
+        }
+    }
+
+    impl fmt::Debug for NcPlaneOptionsBuilder {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            let resizecb_str =
+                if self.resizecb.is_some() { String::from("Some") } else { String::from("None") };
+            f.debug_struct("NcPlaneOptionsBuilder")
+                .field("y", &self.y)
+                .field("x", &self.x)
+                .field("rows", &self.rows)
+                .field("cols", &self.cols)
+                .field("resizecb", &resizecb_str)
+                .field("flags", &self.flags)
+                .field("margin_b", &self.margin_b)
+                .field("margin_r", &self.margin_r)
+                .finish()
+        }
     }
 }
 
 /// # Constructors
 impl NcPlaneOptionsBuilder {
-    /// New `NcPlaneOptionsBuilder` with the [`MARGINALIZED`] flag set.
+    /// New `NcPlaneOptionsBuilder` with the [`Marginalized`] flag set.
     ///
-    /// [`MARGINALIZED`]: NcPlaneOptions#associatedconstant.MARGINALIZED
+    /// [`Marginalized`]: NcPlaneFlag#associatedconstant.Marginalized
     pub fn new() -> Self {
         Self::default()
     }
 
     /// New builder from pre-existing options.
     pub fn from_options(options: &NcPlaneOptions) -> Self {
-        let mut builder = Self::default(); // MARGINALIZED by default
+        let mut builder = Self::default(); // Marginalized by default
 
         // y,x
         if options.is_veraligned() {
@@ -226,11 +228,11 @@ impl NcPlaneOptionsBuilder {
     ///
     /// Default: *[`NcAlign::Top`]*.
     ///
-    /// Effect: Sets the *`y`* alignment and the [`VerAligned`] flag.
+    /// Effect: Sets the *`v`* alignment and the [`VerAligned`] flag.
     ///
     /// [`VerAligned`]: NcPlaneFlag#associatedconstant.VerAligned
-    pub fn valign(mut self, valign: impl Into<NcAlign>) -> Self {
-        self.y = valign.into().into();
+    pub fn valign(mut self, v: impl Into<NcAlign>) -> Self {
+        self.y = v.into().into();
         self.flags |= NcPlaneFlag::VerAligned;
         self
     }
@@ -239,11 +241,11 @@ impl NcPlaneOptionsBuilder {
     ///
     /// Default: *[`NcAlign::Left`]*.
     ///
-    /// Effect: Sets the *`x`* alignment and the [`HorAligned`] flag.
+    /// Effect: Sets the *`h`* alignment and the [`HorAligned`] flag.
     ///
     /// [`HorAligned`]: NcPlaneFlag#associatedconstant.HorAligned
-    pub fn halign(mut self, halign: impl Into<NcAlign>) -> Self {
-        self.y = halign.into().into();
+    pub fn halign(mut self, h: impl Into<NcAlign>) -> Self {
+        self.x = h.into().into();
         self.flags |= NcPlaneFlag::HorAligned;
         self
     }
@@ -252,14 +254,16 @@ impl NcPlaneOptionsBuilder {
     ///
     /// Default: *`(`[`NcAlign::Top`], [`NcAlign::Left`]`)`*.
     ///
-    /// Effect: Sets the *`y` & `x`* alignments and the [`VerAligned`]
+    /// Effect: Sets the *`v` & `h`* alignments and the [`VerAligned`]
     /// & [`HorAligned`] flags.
     ///
     /// [`VerAligned`]: NcPlaneFlag#associatedconstant.VerAligned
     /// [`HorAligned`]: NcPlaneFlag#associatedconstant.HorAligned
-    pub fn align(mut self, halign: impl Into<NcAlign>) -> Self {
-        self.y = halign.into().into();
+    pub fn align(mut self, v: impl Into<NcAlign>, h: impl Into<NcAlign>) -> Self {
+        self.y = v.into().into();
+        self.x = h.into().into();
         self.flags |= NcPlaneFlag::VerAligned;
+        self.flags |= NcPlaneFlag::HorAligned;
         self
     }
 
@@ -299,10 +303,10 @@ impl NcPlaneOptionsBuilder {
     ///
     /// Default: *`(0, 0)`*.
     ///
-    /// Effect: sets the *rows* & *cols* fields and unsets the [`MARGINALIZED`]
+    /// Effect: sets the *rows* & *cols* fields and unsets the [`Marginalized`]
     /// flag.
     ///
-    /// [`MARGINALIZED`]: NcPlaneFlag#associatedconstant.MARGINALIZED
+    /// [`Marginalized`]: NcPlaneFlag#associatedconstant.Marginalized
     pub fn rows_cols(mut self, rows: u32, cols: u32) -> Self {
         self.rows = rows;
         self.cols = cols;
@@ -314,10 +318,10 @@ impl NcPlaneOptionsBuilder {
     ///
     /// Default: *`(0, 0)`*.
     ///
-    /// Effect: sets the `margin_b` & `margin_r` fields and the [`MARGINALIZED`]
+    /// Effect: sets the `margin_b` & `margin_r` fields and the [`Marginalized`]
     /// flag.
     ///
-    /// [`MARGINALIZED`]: NcPlaneFlag#associatedconstant.MARGINALIZED
+    /// [`Marginalized`]: NcPlaneFlag#associatedconstant.Marginalized
     pub fn margins(mut self, bottom: u32, right: u32) -> Self {
         self.margin_b = bottom;
         self.margin_r = right;
@@ -390,5 +394,209 @@ impl NcPlaneOptionsBuilder {
     pub fn resizecb(mut self, callback: Option<NcResizeCb>) -> Self {
         self.resizecb = callback;
         self
+    }
+}
+
+/// # Methods (setable)
+impl NcPlaneOptionsBuilder {
+    /// Sets the vertical placement relative to parent plane.
+    ///
+    /// Default: *`0`*.
+    ///
+    /// Effect: Sets the *`y`* coordinate and unsets the [`VerAligned`] flag.
+    ///
+    /// [`VerAligned`]: NcPlaneFlag#associatedconstant.VerAligned
+    pub fn set_y(&mut self, y: i32) {
+        self.y = y;
+        self.flags &= !NcPlaneFlag::VerAligned;
+    }
+
+    /// Sets the horizontal placement relative to parent plane.
+    ///
+    /// Default: *`0`*.
+    ///
+    /// Effect: Sets the *`x`* coordinate and unsets the [`HorAligned`] flag.
+    ///
+    /// [`HorAligned`]: NcPlaneFlag#associatedconstant.HorAligned
+    pub fn set_x(&mut self, x: i32) {
+        self.x = x;
+        self.flags &= !NcPlaneFlag::HorAligned;
+    }
+
+    /// Sets the vertical & horizontal placement relative to parent plane.
+    ///
+    /// Effect: Sets the *`x`* & *`y`* coordinates and unsets the [`VERALIGNED`]
+    /// and [`HORALIGNED`] flags.
+    ///
+    /// Default: *`(0, 0)`*.
+    ///
+    /// [`VerAligned`]: NcPlaneFlag#associatedconstant.VerAligned
+    /// [`HorAligned`]: NcPlaneFlag#associatedconstant.HorAligned
+    pub fn set_yx(&mut self, y: i32, x: i32) {
+        self.y = y;
+        self.x = x;
+        self.flags &= !NcPlaneFlag::VerAligned;
+        self.flags &= !NcPlaneFlag::HorAligned;
+    }
+
+    /// Sets the vertical alignment.
+    ///
+    /// Default: *[`NcAlign::Top`]*.
+    ///
+    /// Effect: Sets the *`y`* alignment and the [`VerAligned`] flag.
+    ///
+    /// [`VerAligned`]: NcPlaneFlag#associatedconstant.VerAligned
+    pub fn set_valign(&mut self, v: impl Into<NcAlign>) {
+        self.y = v.into().into();
+        self.flags |= NcPlaneFlag::VerAligned;
+    }
+
+    /// Sets the horizontal alignment.
+    ///
+    /// Default: *[`NcAlign::Left`]*.
+    ///
+    /// Effect: Sets the *`h`* alignment and the [`HorAligned`] flag.
+    ///
+    /// [`HorAligned`]: NcPlaneFlag#associatedconstant.HorAligned
+    pub fn set_halign(&mut self, h: impl Into<NcAlign>) {
+        self.x = h.into().into();
+        self.flags |= NcPlaneFlag::HorAligned;
+    }
+
+    /// Sets the vertical & horizontal alignment.
+    ///
+    /// Default: *`(`[`NcAlign::Top`], [`NcAlign::Left`]`)`*.
+    ///
+    /// Effect: Sets the *`v` & `h`* alignments and the [`VerAligned`]
+    /// & [`HorAligned`] flags.
+    ///
+    /// [`VerAligned`]: NcPlaneFlag#associatedconstant.VerAligned
+    /// [`HorAligned`]: NcPlaneFlag#associatedconstant.HorAligned
+    pub fn set_align(&mut self, v: impl Into<NcAlign>, h: impl Into<NcAlign>) {
+        self.y = v.into().into();
+        self.x = h.into().into();
+        self.flags |= NcPlaneFlag::VerAligned;
+        self.flags |= NcPlaneFlag::HorAligned;
+    }
+
+    /// Sets the number of rows for the plane.
+    ///
+    /// Must be >0 when not using `margins`.
+    ///
+    /// Default: *`0`*.
+    ///
+    /// Effect: sets the *rows* field and unsets the [`Marginalized`] flag.
+    ///
+    /// [`Marginalized`]: NcPlaneFlag#associatedconstant.Marginalized
+    pub fn set_rows(&mut self, rows: u32) {
+        self.rows = rows;
+        self.flags &= !NcPlaneFlag::Marginalized;
+    }
+
+    /// Sets the number of columns for the plane.
+    ///
+    /// Must be >0 when not using `margins`.
+    ///
+    /// Default: *`0`*.
+    ///
+    /// Effect: sets the *cols* field and unsets the [`Marginalized`] flag.
+    ///
+    /// [`Marginalized`]: NcPlaneFlag#associatedconstant.Marginalized
+    pub fn set_cols(&mut self, cols: u32) {
+        self.cols = cols;
+        self.flags &= !NcPlaneFlag::Marginalized;
+    }
+
+    /// Sets the number of rows & columns for the plane.
+    ///
+    /// Must be >0 when not using `margins`.
+    ///
+    /// Default: *`(0, 0)`*.
+    ///
+    /// Effect: sets the *rows* & *cols* fields and unsets the [`Marginalized`]
+    /// flag.
+    ///
+    /// [`Marginalized`]: NcPlaneFlag#associatedconstant.Marginalized
+    pub fn set_rows_cols(&mut self, rows: u32, cols: u32) {
+        self.rows = rows;
+        self.cols = cols;
+        self.flags &= !NcPlaneFlag::Marginalized;
+    }
+
+    /// Sets the bottom & right margins.
+    ///
+    /// Default: *`(0, 0)`*.
+    ///
+    /// Effect: sets the `margin_b` & `margin_r` fields and the [`Marginalized`]
+    /// flag.
+    ///
+    /// [`Marginalized`]: NcPlaneFlag#associatedconstant.Marginalized
+    pub fn set_margins(&mut self, bottom: u32, right: u32) {
+        self.margin_b = bottom;
+        self.margin_r = right;
+        self.flags |= NcPlaneFlag::Marginalized;
+    }
+
+    /// If `true`, the plane will **not** scroll with the parent.
+    ///
+    /// Default: *false* (scrolls with the parent).
+    ///
+    /// Effect: (un)sets the [`Fixed`] flag.
+    ///
+    /// [`Fixed`]: NcPlaneFlag#associatedconstant.Fixed
+    pub fn set_fixed(&mut self, fixed: bool) {
+        if fixed {
+            self.flags |= NcPlaneFlag::Fixed;
+        } else {
+            self.flags &= !NcPlaneFlag::Fixed;
+        }
+    }
+
+    /// If `true`, the plane will scroll vertically to accommodate output.
+    ///
+    /// Setting this flag is equivalent to immediately calling
+    /// [`set_scrolling(true)`] following `NcPlane` creation.
+    ///
+    /// Default: *false*.
+    ///
+    /// Effect: (un)sets the [`VScroll`] flag.
+    ///
+    /// See also: [`AutoGrow`].
+    ///
+    /// [`set_scrolling(true)`]: crate::NcPlane#method.set_scrolling
+    /// [`AutoGrow`]: NcPlaneFlag#associatedconstant.AutoGrow
+    /// [`VScroll`]: NcPlaneFlag#associatedconstant.VScroll
+    pub fn set_vscroll(&mut self, vscroll: bool) {
+        if vscroll {
+            self.flags |= NcPlaneFlag::VScroll;
+        } else {
+            self.flags &= !NcPlaneFlag::VScroll;
+        }
+    }
+
+    /// If `true`, the plane will grow automatically.
+    ///
+    /// Default: *false*.
+    ///
+    /// Effect: (un)sets the [`AutoGrow`] flag.
+    ///
+    /// Note that just setting `AutoGrow` makes the `NcPlane` grow to the right,
+    /// and setting `AutoGrow` + [`VScroll`] makes the `NcPlane` grow down.
+    ///
+    /// [`AutoGrow`]: NcPlaneFlag#associatedconstant.AutoGrow
+    /// [`VScroll`]: NcPlaneFlag#associatedconstant.VScroll
+    pub fn set_autogrow(&mut self, autogrow: bool) {
+        if autogrow {
+            self.flags |= NcPlaneFlag::AutoGrow;
+        } else {
+            self.flags &= !NcPlaneFlag::AutoGrow;
+        }
+    }
+
+    /// (Un)Sets the resize callback.
+    ///
+    /// Default: *None*.
+    pub fn set_resizecb(&mut self, callback: Option<NcResizeCb>) {
+        self.resizecb = callback;
     }
 }

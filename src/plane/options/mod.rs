@@ -34,7 +34,7 @@ use std::ptr::{null, null_mut};
 /// [`flags`]: ffi::ncplane_options#structfield.flags
 /// [`margin_b`]: ffi::ncplane_options#structfield.margin_b
 /// [`margin_r`]: ffi::ncplane_options#structfield.margin_r
-/// [`MARGINALIZED`]: NcPlaneFlag#associatedconstant.Marginalized
+/// [`Marginalized`]: NcPlaneFlag#associatedconstant.Marginalized
 pub type NcPlaneOptions = ffi::ncplane_options;
 
 /// # Constructors
@@ -188,7 +188,7 @@ impl NcPlaneFlag {
     /// Use [`NcAlign`] for 'y'.
     pub const VerAligned: Self = Self(c_api::NCPLANE_OPTION_VERALIGNED);
 
-    /// Maximize relative to the parent plane, modulo the provided margins.
+    /// Maximize relative to the parent plane, minus the provided margins.
     ///
     /// The margins are best-effort; the plane will always be at least 1 column
     /// by 1 row. If the margins can be effected, the plane will be sized to all

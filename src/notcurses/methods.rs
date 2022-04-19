@@ -311,7 +311,7 @@ impl Nc {
     /// pixel-blitting mechanism if bitmap support (via any mechanism) has been
     /// detected, or else 0 (NCPIXEL_NONE).
     ///
-    /// *C style function: [notcurses_check_pixel_support()][c_api::notcurses_check-pixel_support].*
+    /// *C style function: [notcurses_check_pixel_support()][c_api::notcurses_check_pixel_support].*
     #[allow(clippy::wildcard_in_or_patterns)]
     pub fn check_pixel_support(&self) -> NcPixelImpl {
         unsafe { c_api::notcurses_check_pixel_support(self) }.into()
