@@ -176,7 +176,7 @@ impl Nc {
         let res = c_api::notcurses_align(availcols, align.into(), cols);
         error![
             res,
-            &format!("NcPlane.align({:?}, {})", align.into(), cols),
+            &format!("Nc.align({:?}, {})", align.into(), cols),
             res as u32
         ]
     }
@@ -318,7 +318,7 @@ impl Nc {
     }
 
     /// Returns the default foreground color, if it is known.
-    pub fn default_forekground(&self) -> Option<NcRgb> {
+    pub fn default_foreground(&self) -> Option<NcRgb> {
         let mut fg = 0;
         let res = unsafe { c_api::notcurses_default_foreground(self, &mut fg) };
         if res == c_api::NCRESULT_ERR {
@@ -656,11 +656,10 @@ impl Nc {
     /// Returns the current screen geometry (`y`, `x`).
     ///
     /// This is primarily useful if the screen is externally corrupted, or if an
-    /// [NcKey::RESIZE][crate::NcKey#associatedconstant.RESIZE] event
+    /// [NcKey::Resize][crate::NcKey#associatedconstant.Resize] event
     /// has been read and you're not yet ready to render.
     ///
     /// *C style function: [notcurses_refresh()][c_api::notcurses_refresh].*
-    //
     pub fn refresh(&mut self) -> NcResult<(u32, u32)> {
         let (mut y, mut x) = (0, 0);
         error![

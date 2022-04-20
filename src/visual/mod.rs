@@ -8,6 +8,7 @@
 //   ncdirectf_geom
 //   ncdirectf_render
 //W  ncvisual_at_yx
+//W  ncvisual_blit
 //W  ncvisual_decode
 //W  ncvisual_decode_loop
 //W  ncvisual_destroy
@@ -53,7 +54,7 @@ pub use options::{NcVisualFlag, NcVisualOptions, NcVisualOptionsBuilder};
 ///
 /// The [`NcVisualOptions`] structure is used only by the following methods:
 /// - [`geom`][NcVisual#method.geom]
-/// - [`render`][NcVisual#method.render]
+/// - [`blit`][NcVisual#method.blit]
 /// - [`simple_streamer`][NcVisual#method.simple_streamer]
 pub type NcVisual = crate::c_api::ffi::ncvisual;
 

@@ -653,7 +653,7 @@ impl NcVisual {
     ) -> NcResult<&mut NcPlane> {
         error_ref_mut![
             unsafe { c_api::ncdirectf_render(ncd, self, options) },
-            "NcVisual.render()"
+            "NcVisual.ncdirectf_render()"
         ]
     }
     /// Having loaded the `frame`, get the geometry of a potential render.

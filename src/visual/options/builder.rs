@@ -20,11 +20,71 @@ pub struct NcVisualOptionsBuilder<'ncplane> {
     transcolor: NcRgba,
 }
 
+mod std_impls {
+    use super::{NcVisualOptions, NcVisualOptionsBuilder};
+
+    impl<'a> From<NcVisualOptionsBuilder<'a>> for NcVisualOptions {
+        fn from(builder: NcVisualOptionsBuilder<'a>) -> NcVisualOptions {
+            builder.build()
+        }
+    }
+
+    impl<'a> From<NcVisualOptions> for NcVisualOptionsBuilder<'a> {
+        fn from(options: NcVisualOptions) -> NcVisualOptionsBuilder<'a> {
+            Self::from_options(&options)
+        }
+    }
+}
+
 /// # Constructors
 impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
     /// New default `NcVisualOptionsBuilder`.
     pub fn new() -> Self {
         Self::default()
+    }
+
+    /// New builder from pre-existing options.
+    pub fn from_options(o: &NcVisualOptions) -> Self {
+        let mut builder = Self::default();
+
+        builder = builder.scale(o.scaling);
+        builder = builder.blitter(o.blitter);
+        builder = builder.cell_offset(o.pxoffy, o.pxoffx);
+        builder = builder.region(o.begy, o.begx, o.leny, o.lenx);
+
+        if o.does_plane() {
+            builder = builder.plane(unsafe { &mut *o.n });
+
+            if o.does_child_plane() {
+                builder = builder.child(true);
+            }
+        }
+
+        if o.does_alpha() {
+            builder = builder.transcolor(Some(o.transcolor))
+        }
+        if o.does_blend() {
+            builder = builder.blend(true);
+        }
+        if o.does_degrade() {
+            builder = builder.degrade(true);
+        }
+        if o.does_interpolate() {
+            builder = builder.interpolate(true);
+        }
+
+        if o.is_veraligned() {
+            builder = builder.valign(o.y);
+        } else {
+            builder = builder.y(o.y);
+        }
+        if o.is_horaligned() {
+            builder = builder.halign(o.x);
+        } else {
+            builder = builder.x(o.x);
+        }
+
+        builder
     }
 }
 
@@ -160,7 +220,7 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
     ///
     /// Effect: Sets the *y* alignment and the [`VerAligned`] flag.
     ///
-    /// [`VerAligned`]: NcVisualOptions#associatedconstant.VerAligned
+    /// [`VerAligned`]: NcVisualFlags#associatedconstant.VerAligned
     pub fn valign(mut self, valign: impl Into<NcAlign>) -> Self {
         self.y = valign.into().into();
         self.flags |= NcVisualFlag::VerAligned;
@@ -171,9 +231,9 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
     ///
     /// Default: *[`NcAlign::Left`]*.
     ///
-    /// Effect: Sets the *`x`* alignment and the [`VerAligned`] flag.
+    /// Effect: Sets the *`x`* alignment and the [`HorAligned`] flag.
     ///
-    /// [`VerAligned`]: NcVisualOptions#associatedconstant.VerAligned
+    /// [`HorAligned`]: NcVisualFlags#associatedconstant.HorAligned
     pub fn halign(mut self, halign: impl Into<NcAlign>) -> Self {
         self.x = halign.into().into();
         self.flags |= NcVisualFlag::HorAligned;
@@ -184,9 +244,11 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
     ///
     /// Default: *`(`[`NcAlign::Top`]*`, `*[`NcAlign::Left`]`)`*.
     ///
-    /// Effect: Sets the *`y` & `x`* alignments and the [`VerAligned`] flag.
+    /// Effect: Sets the *`y` & `x`* alignments and the [`VerAligned`] and
+    /// [`HorAligned`] flags.
     ///
-    /// [`VerAligned`]: NcVisualOptions#associatedconstant.VerAligned
+    /// [`VerAligned`]: NcVisualFlags#associatedconstant.VerAligned
+    /// [`HorAligned`]: NcVisualFlags#associatedconstant.HorAligned
     pub fn align(mut self, valign: impl Into<NcAlign>, halign: impl Into<NcAlign>) -> Self {
         self.y = valign.into().into();
         self.x = halign.into().into();
@@ -213,9 +275,9 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
     ///
     /// Default: *none*.
     ///
-    /// Efect: (Un)Sets the transparent color, and the [`ADDALPHA`] flag.
+    /// Efect: (Un)Sets the transparent color, and the [`AddAlpha`] flag.
     ///
-    /// [`ADDALPHA`]: NcVisualOptions#associatedconstant.ADDALPHA
+    /// [`AddAlpha`]: NcVisualFlags#associatedconstant.AddAlpha
     pub fn transcolor(mut self, color: Option<impl Into<NcRgba>>) -> Self {
         // if color.is_none() {
         if let Some(color) = color {
@@ -227,16 +289,16 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
         self
     }
 
-    /// Choose whether to use [`NcAlpha::BLEND`] with the [`NcVisual`], so that
+    /// Choose whether to use [`NcAlpha::Blend`] with the [`NcVisual`], so that
     /// the foreground or background colors can be a composite between
     /// a color and the corresponding colors underneath it.
     ///
     /// Default: *false* (no blend).
     ///
-    /// Effect: Sets the [`BLEND`] flag.
+    /// Effect: Sets the [`Blend`] flag.
     ///
-    /// [`BLEND`]: NcVisualOptions#associatedconstant.BLEND
-    /// [`NcAlpha::Blend`]: crate::NcAlpha#associatedconstant.BLEND
+    /// [`Blend`]: NcVisualFlags#associatedconstant.Blend
+    /// [`NcAlpha::Blend`]: crate::NcAlpha#associatedconstant.Blend
     /// [`NcVisual`]: crate::NcVisual
     pub fn blend(mut self, blend: bool) -> Self {
         if blend {
@@ -252,11 +314,11 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
     ///
     /// Default: *true* (degrades).
     ///
-    /// Effect: Sets the [`NODEGRADE`] flag.
+    /// Effect: Sets the [`NoDegrade`] flag.
     ///
     /// See also: the [*rules of degradation*].
     ///
-    /// [`NODEGRADE`]: NcVisualOptions#associatedconstant.NODEGRADE
+    /// [`NoDegrade`]: NcVisualFlags#associatedconstant.NoDegrade
     /// [*rules of degradation*]: NcBlitter#degradation
     pub fn degrade(mut self, degrade: bool) -> Self {
         if degrade {
@@ -267,10 +329,11 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
         self
     }
 
-    /// Sets the `NOINTERPOLATE` flag.
+    /// Sets the `NoInterpolate` flag.
     ///
     /// Default: *true* (interpolates).
     ///
+    /// [`NoInterpolate`]: NcVisualFlags#associatedconstant.NoInterpolate
     pub fn interpolate(mut self, interpolate: bool) -> Self {
         if interpolate {
             self.flags &= !NcVisualFlag::NoInterpolate;

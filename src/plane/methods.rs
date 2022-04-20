@@ -1782,7 +1782,7 @@ impl NcPlane {
     ///
     /// *C style function: [ncplane_halign()][c_api::ncplane_halign].*
     #[inline]
-    pub fn halign(&mut self, align: impl Into<NcAlign> + Copy, numcols: u32) -> NcResult<u32> {
+    pub fn halign(&self, align: impl Into<NcAlign> + Copy, numcols: u32) -> NcResult<u32> {
         let res = c_api::ncplane_halign(self, align.into(), numcols);
         error![
             res,
@@ -1791,7 +1791,7 @@ impl NcPlane {
         ]
     }
 
-    /// Returns the row at which `rows` rows ought start in order to be
+    /// Returns the row at which `numrows` rows ought start in order to be
     /// aligned according to `align` within this plane.
     ///
     /// Returns `-`[NCRESULT_MAX][c_api::NCRESULT_MAX] if
@@ -1799,7 +1799,7 @@ impl NcPlane {
     ///
     /// *C style function: [ncplane_valign()][c_api::ncplane_valign].*
     #[inline]
-    pub fn valign(&mut self, align: impl Into<NcAlign> + Copy, numrows: u32) -> NcResult<u32> {
+    pub fn valign(&self, align: impl Into<NcAlign> + Copy, numrows: u32) -> NcResult<u32> {
         let res = c_api::ncplane_valign(self, align.into(), numrows);
         error![
             res,
@@ -1833,7 +1833,7 @@ impl NcPlane {
         (y as u32, x as u32)
     }
 
-    /// Return the rows of this `NcPlane`.
+    /// Returns the rows of this `NcPlane`.
     ///
     /// *C style function: [ncplane_dim_y()][c_api::ncplane_dim_y].*
     #[inline]
@@ -1841,7 +1841,7 @@ impl NcPlane {
         self.dim_yx().0
     }
 
-    /// Return the columns of this `NcPlane`.
+    /// Returns the columns of this `NcPlane`.
     ///
     /// *C style function: [ncplane_dim_x()][c_api::ncplane_dim_x].*
     #[inline]
@@ -1849,22 +1849,14 @@ impl NcPlane {
         self.dim_yx().1
     }
 
-    /// Return the rows of this `NcPlane`.
-    ///
-    /// Alias of [`dim_y`][NcPlane#method.dim_y]
-    ///
-    /// *C style function: [ncplane_dim_y()][c_api::ncplane_dim_y].*
-    #[inline]
+    #[doc(hidden)]
+    #[deprecated = "use the `dim_y` method instead."]
     pub fn rows(&self) -> u32 {
         self.dim_yx().0
     }
 
-    /// Return the cols of this `NcPlane`.
-    ///
-    /// Alias of [`dim_x`][NcPlane#method.dim_x]
-    ///
-    /// *C style function: [ncplane_dim_x()][c_api::ncplane_dim_x].*
-    #[inline]
+    #[doc(hidden)]
+    #[deprecated = "use the `dim_x` method instead."]
     pub fn cols(&self) -> u32 {
         self.dim_yx().1
     }
@@ -2171,7 +2163,7 @@ impl NcPlane {
         unsafe { c_api::ncplane_scrolling_p(self) }
     }
 
-    /// Sets the scrolling behaviour of the plane, and
+    /// (Un)Sets the scrolling behaviour of the plane, and
     /// returns true if scrolling was previously enabled, of false, if disabled.
     ///
     /// All planes are created with scrolling disabled. Attempting to print past
@@ -2190,18 +2182,18 @@ impl NcPlane {
         unsafe { c_api::ncplane_set_scrolling(self, scroll.into()) }
     }
 
-    /// Scrolls down the current plane `r` times.
+    /// Sends `n` scroll events to the current plane.
     ///
-    /// Returns an error if current plane is not a scrolling plane,
+    /// Returns an error if the current plane is not a scrolling plane,
     /// and otherwise returns the number of lines scrolled.
     ///
     /// *C style function: [ncplane_scrollup()][c_api::ncplane_scrollup].*
-    pub fn scrollup(&mut self, r: u32) -> NcResult<u32> {
-        let res = unsafe { c_api::ncplane_scrollup(self, r as i32) };
+    pub fn scrollup(&mut self, n: u32) -> NcResult<u32> {
+        let res = unsafe { c_api::ncplane_scrollup(self, n as i32) };
         error![res, "", res as u32]
     }
 
-    /// Scrolls down the current plane until `child` is no longer hidden beneath it.
+    /// Scrolls the current plane until `child` is no longer hidden beneath it.
     ///
     /// Returns an error if `child` is not a child of this plane, or if this
     /// plane is not scrolling, or `child` is fixed.

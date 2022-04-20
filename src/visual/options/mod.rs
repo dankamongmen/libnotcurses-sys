@@ -23,12 +23,12 @@ pub use builder::NcVisualOptionsBuilder;
 ///
 /// # Fields
 ///
-/// * [`n`] - an optional mutable pointer to an [`NcPlane`].
+/// - [`n`]: an optional mutable pointer to an [`NcPlane`].
 ///
-/// * [`scaling`] - an [`NcScale`] indicating how the source will be
+/// - [`scaling`]: an [`NcScale`] indicating how the source will be
 ///   stretched/scaled relative to the `NcPlane`.
 ///
-/// * [`y`] - if an `NcPlane` is provided in `n` then this specifies where the
+/// - [`y`]: if an `NcPlane` is provided in `n` then this specifies where the
 ///   `NcVisual` will be on that plane.
 ///
 ///   Otherwise it specifies where the created `NcPlane` will be placed relative
@@ -36,7 +36,7 @@ pub use builder::NcVisualOptionsBuilder;
 ///
 ///   If [`VerAligned`] is set, this will be interpreted as an [`NcAlign`] value.
 ///
-/// * [`x`] - if an `NcPlane` is provided in `n` then this specifies where the
+/// - [`x`]: if an `NcPlane` is provided in `n` then this specifies where the
 ///   `NcVisual` will be on that plane.
 ///
 ///   Otherwise it specifies where the created `NcPlane` will be placed relative
@@ -44,19 +44,19 @@ pub use builder::NcVisualOptionsBuilder;
 ///
 ///   If [`HorAligned`] is set, this will be interpreted as an [`NcAlign`] value.
 ///
-/// * [`begy`] - origin of rendered section in the *y* axis.
-/// * [`begx`] - origin of rendered section in the *x* axis.
-/// * [`leny`] - length of rendered section in the *y* axis.
-/// * [`lenx`] - length of rendered section in the *x* axis.
+/// - [`begy`]: origin of rendered section in the *y* axis.
+/// - [`begx`]: origin of rendered section in the *x* axis.
+/// - [`leny`]: length of rendered section in the *y* axis.
+/// - [`lenx`]: length of rendered section in the *x* axis.
 ///
-/// * [`blitter`] - [`NcBlitter`] glyph set to use for blitting.
+/// - [`blitter`]: [`NcBlitter`] glyph set to use for blitting.
 ///
-/// * [`flags`] - [`NcVisualFlag`].
+/// - [`flags`]: [`NcVisualFlag`].
 ///
-/// * [`transcolor`] - treats this color as transparent when the [`AddAlpha`]
+/// - [`transcolor`]: treats this color as transparent when the [`AddAlpha`]
 ///   flag is active.
 ///
-/// * [`pxoffy`] - pixel offset within the cell in the *y* axis.
+/// - [`pxoffy`]: pixel offset within the cell in the *y* axis.
 ///
 ///   If [`NcBlitter::Pixel`] is used the bitmap will be drawn offset from the
 ///   upper-left cell’s origin by these amounts, otherwise this will be ignored.
@@ -64,7 +64,7 @@ pub use builder::NcVisualOptionsBuilder;
 ///   It is an error if either number exceeds the cell-pixel geometry in any
 ///   dimension (see [`NcPixelGeometry.cell_y`], [`NcVisualGeometry.cdim_yx`]).
 ///
-/// * [`pxoffx`] - pixel offset within the cell in the *x* axis.
+/// - [`pxoffx`]: pixel offset within the cell in the *x* axis.
 ///
 ///   If [`NcBlitter::Pixel`] is used, the bitmap will be drawn offset from the
 ///   upper-left cell’s origin by these amounts, otherwise this will be ignored.
@@ -203,6 +203,63 @@ impl<'ncplane> NcVisualOptions {
             pxoffy,
             pxoffx,
         }
+    }
+}
+
+/// # Methods
+impl<'ncplane> NcVisualOptions {
+    /// Returns `true` if it does have an associated [`NcPlane`].
+    pub fn does_plane(&self) -> bool {
+        !self.n.is_null()
+    }
+
+    /// Returns `true` if it has the [`ChildPlane`] flag set.
+    ///
+    /// [`ChildPlane`]: NcVisualFlag#associatedconstant.ChildPlane
+    pub fn does_child_plane(&self) -> bool {
+        self.flags & NcVisualFlag::ChildPlane != NcVisualFlag::None
+    }
+
+    /// Returns `true` if it has the [`AddAlpha`] flag set.
+    ///
+    /// [`AddAlpha`]: NcVisualFlag#associatedconstant.AddAlpha
+    pub fn does_alpha(&self) -> bool {
+        self.flags & NcVisualFlag::AddAlpha != NcVisualFlag::None
+    }
+
+    /// Returns `true` if it has the [`Blend`] flag set.
+    ///
+    /// [`Blend`]: NcVisualFlag#associatedconstant.Blend
+    pub fn does_blend(&self) -> bool {
+        self.flags & NcVisualFlag::Blend != NcVisualFlag::None
+    }
+
+    /// Returns `false` if it has the [`NoDegrade`] flag set.
+    ///
+    /// [`NoDegrade`]: NcVisualFlag#associatedconstant.NoDegrade
+    pub fn does_degrade(&self) -> bool {
+        self.flags & NcVisualFlag::NoDegrade != NcVisualFlag::None
+    }
+
+    /// Returns `false` if it has the [`NoInterpolate`] flag set.
+    ///
+    /// [`NoInterpolate`]: NcVisualFlag#associatedconstant.NoInterpolate
+    pub fn does_interpolate(&self) -> bool {
+        self.flags & NcVisualFlag::NoInterpolate != NcVisualFlag::None
+    }
+
+    /// Returns `true` if it has the [`VerAligned`] flag set.
+    ///
+    /// [`VerAligned`]: NcVisualFlag#associatedconstant.VerAligned
+    pub fn is_veraligned(&self) -> bool {
+        self.flags & NcVisualFlag::VerAligned != NcVisualFlag::None
+    }
+
+    /// Returns `true` if it has the [`HorAligned`] flag set.
+    ///
+    /// [`HorAligned`]: NcVisualFlag#associatedconstant.HorAligned
+    pub fn is_horaligned(&self) -> bool {
+        self.flags & NcVisualFlag::HorAligned != NcVisualFlag::None
     }
 }
 

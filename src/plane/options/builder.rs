@@ -118,7 +118,27 @@ impl NcPlaneOptionsBuilder {
     pub fn from_options(options: &NcPlaneOptions) -> Self {
         let mut builder = Self::default(); // Marginalized by default
 
-        // y,x
+        if options.is_marginalized() {
+            builder = builder.margins(options.margin_b, options.margin_r);
+        } else {
+            builder = builder.rows_cols(options.rows, options.cols);
+        }
+
+        if options.is_fixed() {
+            builder = builder.fixed(true);
+        }
+
+        if options.resizecb.is_some() {
+            builder = builder.resizecb(c_api::ncresizecb_to_rust(options.resizecb));
+        }
+
+        if options.is_autogrow() {
+            builder = builder.autogrow(true);
+        }
+        if options.is_vscroll() {
+            builder = builder.vscroll(true);
+        }
+
         if options.is_veraligned() {
             builder = builder.valign(options.y);
         } else {
@@ -128,33 +148,6 @@ impl NcPlaneOptionsBuilder {
             builder = builder.halign(options.x);
         } else {
             builder = builder.x(options.x);
-        }
-
-        // margins || rows,cols
-        if options.is_marginalized() {
-            builder = builder.margins(options.margin_b, options.margin_r);
-        } else {
-            builder = builder.rows_cols(options.rows, options.cols);
-        }
-
-        // fixed
-        if options.is_fixed() {
-            builder = builder.fixed(true);
-        }
-
-        // resizecb
-        if options.resizecb.is_some() {
-            builder = builder.resizecb(c_api::ncresizecb_to_rust(options.resizecb));
-        }
-
-        // autogrow
-        if options.is_autogrow() {
-            builder = builder.autogrow(true);
-        }
-
-        // vscroll
-        if options.is_vscroll() {
-            builder = builder.vscroll(true);
         }
 
         // TODO: name, userptr
