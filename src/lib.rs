@@ -209,35 +209,3 @@ pub mod c_api {
     #[allow(unused_imports)]
     pub(crate) use helpers::*;
 }
-
-/// The library `examples/`.
-///
-/// Here you can see and navigate the examples as individual modules,
-/// as well as the common utility objects from [`utils`][examples::utils].
-///
-// Note that `cargo doc` doesn't detect changes made inside the `/examples/`
-// directory, unless something about the `examples` module has been modified,
-// (This maybe a side effect of using the [module `path` attribute][0])
-//
-// [0]: https://doc.rust-lang.org/reference/items/modules.html#the-path-attribute
-#[path = "../examples"]
-#[cfg(any(doc))]
-pub mod examples {
-    #![allow(dead_code)]
-
-    pub mod utils;
-    pub use utils::{Canvas, Counter};
-
-    // individual examples
-
-    #[path = "erase_region.rs"]
-    pub mod example_erase_region;
-    #[path = "info.rs"]
-    pub mod example_info;
-    #[path = "input.rs"]
-    pub mod example_input;
-    #[path = "pixel-cell.rs"]
-    pub mod example_pixel_cell;
-    #[path = "planes.rs"]
-    pub mod example_planes;
-}

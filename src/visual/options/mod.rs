@@ -238,14 +238,14 @@ impl<'ncplane> NcVisualOptions {
     ///
     /// [`NoDegrade`]: NcVisualFlag#associatedconstant.NoDegrade
     pub fn does_degrade(&self) -> bool {
-        self.flags & NcVisualFlag::NoDegrade != NcVisualFlag::None
+        self.flags & NcVisualFlag::NoDegrade == NcVisualFlag::None
     }
 
     /// Returns `false` if it has the [`NoInterpolate`] flag set.
     ///
     /// [`NoInterpolate`]: NcVisualFlag#associatedconstant.NoInterpolate
     pub fn does_interpolate(&self) -> bool {
-        self.flags & NcVisualFlag::NoInterpolate != NcVisualFlag::None
+        self.flags & NcVisualFlag::NoInterpolate == NcVisualFlag::None
     }
 
     /// Returns `true` if it has the [`VerAligned`] flag set.

@@ -437,7 +437,7 @@ impl NcVisual {
     ///
     /// There are 3 options for choosing the the plane used for rendering:
     /// 1. if the `options` have set the flag
-    /// [`NcVisualOptions::CHILDPLANE`][NcVisualOptions#associatedconstant.CHILDPLANE]
+    /// [`NcVisualFlag::ChildPlane`][NcVisualFlag#associatedconstant.ChildPlane]
     /// then there must be a plane, which will be the father of the one created.
     /// 2. if the flag is not set and there is no plane, a new plane is created
     ///    as root of a new pile.

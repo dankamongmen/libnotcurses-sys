@@ -220,7 +220,7 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
     ///
     /// Effect: Sets the *y* alignment and the [`VerAligned`] flag.
     ///
-    /// [`VerAligned`]: NcVisualFlags#associatedconstant.VerAligned
+    /// [`VerAligned`]: NcVisualFlag#associatedconstant.VerAligned
     pub fn valign(mut self, valign: impl Into<NcAlign>) -> Self {
         self.y = valign.into().into();
         self.flags |= NcVisualFlag::VerAligned;
@@ -233,7 +233,7 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
     ///
     /// Effect: Sets the *`x`* alignment and the [`HorAligned`] flag.
     ///
-    /// [`HorAligned`]: NcVisualFlags#associatedconstant.HorAligned
+    /// [`HorAligned`]: NcVisualFlag#associatedconstant.HorAligned
     pub fn halign(mut self, halign: impl Into<NcAlign>) -> Self {
         self.x = halign.into().into();
         self.flags |= NcVisualFlag::HorAligned;
@@ -247,8 +247,8 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
     /// Effect: Sets the *`y` & `x`* alignments and the [`VerAligned`] and
     /// [`HorAligned`] flags.
     ///
-    /// [`VerAligned`]: NcVisualFlags#associatedconstant.VerAligned
-    /// [`HorAligned`]: NcVisualFlags#associatedconstant.HorAligned
+    /// [`VerAligned`]: NcVisualFlag#associatedconstant.VerAligned
+    /// [`HorAligned`]: NcVisualFlag#associatedconstant.HorAligned
     pub fn align(mut self, valign: impl Into<NcAlign>, halign: impl Into<NcAlign>) -> Self {
         self.y = valign.into().into();
         self.x = halign.into().into();
@@ -277,7 +277,7 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
     ///
     /// Efect: (Un)Sets the transparent color, and the [`AddAlpha`] flag.
     ///
-    /// [`AddAlpha`]: NcVisualFlags#associatedconstant.AddAlpha
+    /// [`AddAlpha`]: NcVisualFlag#associatedconstant.AddAlpha
     pub fn transcolor(mut self, color: Option<impl Into<NcRgba>>) -> Self {
         // if color.is_none() {
         if let Some(color) = color {
@@ -297,7 +297,7 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
     ///
     /// Effect: Sets the [`Blend`] flag.
     ///
-    /// [`Blend`]: NcVisualFlags#associatedconstant.Blend
+    /// [`Blend`]: NcVisualFlag#associatedconstant.Blend
     /// [`NcAlpha::Blend`]: crate::NcAlpha#associatedconstant.Blend
     /// [`NcVisual`]: crate::NcVisual
     pub fn blend(mut self, blend: bool) -> Self {
@@ -318,7 +318,7 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
     ///
     /// See also: the [*rules of degradation*].
     ///
-    /// [`NoDegrade`]: NcVisualFlags#associatedconstant.NoDegrade
+    /// [`NoDegrade`]: NcVisualFlag#associatedconstant.NoDegrade
     /// [*rules of degradation*]: NcBlitter#degradation
     pub fn degrade(mut self, degrade: bool) -> Self {
         if degrade {
@@ -333,7 +333,7 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
     ///
     /// Default: *true* (interpolates).
     ///
-    /// [`NoInterpolate`]: NcVisualFlags#associatedconstant.NoInterpolate
+    /// [`NoInterpolate`]: NcVisualFlag#associatedconstant.NoInterpolate
     pub fn interpolate(mut self, interpolate: bool) -> Self {
         if interpolate {
             self.flags &= !NcVisualFlag::NoInterpolate;
@@ -352,7 +352,6 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
     }
 
     /// Sets the pixel offset within the [`NcCell`][crate::NcCell].
-    ///
     ///
     pub fn cell_offset(mut self, y: u32, x: u32) -> Self {
         self.cell_offset_yx = Some((y, x));
