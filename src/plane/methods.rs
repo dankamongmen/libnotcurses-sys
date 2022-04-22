@@ -1230,27 +1230,27 @@ impl NcPlane {
     /// Gets the origin of this plane relative to its pile.
     ///
     /// *C style function: [ncplane_abs_yx()][c_api::ncplane_abs_yx].*
-    pub fn abs_yx(&self) -> (u32, u32) {
+    pub fn abs_yx(&self) -> (i32, i32) {
         let mut y = 0;
         let mut x = 0;
         unsafe {
             c_api::ncplane_abs_yx(self, &mut y, &mut x);
         }
-        (y as u32, x as u32)
+        (y, x)
     }
 
     /// Gets the origin of this plane relative to its pile, in the y axis.
     ///
     /// *C style function: [ncplane_abs_y()][c_api::ncplane_abs_y].*
-    pub fn abs_y(&self) -> u32 {
-        unsafe { c_api::ncplane_abs_y(self) as u32 }
+    pub fn abs_y(&self) -> i32 {
+        unsafe { c_api::ncplane_abs_y(self) }
     }
 
     /// Gets the origin of this plane relative to its pile, in the x axis.
     ///
     /// *C style function: [ncplane_abs_x()][c_api::ncplane_abs_x].*
-    pub fn abs_x(&self) -> u32 {
-        unsafe { c_api::ncplane_abs_x(self) as u32 }
+    pub fn abs_x(&self) -> i32 {
+        unsafe { c_api::ncplane_abs_x(self) }
     }
 
     /// Duplicates this `NcPlane`.
@@ -1359,8 +1359,7 @@ impl NcPlane {
 
     /// Relocates this `NcPlane` above the `above` NcPlane, in the z-buffer.
     ///
-    /// Returns [`NCRESULT_ERR`][c_api::NCRESULT_ERR] if
-    /// the current plane is already in the desired location.
+    /// Returns an error if the current plane is already in the desired location.
     /// Both planes must not be the same.
     ///
     /// *C style function: [ncplane_move_above()][c_api::ncplane_move_above].*
@@ -1373,8 +1372,7 @@ impl NcPlane {
 
     /// Relocates this `NcPlane` below the `below` NcPlane, in the z-buffer.
     ///
-    /// Returns [`NCRESULT_ERR`][c_api::NCRESULT_ERR] if
-    /// the current plane is already in the desired location.
+    /// Returns an error the current plane is already in the desired location.
     /// Both planes must not be the same.
     ///
     /// *C style function: [ncplane_move_below()][c_api::ncplane_move_below].*
@@ -1522,21 +1520,31 @@ impl NcPlane {
 
     /// Gets the parent to which this `NcPlane` is bound, if any.
     ///
+    /// # Safety
+    /// You must be careful not to end up with multiple exclusive references
+    /// to the same `NcPlane`, or with one exclusive reference and one
+    /// or more shared references.
+    ///
     /// *C style function: [ncplane_parent()][c_api::ncplane_parent].*
     //
-    // TODO: CHECK: what happens when it's bound to itself.
-    pub fn parent(&mut self) -> NcResult<&mut NcPlane> {
-        error_ref_mut![unsafe { c_api::ncplane_parent(self) }, "NcPlane.parent()"]
+    // CHECK what happens when it's bound to itself.
+    pub unsafe fn parent(&mut self) -> NcResult<&mut NcPlane> {
+        error_ref_mut![c_api::ncplane_parent(self), "NcPlane.parent()"]
     }
 
     /// Gets the parent to which this `NcPlane` is bound, if any.
     ///
+    /// # Safety
+    /// You must be careful not to end up with multiple exclusive references
+    /// to the same `NcPlane`, or with one exclusive reference and one
+    /// or more shared references.
+    ///
     /// *C style function: [ncplane_parent_const()][c_api::ncplane_parent_const].*
     //
-    // CHECK: what happens when it's bound to itself.
-    pub fn parent_const(&self) -> NcResult<&NcPlane> {
+    // CHECK what happens when it's bound to itself.
+    pub unsafe fn parent_const(&self) -> NcResult<&NcPlane> {
         error_ref![
-            unsafe { c_api::ncplane_parent_const(self) },
+            c_api::ncplane_parent_const(self),
             "NcPlane.parent_const()"
         ]
     }
@@ -1553,6 +1561,7 @@ impl NcPlane {
     /// The standard plane cannot be reparented.
     ///
     /// *C style function: [ncplane_reparent()][c_api::ncplane_reparent].*
+    // CHECK: if it's necessary to return the plane.
     pub fn reparent<'a>(&mut self, newparent: &'a mut NcPlane) -> NcResult<&'a mut NcPlane> {
         error_ref_mut![
             unsafe { c_api::ncplane_reparent(self, newparent) },
@@ -1567,7 +1576,8 @@ impl NcPlane {
     ///
     /// *C style function: [ncplane_reparent_family()][c_api::ncplane_reparent_family].*
     //
-    // TODO:CHECK: If 'newparent' is an ancestor, NULL is returned & no changes're made.
+    // CHECK: if it's necessary to return the plane.
+    // CHECK: If 'newparent' is an ancestor, NULL is returned & no changes're made.
     pub fn reparent_family<'a>(&mut self, newparent: &'a mut NcPlane) -> NcResult<&'a mut NcPlane> {
         error_ref_mut![
             unsafe { c_api::ncplane_reparent_family(self, newparent) },
@@ -1609,7 +1619,7 @@ impl NcPlane {
 
     /// Performs the rendering and rasterization portion of
     /// [`render`][NcPlane#method.render] and [`rasterize`][NcPlane#method.rasterize]
-    /// but doe not write the resulting buffer out to the terminal.
+    /// but does not write the resulting buffer out to the terminal.
     ///
     /// Using this function, the user can control the writeout process.
     /// The returned buffer must be freed by the caller.
@@ -1953,15 +1963,15 @@ impl NcPlane {
     /// Resizes this `NcPlane`.
     ///
     /// The four parameters `keep_y`, `keep_x`, `keep_len_y`, and `keep_len_x`
-    /// defines a subset of this `NcPlane` to keep unchanged. This may be a section
-    /// of size 0.
+    /// defines a subset of this `NcPlane` to keep unchanged.
+    /// This may be a section of size 0.
     ///
     /// `keep_x` and `keep_y` are relative to this `NcPlane`. They must specify a
     /// coordinate within the ncplane's totality. If either of `keep_len_y` or
     /// `keep_len_x` is non-zero, both must be non-zero.
     ///
     /// `y_off` and `x_off` are relative to `keep_y` and `keep_x`, and place the
-    /// upper-left corner of the resized NcPlane.
+    /// upper-left corner of the resized `NcPlane`.
     ///
     /// `len_y` and `len_x` are the dimensions of this `NcPlane` after resizing.
     /// `len_y` must be greater than or equal to `keep_len_y`,
@@ -2003,7 +2013,7 @@ impl NcPlane {
     }
 
     /// Suitable for use as a 'resizecb' with planes created with
-    /// [`NcPlaneOptions::MARGINALIZED`][NcPlaneOptions#associatedconstant.MARGINALIZED].
+    /// [`NcPlaneFlag::Marginalized`][NcPlaneFlag#associatedconstant.Marginalized].
     ///
     /// This will resize this plane against its parent, attempting to enforce
     /// the supplied margins.
@@ -2110,10 +2120,8 @@ impl NcPlane {
     /// to the same absolute coordinates relative to the origin of `target`.
     ///
     /// *C style function: [ncplane_translate()][c_api::ncplane_translate].*
-    //
-    // TODO: API change, return the coordinates as a tuple instead of being &mut
-    pub fn translate(&self, target: &NcPlane, y: &mut u32, x: &mut u32) {
-        unsafe { c_api::ncplane_translate(self, target, &mut (*y as i32), &mut (*x as i32)) }
+    pub fn translate(&self, target: &NcPlane, y: &mut i32, x: &mut i32) {
+        unsafe { c_api::ncplane_translate(self, target, y, x) }
     }
 
     /// Returns true if the provided absolute `y`/`x` coordinates are within
@@ -2122,14 +2130,12 @@ impl NcPlane {
     /// Either way, translates the absolute coordinates relative to this `NcPlane`.
     ///
     /// *C style function: [ncplane_translate_abs()][c_api::ncplane_translate_abs].*
-    //
-    // TODO: API change, return a tuple (y,x,bool)
-    pub fn translate_abs(&self, y: &mut u32, x: &mut u32) -> bool {
-        unsafe { c_api::ncplane_translate_abs(self, &mut (*y as i32), &mut (*x as i32)) }
+    pub fn translate_abs(&self, y: &mut i32, x: &mut i32) -> bool {
+        unsafe { c_api::ncplane_translate_abs(self, y, x) }
     }
 
-    /// Gets the `y`, `x` origin of this `NcPlane` relative to the standard plane,
-    /// or the `NcPlane` to which it is bound.
+    /// Gets the `y`, `x` origin of this `NcPlane` relative to its parent,
+    /// or its pile, if it's a root plane.
     ///
     /// *C style function: [ncplane_yx()][c_api::ncplane_yx].*
     //
@@ -2140,16 +2146,16 @@ impl NcPlane {
         (y as i32, x as i32)
     }
 
-    /// Gets the `x` origin of this `NcPlane` relative to the standard plane,
-    /// or the `NcPlane` to which it is bound.
+    /// Gets the `x` origin of this `NcPlane` relative to its parent,
+    /// or its pile, if it's a root plane.
     ///
     /// *C style function: [ncplane_x()][c_api::ncplane_x].*
     pub fn x(&self) -> i32 {
         unsafe { c_api::ncplane_x(self) as i32 }
     }
 
-    /// Gets the `y` origin of this `NcPlane` relative to the standard plane,
-    /// or the `NcPlane` to which it is bound.
+    /// Gets the `y` origin of this `NcPlane` relative to its parent,
+    /// or its pile, if it's a root plane.
     ///
     /// *C style function: [ncplane_y()][c_api::ncplane_y].*
     pub fn y(&self) -> i32 {
