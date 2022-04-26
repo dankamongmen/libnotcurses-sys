@@ -4,6 +4,59 @@ pub use crate::{c_api, error, NcBlitter, NcResult, NcVisualOptions};
 use core::ffi::c_void;
 
 impl NcBlitter {
+    /// The number of `height` *dots* in a cell using the current Blitter.
+    ///
+    /// Default & Pixel returns `None`.
+    pub const fn cell_height(&self) -> Option<u8> {
+        use NcBlitter::*;
+        match self {
+            Ascii => Some(1),
+            Half => Some(2),
+            Quadrant => Some(2),
+            Sextant => Some(3),
+            Braille => Some(4),
+            _4x1 => Some(4),
+            _8x1 => Some(8),
+            _ => None,
+        }
+    }
+
+    /// The number of `width` *dots* in a cell using the current Blitter.
+    ///
+    /// Default & Pixel returns `None`.
+    pub const fn cell_width(&self) -> Option<u8> {
+        use NcBlitter::*;
+        match self {
+            Ascii => Some(1),
+            Half => Some(1),
+            Quadrant => Some(2),
+            Sextant => Some(2),
+            Braille => Some(2),
+            _4x1 => Some(1),
+            _8x1 => Some(1),
+            _ => None,
+        }
+    }
+
+    /// The number of `(height, width)` *dots* in a cell using the current Blitter.
+    ///
+    /// Default & Pixel returns `None`.
+    pub const fn cell_size(&self) -> Option<(u8, u8)> {
+        use NcBlitter::*;
+        match self {
+            Ascii => Some((1, 1)),
+            Half => Some((2, 1)),
+            Quadrant => Some((2, 2)),
+            Sextant => Some((3, 2)),
+            Braille => Some((4, 2)),
+            _4x1 => Some((4, 1)),
+            _8x1 => Some((8, 1)),
+            _ => None,
+        }
+    }
+}
+
+impl NcBlitter {
     /// Blits a flat array `data` of [`NcRgba`] values to the [`NcPlane`] that
     /// must be configured in `vopts`.
     ///

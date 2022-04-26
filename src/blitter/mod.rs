@@ -30,7 +30,7 @@ mod methods;
 /// - the only viable blitters in ASCII are [`Ascii`] and [`Pixel`].
 ///
 /// If you don't want this behaviour you have to set the
-/// *[`NcVisualOptions::NODEGRADE`]* flag on [`NcVisualOptions`] or call
+/// *[`NcVisualFlag::NoDegrade`]* on [`NcVisualOptions`] or call
 /// *[`degrade(false)`]* on [`NcVisualOptionsBuilder`].
 ///
 /// [`Braille`]: NcBlitter::Braille
@@ -39,13 +39,13 @@ mod methods;
 /// [`Half`]: NcBlitter::Half
 /// [`Quadrant`]: NcBlitter::Quadrant
 /// [`Sextant`]: NcBlitter::Sextant
-/// [`NcVisualOptions::NODEGRADE`]: crate::NcVisualOptions#associatedconstant.NODEGRADE
+/// [`NcVisualFlag::noDegrade`]: crate::NcVisualFlag#associatedconstant.noDegrade
 /// [`NcVisualOptions`]: crate::NcVisualOptions
 /// [`degrade(false)`]: crate::NcVisualOptionsBuilder#method.degrade
 /// [`NcVisualOptionsBuilder`]: crate::NcVisualOptionsBuilder
 #[repr(u32)]
 #[non_exhaustive]
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum NcBlitter {
     Default = c_api::NCBLIT_DEFAULT,
 
