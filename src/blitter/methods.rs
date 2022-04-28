@@ -8,16 +8,11 @@ impl NcBlitter {
     ///
     /// Default & Pixel returns `None`.
     pub const fn cell_height(&self) -> Option<u8> {
-        use NcBlitter::*;
-        match self {
-            Ascii => Some(1),
-            Half => Some(2),
-            Quadrant => Some(2),
-            Sextant => Some(3),
-            Braille => Some(4),
-            _4x1 => Some(4),
-            _8x1 => Some(8),
-            _ => None,
+        // self.cell_size().and_then(|size| Some(size.0) ) // not const
+        if let Some(size) = self.cell_size() {
+            Some(size.0)
+        } else {
+            None
         }
     }
 
@@ -25,20 +20,15 @@ impl NcBlitter {
     ///
     /// Default & Pixel returns `None`.
     pub const fn cell_width(&self) -> Option<u8> {
-        use NcBlitter::*;
-        match self {
-            Ascii => Some(1),
-            Half => Some(1),
-            Quadrant => Some(2),
-            Sextant => Some(2),
-            Braille => Some(2),
-            _4x1 => Some(1),
-            _8x1 => Some(1),
-            _ => None,
+        // self.cell_size().and_then(|size| Some(size.1) ) // not const
+        if let Some(size) = self.cell_size() {
+            Some(size.1)
+        } else {
+            None
         }
     }
 
-    /// The number of `(height, width)` *dots* in a cell using the current Blitter.
+    /// The inner Cell's dimensions `(height, width)` using the current [`Blitter`].
     ///
     /// Default & Pixel returns `None`.
     pub const fn cell_size(&self) -> Option<(u8, u8)> {

@@ -1543,10 +1543,7 @@ impl NcPlane {
     //
     // CHECK what happens when it's bound to itself.
     pub unsafe fn parent_const(&self) -> NcResult<&NcPlane> {
-        error_ref![
-            c_api::ncplane_parent_const(self),
-            "NcPlane.parent_const()"
-        ]
+        error_ref![c_api::ncplane_parent_const(self), "NcPlane.parent_const()"]
     }
 
     /// Unbounds this `NcPlane` from its parent, makes it a bound child of
