@@ -16,7 +16,7 @@
 ///
 /// [`NcChannel`]: crate::NcChannel
 #[repr(transparent)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Default, PartialEq, Eq)]
 pub struct NcRgb(pub c_api::NcRgb_u32);
 
 /// 32 bits broken into 3x RGB components + alpha component.
@@ -37,6 +37,7 @@ pub struct NcRgb(pub c_api::NcRgb_u32);
 pub struct NcRgba(pub c_api::NcRgba_u32);
 
 mod std_impls {
+    use std::fmt;
     use super::{
         c_api::{NcRgb_u32, NcRgba_u32},
         NcRgb, NcRgba,
@@ -46,6 +47,11 @@ mod std_impls {
     crate::unit_impl_from![NcRgb, NcRgb_u32];
     crate::unit_impl_fmt![bases+display; NcRgb];
 
+    impl fmt::Debug for NcRgb {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "Rgb({self:06X})")
+        }
+    }
     impl From<[u8; 3]> for NcRgb {
         fn from(array: [u8; 3]) -> Self {
             Self(
