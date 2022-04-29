@@ -17,7 +17,7 @@
 /// - [`None`][NcKeyMod::None]
 /// - [`Mask`][NcKeyMod::Mask]
 #[repr(transparent)]
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct NcKeyMod(pub u32);
 
 /// # Flags

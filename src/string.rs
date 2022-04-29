@@ -28,6 +28,8 @@ impl NcString {
         self.cstring.as_ptr()
     }
 
+    // MAYBE: fn as_raw(self) ? (transfers ownership)
+
     // /// Choose whether to dellocate the string on drop or not.
     // pub fn deallocate(&mut self, deallocate: bool) {
     //     self.deallocate = deallocate;

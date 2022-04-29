@@ -33,7 +33,7 @@ use crate::{
 /// [`NcRgba`]: crate::NcRgba
 /// [`NcAlpha`]: crate::NcAlpha
 #[repr(transparent)]
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct NcChannel(pub NcChannel_u32);
 
 mod std_impls {

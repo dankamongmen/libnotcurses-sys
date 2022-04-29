@@ -16,7 +16,7 @@
 /// - [`Nc.mice_disable`][crate::Nc#method.mice_disable]
 /// - [`Nc.mice_enable`][crate::Nc#method.mice_enable]
 #[repr(transparent)]
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct NcMiceEvents(pub c_api::NcMiceEvents_u32);
 
 /// # Flags

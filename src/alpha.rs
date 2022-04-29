@@ -19,7 +19,7 @@ use crate::NcCell;
 ///
 /// See also: [`NcChannels`][crate::NcChannels] for more context information.
 #[repr(u32)]
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum NcAlpha {
     /// Indicates [`NcCell`]'s foreground or background color will be a
     /// composite between its color and the `NcCell`s' corresponding colors

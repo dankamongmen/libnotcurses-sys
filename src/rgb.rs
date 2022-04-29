@@ -16,7 +16,7 @@
 ///
 /// [`NcChannel`]: crate::NcChannel
 #[repr(transparent)]
-#[derive(Clone, Copy, Debug, PartialEq, Default)]
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub struct NcRgb(pub c_api::NcRgb_u32);
 
 /// 32 bits broken into 3x RGB components + alpha component.
@@ -33,7 +33,7 @@ pub struct NcRgb(pub c_api::NcRgb_u32);
 /// [`NcRgba`]: crate::NcRgba
 /// [`NcChannel`]: crate::NcChannel
 #[repr(transparent)]
-#[derive(Clone, Copy, Debug, PartialEq, Default)]
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub struct NcRgba(pub c_api::NcRgba_u32);
 
 mod std_impls {

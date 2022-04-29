@@ -4,7 +4,7 @@ pub use crate::{c_api, error, NcBlitter, NcResult, NcVisualOptions};
 use core::ffi::c_void;
 
 impl NcBlitter {
-    /// The number of `height` *dots* in a cell using the current Blitter.
+    /// The number of `height` subdivisions in a cell using the current blitter.
     ///
     /// Default & Pixel returns `None`.
     pub const fn cell_height(&self) -> Option<u8> {
@@ -16,7 +16,7 @@ impl NcBlitter {
         }
     }
 
-    /// The number of `width` *dots* in a cell using the current Blitter.
+    /// The number of `width` subdivisions in a cell using the current blitter.
     ///
     /// Default & Pixel returns `None`.
     pub const fn cell_width(&self) -> Option<u8> {
@@ -28,7 +28,7 @@ impl NcBlitter {
         }
     }
 
-    /// The inner Cell's dimensions `(height, width)` using the current [`Blitter`].
+    /// The inner Cell's dimensions `(height, width)` using the current blitter.
     ///
     /// Default & Pixel returns `None`.
     pub const fn cell_size(&self) -> Option<(u8, u8)> {

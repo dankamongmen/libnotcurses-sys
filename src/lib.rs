@@ -160,6 +160,7 @@ pub mod c_api {
     pub use crate::bindings::*;
 
     // public re-export of reimplemented functions:
+    // TODO: join these into the same c_api submodule
     pub use crate::capabilities::reimplemented::*;
     pub use crate::cell::reimplemented::*;
     pub use crate::channel::reimplemented::*;

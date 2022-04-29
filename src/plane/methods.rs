@@ -2010,7 +2010,7 @@ impl NcPlane {
     }
 
     /// Suitable for use as a 'resizecb' with planes created with
-    /// [`NcPlaneFlag::Marginalized`][NcPlaneFlag#associatedconstant.Marginalized].
+    /// [`NcPlaneFlag::Marginalized`][crate::NcPlaneFlag#associatedconstant.Marginalized].
     ///
     /// This will resize this plane against its parent, attempting to enforce
     /// the supplied margins.

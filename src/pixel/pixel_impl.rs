@@ -7,7 +7,7 @@
 /// [`Nc.check_pixel_support`]: crate::Nc#method.check_pixel_support
 #[repr(u32)]
 #[non_exhaustive]
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum NcPixelImpl {
     /// No pixel support.
     None = c_api::NCPIXEL_NONE,

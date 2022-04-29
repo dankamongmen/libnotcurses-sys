@@ -102,7 +102,7 @@ pub type NcDirect = crate::c_api::ffi::ncdirect;
 /// # Default
 /// *[`NcDirectFlag::None`]
 ///
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub struct NcDirectFlag(pub NcDirectFlag_u64);
 
 ///

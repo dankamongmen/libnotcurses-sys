@@ -22,7 +22,7 @@
 ///
 #[repr(u32)]
 #[non_exhaustive]
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum NcScale {
     /// Maintains the original size. Will Apply no scaling.
     None = c_api::NCSCALE_NONE,

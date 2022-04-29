@@ -15,7 +15,7 @@
 /// Note that if stderr is connected to the same terminal on which we're
 /// rendering, any kind of logging will disrupt the output.
 #[repr(i32)]
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum NcLogLevel {
     /// Default. print nothing once fullscreen service begins.
     Silent = c_api::NCLOGLEVEL_SILENT,

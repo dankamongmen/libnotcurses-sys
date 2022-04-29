@@ -107,7 +107,7 @@ pub type NcOptions = crate::c_api::ffi::notcurses_options;
 ///
 /// # Default
 /// *[`NcFlag::None`]
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub struct NcFlag(pub c_api::NcFlag_u64);
 
 impl NcFlag {

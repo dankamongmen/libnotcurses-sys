@@ -171,7 +171,7 @@ impl NcPlaneOptions {
 ///
 /// # Default
 /// *[`NcPlaneFlag::None`]
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub struct NcPlaneFlag(pub c_api::NcPlaneFlag_u64);
 
 impl NcPlaneFlag {

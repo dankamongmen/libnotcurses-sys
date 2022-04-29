@@ -277,7 +277,7 @@ impl<'ncplane> NcVisualOptions {
 ///
 /// # Default
 /// *[`NcVisualFlag::None`]
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub struct NcVisualFlag(pub c_api::NcVisualFlag_u64);
 
 impl NcVisualFlag {

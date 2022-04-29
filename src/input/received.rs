@@ -6,7 +6,7 @@ use crate::NcKey;
 ///
 /// # Default
 /// *[`NcReceived::NoInput`]
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum NcReceived {
     /// No input was received
     ///

@@ -4,8 +4,8 @@ use core::ptr::{null, null_mut};
 use libc::c_void;
 
 use crate::{
-    c_api::{self, NcChannel_u32, NcResult_i32, NCRESULT_ERR},
-    cstring, error, error_ref_mut, Nc, NcBlitter, NcChannel, NcDirect, NcError, NcPixel, NcPlane,
+    c_api::{self, NcResult_i32, NCRESULT_ERR},
+    cstring, error, error_ref_mut, Nc, NcBlitter, NcDirect, NcError, NcPalette, NcPixel, NcPlane,
     NcResult, NcRgba, NcScale, NcTime, NcVisual, NcVisualGeometry, NcVisualOptions,
 };
 
@@ -202,31 +202,19 @@ impl NcVisual {
     /// `pstride`-byte palette-indexed pixels, arranged in `rows` lines of
     /// `rowstride` bytes each, composed of `cols` pixels.
     ///
-    /// `palette` is an array of at least `palsize` [`NcChannel`]s.
+    /// `palette` is an array of at least `palsize` [`NcChannel`][crate::NcChannel]s.
     ///
     /// *C style function: [ncvisual_from_palidx()][c_api::ncvisual_from_palidx].*
-    //
-    // API ALLOC struct ncvisual* ncvisual_from_palidx(const void* data, int rows,
-    // int rowstride, int cols, int palsize, int pstride, const uint32_t* palette)
-    // pub fn ncvisual_from_palidx(
-    //     data: *const cty::c_void,
-    //     rows: cty::c_int,
-    //     rowstride: cty::c_int,
-    //     cols: cty::c_int,
-    //     palsize: cty::c_int,
-    //     pstride: cty::c_int,
-    //     palette: *const u32,
-    // ) -> *mut ncvisual;
     pub fn from_palidx<'a>(
         data: &[u8],
         rows: u32,
         rowstride: u32,
         cols: u32,
+        //
         palsize: u8,
         pstride: u32,
-        palette: &[NcChannel],
+        palette: &NcPalette,
     ) -> NcResult<&'a mut NcVisual> {
-        // assert![];
         error_ref_mut![
             unsafe {
                 c_api::ncvisual_from_palidx(
@@ -234,9 +222,13 @@ impl NcVisual {
                     rows as i32,
                     rowstride as i32,
                     cols as i32,
+                    //
                     palsize as i32,
                     pstride as i32,
-                    palette.as_ptr() as *const NcChannel_u32,
+                    palette.chans.as_slice().as_ptr(),
+                    //
+                    // palette.len(),
+                    //
                 )
             },
             &format!(
@@ -437,7 +429,7 @@ impl NcVisual {
     ///
     /// There are 3 options for choosing the the plane used for rendering:
     /// 1. if the `options` have set the flag
-    /// [`NcVisualFlag::ChildPlane`][NcVisualFlag#associatedconstant.ChildPlane]
+    /// [`NcVisualFlag::ChildPlane`][crate::NcVisualFlag#associatedconstant.ChildPlane]
     /// then there must be a plane, which will be the father of the one created.
     /// 2. if the flag is not set and there is no plane, a new plane is created
     ///    as root of a new pile.

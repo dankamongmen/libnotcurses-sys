@@ -5,7 +5,7 @@
 /// Note: *Unknown* and *Press* are considered equivalent for the purposes
 /// of `PartialEq`.
 #[repr(u32)]
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum NcInputType {
     ///
     Unknown,
