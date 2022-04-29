@@ -432,7 +432,6 @@ pub fn ncchannel_rgb(channel: impl Into<NcChannel_u32>) -> NcRgb_u32 {
 /// *Method: NcChannel.[rgb_p()][NcChannel#method.rgb_p]*
 #[inline]
 pub fn ncchannel_rgb_p(channel: impl Into<NcChannel_u32> + Copy) -> bool {
-    // bitwise or is intentional (allows compiler more freedom)
     !(ncchannel_default_p(channel.into()) | ncchannel_palindex_p(channel.into()))
 }
 
@@ -625,7 +624,7 @@ pub fn ncchannel_set_palindex(channel: &mut NcChannel_u32, index: impl Into<NcPa
 /// *Method: NcChannel.[palindex_p()][NcChannel#method.palindex_p]*
 #[inline]
 pub fn ncchannel_palindex_p(channel: impl Into<NcChannel_u32> + Copy) -> bool {
-    !(ncchannel_default_p(channel.into()) && (channel.into() & c_api::NC_BG_PALETTE) == 0)
+    !ncchannel_default_p(channel.into()) && (channel.into() & c_api::NC_BG_PALETTE) != 0
 }
 
 /// Gets the [`NcPaletteIndex`] from the foreground [`NcChannel_u32`].
