@@ -98,7 +98,7 @@ impl NcCell {
     /// Both must be or will be bound to `common_plane`.
     ///
     /// *C style function: [nccell_duplicate()][c_api::nccell_duplicate].*
-    pub fn duplicate(&self, common_plane: &mut NcPlane) -> NcResult<NcCell> {
+    pub fn duplicate(&self, common_plane: &NcPlane) -> NcResult<NcCell> {
         let mut target = NcCell::new();
         let res = unsafe { c_api::nccell_duplicate(common_plane, &mut target, self) };
         error![res, "NcCell.duplicate()", target]
@@ -331,7 +331,7 @@ impl NcCell {
     ///
     /// *C style function: [nccell_fg_alpha()][c_api::nccell_fg_alpha].*
     pub fn extract(
-        &mut self,
+        &self,
         plane: &mut NcPlane,
         styles: &mut NcStyle,
         channels: &mut NcChannels,
@@ -344,7 +344,7 @@ impl NcCell {
     /// See also: [extended_gcluster][NcCell#method.extended_gcluster] method.
     ///
     /// *(No equivalent C style function)*
-    pub fn egc(&mut self, plane: &mut NcPlane) -> String {
+    pub fn egc(&self, plane: &NcPlane) -> String {
         let (mut _styles, mut _channels) = (0, 0);
         c_api::nccell_extract(plane, self, &mut _styles, &mut _channels)
     }
@@ -352,7 +352,7 @@ impl NcCell {
     /// Returns the [`NcStyle`] bits.
     ///
     /// *C style function: [nccell_styles()][c_api::nccell_styles].*
-    pub fn styles(&mut self) -> NcStyle {
+    pub fn styles(&self) -> NcStyle {
         c_api::nccell_styles(self).into()
     }
 

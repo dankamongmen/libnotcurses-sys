@@ -482,7 +482,7 @@ impl NcPlane {
     ///
     /// *C style function: [ncplane_at_cursor()][c_api::ncplane_at_cursor].*
     pub fn at_cursor(
-        &mut self,
+        &self,
         stylemask: &mut NcStyle,
         channels: &mut NcChannels,
     ) -> NcResult<String> {
@@ -503,7 +503,7 @@ impl NcPlane {
     ///
     /// *C style function: [ncplane_at_cursor_cell()][c_api::ncplane_at_cursor_cell].*
     #[inline]
-    pub fn at_cursor_cell(&mut self, cell: &mut NcCell) -> NcResult<u32> {
+    pub fn at_cursor_cell(&self, cell: &mut NcCell) -> NcResult<u32> {
         let bytes = unsafe { c_api::ncplane_at_cursor_cell(self, cell) };
         error![
             bytes,
@@ -557,7 +557,7 @@ impl NcPlane {
     ///
     /// *C style function: [ncplane_at_yx_cell()][c_api::ncplane_at_yx_cell].*
     #[inline]
-    pub fn at_yx_cell(&mut self, y: u32, x: u32, cell: &mut NcCell) -> NcResult<u32> {
+    pub fn at_yx_cell(&self, y: u32, x: u32, cell: &mut NcCell) -> NcResult<u32> {
         let bytes = unsafe { c_api::ncplane_at_yx_cell(self, y as i32, x as i32, cell) };
         error![
             bytes,
@@ -571,7 +571,7 @@ impl NcPlane {
     /// The reference is invalidated if this `NcPlane` is destroyed.
     ///
     /// *C style function: [ncplane_base()][c_api::ncplane_base].*
-    pub fn base(&mut self) -> NcResult<NcCell> {
+    pub fn base(&self) -> NcResult<NcCell> {
         let mut cell = NcCell::new();
         let res = unsafe { c_api::ncplane_base(self, &mut cell) };
         error![res, "NcPlane.base()", cell]
@@ -650,7 +650,7 @@ impl NcPlane {
     ///
     /// *C style function: [ncplane_contents()][c_api::ncplane_contents].*
     pub fn contents(
-        &mut self,
+        &self,
         beg_y: Option<u32>,
         beg_x: Option<u32>,
         len_y: Option<u32>,
