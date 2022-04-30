@@ -92,6 +92,19 @@ mod std_impls {
     }
 }
 
+impl NcAlpha {
+    /// Displays the short name identifier of the alpha value.
+    pub fn display_short(&self) -> &str {
+        use NcAlpha::*;
+        match self {
+            Blend => "B",
+            HighContrast => "H",
+            Opaque => "O",
+            Transparent => "T",
+        }
+    }
+}
+
 pub(crate) mod c_api {
     use crate::c_api::ffi;
 

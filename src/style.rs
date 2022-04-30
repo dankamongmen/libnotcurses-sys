@@ -23,7 +23,7 @@
 /// [`NcPlane.pulse`]: crate::NcPlane#method.pulse
 /// [`NcPlane`]: crate::NcPlane
 #[repr(transparent)]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, PartialEq, Eq)]
 pub struct NcStyle(pub c_api::NcStyle_u16);
 
 /// # Flags
@@ -52,10 +52,23 @@ impl NcStyle {
 
 mod std_impls {
     use super::{c_api::NcStyle_u16, NcStyle};
+    use crate::Nc;
+    use std::fmt;
 
     impl Default for NcStyle {
         fn default() -> Self {
             Self::None
+        }
+    }
+
+    impl fmt::Display for NcStyle {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "{}", Nc::str_styles(*self))
+        }
+    }
+    impl fmt::Debug for NcStyle {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "Style::{}", self)
         }
     }
 
@@ -71,7 +84,7 @@ mod std_impls {
     }
 
     crate::unit_impl_ops![bitwise; NcStyle, NcStyle_u16];
-    crate::unit_impl_fmt![bases+display; NcStyle];
+    crate::unit_impl_fmt![bases; NcStyle];
 }
 
 /// # Methods

@@ -380,7 +380,7 @@ pub const fn nccell_wide_left_p(cell: &NcCell) -> bool {
 
 /// Copies the UTF8-encoded `EGC` out of the [`NcCell`], whether simple or complex.
 ///
-/// The result is not tied to the [NcPlane],
+/// The result is not tied to the [`NcPlane`],
 /// and persists across erases and destruction.
 ///
 /// *Method: NcCell.[strdup()][NcCell#method.strdup].*

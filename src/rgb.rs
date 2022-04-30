@@ -33,25 +33,31 @@ pub struct NcRgb(pub c_api::NcRgb_u32);
 /// [`NcRgba`]: crate::NcRgba
 /// [`NcChannel`]: crate::NcChannel
 #[repr(transparent)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Default, PartialEq, Eq)]
 pub struct NcRgba(pub c_api::NcRgba_u32);
 
 mod std_impls {
-    use std::fmt;
     use super::{
         c_api::{NcRgb_u32, NcRgba_u32},
         NcRgb, NcRgba,
     };
+    use std::fmt;
 
     crate::from_primitive![NcRgb, NcRgb_u32];
     crate::unit_impl_from![NcRgb, NcRgb_u32];
-    crate::unit_impl_fmt![bases+display; NcRgb];
+    crate::unit_impl_fmt![bases; NcRgb];
 
-    impl fmt::Debug for NcRgb {
+    impl fmt::Display for NcRgb {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "Rgb({self:06X})")
+            write!(f, "{self:06X}")
         }
     }
+    impl fmt::Debug for NcRgb {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "Rgb({self})")
+        }
+    }
+
     impl From<[u8; 3]> for NcRgb {
         fn from(array: [u8; 3]) -> Self {
             Self(
@@ -87,9 +93,20 @@ mod std_impls {
         }
     }
 
+    impl fmt::Display for NcRgba {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "{self:08X}")
+        }
+    }
+    impl fmt::Debug for NcRgba {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "Rgba({self})")
+        }
+    }
+
     crate::from_primitive![NcRgba, NcRgba_u32];
     crate::unit_impl_from![NcRgba, NcRgba_u32];
-    crate::unit_impl_fmt![bases+display; NcRgba];
+    crate::unit_impl_fmt![bases; NcRgba];
 }
 
 pub(crate) mod c_api {
