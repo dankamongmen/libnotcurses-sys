@@ -33,15 +33,15 @@ fn main() -> NcResult<()> {
                     input.char()
                 )?;
             }
-            NcReceived::Event(ev) => {
+            NcReceived::Key(key) => {
                 putstrln!(
                     splane,
-                    "event: {0:?}\n  {1:?} {2:?}\n",
-                    ev.name(),
+                    "key: {0:?}\n  {1:?} {2:?}\n",
+                    key.name(),
                     input,
                     input.char()
                 )?;
-                match ev {
+                match key {
                     NcKey::F01 => break,
                     _ => (),
                 }

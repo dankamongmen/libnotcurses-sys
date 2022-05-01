@@ -14,7 +14,7 @@ pub enum NcReceived {
     NoInput,
 
     /// A synthesized event was received.
-    Event(NcKey),
+    Key(NcKey),
 
     /// A valid [`char`] was received.
     Char(char),
@@ -56,7 +56,7 @@ mod std_impls {
             use NcReceived::*;
             match r {
                 Char(c) => c.into(),
-                Event(e) => e.into(),
+                Key(k) => k.into(),
                 NoInput => 0,
             }
         }
@@ -68,7 +68,7 @@ mod std_impls {
             if num == 0 {
                 NoInput
             } else if NcKey::is(num) {
-                Event(NcKey::new(num).unwrap())
+                Key(NcKey::new(num).unwrap())
             } else if let Some(c) = core::char::from_u32(num) {
                 Char(c)
             } else {

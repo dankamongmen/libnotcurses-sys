@@ -165,7 +165,7 @@ macro_rules! printf {
 macro_rules! putstr {
     ($plane:ident, $($args:tt)*) => {
         {
-            let res = $plane.putstr(&format![$text, $($args)*])?;
+            let res = $plane.putstr(&format![$($args)*])?;
             $plane.render()?;
             $plane.rasterize()?;
             Ok(res)
@@ -202,9 +202,9 @@ macro_rules! putstrln {
             Ok(())
         }
     };
-    ($plane:ident, $text:literal, $($args:tt)*) => {
+    ($plane:ident, $($args:tt)*) => {
         {
-            let res = $plane.putstrln(&format![$text, $($args)*])?;
+            let res = $plane.putstrln(&format![$($args)*])?;
             $plane.render()?;
             $plane.rasterize()?;
             Ok(res)

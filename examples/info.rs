@@ -3,7 +3,7 @@
 use libnotcurses_sys::*;
 
 fn main() -> NcResult<()> {
-    let nc = unsafe { Nc::new_cli_silent()? };
+    let nc = unsafe { Nc::new_cli()? };
     let splane = unsafe { nc.stdplane() };
     splane.set_scrolling(true);
 

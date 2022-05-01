@@ -74,50 +74,54 @@ impl NcOptions {
 impl Nc {
     /// New notcurses context.
     ///
+    /// Has the [`SuppressBanners`] flag enabled.
+    ///
     /// # Safety
     /// You can't have multiple simultaneous `Nc` instances in the same thread.
     pub unsafe fn new<'a>() -> NcResult<&'a mut Nc> {
-        Self::with_flags(NcFlag::None)
+        Self::with_flags(NcFlag::SuppressBanners)
     }
 
     /// New notcurses context in CLI mode.
     ///
-    /// Has the [`CliMode`] flag enabled.
+    /// Has the [`CliMode`] and [`SuppressBanners`] flags enabled.
     ///
     /// [`CliMode`]: NcFlag#associatedconstant.CliMode
+    /// [`SuppressBanners`]: NcFlag#associatedconstant.SuppressBanners
     ///
     /// # Safety
     /// You can't have multiple simultaneous `Nc` instances in the same thread.
     pub unsafe fn new_cli<'a>() -> NcResult<&'a mut Nc> {
-        Self::with_flags(NcFlag::CliMode)
-    }
-
-    /// New notcurses context, without banners.
-    ///
-    /// It has the [`SuppressBanners`] flag enabled.
-    ///
-    /// [`SuppressBanners`]: NcFlag#associatedconstant.SuppressBanners
-    ///
-    /// # Safety
-    /// You can't have multiple simultaneous `Nc` instances in the same thread.
-    pub unsafe fn new_silent<'a>() -> NcResult<&'a mut Nc> {
-        Self::with_flags(NcFlag::SuppressBanners)
-    }
-
-    /// New notcurses context in CLI mode, without banners.
-    ///
-    /// It has the [`CliMode`] and [`SuppressBanners`] flags enabled.
-    ///
-    /// [`CliMode`]: NcFlag#associatedconstant.CliMode
-    /// [`SuppressBanners`]: NcFlag#associatedconstant.SuppressBanners
-    ///
-    /// # Safety
-    /// You can't have multiple simultaneous `Nc` instances in the same thread.
-    pub unsafe fn new_cli_silent<'a>() -> NcResult<&'a mut Nc> {
         Self::with_flags(NcFlag::CliMode | NcFlag::SuppressBanners)
     }
 
-    /// New notcurses context, expects [`NcFlag`].
+    /// New notcurses context, with banners.
+    ///
+    /// It prints the version information banner at initialization
+    /// and the performance information banner at finalization.
+    ///
+    /// # Safety
+    /// You can't have multiple simultaneous `Nc` instances in the same thread.
+    pub unsafe fn with_banners<'a>() -> NcResult<&'a mut Nc> {
+        Self::with_flags(NcFlag::None)
+    }
+
+    /// New notcurses context in CLI mode, with banners.
+    ///
+    /// It prints the version information banner at initialization
+    /// and the performance information banner at finalization.
+    ///
+    /// It has the [`CliMode`] flag enabled.
+    ///
+    /// [`CliMode`]: NcFlag#associatedconstant.CliMode
+    ///
+    /// # Safety
+    /// You can't have multiple simultaneous `Nc` instances in the same thread.
+    pub unsafe fn with_banners_cli<'a>() -> NcResult<&'a mut Nc> {
+        Self::with_flags(NcFlag::CliMode)
+    }
+
+    /// New notcurses context, expecting `flags`.
     ///
     /// # Safety
     /// You can't have multiple simultaneous `Nc` instances in the same thread.
@@ -125,31 +129,31 @@ impl Nc {
         Self::with_options(NcOptions::with_flags(flags.into()))
     }
 
-    /// New notcurses context, expects [NcOptions].
+    /// New notcurses context, expects `flags` and `log_level`.
     ///
     /// # Safety
     /// You can't have multiple simultaneous `Nc` instances in the same thread.
-    pub unsafe fn with_options<'a>(options: NcOptions) -> NcResult<&'a mut Nc> {
-        let res = notcurses_init(&options, null_mut());
-        error_ref_mut![res, &format!["Nc.with_options({:?})", options]]
-    }
-
-    /// New notcurses context, expects [NcLogLevel] and flags.
-    ///
-    /// # Safety
-    /// You can't have multiple simultaneous `Nc` instances in the same thread.
-    pub unsafe fn with_debug<'a>(
-        loglevel: impl Into<NcLogLevel>,
+    pub unsafe fn with_flags_log<'a>(
         flags: impl Into<NcFlag>,
+        log_level: impl Into<NcLogLevel>,
     ) -> NcResult<&'a mut Nc> {
         Self::with_options(NcOptions::with_all_options(
-            loglevel.into(),
+            log_level.into(),
             0,
             0,
             0,
             0,
             flags.into(),
         ))
+    }
+
+    /// New notcurses context, expects [`NcOptions`].
+    ///
+    /// # Safety
+    /// You can't have multiple simultaneous `Nc` instances in the same thread.
+    pub unsafe fn with_options<'a>(options: NcOptions) -> NcResult<&'a mut Nc> {
+        let res = notcurses_init(&options, null_mut());
+        error_ref_mut![res, &format!["Nc.with_options({:?})", options]]
     }
 
     /// Destroys the notcurses context.
