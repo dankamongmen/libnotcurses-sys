@@ -6,7 +6,7 @@ use crate::NcKey;
 ///
 /// # Default
 /// *[`NcReceived::NoInput`]
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, PartialEq, Eq)]
 pub enum NcReceived {
     /// No input was received
     ///
@@ -22,10 +22,34 @@ pub enum NcReceived {
 
 mod std_impls {
     use crate::{NcInput, NcKey, NcReceived};
+    use std::fmt;
 
     impl Default for NcReceived {
         fn default() -> Self {
             Self::NoInput
+        }
+    }
+
+    impl fmt::Display for NcReceived {
+        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+            use NcReceived::*;
+            let string = match self {
+                Key(k) => format!["\"{k}\""],
+                Char(c) => format!["{c:?}"],
+                NoInput => "No".to_string(),
+            };
+            write!(f, "{}", string)
+        }
+    }
+    impl fmt::Debug for NcReceived {
+        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+            use NcReceived::*;
+            let string = match self {
+                Key(k) => format!["Key({k})"],
+                Char(c) => format!["Char({c:?})"],
+                NoInput => "NoInput".to_string(),
+            };
+            write!(f, "Received::{}", string)
         }
     }
 

@@ -5,7 +5,7 @@
 /// Note: *Unknown* and *Press* are considered equivalent for the purposes
 /// of `PartialEq`.
 #[repr(u32)]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, PartialEq, Eq)]
 pub enum NcInputType {
     ///
     Unknown,
@@ -22,10 +22,33 @@ pub enum NcInputType {
 
 mod std_impls {
     use super::{c_api::*, NcInputType};
+    use std::fmt;
 
     impl Default for NcInputType {
         fn default() -> Self {
             Self::Unknown
+        }
+    }
+
+    impl fmt::Display for NcInputType {
+        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+            use NcInputType::*;
+            write!(
+                f,
+                "{}",
+                match self {
+                    Unknown => "Unknown",
+                    Press => "Press",
+                    Repeat => "Repeat",
+                    Release => "Release",
+                }
+            )
+        }
+    }
+
+    impl fmt::Debug for NcInputType {
+        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+            write!(f, "InputType::{}", self)
         }
     }
 

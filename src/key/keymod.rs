@@ -17,7 +17,7 @@
 /// - [`None`][NcKeyMod::None]
 /// - [`Mask`][NcKeyMod::Mask]
 #[repr(transparent)]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, PartialEq, Eq)]
 pub struct NcKeyMod(pub u32);
 
 /// # Flags
@@ -109,10 +109,55 @@ impl NcKeyMod {
 
 mod std_impls {
     use super::NcKeyMod;
+    use std::fmt;
 
     impl Default for NcKeyMod {
         fn default() -> Self {
             Self::None
+        }
+    }
+
+    impl fmt::Display for NcKeyMod {
+        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+            let mut string = String::new();
+
+            if self.none_p() {
+                string += "None ";
+            } else {
+                if self.capslock_p() {
+                    string += "CapsLock+";
+                }
+                if self.numlock_p() {
+                    string += "NumLock+";
+                }
+                if self.ctrl_p() {
+                    string += "Ctrl+";
+                }
+                if self.shift_p() {
+                    string += "Shift+";
+                }
+                if self.alt_p() {
+                    string += "Alt+";
+                }
+                if self.meta_p() {
+                    string += "Meta+";
+                }
+                if self.super_p() {
+                    string += "Super+";
+                }
+                if self.hyper_p() {
+                    string += "Hyper+";
+                }
+            }
+            string.pop();
+
+            write!(f, "{}", string)
+        }
+    }
+
+    impl fmt::Debug for NcKeyMod {
+        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+            write!(f, "KeyMod::{}", self)
         }
     }
 

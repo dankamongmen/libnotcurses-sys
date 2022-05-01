@@ -8,12 +8,29 @@
 ///
 /// See also [`PRETERUNICODEBASE`][c_api::PRETERUNICODEBASE].
 #[repr(transparent)]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, PartialEq, Eq)]
 pub struct NcKey(pub u32);
 
-impl From<NcKey> for u32 {
-    fn from(k: NcKey) -> Self {
-        k.0
+mod std_impls {
+    use super::NcKey;
+    use std::fmt;
+
+    impl fmt::Display for NcKey {
+        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+            write!(f, "{}", self.name())
+        }
+    }
+
+    impl fmt::Debug for NcKey {
+        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+            write!(f, "Key::{}", self)
+        }
+    }
+
+    impl From<NcKey> for u32 {
+        fn from(k: NcKey) -> Self {
+            k.0
+        }
     }
 }
 
@@ -156,6 +173,9 @@ impl NcKey {
     pub const RSuper: NcKey = NcKey(c_api::NCKEY_RSUPER);
     pub const RHyper: NcKey = NcKey(c_api::NCKEY_RHYPER);
     pub const RMeta: NcKey = NcKey(c_api::NCKEY_RMETA);
+    /// `AltGr` in european keyboards
+    pub const L3Shift: NcKey = NcKey(c_api::NCKEY_L3SHIFT);
+    pub const L5Shift: NcKey = NcKey(c_api::NCKEY_L5SHIFT);
 
     // Mouse events. We encode which button was pressed into the number,
     // but position information is embedded in the larger ncinput event:
@@ -346,6 +366,8 @@ impl NcKey {
                 Self::RSuper => "RSuper",
                 Self::RHyper => "RHyper",
                 Self::RMeta => "RMeta",
+                Self::L3Shift => "L3Shift",
+                Self::L5Shift => "L5Shift",
 
                 Self::Motion => "Motion",
                 Self::Button1 => "Button1",
@@ -526,6 +548,9 @@ pub(crate) mod c_api {
     pub const NCKEY_RSUPER: u32 = preterunicode(180);
     pub const NCKEY_RHYPER: u32 = preterunicode(181);
     pub const NCKEY_RMETA: u32 = preterunicode(182);
+    /// `AltGr` in european keyboards
+    pub const NCKEY_L3SHIFT: u32 = preterunicode(183);
+    pub const NCKEY_L5SHIFT: u32 = preterunicode(184);
 
     // Mouse events. We encode which button was pressed into the char,
     // but position information is embedded in the larger ncinput event:

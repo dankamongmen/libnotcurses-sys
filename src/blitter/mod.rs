@@ -45,7 +45,7 @@ mod methods;
 /// [`NcVisualOptionsBuilder`]: crate::NcVisualOptionsBuilder
 #[repr(u32)]
 #[non_exhaustive]
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, PartialEq, Eq)]
 pub enum NcBlitter {
     Default = c_api::NCBLIT_DEFAULT,
 
@@ -116,6 +116,12 @@ mod std_impls {
                     _8x1 => "8x1",
                 }
             )
+        }
+    }
+
+    impl fmt::Debug for NcBlitter {
+        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+            write!(f, "Blitter::{}", self)
         }
     }
 
