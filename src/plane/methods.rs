@@ -942,6 +942,8 @@ impl NcPlane {
     /// Advances the cursor by some positive number of columns (though not
     /// beyond the end of the plane), and this number is returned on success.
     ///
+    /// Newlines are counted as 1 column.
+    ///
     /// On error, a non-positive number is returned, indicating
     /// the number of columns which were written before the error.
     ///

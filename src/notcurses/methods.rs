@@ -431,7 +431,7 @@ impl Nc {
         }
     }
 
-    /// Gets an [`NcReceived`] from input.
+    /// Reads input.
     ///
     /// Provide `None` in `time` to block at length, and otherwise
     /// `Some(`[`NcTime`]`)` to bound blocking.
@@ -460,8 +460,6 @@ impl Nc {
     ///
     /// Will optionally write the event details in `input`.
     ///
-    /// In the case of a valid read, a [`char`] is returned.
-    ///
     /// *C style function: [notcurses_get_blocking()][c_api::notcurses_get_blocking].*
     pub fn get_blocking(&mut self, input: Option<&mut NcInput>) -> NcResult<NcReceived> {
         let res = c_api::notcurses_get_blocking(self, input);
@@ -473,10 +471,6 @@ impl Nc {
     }
 
     /// Reads input without blocking.
-    ///
-    /// In the case of a valid read, a [`char`] is returned.
-    ///
-    /// If no event is ready, returns 0.
     ///
     /// *C style function: [notcurses_get_nblock()][c_api::notcurses_get_nblock].*
     pub fn get_nblock(&mut self, input: Option<&mut NcInput>) -> NcResult<NcReceived> {

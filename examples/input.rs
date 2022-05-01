@@ -1,14 +1,14 @@
 //! `input` example
 
-#[cfg(any(test, doc))]
-use crate::*;
-#[cfg(not(any(test, doc)))]
 use libnotcurses_sys::*;
 
 fn main() -> NcResult<()> {
     let nc = unsafe { Nc::with_flags(NcFlag::SuppressBanners)? };
+
     let splane = unsafe { nc.stdplane() };
     splane.set_scrolling(true);
+
+    nc.mice_enable(NcMiceEvents::All)?;
 
     putstrln!(splane, "Input example.\nPress any key to continue:")?;
     nc.render()?;

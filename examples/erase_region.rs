@@ -4,9 +4,6 @@
 //!
 //! press 'q' to quit at any moment.
 
-#[cfg(any(test, doc))]
-use crate::*;
-#[cfg(not(any(test, doc)))]
 use libnotcurses_sys::*;
 
 /// contains the state of the program

@@ -146,7 +146,7 @@ macro_rules! printf {
 /// rendering and rasterizing the plane afterwards.
 ///
 /// Returns an `NcResult` with the number of columns advanced,
-/// without including newlines.
+/// with newlines counting as 1 column.
 ///
 /// # Example
 /// ```
@@ -155,8 +155,7 @@ macro_rules! printf {
 /// let nc = unsafe { Nc::new_cli()? };
 /// let splane = unsafe { nc.stdplane() };
 /// splane.set_scrolling(true);
-/// putstr!(splane, "hello ")?;
-/// putstr!(splane, " world\n")?;
+/// assert_eq![12, putstr!(splane, "hello\nworld\n")?];
 /// putstr!(splane, "formatted text: {:?}\n", (0, 1.0, "two") )?;
 /// # unsafe { nc.stop()? };
 /// # Ok(())
@@ -164,15 +163,7 @@ macro_rules! printf {
 /// ```
 #[macro_export]
 macro_rules! putstr {
-    ($plane:ident, $text:literal) => {
-        {
-            let res = $plane.putstr($text)?;
-            $plane.render()?;
-            $plane.rasterize()?;
-            Ok(res)
-        }
-    };
-    ($plane:ident, $text:literal, $($args:tt)*) => {
+    ($plane:ident, $($args:tt)*) => {
         {
             let res = $plane.putstr(&format![$text, $($args)*])?;
             $plane.render()?;
@@ -186,7 +177,7 @@ macro_rules! putstr {
 /// rendering and rasterizing the plane afterwards.
 ///
 /// Returns an `NcResult` with the number of columns advanced,
-/// without including newlines.
+/// with newlines counting as 1 column.
 ///
 /// # Example
 /// ```
@@ -195,7 +186,7 @@ macro_rules! putstr {
 /// let nc = unsafe { Nc::new_cli()? };
 /// let splane = unsafe { nc.stdplane() };
 /// splane.set_scrolling(true);
-/// putstrln!(splane, "hello world")?;
+/// assert_eq![12, putstrln!(splane, "hello world")?];
 /// putstrln!(splane, "formatted text: {:?}", (0, 1.0, "two") )?;
 /// # unsafe { nc.stop()? };
 /// # Ok(())
@@ -205,18 +196,10 @@ macro_rules! putstr {
 macro_rules! putstrln {
     ($plane:ident) => {
         {
-            let res = $plane.putln()?;
+            $plane.putln()?;
             $plane.render()?;
             $plane.rasterize()?;
-            Ok(res)
-        }
-    };
-    ($plane:ident, $text:literal) => {
-        {
-            let res = $plane.putstrln($text)?;
-            $plane.render()?;
-            $plane.rasterize()?;
-            Ok(res)
+            Ok(())
         }
     };
     ($plane:ident, $text:literal, $($args:tt)*) => {

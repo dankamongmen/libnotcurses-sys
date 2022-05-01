@@ -1,13 +1,8 @@
 //! `pixel-cell` example.
 //!
 
-#[cfg(not(doc))]
-use rand::{distributions::Uniform, Rng};
-
-#[cfg(any(test, doc))]
-use crate::*;
-#[cfg(not(any(test, doc)))]
 use libnotcurses_sys::*;
+use rand::{distributions::Uniform, Rng};
 
 fn main() -> NcResult<()> {
     let mut nc = unsafe { Nc::new()? };
