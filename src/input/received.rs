@@ -34,7 +34,7 @@ mod std_impls {
         fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
             use NcReceived::*;
             let string = match self {
-                Key(k) => format!["\"{k}\""],
+                Key(k) => format!["{k}"],
                 Char(c) => format!["{c:?}"],
                 NoInput => "No".to_string(),
             };

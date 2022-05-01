@@ -233,6 +233,42 @@ impl NcKey {
         }
     }
 
+    //
+
+    /// Returns true if it's a function key event.
+    pub fn is_function(&self) -> bool {
+        match self.0 {
+            c_api::NCKEY_F00..=c_api::NCKEY_F60 => true,
+            _ => false,
+        }
+    }
+
+    /// Returns true if it's a multimedia key event.
+    pub fn is_media(&self) -> bool {
+        match self.0 {
+            c_api::NCKEY_MEDIA_PLAY..=c_api::NCKEY_MEDIA_MUTE => true,
+            _ => false,
+        }
+    }
+
+    /// Returns true if it's a mouse event.
+    pub fn is_mouse(&self) -> bool {
+        match self.0 {
+            c_api::NCKEY_MOTION..=c_api::NCKEY_BUTTON11 => true,
+            _ => false,
+        }
+    }
+
+    /// Returns true if it's a resize event.
+    pub fn is_resize(&self) -> bool {
+        match self.0 {
+            c_api::NCKEY_RESIZE => true,
+            _ => false,
+        }
+    }
+
+    //
+
     /// Returns the name of the current `NcKey`.
     pub fn name(&self) -> &'static str {
         Self::check_name(self.0)
@@ -575,7 +611,7 @@ pub(crate) mod c_api {
     pub const NCKEY_SIGNAL: u32 = preterunicode(400);
 
     /// Indicates that we have reached the end of input. Any further calls
-    /// will continute to return this immediately.
+    /// will continue to return this immediately.
     pub const NCKEY_EOF: u32 = preterunicode(500);
 
     // Synonyms (so far as we're concerned):
