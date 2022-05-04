@@ -36,7 +36,7 @@ mod std_impls {
             let string = match self {
                 Key(k) => format!["{k}"],
                 Char(c) => format!["{c:?}"],
-                NoInput => "No".to_string(),
+                NoInput => "NoInput".to_string(),
             };
             write!(f, "{}", string)
         }

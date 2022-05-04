@@ -1651,9 +1651,7 @@ impl NcPlane {
     /// Gets a mutable reference to the [`Nc`] context of this `NcPlane`.
     ///
     /// # Safety
-    /// You must be careful not to end up with multiple exclusive references
-    /// to the same `Nc` context, or with one exclusive reference and one
-    /// or more shared references.
+    /// You have now multiple exclusive references to the same notcurses context, congrats!
     ///
     /// *C style function: [ncplane_notcurses()][c_api::ncplane_notcurses].*
     pub unsafe fn notcurses<'a>(&self) -> NcResult<&'a mut Nc> {
@@ -1663,8 +1661,7 @@ impl NcPlane {
     /// Gets an immutable reference to the [`Nc`] context of this `NcPlane`.
     ///
     /// # Safety
-    /// You must be careful not to end up with a mix of exclusive references
-    /// and shared references to the standard plane.
+    /// You have now both exclusive and shared references to the same notcurses context, congrats!
     ///
     /// *C style function: [ncplane_notcurses_const()][c_api::ncplane_notcurses_const].*
     pub unsafe fn notcurses_const<'a>(&self) -> NcResult<&'a Nc> {
