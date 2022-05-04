@@ -109,8 +109,9 @@ impl NcStyle {
     }
 
     /// Returns true if the current style has included the `other_style`.
-    pub fn has(&self, other: impl Into<NcStyle> + Copy) -> bool {
-        (self.0 & other.into().0) == other.into().0
+    pub fn has(&self, other: impl Into<NcStyle>) -> bool {
+        let other = other.into();
+        (self.0 & other.0) == other.0
     }
 
     /// Adds the `other_style` to the current style.

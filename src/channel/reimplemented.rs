@@ -30,15 +30,15 @@ pub fn ncchannel_alpha(channel: impl Into<NcChannel_u32>) -> NcAlpha_u32 {
 #[inline]
 pub fn ncchannel_set_alpha(
     channel: &mut NcChannel_u32,
-    alpha: impl Into<NcAlpha_u32> + Copy,
+    alpha: impl Into<NcAlpha_u32>,
 ) -> NcResult_i32 {
-    // let alpha_u32 = c_api::NcAlpha_u32::from(alpha);
+    let alpha = alpha.into();
 
-    if (alpha.into() & !c_api::NC_BG_ALPHA_MASK) != 0 {
+    if (alpha & !c_api::NC_BG_ALPHA_MASK) != 0 {
         return c_api::NCRESULT_ERR;
     }
-    *channel = alpha.into() | (*channel & !c_api::NC_BG_ALPHA_MASK);
-    if alpha.into() != c_api::NCALPHA_OPAQUE {
+    *channel = alpha | (*channel & !c_api::NC_BG_ALPHA_MASK);
+    if alpha != c_api::NCALPHA_OPAQUE {
         *channel |= c_api::NC_BGDEFAULT_MASK;
     }
     c_api::NCRESULT_OK
@@ -82,13 +82,14 @@ pub fn ncchannels_set_fg_alpha(
 #[inline]
 pub fn ncchannels_set_bg_alpha(
     channels: &mut NcChannels_u64,
-    alpha: impl Into<NcAlpha_u32> + Copy,
+    alpha: impl Into<NcAlpha_u32>,
 ) -> NcResult_i32 {
-    if alpha.into() == c_api::NCALPHA_HIGHCONTRAST {
+    let alpha = alpha.into();
+    if alpha == c_api::NCALPHA_HIGHCONTRAST {
         return c_api::NCRESULT_ERR;
     }
     let mut channel = ncchannels_bchannel(*channels);
-    if ncchannel_set_alpha(&mut channel, alpha.into()) < 0 {
+    if ncchannel_set_alpha(&mut channel, alpha) < 0 {
         return c_api::NCRESULT_ERR;
     }
     ncchannels_set_bchannel(channels, channel);
@@ -123,9 +124,10 @@ pub fn ncchannels_fchannel(channels: impl Into<NcChannels_u64>) -> NcChannel_u32
 ///
 /// *Method: NcChannels.[channels()][NcChannels#method.channels]*
 #[inline]
-pub fn ncchannels_channels(channels: impl Into<NcChannels_u64> + Copy) -> NcChannels_u64 {
-    ncchannels_bchannel(channels.into()) as NcChannels_u64
-        | (ncchannels_fchannel(channels.into()) as NcChannels_u64) << 32
+pub fn ncchannels_channels(channels: impl Into<NcChannels_u64>) -> NcChannels_u64 {
+    let channels = channels.into();
+    ncchannels_bchannel(channels) as NcChannels_u64
+        | (ncchannels_fchannel(channels) as NcChannels_u64) << 32
 }
 
 /// Sets the background alpha and coloring bits of the [`NcChannels_u64`]
@@ -164,16 +166,11 @@ pub fn ncchannels_set_fchannel(
 #[inline]
 pub fn ncchannels_set_channels(
     channels: &mut NcChannels_u64,
-    other_channels: impl Into<NcChannels_u64> + Copy,
+    other: impl Into<NcChannels_u64>,
 ) -> NcChannels_u64 {
-    ncchannels_set_bchannel(
-        channels,
-        (other_channels.into() & 0xffffffff_u64) as NcChannel_u32,
-    );
-    ncchannels_set_fchannel(
-        channels,
-        ((other_channels.into() >> 32) & 0xffffffff_u64) as NcChannel_u32,
-    );
+    let other = other.into();
+    ncchannels_set_bchannel(channels, (other & 0xffffffff_u64) as NcChannel_u32);
+    ncchannels_set_fchannel(channels, ((other >> 32) & 0xffffffff_u64) as NcChannel_u32);
     *channels
 }
 
@@ -199,15 +196,16 @@ pub fn ncchannels_combine(
 ///
 /// *Method: NcChannels.[reverse()][NcChannels#method.reverse]*
 #[inline]
-pub fn ncchannels_reverse(channels: impl Into<NcChannels_u64> + Copy) -> NcChannels_u64 {
-    let raw = ((ncchannels_bchannel(channels.into()) as NcChannels_u64) << 32)
-        + ncchannels_fchannel(channels.into()) as NcChannels_u64;
+pub fn ncchannels_reverse(channels: impl Into<NcChannels_u64>) -> NcChannels_u64 {
+    let channels = channels.into();
+    let raw = ((ncchannels_bchannel(channels) as NcChannels_u64) << 32)
+        + ncchannels_fchannel(channels) as NcChannels_u64;
     let statemask = ((c_api::NC_NOBACKGROUND_MASK | c_api::NC_BG_ALPHA_MASK as NcChannels_u64)
         << 32)
         | c_api::NC_NOBACKGROUND_MASK
         | c_api::NC_BG_ALPHA_MASK as NcChannels_u64;
     let mut ret = (raw as NcChannels_u64) & !statemask;
-    ret |= channels.into() & statemask;
+    ret |= channels & statemask;
     if ncchannels_bg_alpha(ret) != c_api::NCALPHA_OPAQUE && !ncchannels_bg_rgb_p(ret) {
         ncchannels_set_bg_alpha(&mut ret, c_api::NCALPHA_OPAQUE);
     }
@@ -289,15 +287,16 @@ pub fn ncchannel_set_b(channel: &mut NcChannel_u32, b: u8) -> NcChannel_u32 {
 /// *Method: NcChannel.[rgb()][NcChannel#method.rgb]*
 #[inline]
 pub fn ncchannel_rgb8(
-    channel: impl Into<NcChannel_u32> + Copy,
+    channel: impl Into<NcChannel_u32>,
     r: &mut u8,
     g: &mut u8,
     b: &mut u8,
 ) -> NcChannel_u32 {
-    *r = ncchannel_r(channel.into());
-    *g = ncchannel_g(channel.into());
-    *b = ncchannel_b(channel.into());
-    channel.into()
+    let channel = channel.into();
+    *r = ncchannel_r(channel);
+    *g = ncchannel_g(channel);
+    *b = ncchannel_b(channel);
+    channel
 }
 
 /// Sets the three RGB components an [`NcChannel_u32`], and marks it as NOT using the
@@ -431,8 +430,9 @@ pub fn ncchannel_rgb(channel: impl Into<NcChannel_u32>) -> NcRgb_u32 {
 ///
 /// *Method: NcChannel.[rgb_p()][NcChannel#method.rgb_p]*
 #[inline]
-pub fn ncchannel_rgb_p(channel: impl Into<NcChannel_u32> + Copy) -> bool {
-    !(ncchannel_default_p(channel.into()) | ncchannel_palindex_p(channel.into()))
+pub fn ncchannel_rgb_p(channel: impl Into<NcChannel_u32>) -> bool {
+    let channel = channel.into();
+    !(ncchannel_default_p(channel) | ncchannel_palindex_p(channel))
 }
 
 /// Sets the [`NcRgb_u32`] of an [`NcChannel_u32`], and marks it as NOT using
@@ -623,8 +623,9 @@ pub fn ncchannel_set_palindex(channel: &mut NcChannel_u32, index: impl Into<NcPa
 ///
 /// *Method: NcChannel.[palindex_p()][NcChannel#method.palindex_p]*
 #[inline]
-pub fn ncchannel_palindex_p(channel: impl Into<NcChannel_u32> + Copy) -> bool {
-    !ncchannel_default_p(channel.into()) && (channel.into() & c_api::NC_BG_PALETTE) != 0
+pub fn ncchannel_palindex_p(channel: impl Into<NcChannel_u32>) -> bool {
+    let channel = channel.into();
+    !ncchannel_default_p(channel) && (channel & c_api::NC_BG_PALETTE) != 0
 }
 
 /// Gets the [`NcPaletteIndex`] from the foreground [`NcChannel_u32`].

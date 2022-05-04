@@ -68,17 +68,18 @@ impl NcVisual {
     /// *C style function: [ncvisual_from_plane()][c_api::ncvisual_from_plane].*
     pub fn from_plane<'a>(
         plane: &NcPlane,
-        blitter: impl Into<NcBlitter> + Copy,
+        blitter: impl Into<NcBlitter>,
         beg_y: Option<u32>,
         beg_x: Option<u32>,
         len_y: Option<u32>,
         len_x: Option<u32>,
     ) -> NcResult<&'a mut NcVisual> {
+        let blitter = blitter.into();
         error_ref_mut![
             unsafe {
                 c_api::ncvisual_from_plane(
                     plane,
-                    blitter.into().into(),
+                    blitter.into(),
                     beg_y.unwrap_or(u32::MAX) as i32,
                     beg_x.unwrap_or(u32::MAX) as i32,
                     len_y.unwrap_or(0),
@@ -87,11 +88,7 @@ impl NcVisual {
             },
             &format!(
                 "NcVisual::from_file(plane, {}, {:?}, {:?}, {:?}, {:?})",
-                blitter.into(),
-                beg_y,
-                beg_x,
-                len_y,
-                len_x
+                blitter, beg_y, beg_x, len_y, len_x
             )
         ]
     }
@@ -510,10 +507,11 @@ impl NcVisual {
     /// Sets the specified pixel.
     ///
     /// *C style function: [ncvisual_set_yx()][c_api::ncvisual_set_yx].*
-    pub fn set_yx(&mut self, y: u32, x: u32, pixel: impl Into<NcPixel> + Copy) -> NcResult<()> {
+    pub fn set_yx(&mut self, y: u32, x: u32, pixel: impl Into<NcPixel>) -> NcResult<()> {
+        let pixel = pixel.into();
         error![
-            unsafe { c_api::ncvisual_set_yx(self, y, x, pixel.into().into()) },
-            &format!["NcVisual.set_yx({}, {}, {:?})", y, x, pixel.into()]
+            unsafe { c_api::ncvisual_set_yx(self, y, x, pixel.into()) },
+            &format!["NcVisual.set_yx({}, {}, {:?})", y, x, pixel]
         ]
     }
 

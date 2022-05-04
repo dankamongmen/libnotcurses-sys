@@ -119,20 +119,22 @@ impl NcPlane {
     /// Sets the foreground [`NcAlpha`] from this `NcPlane`.
     ///
     /// *C style function: [ncplane_set_fg_alpha()][c_api::ncplane_set_fg_alpha].*
-    pub fn set_fg_alpha(&mut self, alpha: impl Into<NcAlpha> + Copy) -> NcResult<()> {
+    pub fn set_fg_alpha(&mut self, alpha: impl Into<NcAlpha>) -> NcResult<()> {
+        let alpha = alpha.into();
         error![
-            unsafe { c_api::ncplane_set_fg_alpha(self, alpha.into() as i32) },
-            &format!("NcPlane.set_fg_alpha({})", alpha.into())
+            unsafe { c_api::ncplane_set_fg_alpha(self, alpha as i32) },
+            &format!("NcPlane.set_fg_alpha({})", alpha)
         ]
     }
 
     /// Sets the background [`NcAlpha`] for this `NcPlane`.
     ///
     /// *C style function: [ncplane_set_bg_alpha()][c_api::ncplane_set_bg_alpha].*
-    pub fn set_bg_alpha(&mut self, alpha: impl Into<NcAlpha> + Copy) -> NcResult<()> {
+    pub fn set_bg_alpha(&mut self, alpha: impl Into<NcAlpha>) -> NcResult<()> {
+        let alpha = alpha.into();
         error![
-            unsafe { c_api::ncplane_set_bg_alpha(self, alpha.into() as i32) },
-            &format!("NcPlane.set_bg_alpha({})", alpha.into())
+            unsafe { c_api::ncplane_set_bg_alpha(self, alpha as i32) },
+            &format!("NcPlane.set_bg_alpha({})", alpha)
         ]
     }
 }
@@ -206,11 +208,12 @@ impl NcPlane {
         x: Option<u32>,
         len_y: Option<u32>,
         len_x: Option<u32>,
-        ul: impl Into<NcChannels> + Copy,
-        ur: impl Into<NcChannels> + Copy,
-        ll: impl Into<NcChannels> + Copy,
-        lr: impl Into<NcChannels> + Copy,
+        ul: impl Into<NcChannels>,
+        ur: impl Into<NcChannels>,
+        ll: impl Into<NcChannels>,
+        lr: impl Into<NcChannels>,
     ) -> NcResult<u32> {
+        let (ul, ur, ll, lr) = (ul.into(), ur.into(), ll.into(), lr.into());
         let res = unsafe {
             c_api::ncplane_stain(
                 self,
@@ -218,24 +221,17 @@ impl NcPlane {
                 x.unwrap_or(u32::MAX) as i32, // "
                 len_y.unwrap_or(0),
                 len_x.unwrap_or(0),
-                ul.into().0,
-                ur.into().0,
-                ll.into().0,
-                lr.into().0,
+                ul.0,
+                ur.0,
+                ll.0,
+                lr.0,
             )
         };
         error![
             res,
             &format!(
                 "NcPlane.stain({:?}, {:?}, {:?}, {:?}, {:0X}, {:0X}, {:0X}, {:0X})",
-                y,
-                x,
-                len_y,
-                len_x,
-                ul.into(),
-                ur.into(),
-                ll.into(),
-                lr.into()
+                y, x, len_y, len_x, ul, ur, ll, lr
             ),
             res as u32
         ]
@@ -389,8 +385,9 @@ impl NcPlane {
         x: Option<u32>,
         len_y: Option<u32>,
         len_x: Option<u32>,
-        stylemask: impl Into<NcStyle> + Copy,
+        style: impl Into<NcStyle>,
     ) -> NcResult<u32> {
+        let style = style.into();
         let res = unsafe {
             c_api::ncplane_format(
                 self,
@@ -398,18 +395,14 @@ impl NcPlane {
                 x.unwrap_or(u32::MAX) as i32, // "
                 len_y.unwrap_or(0),
                 len_x.unwrap_or(0),
-                stylemask.into().into(),
+                style.into(),
             )
         };
         error![
             res,
             &format!(
                 "NcPlane.format({:?}, {:?}, {:?}, {:?}, {:0X})",
-                y,
-                x,
-                len_y,
-                len_x,
-                stylemask.into()
+                y, x, len_y, len_x, style
             ),
             res as u32
         ]
@@ -597,26 +590,15 @@ impl NcPlane {
     pub fn set_base(
         &mut self,
         egc: &str,
-        stylemask: impl Into<NcStyle> + Copy,
-        channels: impl Into<NcChannels> + Copy,
+        style: impl Into<NcStyle>,
+        channels: impl Into<NcChannels>,
     ) -> NcResult<u32> {
+        let (style, channels) = (style.into(), channels.into());
         let cs = cstring![egc];
-        let res = unsafe {
-            c_api::ncplane_set_base(
-                self,
-                cs.as_ptr(),
-                stylemask.into().into(),
-                channels.into().0,
-            )
-        };
+        let res = unsafe { c_api::ncplane_set_base(self, cs.as_ptr(), style.into(), channels.0) };
         error![
             res,
-            &format!(
-                "NcPlane.set_base({:?}, {:0X}, {:0X})",
-                egc,
-                stylemask.into(),
-                channels.into()
-            ),
+            &format!("NcPlane.set_base({:?}, {:0X}, {:0X})", egc, style, channels),
             res as u32
         ]
     }
@@ -1016,18 +998,14 @@ impl NcPlane {
     pub fn putstr_aligned(
         &mut self,
         y: Option<u32>,
-        align: impl Into<NcAlign> + Copy,
+        align: impl Into<NcAlign>,
         string: &str,
     ) -> NcResult<u32> {
-        let res = c_api::ncplane_putstr_aligned(self, y, align.into(), string);
+        let align = align.into();
+        let res = c_api::ncplane_putstr_aligned(self, y, align, string);
         error![
             res,
-            &format!(
-                "NcPlane.putstr_aligned({:?}, {}, {:?})",
-                y,
-                align.into(),
-                string
-            ),
+            &format!("NcPlane.putstr_aligned({:?}, {}, {:?})", y, align, string),
             res as u32
         ]
     }
@@ -1069,9 +1047,10 @@ impl NcPlane {
     pub fn putstr_aligned_stained(
         &mut self,
         y: u32,
-        align: impl Into<NcAlign> + Copy,
+        align: impl Into<NcAlign>,
         string: &str,
     ) -> NcResult<u32> {
+        let align = align.into();
         let width = string.chars().count() as u32;
         let xpos = self.halign(align, width)?;
         self.cursor_move_yx(y, xpos)?;
@@ -1080,9 +1059,7 @@ impl NcPlane {
             res,
             &format!(
                 "NcPlane.putstr_aligned_stained({}, {}, {:?})",
-                y,
-                align.into(),
-                string
+                y, align, string
             ),
             res as u32
         ]
@@ -1150,28 +1127,20 @@ impl NcPlane {
     pub fn putnstr_aligned(
         &mut self,
         y: u32,
-        align: impl Into<NcAlign> + Copy,
+        align: impl Into<NcAlign>,
         num_bytes: usize,
         string: &str,
     ) -> NcResult<u32> {
+        let align = align.into();
         let cs = cstring![string];
         let res = unsafe {
-            c_api::ncplane_putnstr_aligned(
-                self,
-                y as i32,
-                align.into().into(),
-                num_bytes,
-                cs.as_ptr(),
-            )
+            c_api::ncplane_putnstr_aligned(self, y as i32, align.into(), num_bytes, cs.as_ptr())
         };
         error![
             res,
             &format!(
                 "NcPlane.putnstr_aligned({}, {}, {}, {:?})",
-                y,
-                align.into(),
-                num_bytes,
-                string
+                y, align, num_bytes, string
             ),
             res as u32
         ]
@@ -1788,11 +1757,12 @@ impl NcPlane {
     ///
     /// *C style function: [ncplane_halign()][c_api::ncplane_halign].*
     #[inline]
-    pub fn halign(&self, align: impl Into<NcAlign> + Copy, numcols: u32) -> NcResult<u32> {
-        let res = c_api::ncplane_halign(self, align.into(), numcols);
+    pub fn halign(&self, align: impl Into<NcAlign>, numcols: u32) -> NcResult<u32> {
+        let align = align.into();
+        let res = c_api::ncplane_halign(self, align, numcols);
         error![
             res,
-            &format!("NcPlane.halign({:?}, {})", align.into(), numcols),
+            &format!("NcPlane.halign({:?}, {})", align, numcols),
             res as u32
         ]
     }
@@ -1805,11 +1775,12 @@ impl NcPlane {
     ///
     /// *C style function: [ncplane_valign()][c_api::ncplane_valign].*
     #[inline]
-    pub fn valign(&self, align: impl Into<NcAlign> + Copy, numrows: u32) -> NcResult<u32> {
-        let res = c_api::ncplane_valign(self, align.into(), numrows);
+    pub fn valign(&self, align: impl Into<NcAlign>, numrows: u32) -> NcResult<u32> {
+        let align = align.into();
+        let res = c_api::ncplane_valign(self, align, numrows);
         error![
             res,
-            &format!("NcPlane.valign({:?}, {})", align.into(), numrows),
+            &format!("NcPlane.valign({:?}, {})", align, numrows),
             res as u32
         ]
     }
@@ -1883,12 +1854,14 @@ impl NcPlane {
     /// *C style function: [ncplane_as_rgba()][c_api::ncplane_as_rgba].*
     pub fn as_rgba(
         &mut self,
-        blitter: impl Into<NcBlitter> + Copy,
+        blitter: impl Into<NcBlitter>,
         beg_y: Option<u32>,
         beg_x: Option<u32>,
         len_y: Option<u32>,
         len_x: Option<u32>,
     ) -> NcResult<&mut [NcRgba]> {
+        let blitter = blitter.into();
+
         // pixel geometry
         let mut pxdim_y = 0;
         let mut pxdim_x = 0;
@@ -1896,7 +1869,7 @@ impl NcPlane {
         let res_array = unsafe {
             c_api::ncplane_as_rgba(
                 self,
-                blitter.into().into(),
+                blitter.into(),
                 beg_y.unwrap_or(u32::MAX) as i32, // -1_i32
                 beg_x.unwrap_or(u32::MAX) as i32, // "
                 len_y.unwrap_or(0),
@@ -1910,11 +1883,7 @@ impl NcPlane {
             res_array,
             &format![
                 "NcPlane.rgba({}, {:?}, {:?}, {:?}, {:?})",
-                blitter.into(),
-                beg_y,
-                beg_x,
-                len_y,
-                len_x
+                blitter, beg_y, beg_x, len_y, len_x
             ],
             from_raw_parts_mut(res_array as *mut NcRgba, (pxdim_y * pxdim_x) as usize)
         ]

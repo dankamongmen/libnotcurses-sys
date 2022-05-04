@@ -474,8 +474,8 @@ pub fn nccell_prime(
 #[inline]
 pub fn nccells_load_box(
     plane: &mut NcPlane,
-    style: impl Into<NcStyle_u16> + Copy,
-    channels: impl Into<NcChannels_u64> + Copy,
+    style: impl Into<NcStyle_u16>,
+    channels: impl Into<NcChannels_u64>,
     ul: &mut NcCell,
     ur: &mut NcCell,
     ll: &mut NcCell,
@@ -484,34 +484,34 @@ pub fn nccells_load_box(
     vl: &mut NcCell,
     gcluster: &str,
 ) -> NcResult_i32 {
-    assert![gcluster.len() >= 6]; // DEBUG
+    let (style, channels) = (style.into(), channels.into());
 
     // CHECK: mutable copy for pointer arithmetics
 
     let cs = cstring![gcluster];
     let mut gclu = cs.as_ptr();
 
-    let mut ulen: NcResult_i32 = nccell_prime(plane, ul, gcluster, style.into(), channels.into());
+    let mut ulen: NcResult_i32 = nccell_prime(plane, ul, gcluster, style, channels);
 
     if ulen > 0 {
         gclu = unsafe { gclu.offset(ulen as isize) };
-        ulen = nccell_prime(plane, ur, gcluster, style.into(), channels.into());
+        ulen = nccell_prime(plane, ur, gcluster, style, channels);
 
         if ulen > 0 {
             gclu = unsafe { gclu.offset(ulen as isize) };
-            ulen = nccell_prime(plane, ll, gcluster, style.into(), channels.into());
+            ulen = nccell_prime(plane, ll, gcluster, style, channels);
 
             if ulen > 0 {
                 gclu = unsafe { gclu.offset(ulen as isize) };
-                ulen = nccell_prime(plane, lr, gcluster, style.into(), channels.into());
+                ulen = nccell_prime(plane, lr, gcluster, style, channels);
 
                 if ulen > 0 {
                     gclu = unsafe { gclu.offset(ulen as isize) };
-                    ulen = nccell_prime(plane, hl, gcluster, style.into(), channels.into());
+                    ulen = nccell_prime(plane, hl, gcluster, style, channels);
 
                     if ulen > 0 {
                         let _gclu = unsafe { gclu.offset(ulen as isize) };
-                        ulen = nccell_prime(plane, vl, gcluster, style.into(), channels.into());
+                        ulen = nccell_prime(plane, vl, gcluster, style, channels);
 
                         if ulen > 0 {
                             return c_api::NCRESULT_OK;

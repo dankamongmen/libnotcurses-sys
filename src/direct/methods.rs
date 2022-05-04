@@ -95,18 +95,19 @@ impl NcDirect {
     pub fn render_frame<'a>(
         &mut self,
         filename: &str,
-        blitter: impl Into<NcBlitter> + Copy,
-        scale: impl Into<NcScale> + Copy,
+        blitter: impl Into<NcBlitter>,
+        scale: impl Into<NcScale>,
         max_y: u32,
         max_x: u32,
     ) -> NcResult<&'a mut NcPlane> {
+        let (blitter, scale) = (blitter.into(), scale.into());
         let cs = cstring![filename];
         let res = unsafe {
             c_api::ncdirect_render_frame(
                 self,
                 cs.as_ptr(),
-                blitter.into().into(),
-                scale.into().into(),
+                blitter.into(),
+                scale.into(),
                 max_y as i32,
                 max_x as i32,
             )
@@ -115,9 +116,7 @@ impl NcDirect {
             res,
             &format!(
                 "NcDirect.render_frame({:?}, {:?}, {:?})",
-                filename,
-                blitter.into(),
-                scale.into()
+                filename, blitter, scale
             )
         ]
     }
@@ -135,27 +134,25 @@ impl NcDirect {
     pub fn render_image(
         &mut self,
         filename: &str,
-        align: impl Into<NcAlign> + Copy,
-        blitter: impl Into<NcBlitter> + Copy,
-        scale: impl Into<NcScale> + Copy,
+        align: impl Into<NcAlign>,
+        blitter: impl Into<NcBlitter>,
+        scale: impl Into<NcScale>,
     ) -> NcResult<()> {
+        let (align, blitter, scale) = (align.into(), blitter.into(), scale.into());
         let cs = cstring![filename];
         error![
             unsafe {
                 c_api::ncdirect_render_image(
                     self,
                     cs.as_ptr(),
-                    align.into().into(),
-                    blitter.into().into(),
-                    scale.into().into(),
+                    align.into(),
+                    blitter.into(),
+                    scale.into(),
                 )
             },
             &format!(
                 "NcDirect.render_image({:?}, {:?}, {:?}, {:?})",
-                filename,
-                align.into(),
-                blitter.into(),
-                scale.into()
+                filename, align, blitter, scale
             )
         ]
     }
@@ -166,20 +163,22 @@ impl NcDirect {
     /// Sets the foreground [`NcPaletteIndex`].
     ///
     /// *C style function: [ncdirect_set_fg_palindex()][c_api::ncdirect_set_fg_palindex].*
-    pub fn set_fg_palindex(&mut self, index: impl Into<NcPaletteIndex> + Copy) -> NcResult<()> {
+    pub fn set_fg_palindex(&mut self, index: impl Into<NcPaletteIndex>) -> NcResult<()> {
+        let index = index.into();
         error![
-            unsafe { c_api::ncdirect_set_fg_palindex(self, index.into() as i32) },
-            &format!("NcDirect.set_fg_palindex({})", index.into())
+            unsafe { c_api::ncdirect_set_fg_palindex(self, index as i32) },
+            &format!("NcDirect.set_fg_palindex({})", index)
         ]
     }
 
     /// Sets the background [`NcPaletteIndex`].
     ///
     /// *C style function: [ncdirect_set_bg_palindex()][c_api::ncdirect_set_bg_palindex].*
-    pub fn set_bg_palindex(&mut self, index: impl Into<NcPaletteIndex> + Copy) -> NcResult<()> {
+    pub fn set_bg_palindex(&mut self, index: impl Into<NcPaletteIndex>) -> NcResult<()> {
+        let index = index.into();
         error![
-            unsafe { c_api::ncdirect_set_bg_palindex(self, index.into() as i32) },
-            &format!("NcDirect.set_fg_palindex({})", index.into())
+            unsafe { c_api::ncdirect_set_bg_palindex(self, index as i32) },
+            &format!("NcDirect.set_fg_palindex({})", index)
         ]
     }
 
@@ -228,33 +227,36 @@ impl NcDirect {
         unsafe { c_api::ncdirect_styles(self).into() }
     }
 
-    /// Removes the specified styles.
+    /// Removes the specified `styles`.
     ///
     /// *C style function: [ncdirect_off_styles()][c_api::ncdirect_off_styles].*
-    pub fn styles_off(&mut self, stylebits: impl Into<NcStyle> + Copy) -> NcResult<()> {
+    pub fn styles_off(&mut self, styles: impl Into<NcStyle>) -> NcResult<()> {
+        let styles = styles.into();
         error![
-            unsafe { c_api::ncdirect_off_styles(self, stylebits.into().into()) },
-            &format!("NcDirect.styles_off({:0X})", stylebits.into())
+            unsafe { c_api::ncdirect_off_styles(self, styles.into()) },
+            &format!("NcDirect.styles_off({:0X})", styles)
         ]
     }
 
-    /// Adds the specified styles.
+    /// Adds the specified `styles`.
     ///
     /// *C style function: [ncdirect_on_styles()][c_api::ncdirect_on_styles].*
-    pub fn styles_on(&mut self, stylebits: impl Into<NcStyle> + Copy) -> NcResult<()> {
+    pub fn styles_on(&mut self, styles: impl Into<NcStyle>) -> NcResult<()> {
+        let styles = styles.into();
         error![
-            unsafe { c_api::ncdirect_on_styles(self, stylebits.into().into()) },
-            &format!("NcDirect.styles_on({:0X})", stylebits.into())
+            unsafe { c_api::ncdirect_on_styles(self, styles.into()) },
+            &format!("NcDirect.styles_on({:0X})", styles)
         ]
     }
 
-    /// Sets just the specified styles.
+    /// Sets just the specified `styles`.
     ///
     /// *C style function: [ncdirect_set_styles()][c_api::ncdirect_set_styles].*
-    pub fn styles_set(&mut self, stylebits: impl Into<NcStyle> + Copy) -> NcResult<()> {
+    pub fn styles_set(&mut self, styles: impl Into<NcStyle>) -> NcResult<()> {
+        let styles = styles.into();
         error![
-            unsafe { c_api::ncdirect_set_styles(self, stylebits.into().into()) },
-            &format!("NcDirect.styles_set({:0X})", stylebits.into())
+            unsafe { c_api::ncdirect_set_styles(self, styles.into()) },
+            &format!("NcDirect.styles_set({:0X})", styles)
         ]
     }
 
@@ -626,11 +628,12 @@ impl NcDirect {
     /// are both marked as using the default color.
     ///
     /// *C style function: [ncdirect_putstr()][c_api::ncdirect_putstr].*
-    pub fn putstr(&mut self, channels: impl Into<NcChannels> + Copy, string: &str) -> NcResult<()> {
+    pub fn putstr(&mut self, channels: impl Into<NcChannels>, string: &str) -> NcResult<()> {
+        let channels = channels.into();
         let cs = cstring![string];
         error![
-            unsafe { c_api::ncdirect_putstr(self, channels.into().into(), cs.as_ptr()) },
-            &format!("NcDirect.putstr({:0X}, {:?})", channels.into(), string)
+            unsafe { c_api::ncdirect_putstr(self, channels.into(), cs.as_ptr()) },
+            &format!("NcDirect.putstr({:0X}, {:?})", channels, string)
         ]
     }
 
@@ -672,40 +675,24 @@ impl NcDirect {
     // TODO: CHECK, specially wchars.
     pub fn r#box(
         &mut self,
-        ul: impl Into<NcChannels> + Copy,
-        ur: impl Into<NcChannels> + Copy,
-        ll: impl Into<NcChannels> + Copy,
-        lr: impl Into<NcChannels> + Copy,
+        ul: impl Into<NcChannels>,
+        ur: impl Into<NcChannels>,
+        ll: impl Into<NcChannels>,
+        lr: impl Into<NcChannels>,
         wchars: &[char; 6],
         len_y: u32,
         len_x: u32,
         ctlword: u32,
     ) -> NcResult<()> {
+        let (ul, ur, ll, lr) = (ul.into(), ur.into(), ll.into(), lr.into());
         error![
             unsafe {
                 let wchars = core::mem::transmute(wchars);
-                c_api::ncdirect_box(
-                    self,
-                    ul.into().0,
-                    ur.into().0,
-                    ll.into().0,
-                    lr.into().0,
-                    wchars,
-                    len_y,
-                    len_x,
-                    ctlword,
-                )
+                c_api::ncdirect_box(self, ul.0, ur.0, ll.0, lr.0, wchars, len_y, len_x, ctlword)
             },
             &format!(
                 "NcDirect.box({:0X}, {:0X}, {:0X}, {:0X}, {:?}, {}, {}, {})",
-                ul.into(),
-                ur.into(),
-                ll.into(),
-                lr.into(),
-                wchars,
-                len_y,
-                len_x,
-                ctlword
+                ul, ur, ll, lr, wchars, len_y, len_x, ctlword
             )
         ]
     }

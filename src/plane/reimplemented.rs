@@ -729,7 +729,7 @@ pub fn ncplane_resize_simple(plane: &mut NcPlane, len_y: u32, len_x: u32) -> NcR
 #[inline]
 pub fn ncplane_halign(
     plane: &NcPlane,
-    align: impl Into<NcAlign_u32> + Copy,
+    align: impl Into<NcAlign_u32>,
     numcols: u32,
 ) -> NcResult_i32 {
     c_api::notcurses_align(ncplane_dim_x(plane), align, numcols)
@@ -745,7 +745,7 @@ pub fn ncplane_halign(
 #[inline]
 pub fn ncplane_valign(
     plane: &NcPlane,
-    align: impl Into<NcAlign_u32> + Copy,
+    align: impl Into<NcAlign_u32>,
     numrows: u32,
 ) -> NcResult_i32 {
     c_api::notcurses_align(ncplane_dim_y(plane), align, numrows)

@@ -15,14 +15,15 @@ use crate::{
 ///
 /// *Method: Nc.[align()][Nc#method.align].*
 #[inline]
-pub fn notcurses_align(avail_u: u32, align: impl Into<NcAlign_u32> + Copy, u: u32) -> NcResult_i32 {
-    if align.into() == c_api::NCALIGN_LEFT || align.into() == c_api::NCALIGN_TOP {
+pub fn notcurses_align(avail_u: u32, align: impl Into<NcAlign_u32>, u: u32) -> NcResult_i32 {
+    let align = align.into();
+    if align == c_api::NCALIGN_LEFT || align == c_api::NCALIGN_TOP {
         return 0;
     }
-    if align.into() == c_api::NCALIGN_CENTER {
+    if align == c_api::NCALIGN_CENTER {
         return ((avail_u - u) / 2) as NcResult_i32;
     }
-    if align.into() == c_api::NCALIGN_RIGHT || align.into() == c_api::NCALIGN_BOTTOM {
+    if align == c_api::NCALIGN_RIGHT || align == c_api::NCALIGN_BOTTOM {
         return (avail_u - u) as NcResult_i32;
     }
     -NcResult_i32::MAX

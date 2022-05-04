@@ -176,13 +176,10 @@ impl Nc {
     /// [`NcAlign::Unaligned`].
     ///
     /// *C style function: [notcurses_align()][c_api::notcurses_align].*
-    pub fn align(availcols: u32, align: impl Into<NcAlign> + Copy, cols: u32) -> NcResult<u32> {
-        let res = c_api::notcurses_align(availcols, align.into(), cols);
-        error![
-            res,
-            &format!("Nc.align({:?}, {})", align.into(), cols),
-            res as u32
-        ]
+    pub fn align(availcols: u32, align: impl Into<NcAlign>, cols: u32) -> NcResult<u32> {
+        let align = align.into();
+        let res = c_api::notcurses_align(availcols, align, cols);
+        error![res, &format!("Nc.align({:?}, {})", align, cols), res as u32]
     }
 
     /// Retrieves the current contents of the specified [`NcCell`][crate::NcCell]

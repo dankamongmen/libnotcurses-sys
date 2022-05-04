@@ -446,8 +446,8 @@ impl NcCell {
     /// *C style function: [nccells_load_box()][c_api::nccells_load_box].*
     pub fn load_box(
         plane: &mut NcPlane,
-        style: impl Into<NcStyle> + Copy,
-        channels: impl Into<NcChannels> + Copy,
+        style: impl Into<NcStyle>,
+        channels: impl Into<NcChannels>,
         ul: &mut NcCell,
         ur: &mut NcCell,
         ll: &mut NcCell,
@@ -456,17 +456,9 @@ impl NcCell {
         vl: &mut NcCell,
         gcluster: &str,
     ) -> NcResult<()> {
+        let (style, channels) = (style.into(), channels.into());
         error![c_api::nccells_load_box(
-            plane,
-            style.into(),
-            channels.into(),
-            ul,
-            ur,
-            ll,
-            lr,
-            hl,
-            vl,
-            gcluster
+            plane, style, channels, ul, ur, ll, lr, hl, vl, gcluster
         )]
     }
 
