@@ -120,6 +120,51 @@ impl NcOptionsBuilder {
 
 /// # methods (chainable)
 impl NcOptionsBuilder {
+    // /// Sets the TERM type.
+    // pub fn term_type(mut self, term_type: &str) -> Self {
+    //     self.termtype = term_type;
+    //     self
+    // }
+
+    /// Sets the log level.
+    pub fn log_level(mut self, log_level: NcLogLevel) -> Self {
+        self.loglevel = log_level;
+        self
+    }
+
+    /// Sets the margins.
+    pub fn margins(mut self, top: u32, right: u32, bottom: u32, left: u32) -> Self {
+        self.margin_t = top;
+        self.margin_r = right;
+        self.margin_b = bottom;
+        self.margin_l = left;
+        self
+    }
+
+    /// Sets the top margin.
+    pub fn margin_top(mut self, top: u32) -> Self {
+        self.margin_t = top;
+        self
+    }
+
+    /// Sets the right margin.
+    pub fn margin_right(mut self, right: u32) -> Self {
+        self.margin_r = right;
+        self
+    }
+
+    /// Sets the bottom margin.
+    pub fn margin_bottom(mut self, bottom: u32) -> Self {
+        self.margin_b = bottom;
+        self
+    }
+
+    /// Sets the left margin.
+    pub fn margin_left(mut self, left: u32) -> Self {
+        self.margin_l = left;
+        self
+    }
+
     // flags
 
     /// If `true`, Input may be freely dropped.
