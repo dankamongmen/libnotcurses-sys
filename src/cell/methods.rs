@@ -326,8 +326,7 @@ impl NcCell {
         c_api::nccellcmp(plane1, cell1, plane2, cell2)
     }
 
-    /// Saves the [`NcStyle`] and the [`NcChannels`], and returns the `EGC`.
-    /// (These are the three elements of an `NcCell`).
+    /// Saves the [`NcStyle`] and the [`NcChannels`], and returns the duplicatd `EGC`.
     ///
     /// *C style function: [nccell_fg_alpha()][c_api::nccell_fg_alpha].*
     pub fn extract(
@@ -337,16 +336,6 @@ impl NcCell {
         channels: &mut NcChannels,
     ) -> String {
         c_api::nccell_extract(plane, self, styles.into(), channels.into())
-    }
-
-    /// Returns the `EGC` of the `NcCell`.
-    ///
-    /// See also: [extended_gcluster][NcCell#method.extended_gcluster] method.
-    ///
-    /// *(No equivalent C style function)*
-    pub fn egc(&self, plane: &NcPlane) -> String {
-        let (mut _styles, mut _channels) = (0, 0);
-        c_api::nccell_extract(plane, self, &mut _styles, &mut _channels)
     }
 
     /// Returns the [`NcStyle`] bits.
@@ -397,7 +386,7 @@ impl NcCell {
     /// plane, so… watch out!
     ///
     /// *C style function: [nccell_extended_gcluster()][c_api::nccell_wide_left_p].*
-    pub fn extended_gcluster(&self, plane: &NcPlane) -> &str {
+    pub fn egc(&self, plane: &NcPlane) -> &str {
         let egcpointer = unsafe { c_api::nccell_extended_gcluster(plane, self) };
         rstring![egcpointer]
     }

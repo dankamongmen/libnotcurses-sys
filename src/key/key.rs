@@ -237,34 +237,22 @@ impl NcKey {
 
     /// Returns true if it's a function key event.
     pub fn is_function(&self) -> bool {
-        match self.0 {
-            c_api::NCKEY_F00..=c_api::NCKEY_F60 => true,
-            _ => false,
-        }
+        matches!(self.0, c_api::NCKEY_F00..=c_api::NCKEY_F60)
     }
 
     /// Returns true if it's a multimedia key event.
     pub fn is_media(&self) -> bool {
-        match self.0 {
-            c_api::NCKEY_MEDIA_PLAY..=c_api::NCKEY_MEDIA_MUTE => true,
-            _ => false,
-        }
+        matches!(self.0, c_api::NCKEY_MEDIA_PLAY..=c_api::NCKEY_MEDIA_MUTE)
     }
 
     /// Returns true if it's a mouse event.
     pub fn is_mouse(&self) -> bool {
-        match self.0 {
-            c_api::NCKEY_MOTION..=c_api::NCKEY_BUTTON11 => true,
-            _ => false,
-        }
+        matches!(self.0, c_api::NCKEY_MOTION..=c_api::NCKEY_BUTTON11)
     }
 
     /// Returns true if it's a resize event.
     pub fn is_resize(&self) -> bool {
-        match self.0 {
-            c_api::NCKEY_RESIZE => true,
-            _ => false,
-        }
+        matches!(self.0, c_api::NCKEY_RESIZE)
     }
 
     //

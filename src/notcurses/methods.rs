@@ -78,6 +78,8 @@ impl Nc {
     ///
     /// # Safety
     /// You can't have multiple simultaneous `Nc` instances in the same thread.
+    ///
+    /// [`SuppressBanners`]: NcFlag#associatedconstant.SuppressBanners
     pub unsafe fn new<'a>() -> NcResult<&'a mut Nc> {
         Self::with_flags(NcFlag::SuppressBanners)
     }

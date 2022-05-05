@@ -408,37 +408,37 @@ impl NcPlane {
         ]
     }
 
-    /// Returns the current style for this `NcPlane`.
+    /// Returns the current styles for this `NcPlane`.
     ///
     /// *C style function: [ncplane_styles()][c_api::ncplane_styles].*
     pub fn styles(&self) -> NcStyle {
         unsafe { c_api::ncplane_styles(self).into() }
     }
 
-    /// Removes the specified styles from this `NcPlane`'s existing spec.
+    /// Removes the specified `styles` from this `NcPlane`'s existing spec.
     ///
     /// *C style function: [ncplane_off_styles()][c_api::ncplane_off_styles].*
-    pub fn off_styles(&mut self, stylemask: impl Into<NcStyle>) {
+    pub fn off_styles(&mut self, styles: impl Into<NcStyle>) {
         unsafe {
-            c_api::ncplane_off_styles(self, stylemask.into().into());
+            c_api::ncplane_off_styles(self, styles.into().into());
         }
     }
 
-    /// Adds the specified styles to this `NcPlane`'s existing spec.
+    /// Adds the specified `styles` to this `NcPlane`'s existing spec.
     ///
     /// *C style function: [ncplane_on_styles()][c_api::ncplane_on_styles].*
-    pub fn on_styles(&mut self, stylemask: impl Into<NcStyle>) {
+    pub fn on_styles(&mut self, styles: impl Into<NcStyle>) {
         unsafe {
-            c_api::ncplane_on_styles(self, stylemask.into().into());
+            c_api::ncplane_on_styles(self, styles.into().into());
         }
     }
 
-    /// Sets just the specified styles for this `NcPlane`.
+    /// Sets just the specified `styles` for this `NcPlane`.
     ///
     /// *C style function: [ncplane_set_styles()][c_api::ncplane_set_styles].*
-    pub fn set_styles(&mut self, stylemask: impl Into<NcStyle>) {
+    pub fn set_styles(&mut self, styles: impl Into<NcStyle>) {
         unsafe {
-            c_api::ncplane_set_styles(self, stylemask.into().into());
+            c_api::ncplane_set_styles(self, styles.into().into());
         }
     }
 
