@@ -10,66 +10,6 @@ use crate::{
     NcVisualGeometry, NcVisualOptions,
 };
 
-/// # `NcOptions` Constructors
-impl NcOptions {
-    /// New `NcOptions`.
-    pub fn new() -> Self {
-        Self::with_all_options(NcLogLevel::Silent, 0, 0, 0, 0, NcFlag::None)
-    }
-
-    /// New `NcOptions`, with margins.
-    pub fn with_margins(top: u32, right: u32, bottom: u32, left: u32) -> Self {
-        Self::with_all_options(NcLogLevel::Silent, top, right, bottom, left, NcFlag::None)
-    }
-
-    /// New `NcOptions`, with flags.
-    pub fn with_flags(flags: impl Into<NcFlag>) -> Self {
-        Self::with_all_options(NcLogLevel::Silent, 0, 0, 0, 0, flags.into())
-    }
-
-    /// New `NcOptions`, with all the options.
-    ///
-    /// ## Arguments
-    ///
-    /// - loglevel
-    ///
-    ///   Progressively higher log levels result in more logging to stderr. By
-    ///   default, nothing is printed to stderr once fullscreen service begins.
-    ///
-    /// - margin_t, margin_r, margin_b, margin_l
-    ///
-    ///   Desirable margins (top, right, bottom, left).
-    ///
-    ///   If all are 0 (default), we will render to the entirety of the screen.
-    ///   If the screen is too small, we do what we can.
-    ///   Absolute coordinates are relative to the rendering area
-    ///   ((0, 0) is always the origin of the rendering area).
-    ///
-    /// - flags
-    ///
-    ///   General flags; This is expressed as a bitfield so that future options
-    ///   can be added without reshaping the struct.
-    ///   Undefined bits must be set to 0.
-    pub fn with_all_options(
-        loglevel: impl Into<NcLogLevel>,
-        margin_t: u32,
-        margin_r: u32,
-        margin_b: u32,
-        margin_l: u32,
-        flags: impl Into<NcFlag>,
-    ) -> Self {
-        Self {
-            termtype: null(),
-            loglevel: loglevel.into().into(),
-            margin_t,
-            margin_r,
-            margin_b,
-            margin_l,
-            flags: flags.into().into(),
-        }
-    }
-}
-
 /// # `Nc` Constructors and destructors
 impl Nc {
     /// New notcurses context.
@@ -141,10 +81,7 @@ impl Nc {
     ) -> NcResult<&'a mut Nc> {
         Self::with_options(NcOptions::with_all_options(
             log_level.into(),
-            0,
-            0,
-            0,
-            0,
+            Some((0, 0, 0, 0)),
             flags.into(),
         ))
     }
