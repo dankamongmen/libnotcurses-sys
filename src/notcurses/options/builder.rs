@@ -4,7 +4,7 @@ use crate::{NcFlag, NcLogLevel, NcOptions};
 use std::ptr::null;
 
 /// Builder object for [`NcOptions`].
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Copy, Debug, Default)]
 pub struct NcOptionsBuilder {
     // pub(crate): termtype: String,
     pub(crate) loglevel: NcLogLevel,
@@ -303,6 +303,176 @@ impl NcOptionsBuilder {
             self.flags &= !NcFlag::SuppressBanners;
         }
         self
+    }
+}
+
+/// # methods (settable)
+impl NcOptionsBuilder {
+    // /// Sets the TERM type.
+    // pub fn set_term_type(&mut self, term_type: &str) {
+    //     self.termtype = term_type;
+    // }
+
+    /// Sets the log level.
+    pub fn set_log_level(&mut self, log_level: NcLogLevel) {
+        self.loglevel = log_level;
+    }
+
+    /// Sets the margins.
+    pub fn set_margins(&mut self, top: u32, right: u32, bottom: u32, left: u32) {
+        self.margin_t = top;
+        self.margin_r = right;
+        self.margin_b = bottom;
+        self.margin_l = left;
+    }
+
+    /// Sets the top margin.
+    pub fn set_margin_top(&mut self, top: u32) {
+        self.margin_t = top;
+    }
+
+    /// Sets the right margin.
+    pub fn set_margin_right(&mut self, right: u32) {
+        self.margin_r = right;
+    }
+
+    /// Sets the bottom margin.
+    pub fn set_margin_bottom(&mut self, bottom: u32) {
+        self.margin_b = bottom;
+    }
+
+    /// Sets the left margin.
+    pub fn set_margin_left(&mut self, left: u32) {
+        self.margin_l = left;
+    }
+
+    // flags
+
+    /// If `true`, Input may be freely dropped.
+    ///
+    /// This ought be provided when the program does not intend to handle input.
+    /// Otherwise, input can accumulate in internal buffers, eventually preventing
+    /// Notcurses from processing terminal messages.
+    ///
+    /// See `NcFlag::`[`DrainInput`][NcFlag#associatedconstant.DrainInput].
+    pub fn set_drain_input(&mut self, drain: bool) {
+        if drain {
+            self.flags |= NcFlag::DrainInput;
+        } else {
+            self.flags &= !NcFlag::DrainInput;
+        }
+    }
+
+    /// If `true`, wont call setlocale().
+    ///
+    /// See `NcFlag::`[`InhibitSetLocale`][NcFlag#associatedconstant.InhibitSetLocale].
+    pub fn set_inhibit_set_locale(&mut self, inhibit: bool) {
+        if inhibit {
+            self.flags |= NcFlag::InhibitSetLocale;
+        } else {
+            self.flags &= !NcFlag::InhibitSetLocale;
+        }
+    }
+
+    /// If `true`, wont enter alternate mode.
+    ///
+    /// See `NcFlag::`[`NoAlternateScreen`][NcFlag#associatedconstant.NoAlternateScreen].
+    pub fn set_no_alternate_screen(&mut self, no_alternate: bool) {
+        if no_alternate {
+            self.flags |= NcFlag::NoAlternateScreen;
+        } else {
+            self.flags &= !NcFlag::NoAlternateScreen;
+        }
+    }
+
+    /// If `true`, wont try to clear any preexisting bitmaps.
+    ///
+    /// See `NcFlag::`[`NoClearBitmaps`][NcFlag#associatedconstant.NoClearBitmaps].
+    pub fn set_no_clear_bitmaps(&mut self, no_clear: bool) {
+        if no_clear {
+            self.flags |= NcFlag::NoClearBitmaps;
+        } else {
+            self.flags &= !NcFlag::NoClearBitmaps;
+        }
+    }
+
+    /// If `true`, wont modify the font.
+    ///
+    /// See `NcFlag::`[`NoFontChanges`][NcFlag#associatedconstant.NoFontChanges].
+    pub fn set_no_font_changes(&mut self, no_font_changes: bool) {
+        if no_font_changes {
+            self.flags |= NcFlag::NoFontChanges;
+        } else {
+            self.flags &= !NcFlag::NoFontChanges;
+        }
+    }
+
+    /// If `true`, wont handle `SIGINT`, `SIGSEGV`, `SIGABRT` nor `SIGQUIT`.
+    ///
+    /// See `NcFlag::`[`NoQuitSigHandlers`][NcFlag#associatedconstant.NoQuitSigHandlers].
+    pub fn set_no_quit_sig_handlers(&mut self, no_quit: bool) {
+        if no_quit {
+            self.flags |= NcFlag::NoQuitSigHandlers;
+        } else {
+            self.flags &= !NcFlag::NoQuitSigHandlers;
+        }
+    }
+
+    /// If `true`, wont handle `SIGWINCH`.
+    ///
+    /// See `NcFlag::`[`NoWinchSigHandler`][NcFlag#associatedconstant.NoWinchSigHandler].
+    pub fn set_no_winch_sig_handler(&mut self, no_winch: bool) {
+        if no_winch {
+            self.flags |= NcFlag::NoWinchSigHandler;
+        } else {
+            self.flags &= !NcFlag::NoWinchSigHandler;
+        }
+    }
+
+    /// If `true`, will initializes the CLI plane’s virtual cursor to match
+    /// the physical cursor at context creation time.
+    ///
+    /// See `NcFlag::`[`PreserveCursor`][NcFlag#associatedconstant.PreserveCursor].
+    pub fn set_preserve_cursor(&mut self, preserve: bool) {
+        if preserve {
+            self.flags |= NcFlag::PreserveCursor;
+        } else {
+            self.flags &= !NcFlag::PreserveCursor;
+        }
+    }
+
+    /// If `true`, will prepare the CLI plane in scrolling mode.
+    ///
+    /// See `NcFlag::`[`Scrolling`][NcFlag#associatedconstant.Scrolling].
+    pub fn set_scrolling(&mut self, scrolling: bool) {
+        if scrolling {
+            self.flags |= NcFlag::Scrolling;
+        } else {
+            self.flags &= !NcFlag::Scrolling;
+        }
+    }
+
+    /// A shortcut for setting the following options together:
+    /// `no_alternate_screen`, `no_clear_bitmaps`, `preserve_cursor` & `scrolling`.
+    ///
+    /// See `NcFlag::`[`CliMode`][NcFlag#associatedconstant.CliMode].
+    pub fn set_cli_mode(&mut self, cli_mode: bool) {
+        if cli_mode {
+            self.flags |= NcFlag::CliMode;
+        } else {
+            self.flags &= !NcFlag::CliMode;
+        }
+    }
+
+    /// If `true`, wont print banners.
+    ///
+    /// See `NcFlag::`[`SuppressBanners`][NcFlag#associatedconstant.SuppressBanners].
+    pub fn set_suppress_banners(&mut self, suppress_banners: bool) {
+        if suppress_banners {
+            self.flags |= NcFlag::SuppressBanners;
+        } else {
+            self.flags &= !NcFlag::SuppressBanners;
+        }
     }
 }
 
