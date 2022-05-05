@@ -31,11 +31,15 @@ pub type NcOptions = ffi::notcurses_options;
 
 /// # constructors
 impl NcOptions {
+    /// Returns a default `Nc` options builder.
     pub fn builder() -> NcOptionsBuilder {
         NcOptionsBuilder::default()
     }
 
-    // pub fn to_builder(&self) -> NcOptionsBuilder
+    /// Returns a builder object from the current `Nc` options.
+    pub fn to_builder(&self) -> NcOptionsBuilder {
+        NcOptionsBuilder::from_options(&self)
+    }
 
     //
 
@@ -79,6 +83,18 @@ impl NcOptions {
 
 /// # methods
 impl NcOptions {
+    /// Returns the `(top, right, bottom, left)` margins.
+    pub fn margins(&self) -> (u32, u32, u32, u32) {
+        (self.margin_t, self.margin_r, self.margin_b, self.margin_l)
+    }
+
+    /// Returns the log level.
+    pub fn log_level(&self) -> NcLogLevel {
+        self.loglevel.into()
+    }
+
+    // flags
+
     /// Returns `true` if it has the [`DrainInput`] flag set.
     ///
     /// [`DrainInput`]: NcFlag#associatedconstant.DrainInput
@@ -98,6 +114,13 @@ impl NcOptions {
     /// [`NoAlternateScreen`]: NcFlag#associatedconstant.NoAlternateScreen
     pub fn is_no_alternate_screen(&self) -> bool {
         self.flags & NcFlag::NoAlternateScreen != NcFlag::None
+    }
+
+    /// Returns `true` if it has the [`NoClearBitmaps`] flag set.
+    ///
+    /// [`NoFontChanges`]: NcFlag#associatedconstant.NoFontChanges
+    pub fn is_no_clear_bitmaps(&self) -> bool {
+        self.flags & NcFlag::NoClearBitmaps != NcFlag::None
     }
 
     /// Returns `true` if it has the [`NoFontChanges`] flag set.

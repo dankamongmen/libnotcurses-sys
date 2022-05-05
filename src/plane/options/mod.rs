@@ -41,22 +41,22 @@ pub type NcPlaneOptions = ffi::ncplane_options;
 
 /// # Constructors
 impl NcPlaneOptions {
-    /// New NcPlaneOptions using the horizontal x.
+    /// New `NcPlaneOptions` using the horizontal x.
     pub fn new(y: i32, x: i32, rows: u32, cols: u32) -> Self {
         Self::with_flags(y, x, rows, cols, None, NcPlaneFlag::None, 0, 0)
     }
 
-    /// Returns a default `NcPlaneOptionsBuilder`.
+    /// Returns a default `NcPlane` options builder.
     pub fn builder() -> NcPlaneOptionsBuilder {
         NcPlaneOptionsBuilder::default()
     }
 
-    /// Returns a builder object for `NcPlaneOptions` from the current options.
+    /// Returns a builder object from the current `NcPlane` options.
     pub fn to_builder(&self) -> NcPlaneOptionsBuilder {
         NcPlaneOptionsBuilder::from_options(self)
     }
 
-    /// New NcPlaneOptions with horizontal alignment.
+    /// New `NcPlaneOptions` with horizontal alignment.
     pub fn new_aligned(y: i32, align: impl Into<NcAlign>, rows: u32, cols: u32) -> Self {
         Self::with_flags_aligned(y, align.into(), rows, cols, None, NcPlaneFlag::HorAligned)
     }
@@ -86,7 +86,7 @@ impl NcPlaneOptions {
         }
     }
 
-    /// New NcPlaneOptions, with flags and horizontal alignment.
+    /// New `NcPlaneOptions`, with flags and horizontal alignment.
     ///
     /// Note: Already includes the
     /// [`NcPlaneOptions::HORALIGNED`][NcPlaneOptions#associatedconstant.HORALIGNED]

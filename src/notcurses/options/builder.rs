@@ -7,11 +7,11 @@ use std::ptr::null;
 #[derive(Clone, Debug, Default)]
 pub struct NcOptionsBuilder {
     // pub(crate): termtype: String,
+    pub(crate) loglevel: NcLogLevel,
     pub(crate) margin_t: u32,
     pub(crate) margin_r: u32,
     pub(crate) margin_b: u32,
     pub(crate) margin_l: u32,
-    pub(crate) loglevel: NcLogLevel,
     pub(crate) flags: u64,
 }
 
@@ -303,5 +303,97 @@ impl NcOptionsBuilder {
             self.flags &= !NcFlag::SuppressBanners;
         }
         self
+    }
+}
+
+/// # query methods
+impl NcOptionsBuilder {
+    /// Returns the `(top, right, bottom, left)` margins.
+    pub fn get_margins(&self) -> (u32, u32, u32, u32) {
+        (self.margin_t, self.margin_r, self.margin_b, self.margin_l)
+    }
+
+    /// Returns the log level.
+    pub fn get_log_level(&self) -> NcLogLevel {
+        self.loglevel
+    }
+
+    //
+
+    /// Returns `true` if it has the [`DrainInput`] flag set.
+    ///
+    /// [`DrainInput`]: NcFlag#associatedconstant.DrainInput
+    pub fn is_drain_input(&self) -> bool {
+        self.flags & NcFlag::DrainInput != NcFlag::None
+    }
+
+    /// Returns `true` if it has the [`InhibitSetLocale`] flag set.
+    ///
+    /// [`InhibitSetLocale`]: NcFlag#associatedconstant.InhibitSetLocale
+    pub fn is_inhibit_set_locale(&self) -> bool {
+        self.flags & NcFlag::InhibitSetLocale != NcFlag::None
+    }
+
+    /// Returns `true` if it has the [`NoAlternateScreen`] flag set.
+    ///
+    /// [`NoAlternateScreen`]: NcFlag#associatedconstant.NoAlternateScreen
+    pub fn is_no_alternate_screen(&self) -> bool {
+        self.flags & NcFlag::NoAlternateScreen != NcFlag::None
+    }
+
+    /// Returns `true` if it has the [`NoClearBitmaps`] flag set.
+    ///
+    /// [`NoFontChanges`]: NcFlag#associatedconstant.NoFontChanges
+    pub fn is_no_clear_bitmaps(&self) -> bool {
+        self.flags & NcFlag::NoClearBitmaps != NcFlag::None
+    }
+
+    /// Returns `true` if it has the [`NoFontChanges`] flag set.
+    ///
+    /// [`NoFontChanges`]: NcFlag#associatedconstant.NoFontChanges
+    pub fn is_no_font_changes(&self) -> bool {
+        self.flags & NcFlag::NoFontChanges != NcFlag::None
+    }
+
+    /// Returns `true` if it has the [`NoQuitSigHandlers`] flag set.
+    ///
+    /// [`NoQuitSigHandlers`]: NcFlag#associatedconstant.NoQuitSigHandlers
+    pub fn is_no_quit_sig_handlers(&self) -> bool {
+        self.flags & NcFlag::NoQuitSigHandlers != NcFlag::None
+    }
+
+    /// Returns `true` if it has the [`NoWinchSigHandler`] flag set.
+    ///
+    /// [`NoWinchSigHandler`]: NcFlag#associatedconstant.NoWinchSigHandler
+    pub fn is_no_winch_sig_handler(&self) -> bool {
+        self.flags & NcFlag::NoWinchSigHandler != NcFlag::None
+    }
+
+    /// Returns `true` if it has the [`PreserveCursor`] flag set.
+    ///
+    /// [`PreserveCursor`]: NcFlag#associatedconstant.PreserveCursor
+    pub fn is_preserve_cursor(&self) -> bool {
+        self.flags & NcFlag::PreserveCursor != NcFlag::None
+    }
+
+    /// Returns `true` if it has the [`Scrolling`] flag set.
+    ///
+    /// [`Scrolling`]: NcFlag#associatedconstant.Scrolling
+    pub fn is_scrolling(&self) -> bool {
+        self.flags & NcFlag::Scrolling != NcFlag::None
+    }
+
+    /// Returns `true` if it has the [`CliMode`] flag set.
+    ///
+    /// [`CliMode`]: NcFlag#associatedconstant.CliMode
+    pub fn is_cli_mode(&self) -> bool {
+        self.flags & NcFlag::CliMode != NcFlag::None
+    }
+
+    /// Returns `true` if it has the [`SuppressBanners`] flag set.
+    ///
+    /// [`SuppressBanners`]: NcFlag#associatedconstant.SuppressBanners
+    pub fn is_suppress_banners(&self) -> bool {
+        self.flags & NcFlag::SuppressBanners != NcFlag::None
     }
 }
