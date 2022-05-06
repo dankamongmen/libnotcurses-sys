@@ -1046,20 +1046,25 @@ impl NcPlane {
     /// *(No equivalent C style function)*
     pub fn putstr_aligned_stained(
         &mut self,
-        y: u32,
+        y: Option<u32>,
         align: impl Into<NcAlign>,
         string: &str,
     ) -> NcResult<u32> {
         let align = align.into();
         let width = string.chars().count() as u32;
         let xpos = self.halign(align, width)?;
-        self.cursor_move_yx(y, xpos)?;
+        let new_y = if let Some(y) = y {
+            y
+        } else {
+            self.cursor_y()
+        };
+        self.cursor_move_yx(new_y, xpos)?;
         let res = c_api::ncplane_putstr_stained(self, string);
         error![
             res,
             &format!(
                 "NcPlane.putstr_aligned_stained({}, {}, {:?})",
-                y, align, string
+                new_y, align, string
             ),
             res as u32
         ]
@@ -1126,21 +1131,26 @@ impl NcPlane {
     /// *C style function: [ncplane_putnstr_aligned()][c_api::ncplane_putnstr_aligned].*
     pub fn putnstr_aligned(
         &mut self,
-        y: u32,
+        y: Option<u32>,
         align: impl Into<NcAlign>,
         num_bytes: usize,
         string: &str,
     ) -> NcResult<u32> {
         let align = align.into();
         let cs = cstring![string];
+        let new_y = if let Some(y) = y {
+            y as i32
+        } else {
+            self.cursor_y() as i32
+        };
         let res = unsafe {
-            c_api::ncplane_putnstr_aligned(self, y as i32, align.into(), num_bytes, cs.as_ptr())
+            c_api::ncplane_putnstr_aligned(self, new_y, align.into(), num_bytes, cs.as_ptr())
         };
         error![
             res,
             &format!(
                 "NcPlane.putnstr_aligned({}, {}, {}, {:?})",
-                y, align, num_bytes, string
+                new_y, align, num_bytes, string
             ),
             res as u32
         ]
@@ -1178,7 +1188,7 @@ impl NcPlane {
     }
 
     /// Considers the glyph at `y`,`x` coordinates as the fill target,
-    /// and copies `cell` to it and to all cardinally-connect cells.
+    /// and copies `cell` to it and to all cardinally-connected cells.
     ///
     /// Returns the number of cells polyfilled.
     ///

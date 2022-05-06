@@ -293,7 +293,7 @@ impl<'ncplane> NcVisualOptionsBuilder<'ncplane> {
     /// the foreground or background colors can be a composite between
     /// a color and the corresponding colors underneath it.
     ///
-    /// Default: *false* (no blend).
+    /// Default: *false* (blends not).
     ///
     /// Effect: Sets the [`Blend`] flag.
     ///
