@@ -22,7 +22,7 @@
 ///
 #[repr(u32)]
 #[non_exhaustive]
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, PartialEq, Eq)]
 pub enum NcScale {
     /// Maintains the original size. Will Apply no scaling.
     None = c_api::NCSCALE_NONE,
@@ -71,6 +71,12 @@ mod std_impls {
                     Stretch => "Stretch",
                 }
             )
+        }
+    }
+
+    impl fmt::Debug for NcScale {
+        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+            write!(f, "Scale {{ {} }}", self)
         }
     }
 

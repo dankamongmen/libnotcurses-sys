@@ -475,7 +475,7 @@ impl NcPlane {
     ///
     /// *C style function: [ncplane_at_cursor()][c_api::ncplane_at_cursor].*
     pub fn at_cursor(
-        &self,
+        &mut self,
         stylemask: &mut NcStyle,
         channels: &mut NcChannels,
     ) -> NcResult<String> {
@@ -496,7 +496,7 @@ impl NcPlane {
     ///
     /// *C style function: [ncplane_at_cursor_cell()][c_api::ncplane_at_cursor_cell].*
     #[inline]
-    pub fn at_cursor_cell(&self, cell: &mut NcCell) -> NcResult<u32> {
+    pub fn at_cursor_cell(&mut self, cell: &mut NcCell) -> NcResult<u32> {
         let bytes = unsafe { c_api::ncplane_at_cursor_cell(self, cell) };
         error![
             bytes,
@@ -550,7 +550,7 @@ impl NcPlane {
     ///
     /// *C style function: [ncplane_at_yx_cell()][c_api::ncplane_at_yx_cell].*
     #[inline]
-    pub fn at_yx_cell(&self, y: u32, x: u32, cell: &mut NcCell) -> NcResult<u32> {
+    pub fn at_yx_cell(&mut self, y: u32, x: u32, cell: &mut NcCell) -> NcResult<u32> {
         let bytes = unsafe { c_api::ncplane_at_yx_cell(self, y as i32, x as i32, cell) };
         error![
             bytes,
@@ -564,7 +564,7 @@ impl NcPlane {
     /// The reference is invalidated if this `NcPlane` is destroyed.
     ///
     /// *C style function: [ncplane_base()][c_api::ncplane_base].*
-    pub fn base(&self) -> NcResult<NcCell> {
+    pub fn base(&mut self) -> NcResult<NcCell> {
         let mut cell = NcCell::new();
         let res = unsafe { c_api::ncplane_base(self, &mut cell) };
         error![res, "NcPlane.base()", cell]
@@ -632,7 +632,7 @@ impl NcPlane {
     ///
     /// *C style function: [ncplane_contents()][c_api::ncplane_contents].*
     pub fn contents(
-        &self,
+        &mut self,
         beg_y: Option<u32>,
         beg_x: Option<u32>,
         len_y: Option<u32>,
@@ -1053,11 +1053,7 @@ impl NcPlane {
         let align = align.into();
         let width = string.chars().count() as u32;
         let xpos = self.halign(align, width)?;
-        let new_y = if let Some(y) = y {
-            y
-        } else {
-            self.cursor_y()
-        };
+        let new_y = if let Some(y) = y { y } else { self.cursor_y() };
         self.cursor_move_yx(new_y, xpos)?;
         let res = c_api::ncplane_putstr_stained(self, string);
         error![
@@ -1138,11 +1134,7 @@ impl NcPlane {
     ) -> NcResult<u32> {
         let align = align.into();
         let cs = cstring![string];
-        let new_y = if let Some(y) = y {
-            y as i32
-        } else {
-            self.cursor_y() as i32
-        };
+        let new_y = if let Some(y) = y { y as i32 } else { self.cursor_y() as i32 };
         let res = unsafe {
             c_api::ncplane_putnstr_aligned(self, new_y, align.into(), num_bytes, cs.as_ptr())
         };

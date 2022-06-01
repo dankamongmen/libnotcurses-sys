@@ -98,7 +98,7 @@ impl NcCell {
     /// Both must be or will be bound to `common_plane`.
     ///
     /// *C style function: [nccell_duplicate()][c_api::nccell_duplicate].*
-    pub fn duplicate(&self, common_plane: &NcPlane) -> NcResult<NcCell> {
+    pub fn duplicate(&self, common_plane: &mut NcPlane) -> NcResult<NcCell> {
         let mut target = NcCell::new();
         let res = unsafe { c_api::nccell_duplicate(common_plane, &mut target, self) };
         error![res, "NcCell.duplicate()", target]

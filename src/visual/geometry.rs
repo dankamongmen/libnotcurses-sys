@@ -24,7 +24,7 @@ use crate::NcBlitter;
 /// [`ncdirectf_geom`]: crate::NcVisual#method.ncdirectf_geom
 /// [`NcVisual.geom`]: crate::NcVisual#method.ncdirectf_geom
 /// [`Nc.visual_geom`]: crate::Nc#method.visual_geom
-#[derive(Debug, Clone, Copy, Default)]
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 pub struct NcVisualGeometry {
     /// The true internal pixel geometry of [`NcVisual`] data, taken directly
     /// from the load, and updated by `ncvisual_resize`.
