@@ -25,12 +25,12 @@ mod std_impls {
     }
     impl From<&NcOptionsBuilder> for NcOptions {
         fn from(builder: &NcOptionsBuilder) -> Self {
-            builder.clone().build()
+            builder.build()
         }
     }
     impl From<&mut NcOptionsBuilder> for NcOptions {
         fn from(builder: &mut NcOptionsBuilder) -> Self {
-            builder.clone().build()
+            builder.build()
         }
     }
     //
@@ -101,7 +101,7 @@ impl NcOptionsBuilder {
         if options.is_suppress_banners() {
             builder = builder.suppress_banners(true);
         }
-        builder.into()
+        builder
     }
 
     /// Finishes the building and returns [`NcOptions`].

@@ -93,6 +93,12 @@ mod std_impls {
         }
     }
 
+    //
+
+    crate::from_primitive![NcRgba, NcRgba_u32];
+    crate::unit_impl_from![NcRgba, NcRgba_u32];
+    crate::unit_impl_fmt![bases; NcRgba];
+
     impl fmt::Display for NcRgba {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "{self:08X}")
@@ -104,13 +110,82 @@ mod std_impls {
         }
     }
 
-    crate::from_primitive![NcRgba, NcRgba_u32];
-    crate::unit_impl_from![NcRgba, NcRgba_u32];
-    crate::unit_impl_fmt![bases; NcRgba];
+    /// [R, G, B, A]
+    impl From<[u8; 4]> for NcRgba {
+        fn from(array: [u8; 4]) -> Self {
+            Self(
+                (array[3] as NcRgba_u32) << 24   // a
+                | (array[0] as NcRgba_u32) << 16 // r
+                | (array[1] as NcRgba_u32) << 8  // g
+                | array[2] as NcRgba_u32, // b
+            )
+        }
+    }
+    /// [R, G, B, A]
+    impl From<NcRgba> for [u8; 4] {
+        #[inline]
+        fn from(rgba: NcRgba) -> Self {
+            [
+                ((rgba.0 & 0x00ff0000) >> 16) as u8, // r
+                ((rgba.0 & 0x0000ff00) >> 8) as u8,  // g
+                (rgba.0 & 0x000000ff) as u8,         // b
+                ((rgba.0 & 0xff000000) >> 24) as u8, // a
+            ]
+        }
+    }
+
+    /// (R, G, B, A)
+    impl From<(u8, u8, u8, u8)> for NcRgba {
+        fn from(tuple: (u8, u8, u8, u8)) -> Self {
+            Self(
+                (tuple.3 as NcRgb_u32) << 24   // a
+                | (tuple.0 as NcRgb_u32) << 16 // r
+                | (tuple.1 as NcRgb_u32) << 8  // g
+                | tuple.2 as NcRgb_u32, // b
+            )
+        }
+    }
+    /// (R, G, B, A)
+    impl From<NcRgba> for (u8, u8, u8, u8) {
+        #[inline]
+        fn from(rgba: NcRgba) -> Self {
+            (
+                ((rgba.0 & 0x00ff0000) >> 16) as u8, // r
+                ((rgba.0 & 0x0000ff00) >> 8) as u8,  // g
+                (rgba.0 & 0x000000ff) as u8,         // b
+                ((rgba.0 & 0xff000000) >> 24) as u8, // a
+            )
+        }
+    }
+
+    #[cfg(test)]
+    mod test {
+        use super::{NcRgb, NcRgba};
+
+        #[test]
+        fn rgbx_from() {
+            let rgb = NcRgb(0x112233_u32);
+            let rgb_arr = [0x11, 0x22, 0x33];
+            let rgb_tup = (0x11, 0x22, 0x33);
+
+            assert_eq!(rgb, NcRgb::from(rgb_arr));
+            assert_eq!(rgb, NcRgb::from(rgb_tup));
+            assert_eq!(rgb_arr, <[u8; 3]>::from(rgb));
+            assert_eq!(rgb_tup, <(u8, u8, u8)>::from(rgb));
+
+            let rgba = NcRgba(0xAA112233_u32);
+            let rgba_arr = [0x11, 0x22, 0x33, 0xAA];
+            let rgba_tup = (0x11, 0x22, 0x33, 0xAA);
+
+            assert_eq!(rgba, NcRgba::from(rgba_arr));
+            assert_eq!(rgba, NcRgba::from(rgba_tup));
+            assert_eq!(rgba_arr, <[u8; 4]>::from(rgba));
+            assert_eq!(rgba_tup, <(u8, u8, u8, u8)>::from(rgba));
+        }
+    }
 }
 
 pub(crate) mod c_api {
-
     /// 24 bits broken into 3x RGB components.
     ///
     /// It's recommended to use [`NcRgb`] instead.

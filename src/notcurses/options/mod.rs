@@ -38,7 +38,7 @@ impl NcOptions {
 
     /// Returns a builder object from the current `Nc` options.
     pub fn to_builder(&self) -> NcOptionsBuilder {
-        NcOptionsBuilder::from_options(&self)
+        NcOptionsBuilder::from_options(self)
     }
 
     //

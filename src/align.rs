@@ -12,7 +12,7 @@
 #[repr(u32)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum NcAlign {
-    /// Nothing unaligned should be rendered.
+    /// Anything unaligned wont be rendered.
     Unaligned = c_api::NCALIGN_UNALIGNED,
     /// Left (==[`Top`][NcAlign::Top]) alignment.
     Left = c_api::NCALIGN_LEFT,
