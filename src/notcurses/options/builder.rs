@@ -513,7 +513,7 @@ impl NcOptionsBuilder {
 
     /// Returns `true` if it has the [`NoClearBitmaps`] flag set.
     ///
-    /// [`NoFontChanges`]: NcFlag#associatedconstant.NoFontChanges
+    /// [`NoClearBitmaps`]: NcFlag#associatedconstant.NoClearBitmaps
     pub fn is_no_clear_bitmaps(&self) -> bool {
         self.flags & NcFlag::NoClearBitmaps != NcFlag::None
     }

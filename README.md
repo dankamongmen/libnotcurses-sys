@@ -6,13 +6,20 @@
 `libnotcurses-sys` is a low-level Rust wrapper for the
 [notcurses C library](https://www.github.com/dankamongmen/notcurses/)
 
+<!-- It's recommended to use the [notcurses higher level bindings][notcurses-rs].
+-
+[notcurses-rs]: https://crates.io/crates/notcurses
+-->
+
+## Example
 
 ```rust
 use libnotcurses_sys::*;
 
 fn main() -> NcResult<()> {
     let nc = unsafe { Nc::new_cli()? };
-    nc.stdplane().putstr("hello world")?;
+    let stdplane = unsafe { nc.stdplane() };
+    stdplane.putstr("\nhello world!\n")?;
     nc.render()?;
     unsafe { nc.stop()? };
     Ok(())

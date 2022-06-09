@@ -1570,6 +1570,7 @@ impl NcPlane {
     }
 
     /// Renders the pile of which this `NcPlane` is a part.
+    ///
     /// Rendering this pile again will blow away the render.
     /// To actually write out the render, call ncpile_rasterize().
     ///

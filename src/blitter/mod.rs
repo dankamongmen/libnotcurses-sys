@@ -71,11 +71,11 @@ pub enum NcBlitter {
     /// Blitter mode using Pixels/Sixels.
     Pixel = c_api::NCBLIT_PIXEL,
 
-    /// [`NcBlitter`] mode using: four vertical levels (4x1).
+    /// NcBlitter mode using: four vertical levels (4x1).
     /// █▆▄▂
     _4x1 = c_api::NCBLIT_4x1,
 
-    /// [`NcBlitter`] mode using: eight vertical levels (8x1).
+    /// NcBlitter mode using: eight vertical levels (8x1).
     /// █▇▆▅▄▃▂▁
     _8x1 = c_api::NCBLIT_8x1,
 }
