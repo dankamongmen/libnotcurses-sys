@@ -49,6 +49,16 @@ pub use received::NcReceived;
 // We encompass single Unicode codepoints, not complete EGCs.
 pub type NcInput = crate::c_api::ffi::ncinput;
 
+mod std_impls {
+	use super::NcInput;
+
+	impl PartialEq for NcInput {
+		fn eq(&self, other: &Self) -> bool {
+			self.equal_p(other)
+		}
+	}
+}
+
 /// # Constructors
 impl NcInput {
     /// New empty `NcInput`.

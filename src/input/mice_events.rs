@@ -44,12 +44,12 @@ impl NcMiceEvents {
         Self(value)
     }
 
-    /// Returns true if the current style has included the `other_style`.
+    /// Returns true if the current mice events has `other` included.
     pub fn has(&self, other: NcMiceEvents) -> bool {
         (self.0 & other.0) == other.0
     }
 
-    /// Adds the `other_style` to the current style.
+    /// Adds `other` to the current mice events.
     pub fn add(&mut self, other: NcMiceEvents) {
         self.0 |= other.0
     }

@@ -8,7 +8,7 @@ use crate::NcKey;
 /// *[`NcReceived::NoInput`]
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub enum NcReceived {
-    /// No input was received
+    /// No input was received.
     ///
     /// A `0x00` (NUL) was received, meaning no input.
     NoInput,
@@ -66,12 +66,6 @@ mod std_impls {
     impl From<&mut NcInput> for NcReceived {
         fn from(i: &mut NcInput) -> Self {
             Self::from(i.id)
-        }
-    }
-
-    impl PartialEq for NcInput {
-        fn eq(&self, other: &Self) -> bool {
-            self.equal_p(other)
         }
     }
 
