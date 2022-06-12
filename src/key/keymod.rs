@@ -157,7 +157,7 @@ mod std_impls {
 
     impl fmt::Debug for NcKeyMod {
         fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-            write!(f, "KeyMod::{}", self)
+            write!(f, "NcKeyMod::{}", self)
         }
     }
 

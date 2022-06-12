@@ -121,7 +121,7 @@ mod std_impls {
 
     impl fmt::Debug for NcBlitter {
         fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-            write!(f, "Blitter::{}", self)
+            write!(f, "NcBlitter::{}", self)
         }
     }
 

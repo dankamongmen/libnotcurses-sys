@@ -76,7 +76,7 @@ mod std_impls {
 
     impl fmt::Debug for NcScale {
         fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-            write!(f, "Scale {{ {} }}", self)
+            write!(f, "NcScale {{ {} }}", self)
         }
     }
 

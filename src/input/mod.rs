@@ -50,13 +50,13 @@ pub use received::NcReceived;
 pub type NcInput = crate::c_api::ffi::ncinput;
 
 mod std_impls {
-	use super::NcInput;
+    use super::NcInput;
 
-	impl PartialEq for NcInput {
-		fn eq(&self, other: &Self) -> bool {
-			self.equal_p(other)
-		}
-	}
+    impl PartialEq for NcInput {
+        fn eq(&self, other: &Self) -> bool {
+            self.equal_p(other)
+        }
+    }
 }
 
 /// # Constructors

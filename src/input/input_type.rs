@@ -2,8 +2,7 @@
 
 /// The type of the [`NcInput`][crate::NcInput] event.
 ///
-/// Note: *Unknown* and *Press* are considered equivalent for the purposes
-/// of `PartialEq`.
+/// Note: *Unknown* and *Press* are considered equivalent.
 #[repr(u32)]
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub enum NcInputType {
@@ -48,7 +47,7 @@ mod std_impls {
 
     impl fmt::Debug for NcInputType {
         fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-            write!(f, "InputType::{}", self)
+            write!(f, "NcInputType::{}", self)
         }
     }
 

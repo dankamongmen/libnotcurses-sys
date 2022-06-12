@@ -49,7 +49,7 @@ mod std_impls {
                 Char(c) => format!["Char({c:?})"],
                 NoInput => "NoInput".to_string(),
             };
-            write!(f, "Received::{}", string)
+            write!(f, "NcReceived::{}", string)
         }
     }
 

@@ -54,7 +54,7 @@ mod std_impls {
     }
     impl fmt::Debug for NcRgb {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "Rgb({self})")
+            write!(f, "NcRgb({self})")
         }
     }
 
@@ -106,7 +106,7 @@ mod std_impls {
     }
     impl fmt::Debug for NcRgba {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "Rgba({self})")
+            write!(f, "NcRgba({self})")
         }
     }
 

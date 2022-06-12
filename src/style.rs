@@ -68,7 +68,7 @@ mod std_impls {
     }
     impl fmt::Debug for NcStyle {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "Style::{}", self)
+            write!(f, "NcStyle::{}", self)
         }
     }
 

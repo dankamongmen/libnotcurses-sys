@@ -23,7 +23,7 @@ mod std_impls {
 
     impl fmt::Debug for NcKey {
         fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-            write!(f, "Key::{}", self)
+            write!(f, "NcKey::{}", self)
         }
     }
 
