@@ -11,8 +11,16 @@ use crate::{
 
 // Sleep, Render & Flush Macros ------------------------------------------------
 
-/// Sleeps for `$s` seconds + `$ms` milliseconds
-/// + `$us` microseconds + `$ns` nanoseconds
+/// Sleep for a given time with custom precision.
+///
+/// [`$s` seconds, `$ms` milliseconds, `$us` microseconds, `$ns` nanoseconds]
+///
+/// # Example
+/// ```
+/// # use libnotcurses_sys::sleep;
+/// // sleeps for 0 seconds + 30 milliseconds
+/// sleep![0, 30]
+/// ```
 #[macro_export]
 macro_rules! sleep {
     ($s:expr) => {
