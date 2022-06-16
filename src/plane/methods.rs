@@ -1600,10 +1600,21 @@ impl NcPlane {
     pub fn render_to_buffer(&mut self, buffer: &mut Vec<u8>) -> NcResult<()> {
         let len = buffer.len() as u32;
 
-        // https://github.com/dankamongmen/notcurses/issues/1339
-        #[cfg(any(target_arch = "x86_64", target_arch = "i686", target_arch = "x86"))]
+        // https://github.com/dankamongmen/libnotcurses-sys/issues/3
+        // https://github.com/dankamongmen/libnotcurses-sys/issues/22
+        #[cfg(any(
+            target_arch = "x86_64",
+            target_arch = "i686",
+            target_arch = "x86",
+            all(target_arch = "aarch64", target_os = "macos"),
+        ))]
         let mut buf = buffer.as_mut_ptr() as *mut i8;
-        #[cfg(not(any(target_arch = "x86_64", target_arch = "i686", target_arch = "x86")))]
+        #[cfg(not(any(
+            target_arch = "x86_64",
+            target_arch = "i686",
+            target_arch = "x86",
+            all(target_arch = "aarch64", target_os = "macos"),
+        )))]
         let mut buf = buffer.as_mut_ptr() as *mut u8;
 
         error![
