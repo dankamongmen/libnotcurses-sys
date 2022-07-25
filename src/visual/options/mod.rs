@@ -207,7 +207,7 @@ impl<'ncplane> NcVisualOptions {
 }
 
 /// # Methods
-impl<'ncplane> NcVisualOptions {
+impl NcVisualOptions {
     /// Returns `true` if it does have an associated [`NcPlane`].
     pub fn does_plane(&self) -> bool {
         !self.n.is_null()
