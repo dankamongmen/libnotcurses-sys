@@ -44,6 +44,13 @@ Palette size: {11:?}
         nc.palette_size(),
     )?;
 
+    putstrln!(
+        splane,
+        "Supported styles: {}.\n",
+        nc.supported_styles().to_string().replace(" ", ", ")
+    )?;
+    putstrln!(splane, "{:?}", nc.supported_styles())?;
+
     putstrln!(splane, "GEOMETRY\n------------")?;
     let (t_rows, t_cols) = nc.term_dim_yx();
     putstrln!(
@@ -59,7 +66,7 @@ Palette size: {11:?}
     //
     // TODO:WIP (use for unit tests)
 
-    //let vg = nc.visual_geom(None, None)?; // no visual, no visualoptions
+    // let vg = nc.visual_geom(None, None)?; // no visual, no visualoptions
     // let vopts = NcVisualOptions::builder().pixel().build();
     // let vg = nc.visual_geom(None, Some(&vopts))?; // no visualoptions (same response)
     let vg = nc.visual_geom_with_pixel(None)?;

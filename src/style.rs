@@ -52,7 +52,6 @@ impl NcStyle {
 
 mod std_impls {
     use super::{c_api::NcStyle_u16, NcStyle};
-    use crate::Nc;
     use std::fmt;
 
     impl Default for NcStyle {
@@ -63,12 +62,38 @@ mod std_impls {
 
     impl fmt::Display for NcStyle {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "{}", Nc::str_styles(*self))
+            let mut string = String::new();
+            for s in self.to_vec() {
+                string.push_str(match s {
+                    NcStyle::Italic => "Italic ",
+                    NcStyle::Underline => "Underline ",
+                    NcStyle::Undercurl => "Undercurl ",
+                    NcStyle::Struck => "Struck ",
+                    NcStyle::Bold => "Bold ",
+                    NcStyle::None => "None ",
+                    _ => "",
+                });
+            }
+            let _ = string.pop();
+            write!(f, "{}", string)
         }
     }
     impl fmt::Debug for NcStyle {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "NcStyle::{}", self)
+            let mut string = String::new();
+            for s in self.to_vec() {
+                string.push_str(match s {
+                    NcStyle::Italic => "Italic+",
+                    NcStyle::Underline => "Underline+",
+                    NcStyle::Undercurl => "Undercurl+",
+                    NcStyle::Struck => "Struck+",
+                    NcStyle::Bold => "Bold+",
+                    NcStyle::None => "None ",
+                    _ => "",
+                });
+            }
+            let _ = string.pop();
+            write!(f, "NcStyle::{}", string)
         }
     }
 
@@ -98,12 +123,15 @@ impl NcStyle {
             NcStyle::Undercurl,
             NcStyle::Struck,
             NcStyle::Bold,
-            NcStyle::None,
         ];
         for s in &styles {
             if self.has(*s) {
                 v.push(*s)
             }
+        }
+        // only push None if there are no other styles present.
+        if v.is_empty() {
+            v.push(NcStyle::None)
         }
         v
     }
@@ -114,9 +142,14 @@ impl NcStyle {
         (self.0 & other.0) == other.0
     }
 
-    /// Adds the `other_style` to the current style.
-    pub fn add(&mut self, other: impl Into<NcStyle>) {
+    /// Sets the `other` style in the current style.
+    pub fn set(&mut self, other: impl Into<NcStyle>) {
         self.0 |= other.into().0
+    }
+
+    /// Unsets the `other` style in the current style.
+    pub fn unset(&mut self, other: impl Into<NcStyle>) {
+        self.0 &= !other.into().0
     }
 }
 

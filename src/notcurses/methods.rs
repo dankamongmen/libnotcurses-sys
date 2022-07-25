@@ -508,11 +508,11 @@ impl Nc {
 
         for s in styles_str.split(' ') {
             match s.to_lowercase().as_str() {
-                "italic" => style.add(NcStyle::Italic),
-                "underline" => style.add(NcStyle::Underline),
-                "undercurl" => style.add(NcStyle::Undercurl),
-                "struck" => style.add(NcStyle::Struck),
-                "bold" => style.add(NcStyle::Bold),
+                "italic" => style.set(NcStyle::Italic),
+                "underline" => style.set(NcStyle::Underline),
+                "undercurl" => style.set(NcStyle::Undercurl),
+                "struck" => style.set(NcStyle::Struck),
+                "bold" => style.set(NcStyle::Bold),
                 "none" => (),
                 _ => {
                     errstr.push_str(s);
@@ -714,18 +714,18 @@ impl Nc {
     /// *(No equivalent C style function)*
     pub fn str_styles(style: impl Into<NcStyle>) -> String {
         let mut string = String::new();
-        for s in style.into().to_vec() {
+
+        let styles = style.into();
+        for s in styles.to_vec() {
             string.push_str(match s {
-                NcStyle::Italic => "italic",
-                NcStyle::Underline => "underline",
-                NcStyle::Undercurl => "undercurl",
-                NcStyle::Struck => "struck",
-                NcStyle::Bold => "bold",
-                #[allow(unreachable_patterns)] // FIXME
-                NcStyle::None => "none",
-                _ => "none",
+                NcStyle::Italic => "Italic ",
+                NcStyle::Underline => "Underline ",
+                NcStyle::Undercurl => "Undercurl ",
+                NcStyle::Struck => "Struck ",
+                NcStyle::Bold => "Bold ",
+                NcStyle::None => "None ",
+                _ => "",
             });
-            string.push(' ');
         }
         let _ = string.pop();
         string
