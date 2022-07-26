@@ -1238,7 +1238,7 @@ impl NcPlane {
     /// *C style function: [ncplane_dup()][c_api::ncplane_dup].*
     //
     // TODO: deal with the opaque field that is stored in NcPlaneOptions.userptr
-    pub fn dup(&mut self) -> &mut NcPlane {
+    pub fn dup(&self) -> &mut NcPlane {
         unsafe { &mut *c_api::ncplane_dup(self, null_mut()) }
     }
 
