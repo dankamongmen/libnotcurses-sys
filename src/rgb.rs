@@ -1,5 +1,7 @@
 //!
 
+use c_api::{NcRgb_u32, NcRgba_u32};
+
 /// 24 bits broken into 3x RGB components.
 ///
 /// Unlike with [`NcChannel`], operations involving `NcRgb`
@@ -18,6 +20,14 @@
 #[repr(transparent)]
 #[derive(Clone, Copy, Default, PartialEq, Eq)]
 pub struct NcRgb(pub c_api::NcRgb_u32);
+impl NcRgb {
+    /// New const RGB color.
+    pub const fn new(r: u8, g: u8, b: u8) -> Self {
+        Self(
+            (r as NcRgb_u32) << 16 | (g as NcRgb_u32) << 8 | b as NcRgb_u32,
+        )
+    }
+}
 
 /// 32 bits broken into 3x RGB components + alpha component.
 ///
@@ -35,7 +45,17 @@ pub struct NcRgb(pub c_api::NcRgb_u32);
 #[repr(transparent)]
 #[derive(Clone, Copy, Default, PartialEq, Eq)]
 pub struct NcRgba(pub c_api::NcRgba_u32);
-
+impl NcRgba {
+    /// New const RGBA color.
+    pub const fn new(r: u8, g: u8, b: u8, a: u8) -> Self {
+        Self(
+            (a as NcRgba_u32) << 24
+                | (r as NcRgba_u32) << 16
+                | (g as NcRgba_u32) << 8
+                | b as NcRgba_u32,
+        )
+    }
+}
 mod std_impls {
     use super::{
         c_api::{NcRgb_u32, NcRgba_u32},
