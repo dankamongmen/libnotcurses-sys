@@ -66,10 +66,32 @@ pub struct NcPixel(pub c_api::NcPixel_u32);
 
 mod std_impls {
     use super::{c_api::NcPixel_u32, NcPixel};
+    use crate::{NcRgb, NcRgba};
 
     crate::from_primitive![NcPixel, NcPixel_u32];
     crate::unit_impl_from![NcPixel, NcPixel_u32];
     crate::unit_impl_fmt![bases+display; NcPixel];
+
+    impl From<NcRgb> for NcPixel {
+        fn from(rgb: NcRgb) -> Self {
+            Self::from_rgb(rgb)
+        }
+    }
+    impl From<NcPixel> for NcRgb {
+        fn from(bgra: NcPixel) -> Self {
+            bgra.to_rgb()
+        }
+    }
+    impl From<NcRgba> for NcPixel {
+        fn from(rgba: NcRgba) -> Self {
+            Self::from_rgba(rgba)
+        }
+    }
+    impl From<NcPixel> for NcRgba {
+        fn from(bgra: NcPixel) -> Self {
+            bgra.to_rgba()
+        }
+    }
 }
 
 /// Contains the pixel geometry information as returned by the
