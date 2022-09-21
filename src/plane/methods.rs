@@ -1238,6 +1238,9 @@ impl NcPlane {
     /// *C style function: [ncplane_dup()][c_api::ncplane_dup].*
     //
     // TODO: deal with the opaque field that is stored in NcPlaneOptions.userptr
+    //
+    // SAFETY: it's a new NcPlane, not a new one
+    #[allow(clippy::mut_from_ref)]
     pub fn dup(&self) -> &mut NcPlane {
         unsafe { &mut *c_api::ncplane_dup(self, null_mut()) }
     }

@@ -653,7 +653,7 @@ impl NcDirect {
         let cs = cstring![prompt];
         let res = unsafe { c_api::ncdirect_readline(self, cs.as_ptr()) };
         if !res.is_null() {
-            return Ok(rstring_free![res]);
+            Ok(rstring_free![res])
         } else {
             Err(NcError::with_msg(
                 c_api::NCRESULT_ERR,
@@ -672,7 +672,8 @@ impl NcDirect {
     /// `wchars` is an array of 6 characters: UL, UR, LL, LR, HL, VL.
     ///
     /// *C style function: [ncdirect_box()][c_api::ncdirect_box].*
-    // TODO: CHECK, specially wchars.
+    //
+    // CHECK, specially wchars.
     pub fn r#box(
         &mut self,
         ul: impl Into<NcChannels>,
@@ -687,7 +688,7 @@ impl NcDirect {
         let (ul, ur, ll, lr) = (ul.into(), ur.into(), ll.into(), lr.into());
         error![
             unsafe {
-                let wchars = core::mem::transmute(wchars);
+                let wchars = wchars as *const [char; 6] as *const i32;
                 c_api::ncdirect_box(self, ul.0, ur.0, ll.0, lr.0, wchars, len_y, len_x, ctlword)
             },
             &format!(
