@@ -117,9 +117,9 @@ macro_rules! cstring {
 #[doc(hidden)]
 macro_rules! rstring {
     ($s:expr) => {
-        unsafe { std::ffi::CStr::from_ptr($s).to_str().unwrap() }
+        unsafe { core::ffi::CStr::from_ptr($s).to_str().unwrap() }
         // possible alternative:
-        // unsafe { std::ffi::CStr::from_ptr($s).to_string_lossy() }
+        // unsafe { core::ffi::CStr::from_ptr($s).to_string_lossy() }
     };
 }
 

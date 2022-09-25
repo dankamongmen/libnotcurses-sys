@@ -13,7 +13,7 @@
 //W+ ncinput_meta_p
 //W+ ncinput_equal_p
 
-use std::ffi::CStr;
+use core::ffi::CStr;
 
 use crate::NcKeyMod;
 

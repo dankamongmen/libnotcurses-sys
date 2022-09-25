@@ -9,7 +9,7 @@
 //W  ncfadectx_iterations
 //W  ncfadectx_setup
 
-use std::ffi::c_void;
+use core::ffi::c_void;
 
 use crate::{
     c_api::{self, NcResult_i32},

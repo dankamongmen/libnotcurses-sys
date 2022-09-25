@@ -2,9 +2,8 @@
 // WIP
 
 // use crate::c_api::libc::{free, strdup};
-use cty::c_char;
+use core::ffi::c_char;
 use std::ffi::CString;
-// use std::ffi::{c_void, CString};
 
 /// A wrapped [`CString`] accepted by widgets.
 ///

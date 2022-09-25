@@ -104,6 +104,16 @@ impl Nc {
     pub unsafe fn stop(&mut self) -> NcResult<()> {
         error![c_api::notcurses_stop(self)]
     }
+
+    /// Destroys all [`NcPlane`]s other than the stdplane.
+    ///
+    /// # Safety
+    /// Must not use any pre-existing references to `NcPlane`s.
+    ///
+    /// *C style function: [notcurses_drop_planes()][c_api::notcurses_drop_planes].*
+    pub unsafe fn drop_planes(&mut self) {
+        c_api::notcurses_drop_planes(self);
+    }
 }
 
 /// # `Nc` methods
@@ -360,15 +370,6 @@ impl Nc {
     /// *C style function: [notcurses_osversion()][c_api::notcurses_osversion].*
     pub fn osversion(&self) -> String {
         rstring_free![c_api::notcurses_detected_terminal(self)]
-    }
-
-    /// Destroys all [`NcPlane`]s other than the stdplane.
-    ///
-    /// *C style function: [notcurses_drop_planes()][c_api::notcurses_drop_planes].*
-    pub fn drop_planes(&mut self) {
-        unsafe {
-            c_api::notcurses_drop_planes(self);
-        }
     }
 
     /// Reads input.

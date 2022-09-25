@@ -43,9 +43,10 @@ fn main() {
         // tell cargo to invalidate the built crate whenever the wrapper changes
         println!("cargo:rerun-if-changed=build/wrapper.h");
 
+        // https://docs.rs/bindgen/latest/bindgen/struct.Builder.html
         let mut builder = bindgen::Builder::default()
             .use_core()
-            .ctypes_prefix("cty")
+            .ctypes_prefix("core::ffi")
             .clang_arg("-D_XOPEN_SOURCE")
             .clang_arg(&nc_src.headers_include_string())
             // the input header we would like to generate builder for

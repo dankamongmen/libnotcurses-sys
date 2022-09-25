@@ -10,18 +10,18 @@ use libc::{
     c_long, c_void, fclose, /* feof, */ fread, fseek, ftell, SEEK_CUR, SEEK_END, SEEK_SET,
 };
 
-/// A utility function to pull the current value of errno and put it into an
-/// Error::Errno
+// A utility function to pull the current value of errno and put it into an
+// Error::Errno
 fn get_error<T>() -> Result<T, Error> {
     Err(Error::last_os_error())
 }
 
-/// See [`NcFile`]. Notcurses functions expects this type of `*FILE` (a struct)
+// See [`NcFile`]. Notcurses functions expects this type of `*FILE` (a struct)
 #[allow(clippy::upper_case_acronyms)]
 type NcFile_nc = crate::c_api::ffi::FILE;
 
-/// See [`NcFile`]. The [`libc`](https://docs.rs/libc/) crate expects this type
-/// of `*FILE` (an opaque enum)
+// See [`NcFile`]. The [`libc`](https://docs.rs/libc/) crate expects this type
+// of `*FILE` (an opaque enum)
 #[allow(clippy::upper_case_acronyms)]
 type NcFile_libc = libc::FILE;
 
@@ -227,16 +227,9 @@ impl Read for NcFile {
     ///
     /// If an error occurs during reading, some varient of error will be returned.
     fn read_to_string(&mut self, strbuf: &mut String) -> Result<usize, Error> {
-        let mut bytes_read = 0_usize;
         let mut buffer = vec![0u8];
-        let result = self.read_all(&mut buffer);
 
-        if let Ok(bytes) = result {
-            bytes_read = bytes;
-        }
-        if let Err(e) = result {
-            return Err(e);
-        }
+        let bytes_read = self.read_all(&mut buffer)?;
 
         let result = std::str::from_utf8(&buffer);
 

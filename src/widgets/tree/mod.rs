@@ -17,8 +17,7 @@
 //W  nctree_prev
 //W  nctree_redraw
 
-use cty::c_int;
-use std::ffi::c_void;
+use core::ffi::{c_int, c_void};
 
 use crate::{c_api::ffi, NcPlane};
 
