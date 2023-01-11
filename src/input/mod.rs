@@ -143,15 +143,7 @@ impl NcInput {
         let cstr = unsafe { CStr::from_ptr(self.utf8.as_ptr()) };
         let string = cstr.to_string_lossy();
         let raw_char = string.chars().next();
-        if let Some(ch) = raw_char {
-            if ch.is_ascii_control() {
-                None
-            } else {
-                Some(ch)
-            }
-        } else {
-            None
-        }
+        raw_char.filter(|&ch| !ch.is_ascii_control())
     }
 
     /// Returns true if there are no modifiers present.

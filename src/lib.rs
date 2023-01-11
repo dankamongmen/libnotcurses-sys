@@ -138,7 +138,7 @@ pub use string::NcString;
 pub use style::NcStyle;
 pub use time::NcTime;
 pub use visual::{
-    NcVisual, NcVisualFlag, NcVisualGeometry, NcVisualOptions, NcVisualOptionsBuilder,
+    NcStreamCb, NcVisual, NcVisualFlag, NcVisualGeometry, NcVisualOptions, NcVisualOptionsBuilder,
 };
 
 pub mod c_api {

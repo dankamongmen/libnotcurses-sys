@@ -1676,7 +1676,7 @@ impl NcPlane {
     pub fn cursor_yx(&self) -> (u32, u32) {
         let (mut y, mut x) = (0, 0);
         unsafe { c_api::ncplane_cursor_yx(self, &mut y, &mut x) };
-        (y as u32, x as u32)
+        (y, x)
     }
 
     /// Returns the current row of the cursor within this `NcPlane`.
@@ -1824,7 +1824,7 @@ impl NcPlane {
     pub fn dim_yx(&self) -> (u32, u32) {
         let (mut y, mut x) = (0, 0);
         unsafe { c_api::ncplane_dim_yx(self, &mut y, &mut x) };
-        (y as u32, x as u32)
+        (y, x)
     }
 
     /// Returns the rows of this `NcPlane`.
@@ -1933,12 +1933,12 @@ impl NcPlane {
             );
         }
         NcPixelGeometry {
-            term_y: pxy as u32,
-            term_x: pxx as u32,
-            cell_y: celldimy as u32,
-            cell_x: celldimx as u32,
-            max_bitmap_y: maxbmapy as u32,
-            max_bitmap_x: maxbmapx as u32,
+            term_y: pxy,
+            term_x: pxx,
+            cell_y: celldimy,
+            cell_x: celldimx,
+            max_bitmap_y: maxbmapy,
+            max_bitmap_x: maxbmapx,
         }
     }
 
@@ -1981,8 +1981,8 @@ impl NcPlane {
                     keep_x as i32,
                     keep_len_y,
                     keep_len_x,
-                    off_y as i32,
-                    off_x as i32,
+                    off_y,
+                    off_x,
                     len_y,
                     len_x,
                 )
@@ -2048,11 +2048,7 @@ impl NcPlane {
     /// *C style function: [ncplane_resize_simple()][c_api::ncplane_resize_simple].*
     #[inline]
     pub fn resize_simple(&mut self, len_y: u32, len_x: u32) -> NcResult<()> {
-        error![c_api::ncplane_resize_simple(
-            self,
-            len_y as u32,
-            len_x as u32
-        )]
+        error![c_api::ncplane_resize_simple(self, len_y, len_x)]
     }
 
     /// Returns this `NcPlane`'s current resize callback, or `None` if not set.
@@ -2125,7 +2121,7 @@ impl NcPlane {
     pub fn yx(&self) -> (i32, i32) {
         let (mut y, mut x) = (0, 0);
         unsafe { c_api::ncplane_yx(self, &mut y, &mut x) };
-        (y as i32, x as i32)
+        (y, x)
     }
 
     /// Gets the `x` origin of this `NcPlane` relative to its parent,
@@ -2133,7 +2129,7 @@ impl NcPlane {
     ///
     /// *C style function: [ncplane_x()][c_api::ncplane_x].*
     pub fn x(&self) -> i32 {
-        unsafe { c_api::ncplane_x(self) as i32 }
+        unsafe { c_api::ncplane_x(self) }
     }
 
     /// Gets the `y` origin of this `NcPlane` relative to its parent,
@@ -2141,7 +2137,7 @@ impl NcPlane {
     ///
     /// *C style function: [ncplane_y()][c_api::ncplane_y].*
     pub fn y(&self) -> i32 {
-        unsafe { c_api::ncplane_y(self) as i32 }
+        unsafe { c_api::ncplane_y(self) }
     }
 
     /// Returns `true` if this `NcPlane` has scrolling enabled, or `false` otherwise.

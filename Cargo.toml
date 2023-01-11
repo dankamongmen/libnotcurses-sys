@@ -1,6 +1,6 @@
 [package]
 name = "libnotcurses-sys"
-version = "3.7.0"
+version = "3.7.1"
 authors = [
 	"nick black <dankamongmen@gmail.com>",
 	"José Luis Cruz <joseluis@andamira.net>"
@@ -44,7 +44,7 @@ include = [
 libc = { version = "0.2.132", default-features = false }
 
 [dev-dependencies]
-serial_test = "0.9"
+serial_test = "0.10"
 
 # for the examples
 rand = "0.8"
@@ -52,7 +52,7 @@ rand = "0.8"
 [build-dependencies]
 # https://tracker.debian.org/pkg/rust-bindgen
 # https://pkgs.org/search/?q=rust-bindgen
-bindgen = "0.59"
+bindgen = "0.60"
 # https://tracker.debian.org/pkg/rust-pkg-config
 # https://pkgs.org/search/?q=rust-pkg-config
 pkg-config = "0.3.25"

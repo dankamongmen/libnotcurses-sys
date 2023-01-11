@@ -436,7 +436,7 @@ impl NcDirect {
     /// *C style function: [ncdirect_cursor_down()][c_api::ncdirect_cursor_down].*
     pub fn cursor_down(&mut self, rows: i32) -> NcResult<()> {
         error![
-            unsafe { c_api::ncdirect_cursor_down(self, rows as i32) },
+            unsafe { c_api::ncdirect_cursor_down(self, rows) },
             &format!("NcDirect.cursor_down({})", rows)
         ]
     }
@@ -446,7 +446,7 @@ impl NcDirect {
     /// *C style function: [ncdirect_cursor_left()][c_api::ncdirect_cursor_left].*
     pub fn cursor_left(&mut self, cols: i32) -> NcResult<()> {
         error![
-            unsafe { c_api::ncdirect_cursor_left(self, cols as i32) },
+            unsafe { c_api::ncdirect_cursor_left(self, cols) },
             &format!("NcDirect.cursor_left({})", cols)
         ]
     }
@@ -456,7 +456,7 @@ impl NcDirect {
     /// *C style function: [ncdirect_cursor_right()][c_api::ncdirect_cursor_right].*
     pub fn cursor_right(&mut self, cols: i32) -> NcResult<()> {
         error![
-            unsafe { c_api::ncdirect_cursor_right(self, cols as i32) },
+            unsafe { c_api::ncdirect_cursor_right(self, cols) },
             &format!("NcDirect.cursor_right({})", cols)
         ]
     }
@@ -466,7 +466,7 @@ impl NcDirect {
     /// *C style function: [ncdirect_cursor_up()][c_api::ncdirect_cursor_up].*
     pub fn cursor_up(&mut self, rows: i32) -> NcResult<()> {
         error![
-            unsafe { c_api::ncdirect_cursor_up(self, rows as i32) },
+            unsafe { c_api::ncdirect_cursor_up(self, rows) },
             &format!("NcDirect.cursor_up({})", rows)
         ]
     }
@@ -504,7 +504,7 @@ impl NcDirect {
         error![
             unsafe { c_api::ncdirect_cursor_yx(self, &mut y, &mut x) },
             "",
-            (y as u32, x as u32)
+            (y, x)
         ]
     }
 
@@ -530,22 +530,22 @@ impl NcDirect {
     ///
     /// *C style function: [ncdirect_dim_y()][c_api::ncdirect_dim_y].*
     pub fn dim_y(&mut self) -> u32 {
-        unsafe { c_api::ncdirect_dim_y(self) as u32 }
+        unsafe { c_api::ncdirect_dim_y(self) }
     }
 
     /// Gets the current number of columns.
     ///
     /// *C style function: [ncdirect_dim_x()][c_api::ncdirect_dim_x].*
     pub fn dim_x(&mut self) -> u32 {
-        unsafe { c_api::ncdirect_dim_x(self) as u32 }
+        unsafe { c_api::ncdirect_dim_x(self) }
     }
 
     /// Gets the current number of rows and columns.
     ///
     /// *C style function: [ncdirect_dim_y()][c_api::ncdirect_dim_y].*
     pub fn dim_yx(&mut self) -> (u32, u32) {
-        let y = unsafe { c_api::ncdirect_dim_y(self) as u32 };
-        let x = unsafe { c_api::ncdirect_dim_x(self) as u32 };
+        let y = unsafe { c_api::ncdirect_dim_y(self) };
+        let x = unsafe { c_api::ncdirect_dim_x(self) };
         (y, x)
     }
 

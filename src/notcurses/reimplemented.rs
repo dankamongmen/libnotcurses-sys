@@ -200,7 +200,7 @@ pub fn notcurses_term_dim_yx(nc: &Nc) -> (u32, u32) {
     unsafe {
         c_api::ncplane_dim_yx(c_api::notcurses_stdplane_const(nc), &mut y, &mut x);
     }
-    (y as u32, x as u32)
+    (y, x)
 }
 
 /// Disables all mice tracking.

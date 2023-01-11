@@ -6,7 +6,7 @@ extern crate pkg_config;
 mod csource;
 
 /// The notcurses version that we are aiming to support in the current release.
-const NC_VERSION: &str = "3.0.8";
+const NC_VERSION: &str = "3.0.9";
 
 fn main() {
     let nc_src = csource::NcCSource::new(NC_VERSION);
@@ -48,7 +48,7 @@ fn main() {
             .use_core()
             .ctypes_prefix("core::ffi")
             .clang_arg("-D_XOPEN_SOURCE")
-            .clang_arg(&nc_src.headers_include_string())
+            .clang_arg(nc_src.headers_include_string())
             // the input header we would like to generate builder for
             .header("build/wrapper.h")
             // generate comments, also from headers and not just doc comments (///)

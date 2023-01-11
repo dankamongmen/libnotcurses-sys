@@ -209,7 +209,7 @@ impl Read for NcFile {
                         let to_reserve = to_read - buf.len();
                         Self::expand_buffer(buf, to_reserve);
                     }
-                    let _ = self.seek(SeekFrom::Start(cur_pos as u64));
+                    let _ = self.seek(SeekFrom::Start(cur_pos));
                     match self.read_exact(buf) {
                         Ok(()) => Ok(to_read),
                         Err(e) => Err(e),

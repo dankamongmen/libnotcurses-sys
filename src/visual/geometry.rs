@@ -215,33 +215,33 @@ mod std_impls {
             if vg.pixy == 0 || vg.pixx == 0 {
                 pix_yx = None;
             } else {
-                pix_yx = Some((vg.pixy as u32, vg.pixx as u32));
+                pix_yx = Some((vg.pixy, vg.pixx));
             }
             if vg.cdimy == 0 || vg.cdimx == 0 {
                 cdim_yx = None;
             } else {
-                cdim_yx = Some((vg.cdimy as u32, vg.cdimx as u32));
+                cdim_yx = Some((vg.cdimy, vg.cdimx));
             }
             if vg.rpixy == 0 || vg.rpixx == 0 {
                 // MAYBE double CHECK this case
                 rpix_yx = None;
             } else {
-                rpix_yx = Some((vg.rpixy as u32, vg.rpixx as u32));
+                rpix_yx = Some((vg.rpixy, vg.rpixx));
             }
             if vg.rcelly == 0 || vg.rcellx == 0 {
                 rcell_yx = None;
             } else {
-                rcell_yx = Some((vg.rcelly as u32, vg.rcellx as u32));
+                rcell_yx = Some((vg.rcelly, vg.rcellx));
             }
             if vg.scaley == 0 || vg.scalex == 0 {
                 scale_yx = None;
             } else {
-                scale_yx = Some((vg.scaley as u32, vg.scalex as u32));
+                scale_yx = Some((vg.scaley, vg.scalex));
             }
 
             // maxpixel_yx is only defined when using NcBlitter::Pixel
             if vg.blitter == NcBlitter::Pixel.into() {
-                maxpixel_yx = Some((vg.maxpixely as u32, vg.maxpixelx as u32));
+                maxpixel_yx = Some((vg.maxpixely, vg.maxpixelx));
             } else {
                 maxpixel_yx = None;
             }
@@ -254,8 +254,8 @@ mod std_impls {
                 scale_yx,
                 maxpixel_yx,
 
-                len_yx: Some((vg.leny as u32, vg.lenx as u32)),
-                beg_yx: Some((vg.begy as u32, vg.begx as u32)),
+                len_yx: Some((vg.leny, vg.lenx)),
+                beg_yx: Some((vg.begy, vg.begx)),
 
                 blitter: vg.blitter.into(),
             }

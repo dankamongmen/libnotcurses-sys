@@ -38,7 +38,7 @@
 //W+ ncvisualplane_create
 
 #[allow(unused_imports)] // for doc comments
-use crate::{NcBlitter, NcChannel, NcPlane, NcScale};
+use crate::{c_api::NcResult_i32, NcBlitter, NcChannel, NcPlane, NcScale, NcTime};
 
 mod geometry;
 mod methods;
@@ -57,6 +57,15 @@ pub use options::{NcVisualFlag, NcVisualOptions, NcVisualOptionsBuilder};
 /// - [`blit`][NcVisual#method.blit]
 /// - [`simple_streamer`][NcVisual#method.simple_streamer]
 pub type NcVisual = crate::c_api::ffi::ncvisual;
+
+/// Called for each frame rendered from an `NcVisual`
+///
+/// If anything but 0 is returned, the streaming operation ceases immediately,
+/// and that value is propagated out.
+///
+/// The recommended absolute display time target is passed in 'tspec'.
+pub type NcStreamCb =
+    fn(&mut NcVisual, &mut NcVisualOptions, &NcTime, Option<&mut NcPlane>) -> NcResult_i32;
 
 pub(crate) mod c_api {
     pub use super::geometry::c_api::*;

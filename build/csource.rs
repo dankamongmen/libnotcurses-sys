@@ -104,7 +104,7 @@ impl NcCSource {
         create_dir_all(&self.build_path).expect("couldn't create 'build/' directory");
 
         set_var("PKG_CONFIG_PATH", &self.build_path);
-        set_var("CPATH", &self.build_path.join("include/notcurses"));
+        set_var("CPATH", self.build_path.join("include/notcurses"));
 
         // compile notcurses
 

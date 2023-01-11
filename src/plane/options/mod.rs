@@ -73,8 +73,8 @@ impl NcPlaneOptions {
         margin_r: u32,
     ) -> Self {
         NcPlaneOptions {
-            y: y as i32,
-            x: x as i32,
+            y,
+            x,
             rows,
             cols,
             userptr: null_mut(),
@@ -101,7 +101,7 @@ impl NcPlaneOptions {
     ) -> Self {
         let flags = NcPlaneFlag::HorAligned | flags.into();
         NcPlaneOptions {
-            y: y as i32,
+            y,
             x: align.into().into(),
             rows,
             cols,

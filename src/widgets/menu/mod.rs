@@ -55,10 +55,10 @@ pub type NcMenuSection = ffi::ncmenu_section;
 
 impl NcMenuOptions {
     /// [`NcMenuOptions`] flag: Bottom row (as opposed to top row).
-    pub const BOTTOM: u64 = c_api::NCMENU_OPTION_BOTTOM as u64;
+    pub const BOTTOM: u64 = c_api::NCMENU_OPTION_BOTTOM;
 
     /// [`NcMenuOptions`] flag: Hides the menu when not unrolled.
-    pub const HIDING: u64 = c_api::NCMENU_OPTION_HIDING as u64;
+    pub const HIDING: u64 = c_api::NCMENU_OPTION_HIDING;
 }
 
 pub(crate) mod c_api {

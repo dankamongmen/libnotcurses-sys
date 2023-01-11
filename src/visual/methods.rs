@@ -321,7 +321,7 @@ impl NcVisual {
 
         // if an `Nc` context is not provided, only `pix_yx` will be filled in.
         if nc.is_none() {
-            pix_yx = Some((vg.pixy as u32, vg.pixx as u32));
+            pix_yx = Some((vg.pixy, vg.pixx));
 
             cdim_yx = None;
             rpix_yx = None;
@@ -333,7 +333,7 @@ impl NcVisual {
         } else {
             // `maxpixel_yx` only is defined for `Ncblitter::PIXEL`.
             if vg.blitter == NcBlitter::Pixel.into() {
-                maxpixel_yx = Some((vg.maxpixely as u32, vg.maxpixelx as u32));
+                maxpixel_yx = Some((vg.maxpixely, vg.maxpixelx));
             } else {
                 maxpixel_yx = None;
             }
@@ -343,35 +343,35 @@ impl NcVisual {
                 beg_yx = None;
                 len_yx = None;
             } else {
-                beg_yx = Some((vg.begy as u32, vg.begx as u32));
-                len_yx = Some((vg.leny as u32, vg.lenx as u32));
+                beg_yx = Some((vg.begy, vg.begx));
+                len_yx = Some((vg.leny, vg.lenx));
             }
 
             // valid values for the following fields can't be 0 either:
             if vg.pixy | vg.pixx == 0 {
                 pix_yx = None;
             } else {
-                pix_yx = Some((vg.pixy as u32, vg.pixx as u32));
+                pix_yx = Some((vg.pixy, vg.pixx));
             }
             if vg.cdimy | vg.cdimx == 0 {
                 cdim_yx = None;
             } else {
-                cdim_yx = Some((vg.cdimy as u32, vg.cdimx as u32));
+                cdim_yx = Some((vg.cdimy, vg.cdimx));
             }
             if vg.scaley | vg.scalex == 0 {
                 scale_yx = None;
             } else {
-                scale_yx = Some((vg.scaley as u32, vg.scalex as u32));
+                scale_yx = Some((vg.scaley, vg.scalex));
             }
             if vg.rpixy | vg.rpixx == 0 {
                 rpix_yx = None;
             } else {
-                rpix_yx = Some((vg.rpixy as u32, vg.rpixx as u32));
+                rpix_yx = Some((vg.rpixy, vg.rpixx));
             }
             if vg.rcelly | vg.rcellx == 0 {
                 rcell_yx = None;
             } else {
-                rcell_yx = Some((vg.rcelly as u32, vg.rcellx as u32));
+                rcell_yx = Some((vg.rcelly, vg.rcellx));
             }
         }
 
@@ -520,7 +520,7 @@ impl NcVisual {
     /// *Provide as an argument to ncvisual_stream().*
     ///
     /// If you'd like subtitles to be decoded, provide an ncplane as the curry.
-    /// If the curry is NULL, subtitles will not be displayed.
+    /// If the curry is `None`, subtitles will not be displayed.
     ///
     /// *C style function: [ncvisual_simple_streamer()][c_api::ncvisual_simple_streamer].*
     pub fn simple_streamer(
@@ -552,36 +552,34 @@ impl NcVisual {
         }
     }
 
-    // // TODO
-    //
     // /// Streams the entirety of the media, according to its own timing.
     // ///
     // /// Blocking, obviously.
     // ///
-    // /// If `streamer` is provided it will be called for each frame, and its return
-    // /// value handled as outlined for streamcb.
-    // /// If streamer() returns non-zero, the stream is aborted, and that value is
-    // /// returned.  By convention, return a positive number to indicate intentional
-    // /// abort from within streamer().
+    // /// If `streamer` is provided it will be called for each frame, and its
+    // /// return value handled as outlined for streamcb. If streamer() returns
+    // /// non-zero, the stream is aborted, and that value is returned.  By
+    // /// convention, return a positive number to indicate intentional abort from
+    // /// within streamer().
     // ///
-    // /// `timescale` allows the frame duration time to be scaled.
-    // /// For an NcVisual naturally running at 30FPS, a 'timescale' of 0.1
-    // /// will result in 300 FPS, and a `timescale` of 10 will result in 3 FPS.
-    // /// It is an error to supply `timescale` less than or equal to 0.
+    // /// `timescale` allows the frame duration time to be scaled. For an NcVisual
+    // /// naturally running at 30FPS, a 'timescale' of 0.1 will result in 300 FPS,
+    // /// and a `timescale` of 10 will result in 3 FPS. It is an error to supply
+    // /// `timescale` less than or equal to 0.
     // ///
     // /// *C style function: [ncvisual_streamer()][c_api::ncvisual_streamer].*
     // //
-    // // TODO: add streamcb
-    // // INFO: QUESTION: is curry also optional like in simple_streamer?
-    // //
-    // pub fn simple_streamer(
+    // // TODO
+    // pub fn streamer(
     //     &mut self,
     //     nc: &mut Nc,
-    //     timescale: f32,
-    //     //streamer: Option<streamcb>
     //     options: &NcVisualOptions,
+    //     timescale: f32,
+    //     streamer: Option<NcStreamCb>,
     //     curry: Option<&mut NcPlane>,
     // ) -> NcResult<()> {
+    //     debug_assert![timescale > 0.0];
+    //     todo![]
     // }
 
     /// If a subtitle ought be displayed at this time, return a new plane

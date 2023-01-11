@@ -320,7 +320,7 @@ pub const fn nccell_styles(cell: &NcCell) -> NcStyle_u16 {
 /// *Method: NcCell.[styles_on()][NcCell#method.styles_on].*
 #[inline]
 pub fn nccell_on_styles(cell: &mut NcCell, stylebits: impl Into<NcStyle_u16>) {
-    cell.stylemask |= stylebits.into() & c_api::NCSTYLE_MASK as u16;
+    cell.stylemask |= stylebits.into() & c_api::NCSTYLE_MASK;
 }
 
 /// Removes the specified [`NcStyle_u16`] bits from an [`NcCell`]'s existing spec.
@@ -328,7 +328,7 @@ pub fn nccell_on_styles(cell: &mut NcCell, stylebits: impl Into<NcStyle_u16>) {
 /// *Method: NcCell.[styles_off()][NcCell#method.styles_off].*
 #[inline]
 pub fn nccell_off_styles(cell: &mut NcCell, stylebits: impl Into<NcStyle_u16>) {
-    cell.stylemask &= !(stylebits.into() & c_api::NCSTYLE_MASK as u16);
+    cell.stylemask &= !(stylebits.into() & c_api::NCSTYLE_MASK);
 }
 
 /// Sets *just* the specified [`NcStyle_u16`] bits for an [`NcCell`],
@@ -337,7 +337,7 @@ pub fn nccell_off_styles(cell: &mut NcCell, stylebits: impl Into<NcStyle_u16>) {
 /// *Method: NcCell.[styles_set()][NcCell#method.styles_set].*
 #[inline]
 pub fn nccell_set_styles(cell: &mut NcCell, stylebits: impl Into<NcStyle_u16>) {
-    cell.stylemask = stylebits.into() & c_api::NCSTYLE_MASK as u16;
+    cell.stylemask = stylebits.into() & c_api::NCSTYLE_MASK;
 }
 
 // Chars -----------------------------------------------------------------------

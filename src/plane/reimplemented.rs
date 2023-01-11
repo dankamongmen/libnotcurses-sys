@@ -562,7 +562,7 @@ pub fn ncplane_putnstr_yx(
         // print, so that scrolling is taken into account
         y = None;
         x = None;
-        offset += wcs as usize;
+        offset += wcs;
     }
     ret
 }
@@ -664,7 +664,7 @@ pub fn ncplane_dim_x(plane: &NcPlane) -> u32 {
     unsafe {
         let mut x = 0;
         c_api::ncplane_dim_yx(plane, null_mut(), &mut x);
-        x as u32
+        x
     }
 }
 
@@ -676,7 +676,7 @@ pub fn ncplane_dim_y(plane: &NcPlane) -> u32 {
     unsafe {
         let mut y = 0;
         c_api::ncplane_dim_yx(plane, &mut y, null_mut());
-        y as u32
+        y
     }
 }
 
@@ -704,19 +704,7 @@ pub fn ncplane_resize_simple(plane: &mut NcPlane, len_y: u32, len_x: u32) -> NcR
             old_x
         }
     };
-    unsafe {
-        c_api::ncplane_resize(
-            plane,
-            0,
-            0,
-            keep_len_y as u32,
-            keep_len_x as u32,
-            0,
-            0,
-            len_y,
-            len_x,
-        )
-    }
+    unsafe { c_api::ncplane_resize(plane, 0, 0, keep_len_y, keep_len_x, 0, 0, len_y, len_x) }
 }
 
 /// Returns the column at which `numcols` columns ought start in order to be
@@ -811,8 +799,8 @@ pub fn ncplane_perimeter(
             lr,
             hline,
             vline,
-            dimy as u32,
-            dimx as u32,
+            dimy,
+            dimx,
             boxmask.into(),
         )
     }
@@ -847,18 +835,7 @@ pub fn ncplane_perimeter_double(
     {
         return NCRESULT_ERR;
     }
-    let ret = ncplane_box_sized(
-        plane,
-        &ul,
-        &ur,
-        &ll,
-        &lr,
-        &hl,
-        &vl,
-        dimy as u32,
-        dimx as u32,
-        boxmask,
-    );
+    let ret = ncplane_box_sized(plane, &ul, &ur, &ll, &lr, &hl, &vl, dimy, dimx, boxmask);
     unsafe {
         nccell_release(plane, &mut ul);
         nccell_release(plane, &mut ur);
@@ -899,18 +876,7 @@ pub fn ncplane_perimeter_rounded(
     {
         return NCRESULT_ERR;
     }
-    let ret = ncplane_box_sized(
-        plane,
-        &ul,
-        &ur,
-        &ll,
-        &lr,
-        &hl,
-        &vl,
-        dimy as u32,
-        dimx as u32,
-        boxmask,
-    );
+    let ret = ncplane_box_sized(plane, &ul, &ur, &ll, &lr, &hl, &vl, dimy, dimx, boxmask);
     unsafe {
         nccell_release(plane, &mut ul);
         nccell_release(plane, &mut ur);
@@ -1007,8 +973,8 @@ pub fn ncplane_box_sized(
             lr,
             hline,
             vline,
-            (y + len_y - 1) as u32,
-            (x + len_x - 1) as u32,
+            y + len_y - 1,
+            x + len_x - 1,
             boxmask.into(),
         )
     }
@@ -1086,8 +1052,8 @@ pub fn ncplane_double_box_sized(
         plane,
         stylemask,
         channels,
-        y as u32 + len_y - 1,
-        x as u32 + len_x - 1,
+        y + len_y - 1,
+        x + len_x - 1,
         boxmask,
     )
 }
@@ -1163,8 +1129,8 @@ pub fn ncplane_rounded_box_sized(
         plane,
         stylemask,
         channels,
-        y as u32 + len_y - 1,
-        x as u32 + len_x - 1,
+        y + len_y - 1,
+        x + len_x - 1,
         boxmask,
     )
 }

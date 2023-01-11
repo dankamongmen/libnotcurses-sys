@@ -91,3 +91,16 @@ impl NcPixel {
         c_api::ncpixel_set_rgb8(self.into(), r, g, b);
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn abgr() {
+        let rgba: NcRgba = 0x11223344.into();
+        let abgr: NcPixel = rgba.into();
+
+        assert_eq![0x44332211_u32, abgr.into()];
+    }
+}
