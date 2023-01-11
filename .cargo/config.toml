@@ -4,6 +4,10 @@
 cl = "clippy"
 clq = "clippy --quiet"
 
+# CLEAN PACKAGE
+cp = "clean --package"
+crp = "clean --release --package"
+
 # DOC
 d = "doc --no-deps"
 do = "doc --no-deps --open"
@@ -40,3 +44,15 @@ rrqe = "run --release --quiet --example"
 # fix IO errors: https://github.com/dankamongmen/notcurses/issues/766
 t = "test -- --test-threads 1 --nocapture"
 t_all = "test --no-fail-fast -- --test-threads 1 --nocapture"
+
+# TREE
+tr = "tree"
+trf = "tree --format {p}:{f}" # with feature list
+trr = "tree --format {p}:{r}" # with repository url
+
+# Cargo subcommands:
+## cargo-expand
+E = "expand"
+Eb = "expand --bin"
+Ee = "expand --example"
+El = "expand --lib"
