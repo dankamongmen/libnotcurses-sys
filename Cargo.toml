@@ -60,6 +60,8 @@ pkg-config = "0.3.25"
 cc = { version = "1.0", optional = true }
 
 [features]
+default = ["keep_vendored"]
+
 # enable this feature to compile the notcurses C source code.
 compile_csource = ["cc", "keep_vendored"]
 # enable this feature to vendor the C source code into the crate.
