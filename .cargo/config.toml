@@ -50,6 +50,12 @@ tr = "tree"
 trf = "tree --format {p}:{f}" # with feature list
 trr = "tree --format {p}:{r}" # with repository url
 
+# PUBLISH
+p = "publish --dry-run --features=use_vendored_bindings"
+pa = "publish --dry-run --allow-dirty --features=use_vendored_bindings"
+pp = "publish --features=use_vendored_bindings"
+ppa = "publish --allow-dirty --features=use_vendored_bindings"
+
 # Cargo subcommands:
 ## cargo-expand
 E = "expand"
