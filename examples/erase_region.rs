@@ -231,6 +231,8 @@ fn print_info_row(
         )?;
     }
 
-    state.info.putstr_aligned_stained(Some(row), align, string)?;
+    state
+        .info
+        .putstr_aligned_stained(Some(row), align, string)?;
     Ok(())
 }
