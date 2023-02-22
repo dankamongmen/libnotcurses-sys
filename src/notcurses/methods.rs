@@ -358,17 +358,17 @@ impl Nc {
         rstring_free![c_api::notcurses_hostname()]
     }
 
+    /// Returns the name of the detected OS version.
+    ///
+    /// *C style function: [notcurses_osversion()][c_api::notcurses_osversion].*
+    pub fn osversion() -> String {
+        rstring_free![c_api::notcurses_osversion()]
+    }
+
     /// Returns the name of the detected terminal.
     ///
     /// *C style function: [notcurses_detected_terminal()][c_api::notcurses_detected_terminal].*
     pub fn detected_terminal(&self) -> String {
-        rstring_free![c_api::notcurses_detected_terminal(self)]
-    }
-
-    /// Returns the name of the detected OS version.
-    ///
-    /// *C style function: [notcurses_osversion()][c_api::notcurses_osversion].*
-    pub fn osversion(&self) -> String {
         rstring_free![c_api::notcurses_detected_terminal(self)]
     }
 

@@ -10,8 +10,9 @@ fn main() -> NcResult<()> {
     putstrln!(splane, "ENVIRONMENT\n-----------")?;
     putstrln!(splane, "notcurses version: {}", Nc::version())?;
     putstrln!(splane, "terminal name: {}", nc.detected_terminal())?;
-    putstrln!(splane, "user name: {}", Nc::accountname())?;
+    putstrln!(splane, "os version: {}", Nc::osversion())?;
     putstrln!(splane, "host name: {}", Nc::hostname())?;
+    putstrln!(splane, "user name: {}", Nc::accountname())?;
     putstrln!(splane)?;
 
     putstrln!(splane, "CAPABILITIES\n------------")?;
