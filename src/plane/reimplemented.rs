@@ -14,7 +14,7 @@
 // - gradient
 // - cursor
 
-use core::ptr::null_mut;
+use core::{ffi::c_char, ptr::null_mut};
 
 use std::ffi::CString;
 
@@ -307,7 +307,7 @@ pub fn ncplane_putchar_stained(plane: &mut NcPlane, ch: char) -> NcResult_i32 {
 pub fn ncplane_putegc(plane: &mut NcPlane, egc: &str, sbytes: Option<&mut usize>) -> NcResult_i32 {
     let sbytes_ptr = if let Some(sb) = sbytes { sb as *mut _ } else { null_mut() };
     let cs = cstring![egc];
-    let egc_ptr = cs.as_ptr() as *const i8; // CHECK why is this needed only here
+    let egc_ptr = cs.as_ptr() as *const c_char; // CHECK why is this needed only here
 
     unsafe { c_api::ffi::ncplane_putegc_yx(plane, -1, -1, egc_ptr, sbytes_ptr) }
 }
@@ -1181,11 +1181,7 @@ pub fn ncplane_gradient(
     lr: impl Into<NcChannels_u64>,
 ) -> NcResult_i32 {
     let cs = cstring![egc];
-
-    #[cfg(any(target_arch = "armv7l", target_arch = "i686"))]
-    let egc_ptr = cs.as_ptr() as *const i8;
-    #[cfg(not(any(target_arch = "armv7l", target_arch = "i686")))]
-    let egc_ptr = cs.as_ptr();
+    let egc_ptr = cs.as_ptr() as *const c_char;
 
     unsafe {
         c_api::ffi::ncplane_gradient(

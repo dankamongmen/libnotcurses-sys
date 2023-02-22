@@ -1,4 +1,7 @@
-use core::ptr::{null, null_mut};
+use core::{
+    ffi::c_char,
+    ptr::{null, null_mut},
+};
 
 use crate::{
     c_api, cstring, error, error_ref_mut, error_str,
@@ -90,14 +93,14 @@ impl NcSelector {
     /// Move down in the list. A reference to the newly-selected item is
     /// returned, or NULL if there are no items in the list.
     pub fn nextitem(&mut self) -> NcResult<String> {
-        let cstr: *const i8 = unsafe { c_api::ncselector_nextitem(self) };
+        let cstr: *const c_char = unsafe { c_api::ncselector_nextitem(self) };
         error_str![cstr, "Calling selector.nextitem"]
     }
 
     /// Move up in the list. A reference to the newly-selected item is
     /// returned, or NULL if there are no items in the list.
     pub fn previtem(&mut self) -> NcResult<String> {
-        let cstr: *const i8 = unsafe { c_api::ncselector_previtem(self) };
+        let cstr: *const c_char = unsafe { c_api::ncselector_previtem(self) };
         error_str![cstr, "Calling selector.previtem"]
     }
 }

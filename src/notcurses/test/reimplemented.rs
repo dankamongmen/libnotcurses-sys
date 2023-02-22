@@ -1,6 +1,8 @@
 //! Test `notcurses_*` reimplemented functions.
 
 use serial_test::serial;
+
+use core::ffi::c_char;
 use std::io::Read;
 
 use crate::c_api::{self, notcurses_init_test, notcurses_stop, NCRESULT_MAX};
@@ -146,26 +148,12 @@ fn notcurses_at_yx() {
 
 #[test]
 #[serial]
-#[cfg_attr(target_os = "macos", ignore)] // FIXME
-#[ignore] // FIXME https://github.com/dankamongmen/notcurses/issues/2111
+// #[ignore] // FIXME https://github.com/dankamongmen/notcurses/issues/2111
 fn notcurses_debug() {
     unsafe {
         let nc = notcurses_init_test();
 
-        #[cfg(any(
-            target_arch = "s390x",
-            target_arch = "powerpc64le",
-            target_arch = "armv7hl",
-            target_arch = "aarch64"
-        ))]
-        let mut _p: *mut u8 = &mut 0;
-        #[cfg(not(any(
-            target_arch = "s390x",
-            target_arch = "powerpc64le",
-            target_arch = "armv7hl",
-            target_arch = "aarch64"
-        )))]
-        let mut _p: *mut i8 = &mut 0;
+        let mut _p: *mut c_char = &mut 0;
 
         let mut _size: *mut usize = &mut 0;
         let mut file = NcFile::from_libc(libc::open_memstream(&mut _p, _size));

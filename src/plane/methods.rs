@@ -1,5 +1,6 @@
 //! `NcPlane*` methods and associated functions.
-use core::{ptr::null_mut, slice::from_raw_parts_mut};
+
+use core::{ffi::c_char, ptr::null_mut, slice::from_raw_parts_mut};
 
 use crate::{
     c_api, cstring, error, error_ref, error_ref_mut, rstring_free, Nc, NcAlign, NcAlpha, NcBlitter,
@@ -1602,23 +1603,7 @@ impl NcPlane {
     // CHECK this works
     pub fn render_to_buffer(&mut self, buffer: &mut Vec<u8>) -> NcResult<()> {
         let len = buffer.len() as u32;
-
-        // https://github.com/dankamongmen/libnotcurses-sys/issues/3
-        // https://github.com/dankamongmen/libnotcurses-sys/issues/22
-        #[cfg(any(
-            target_arch = "x86_64",
-            target_arch = "i686",
-            target_arch = "x86",
-            all(target_arch = "aarch64", target_os = "macos"),
-        ))]
-        let mut buf = buffer.as_mut_ptr() as *mut i8;
-        #[cfg(not(any(
-            target_arch = "x86_64",
-            target_arch = "i686",
-            target_arch = "x86",
-            all(target_arch = "aarch64", target_os = "macos"),
-        )))]
-        let mut buf = buffer.as_mut_ptr() as *mut u8;
+        let mut buf = buffer.as_mut_ptr() as *mut c_char;
 
         error![
             unsafe { c_api::ncpile_render_to_buffer(self, &mut buf, &mut len.try_into().unwrap()) },
