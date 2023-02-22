@@ -2,6 +2,8 @@
 
 use core::ptr::{null, null_mut};
 
+use libc::wchar_t;
+
 use crate::{
     c_api, cstring, error, error_ref_mut, rstring_free, NcAlign, NcBlitter, NcCapabilities,
     NcChannels, NcDirect, NcDirectFlag, NcError, NcFd, NcInput, NcPaletteIndex, NcPlane, NcResult,
@@ -688,7 +690,7 @@ impl NcDirect {
         let (ul, ur, ll, lr) = (ul.into(), ur.into(), ll.into(), lr.into());
         error![
             unsafe {
-                let wchars = wchars as *const [char; 6] as *const i32;
+                let wchars = wchars as *const [char; 6] as *const wchar_t;
                 c_api::ncdirect_box(self, ul.0, ur.0, ll.0, lr.0, wchars, len_y, len_x, ctlword)
             },
             &format!(
