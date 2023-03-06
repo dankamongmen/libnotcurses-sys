@@ -33,7 +33,7 @@ pub enum NcPixelImpl {
 
 mod std_impls {
     use super::{c_api::*, NcPixelImpl};
-    use std::fmt;
+    use core::fmt;
 
     impl Default for NcPixelImpl {
         fn default() -> Self {

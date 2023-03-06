@@ -1,7 +1,7 @@
 //!
 
 use crate::{c_api::ffi, NcAlign, NcResizeCb};
-use std::ptr::{null, null_mut};
+use core::ptr::{null, null_mut};
 
 mod builder;
 pub(crate) mod flags;

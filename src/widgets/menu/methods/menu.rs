@@ -1,5 +1,11 @@
 use core::ptr::null_mut;
 
+#[cfg(not(feature = "std"))]
+use alloc::{
+    format,
+    string::{String, ToString},
+};
+
 use crate::{
     c_api::{self, ncmenu_create},
     cstring, error, error_ref_mut, error_str, rstring,

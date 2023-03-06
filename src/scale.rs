@@ -49,7 +49,7 @@ pub enum NcScale {
 
 mod std_impls {
     use super::{c_api, NcScale};
-    use std::fmt;
+    use core::fmt;
 
     impl Default for NcScale {
         fn default() -> Self {

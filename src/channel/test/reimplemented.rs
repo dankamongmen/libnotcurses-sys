@@ -74,7 +74,10 @@ fn channel_set() {
     assert_eq!(true, c_api::ncchannel_default_p(c));
 
     c_api::ncchannel_set(&mut c, 0x112233_u32);
+
+    #[cfg(feature = "std")]
     println!("\n {:08x}", c); // DEBUG
+
 
     assert_eq!(c_api::ncchannel_r(c), 0x11);
     assert_eq!(c_api::ncchannel_g(c), 0x22);

@@ -106,9 +106,22 @@ macro_rules! visual_render_sleep {
 /// See [`Cstring`].
 #[macro_export]
 #[doc(hidden)]
+#[cfg(feature = "std")]
 macro_rules! cstring {
     ($s:expr) => {
         std::ffi::CString::new($s).unwrap()
+    };
+}
+
+/// Converts an `&str` into `*const c_char`.
+///
+/// See [`Cstring`].
+#[macro_export]
+#[doc(hidden)]
+#[cfg(not(feature = "std"))]
+macro_rules! cstring {
+    ($s:expr) => {
+        alloc::ffi::CString::new($s).unwrap()
     };
 }
 
@@ -126,11 +139,26 @@ macro_rules! rstring {
 /// Converts a `*const c_char` into a `String`, freeing the original alloc.
 #[macro_export]
 #[doc(hidden)]
+#[cfg(feature = "std")]
 macro_rules! rstring_free {
     ($s:expr) => {{
         #[allow(unused_unsafe)]
         let nc_string = unsafe { $s };
         let string = $crate::rstring![nc_string].to_string();
+        unsafe { $crate::c_api::libc::free(nc_string as *mut core::ffi::c_void) };
+        string
+    }};
+}
+
+/// Converts a `*const c_char` into a `String`, freeing the original alloc.
+#[macro_export]
+#[doc(hidden)]
+#[cfg(not(feature = "std"))]
+macro_rules! rstring_free {
+    ($s:expr) => {{
+        #[allow(unused_unsafe)]
+        let nc_string = unsafe { $s };
+        let string = alloc::string::ToString::to_string($crate::rstring![nc_string]);
         unsafe { $crate::c_api::libc::free(nc_string as *mut core::ffi::c_void) };
         string
     }};
@@ -320,11 +348,37 @@ macro_rules! error_ref_mut {
 /// `$msg` is optional. By default it will be an empty `&str` `""`.
 #[macro_export]
 #[doc(hidden)]
+#[cfg(feature = "std")]
 macro_rules! error_str {
     ($str:expr, $msg:expr) => {
         if !$str.is_null() {
             #[allow(unused_unsafe)]
             return Ok(unsafe { $crate::rstring!($str).to_string() });
+        } else {
+            return Err($crate::NcError::with_msg($crate::c_api::NCRESULT_ERR, $msg));
+        }
+    };
+    ($str:expr) => {
+        error_str![$str, ""];
+    };
+}
+
+/// Returns an `Ok(String)` from a `*const` pointer to a C string,
+/// or an `Err(`[`NcError`]`)` if the pointer is null.
+///
+/// In other words:
+/// Returns Ok((&*`$str`).to_string()) if `!$str.is_null()`, otherwise returns
+/// Err([NcError]]::[new][NcError#method.new]([NCRESULT_ERR], `$msg`)).
+///
+/// `$msg` is optional. By default it will be an empty `&str` `""`.
+#[macro_export]
+#[doc(hidden)]
+#[cfg(not(feature = "std"))]
+macro_rules! error_str {
+    ($str:expr, $msg:expr) => {
+        if !$str.is_null() {
+            #[allow(unused_unsafe)]
+            return Ok(unsafe { alloc::string::ToString::to_string($crate::rstring!($str)) });
         } else {
             return Err($crate::NcError::with_msg($crate::c_api::NCRESULT_ERR, $msg));
         }
@@ -694,10 +748,10 @@ macro_rules! unit_impl_fmt [
     };
 
     (single; $trait:ident, $type:ty) => {
-        impl std::fmt::$trait for $type {
-            fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        impl core::fmt::$trait for $type {
+            fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
                 let val = self.0;
-                std::fmt::$trait::fmt(&val, f)
+                core::fmt::$trait::fmt(&val, f)
             }
         }
     };

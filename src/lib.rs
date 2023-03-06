@@ -72,6 +72,10 @@
 //!
 #![allow(non_upper_case_globals, non_camel_case_types, non_snake_case)]
 #![allow(clippy::too_many_arguments, clippy::needless_doctest_main)]
+#![cfg_attr(feature = "nightly", feature(doc_cfg))]
+#![cfg_attr(not(feature = "std"), no_std)]
+#[cfg(not(feature = "std"))]
+extern crate alloc;
 
 mod align;
 mod alpha;
@@ -85,6 +89,7 @@ mod direct;
 mod error;
 mod fade;
 mod fd;
+#[cfg(feature = "std")]
 mod file;
 mod input;
 mod key;
@@ -121,6 +126,8 @@ pub use direct::{NcDirect, NcDirectFlag};
 pub use error::{NcError, NcResult};
 pub use fade::{NcFadeCb, NcFadeCtx};
 pub use fd::{NcFd, NcFdPlane, NcFdPlaneOptions, NcSubproc, NcSubprocOptions};
+#[cfg(feature = "std")]
+#[cfg_attr(feature = "nightly", doc(cfg(feature = "std")))]
 pub use file::NcFile;
 pub use input::{NcInput, NcInputType, NcMiceEvents, NcReceived};
 pub use key::{NcKey, NcKeyMod};
@@ -194,12 +201,11 @@ pub mod c_api {
     pub use crate::scale::c_api::*;
     pub use crate::style::c_api::*;
     pub use crate::visual::c_api::*;
-    pub use crate::widgets::menu::c_api::*;
-    pub use crate::widgets::plot::c_api::*;
-    pub use crate::widgets::progbar::c_api::*;
-    pub use crate::widgets::reader::c_api::*;
-    pub use crate::widgets::reel::c_api::*;
-    pub use crate::widgets::tabbed::c_api::*;
+
+    pub use crate::widgets::{
+        menu::c_api::*, plot::c_api::*, progbar::c_api::*, reader::c_api::*, reel::c_api::*,
+        tabbed::c_api::*,
+    };
 
     // private re-export of helper functions for testing:
     mod helpers {

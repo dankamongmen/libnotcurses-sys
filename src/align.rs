@@ -24,7 +24,7 @@ pub enum NcAlign {
 
 mod std_impls {
     use super::{c_api, NcAlign};
-    use std::fmt;
+    use core::fmt;
 
     impl Default for NcAlign {
         fn default() -> Self {

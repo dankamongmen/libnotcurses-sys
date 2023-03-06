@@ -1,8 +1,8 @@
 //!
 
-use crate::{c_api, NcAlign, NcPlaneFlag, NcPlaneOptions, NcResizeCb};
+use core::ptr::{null, null_mut};
 
-use std::ptr::{null, null_mut};
+use crate::{c_api, NcAlign, NcPlaneFlag, NcPlaneOptions, NcResizeCb};
 
 /// Builder object for [`NcPlaneOptions`].
 ///
@@ -33,8 +33,12 @@ pub struct NcPlaneOptionsBuilder {
 }
 
 mod std_impls {
+    use core::fmt;
+
+    #[cfg(not(feature = "std"))]
+    use alloc::string::String;
+
     use super::{NcPlaneFlag, NcPlaneOptions, NcPlaneOptionsBuilder};
-    use std::fmt;
 
     //
     impl From<NcPlaneOptionsBuilder> for NcPlaneOptions {

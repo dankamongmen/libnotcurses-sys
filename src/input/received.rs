@@ -21,8 +21,12 @@ pub enum NcReceived {
 }
 
 mod std_impls {
+    use core::fmt;
+
+    #[cfg(not(feature = "std"))]
+    use alloc::{format, string::ToString};
+
     use crate::{NcInput, NcKey, NcReceived};
-    use std::fmt;
 
     impl Default for NcReceived {
         fn default() -> Self {

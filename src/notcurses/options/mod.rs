@@ -1,7 +1,7 @@
 //! `NcOptions`
 
 use crate::{c_api::ffi, NcLogLevel};
-use std::ptr::null;
+use core::ptr::null;
 
 mod builder;
 pub(crate) mod flags;

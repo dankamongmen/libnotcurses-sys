@@ -108,8 +108,12 @@ impl NcKeyMod {
 }
 
 mod std_impls {
+    use core::fmt;
+
+    #[cfg(not(feature = "std"))]
+    use alloc::string::String;
+
     use super::NcKeyMod;
-    use std::fmt;
 
     impl Default for NcKeyMod {
         fn default() -> Self {

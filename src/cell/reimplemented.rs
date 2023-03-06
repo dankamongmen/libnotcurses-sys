@@ -2,6 +2,9 @@
 
 #![allow(dead_code)]
 
+#[cfg(not(feature = "std"))]
+use alloc::string::String;
+
 use libc::strcmp;
 
 use crate::{

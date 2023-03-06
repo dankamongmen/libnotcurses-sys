@@ -2,11 +2,12 @@
 
 use serial_test::serial;
 
-use core::ffi::c_char;
+#[cfg(feature = "std")]
 use std::io::Read;
 
 use crate::c_api::{self, notcurses_init_test, notcurses_stop, NCRESULT_MAX};
 
+#[cfg(feature = "std")]
 use crate::NcFile;
 
 #[test]
@@ -31,9 +32,10 @@ fn notcurses_align() {
 fn notcurses_canchangecolor() {
     unsafe {
         let nc = notcurses_init_test();
-        let res = c_api::notcurses_canchangecolor(nc);
+        let _res = c_api::notcurses_canchangecolor(nc);
         notcurses_stop(nc);
-        print!("[{}] ", res);
+        #[cfg(feature = "std")]
+        print!("[{}] ", _res);
     }
 }
 
@@ -42,9 +44,10 @@ fn notcurses_canchangecolor() {
 fn notcurses_canfade() {
     unsafe {
         let nc = notcurses_init_test();
-        let res = c_api::notcurses_canfade(nc);
+        let _res = c_api::notcurses_canfade(nc);
         notcurses_stop(nc);
-        print!("[{}] ", res);
+        #[cfg(feature = "std")]
+        print!("[{}] ", _res);
     }
 }
 
@@ -53,9 +56,10 @@ fn notcurses_canfade() {
 fn notcurses_canopen_images() {
     unsafe {
         let nc = notcurses_init_test();
-        let res = c_api::notcurses_canopen_images(nc);
+        let _res = c_api::notcurses_canopen_images(nc);
         notcurses_stop(nc);
-        print!("[{}] ", res);
+        #[cfg(feature = "std")]
+        print!("[{}] ", _res);
     }
 }
 
@@ -64,9 +68,10 @@ fn notcurses_canopen_images() {
 fn notcurses_canopen_videos() {
     unsafe {
         let nc = notcurses_init_test();
-        let res = c_api::notcurses_canopen_videos(nc);
+        let _res = c_api::notcurses_canopen_videos(nc);
         notcurses_stop(nc);
-        print!("[{}] ", res);
+        #[cfg(feature = "std")]
+        print!("[{}] ", _res);
     }
 }
 
@@ -75,9 +80,10 @@ fn notcurses_canopen_videos() {
 fn notcurses_cansextant() {
     unsafe {
         let nc = notcurses_init_test();
-        let res = c_api::notcurses_cansextant(nc);
+        let _res = c_api::notcurses_cansextant(nc);
         notcurses_stop(nc);
-        print!("[{}] ", res);
+        #[cfg(feature = "std")]
+        print!("[{}] ", _res);
     }
 }
 
@@ -86,9 +92,10 @@ fn notcurses_cansextant() {
 fn notcurses_cantruecolor() {
     unsafe {
         let nc = notcurses_init_test();
-        let res = c_api::notcurses_cantruecolor(nc);
+        let _res = c_api::notcurses_cantruecolor(nc);
         notcurses_stop(nc);
-        print!("[{}] ", res);
+        #[cfg(feature = "std")]
+        print!("[{}] ", _res);
     }
 }
 
@@ -97,9 +104,10 @@ fn notcurses_cantruecolor() {
 fn notcurses_canutf8() {
     unsafe {
         let nc = notcurses_init_test();
-        let res = c_api::notcurses_canutf8(nc);
+        let _res = c_api::notcurses_canutf8(nc);
         notcurses_stop(nc);
-        print!("[{}] ", res);
+        #[cfg(feature = "std")]
+        print!("[{}] ", _res);
     }
 }
 
@@ -148,12 +156,13 @@ fn notcurses_at_yx() {
 
 #[test]
 #[serial]
-// #[ignore] // FIXME https://github.com/dankamongmen/notcurses/issues/2111
+#[ignore] // FIXME https://github.com/dankamongmen/notcurses/issues/2111
+#[cfg(feature = "std")]
 fn notcurses_debug() {
     unsafe {
         let nc = notcurses_init_test();
 
-        let mut _p: *mut c_char = &mut 0;
+        let mut _p: *mut core::ffi::c_char = &mut 0;
 
         let mut _size: *mut usize = &mut 0;
         let mut file = NcFile::from_libc(libc::open_memstream(&mut _p, _size));
@@ -176,5 +185,6 @@ fn notcurses_debug() {
 fn notcurses_version() {
     let c_str = unsafe { c_api::notcurses_version() };
     assert!(!c_str.is_null());
+    #[cfg(feature = "std")]
     print!("v{} ", crate::rstring![c_str]);
 }

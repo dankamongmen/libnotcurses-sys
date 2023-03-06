@@ -47,7 +47,7 @@ pub enum NcLogLevel {
 
 mod std_impls {
     use super::{c_api, NcLogLevel};
-    use std::fmt;
+    use core::fmt;
 
     impl Default for NcLogLevel {
         fn default() -> Self {

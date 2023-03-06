@@ -1,5 +1,8 @@
 //!
 
+#[cfg(not(feature = "std"))]
+use alloc::{vec, vec::Vec};
+
 /// A bitmask of styles.
 ///
 /// # Flags
@@ -51,8 +54,12 @@ impl NcStyle {
 }
 
 mod std_impls {
+    use core::fmt;
+
+    #[cfg(not(feature = "std"))]
+    use alloc::string::String;
+
     use super::{c_api::NcStyle_u16, NcStyle};
-    use std::fmt;
 
     impl Default for NcStyle {
         fn default() -> Self {

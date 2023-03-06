@@ -59,7 +59,7 @@ mod std_impls {
         c_api::{NcRgb_u32, NcRgba_u32},
         NcRgb, NcRgba,
     };
-    use std::fmt;
+    use core::fmt;
 
     crate::from_primitive![NcRgb, NcRgb_u32];
     crate::unit_impl_from![NcRgb, NcRgb_u32];

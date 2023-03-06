@@ -3,6 +3,9 @@
 pub(crate) mod reimplemented {
     use crate::{c_api::ffi, cstring, rstring, NcError, NcResult};
 
+    #[cfg(not(feature = "std"))]
+    use alloc::format;
+
     // TODO: clarify, update and visibilize doc-comments
 
     /// Takes an arbitrarily large number, and prints it into a fixed-size buffer by

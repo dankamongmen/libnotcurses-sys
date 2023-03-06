@@ -1,5 +1,8 @@
 //!
 
+#[cfg(not(feature = "std"))]
+use alloc::string::String;
+
 use crate::NcBlitter;
 
 /// Describes all the geometries of an [`NcVisual`].

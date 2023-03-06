@@ -2,11 +2,20 @@
 
 use core::ptr::{null, null_mut};
 
+#[cfg(not(feature = "std"))]
+use alloc::{
+    format,
+    string::{String, ToString},
+    vec::Vec,
+};
+
+#[cfg(feature = "std")]
+use crate::NcFile;
 use crate::{
     c_api::{self, notcurses_init},
     cstring, error, error_ref_mut, rstring, rstring_free, Nc, NcAlign, NcBlitter, NcCapabilities,
-    NcChannels, NcError, NcFd, NcFile, NcFlag, NcInput, NcLogLevel, NcMiceEvents, NcOptions,
-    NcPixelImpl, NcPlane, NcReceived, NcResult, NcRgb, NcScale, NcStats, NcStyle, NcTime, NcVisual,
+    NcChannels, NcError, NcFd, NcFlag, NcInput, NcLogLevel, NcMiceEvents, NcOptions, NcPixelImpl,
+    NcPlane, NcReceived, NcResult, NcRgb, NcScale, NcStats, NcStyle, NcTime, NcVisual,
     NcVisualGeometry, NcVisualOptions,
 };
 
@@ -338,6 +347,8 @@ impl Nc {
     /// planes, from all piles.
     ///
     /// *C style function: [notcurses_debug()][c_api::notcurses_debug].*
+    #[cfg(feature = "std")]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "std")))]
     pub fn debug(&mut self, debugfp: &mut NcFile) {
         unsafe {
             c_api::notcurses_debug(self, debugfp.as_nc_ptr());

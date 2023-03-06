@@ -1,5 +1,8 @@
 //! Error handling with `NcError`, `NcResult` & `NcResult_i32`
 
+#[cfg(not(feature = "std"))]
+use alloc::string::{String, ToString};
+
 /// The result type for the Rust methods API.
 pub type NcResult<T> = Result<T, NcError>;
 
@@ -35,17 +38,23 @@ impl NcError {
     }
 }
 
-mod std_impls {
+mod core_impls {
     use super::NcError;
-    use std::{self, error, fmt};
+    use core::fmt;
 
     impl fmt::Display for NcError {
         fn fmt(&self, f: &mut fmt::Formatter) -> Result<(), fmt::Error> {
             write!(f, "NcError {}: {}", self.int, self.msg)
         }
     }
+}
 
-    impl error::Error for NcError {
+#[cfg(feature = "std")]
+mod std_impls {
+    use super::NcError;
+    use std::error::Error;
+
+    impl Error for NcError {
         fn description(&self) -> &str {
             &self.msg
         }

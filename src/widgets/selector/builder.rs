@@ -1,3 +1,8 @@
+use core::cmp::min;
+
+#[cfg(not(feature = "std"))]
+use alloc::{vec, vec::Vec};
+
 use crate::{
     widgets::{NcSelector, NcSelectorItem, NcSelectorOptions},
     NcChannels, NcPlane, NcResult, NcString,
@@ -127,7 +132,7 @@ impl NcSelectorBuilder {
         }
         selitems.push(NcSelectorItem::new_empty());
 
-        let default_item = std::cmp::min(self.default_item, selitems.len() as u32 - 1);
+        let default_item = min(self.default_item, selitems.len() as u32 - 1);
 
         let options = NcSelectorOptions::with_all_options(
             self.title.as_ref(),

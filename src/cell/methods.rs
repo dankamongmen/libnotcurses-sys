@@ -1,5 +1,11 @@
 //! `NcCell` methods and associated functions.
 
+#[cfg(not(feature = "std"))]
+use alloc::{
+    format,
+    string::{String, ToString},
+};
+
 use crate::{
     c_api::{self, nccell_load, NcChannels_u64, NCRESULT_ERR},
     cstring, error, rstring, NcAlpha, NcCell, NcChannel, NcChannels, NcError, NcPaletteIndex,

@@ -1,6 +1,10 @@
 //! `NcVisual*` methods and associated functions.
 
 use core::ptr::{null, null_mut};
+
+#[cfg(not(feature = "std"))]
+use alloc::format;
+
 use libc::c_void;
 
 use crate::{

@@ -13,7 +13,7 @@ pub struct NcKey(pub u32);
 
 mod std_impls {
     use super::NcKey;
-    use std::fmt;
+    use core::fmt;
 
     impl fmt::Display for NcKey {
         fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {

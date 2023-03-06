@@ -3,6 +3,9 @@ use core::{
     ptr::{null, null_mut},
 };
 
+#[cfg(not(feature = "std"))]
+use alloc::string::{String, ToString};
+
 use crate::{
     c_api, cstring, error, error_ref_mut, error_str,
     widgets::{NcSelector, NcSelectorBuilder, NcSelectorItem, NcSelectorOptions},

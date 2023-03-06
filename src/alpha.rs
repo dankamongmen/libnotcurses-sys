@@ -42,7 +42,7 @@ pub enum NcAlpha {
 
 mod std_impls {
     use super::{c_api, NcAlpha};
-    use std::fmt;
+    use core::fmt;
 
     impl Default for NcAlpha {
         fn default() -> Self {

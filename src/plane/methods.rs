@@ -1,12 +1,22 @@
 //! `NcPlane*` methods and associated functions.
 
-use core::{ffi::c_char, ptr::null_mut, slice::from_raw_parts_mut};
+use core::{
+    ffi::{c_char, c_void},
+    ptr::null_mut,
+    slice::from_raw_parts_mut,
+};
+
+#[cfg(not(feature = "std"))]
+use alloc::{format, string::String, vec::Vec};
 
 use crate::{
     c_api, cstring, error, error_ref, error_ref_mut, rstring_free, Nc, NcAlign, NcAlpha, NcBlitter,
-    NcBoxMask, NcCell, NcChannel, NcChannels, NcError, NcFadeCb, NcFile, NcPaletteIndex,
-    NcPixelGeometry, NcPlane, NcPlaneOptions, NcResizeCb, NcResult, NcRgb, NcRgba, NcStyle, NcTime,
+    NcBoxMask, NcCell, NcChannel, NcChannels, NcError, NcFadeCb, NcPaletteIndex, NcPixelGeometry,
+    NcPlane, NcPlaneOptions, NcResizeCb, NcResult, NcRgb, NcRgba, NcStyle, NcTime,
 };
+
+#[cfg(feature = "std")]
+use crate::NcFile;
 
 /// # NcPlane constructors & destructors
 impl NcPlane {
@@ -1616,6 +1626,8 @@ impl NcPlane {
     /// If a frame has not yet been rendered, nothing will be written.
     ///
     /// *C style function: [ncpile_render_to_file()][c_api::ncpile_render_to_file].*
+    #[cfg(feature = "std")]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "std")))]
     pub fn render_to_file(&mut self, fp: &mut NcFile) -> NcResult<()> {
         error![unsafe { c_api::ncpile_render_to_file(self, fp.as_nc_ptr()) }]
     }
@@ -2604,7 +2616,7 @@ impl NcPlane {
     pub fn qrcode(&mut self, data: &mut [u8]) -> NcResult<(u32, u32, u32)> {
         let (mut max_y, mut max_x) = (0, 0);
         let len = data.len();
-        let data_ptr = data.as_ptr() as *const std::ffi::c_void;
+        let data_ptr = data.as_ptr() as *const c_void;
         let res = unsafe { c_api::ncplane_qrcode(self, &mut max_y, &mut max_x, data_ptr, len) };
         error![
             res,

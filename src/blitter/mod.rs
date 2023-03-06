@@ -90,7 +90,7 @@ impl NcBlitter {
 
 mod std_impls {
     use super::{c_api, NcBlitter};
-    use std::fmt;
+    use core::fmt;
 
     impl Default for NcBlitter {
         fn default() -> Self {

@@ -1,7 +1,7 @@
 //!
 
 use crate::{NcFlag, NcLogLevel, NcOptions};
-use std::ptr::null;
+use core::ptr::null;
 
 /// Builder object for [`NcOptions`].
 #[derive(Clone, Copy, Debug, Default)]

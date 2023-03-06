@@ -2,7 +2,13 @@
 // WIP
 
 // use crate::c_api::libc::{free, strdup};
+
 use core::ffi::c_char;
+
+#[cfg(not(feature = "std"))]
+use alloc::ffi::CString;
+
+#[cfg(feature = "std")]
 use std::ffi::CString;
 
 /// A wrapped [`CString`] accepted by widgets.

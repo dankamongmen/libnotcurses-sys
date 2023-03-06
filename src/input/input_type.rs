@@ -21,7 +21,7 @@ pub enum NcInputType {
 
 mod std_impls {
     use super::{c_api::*, NcInputType};
-    use std::fmt;
+    use core::fmt;
 
     impl Default for NcInputType {
         fn default() -> Self {

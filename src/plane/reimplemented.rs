@@ -16,6 +16,10 @@
 
 use core::{ffi::c_char, ptr::null_mut};
 
+#[cfg(not(feature = "std"))]
+use alloc::{ffi::CString, string::ToString};
+
+#[cfg(feature = "std")]
 use std::ffi::CString;
 
 use crate::{

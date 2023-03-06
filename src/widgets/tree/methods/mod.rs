@@ -6,8 +6,13 @@ mod tree;
 pub use options::*;
 pub use tree::*;
 
-use core::{ffi::c_void, ptr::null_mut};
+#[cfg(not(feature = "std"))]
+use alloc::ffi::CString;
+
+#[cfg(feature = "std")]
 use std::ffi::CString;
+
+use core::{ffi::c_void, ptr::null_mut};
 
 use super::NcTreeItem;
 

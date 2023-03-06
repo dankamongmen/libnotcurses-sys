@@ -2,6 +2,9 @@
 
 use core::ptr::{null, null_mut};
 
+#[cfg(not(feature = "std"))]
+use alloc::{format, string::String};
+
 use libc::wchar_t;
 
 use crate::{

@@ -3,6 +3,8 @@
 # CHECK
 cl = "clippy"
 clq = "clippy --quiet"
+#
+cl_std = "clippy --features=std"
 
 # CLEAN PACKAGE
 cp = "clean --package"
@@ -13,6 +15,11 @@ d = "doc --no-deps"
 do = "doc --no-deps --open"
 dd = "doc"
 ddo = "doc --open"
+#
+nd = "doc --no-deps --features=nightly,std"
+ndo = "doc --no-deps --open --features=nightly,std"
+ndd = "doc --features=nightly,std"
+nddo = "doc --open --features=nightly,std"
 
 # BUILD
 b = "build"
@@ -26,6 +33,12 @@ brb = "build --release --bin"
 bre = "build --release --example"
 brqb = "build --release --quiet --bin"
 brqe = "build --release --quiet --example"
+#
+b_std = "build --features=std"
+bb_std = "build --features=std --bin"
+be_std = "build --features=std --example"
+br_std = "build --release --features=std"
+bre_std = "build --release --features=std --example"
 
 # RUN
 r = "run"
@@ -39,11 +52,19 @@ rrb = "run --release --bin"
 rre = "run --release --example"
 rrqb = "run --release --quiet --bin"
 rrqe = "run --release --quiet --example"
+#
+r_std = "run --features=std"
+rb_std = "run --features=std --bin"
+re_std = "run --features=std --example"
+rr_std = "run --release --features=std"
+rre_std = "run --release --features=std --example"
 
 # TEST
 # fix IO errors: https://github.com/dankamongmen/notcurses/issues/766
 t = "test -- --test-threads 1 --nocapture"
 t_all = "test --no-fail-fast -- --test-threads 1 --nocapture"
+#
+t_std = "test --features=std -- --test-threads 1 --nocapture"
 
 # TREE
 tr = "tree"

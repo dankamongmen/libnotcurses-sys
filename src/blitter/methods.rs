@@ -1,6 +1,8 @@
 //! `NcBlitter` methods
 
 pub use crate::{c_api, error, NcBlitter, NcResult, NcVisualOptions};
+#[cfg(not(feature = "std"))]
+use alloc::format;
 use core::ffi::c_void;
 
 impl NcBlitter {
