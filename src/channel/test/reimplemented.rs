@@ -78,7 +78,6 @@ fn channel_set() {
     #[cfg(feature = "std")]
     println!("\n {:08x}", c); // DEBUG
 
-
     assert_eq!(c_api::ncchannel_r(c), 0x11);
     assert_eq!(c_api::ncchannel_g(c), 0x22);
     assert_eq!(c_api::ncchannel_b(c), 0x33);
