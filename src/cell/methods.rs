@@ -1,16 +1,16 @@
 //! `NcCell` methods and associated functions.
 
-#[cfg(not(feature = "std"))]
-use alloc::{
-    format,
-    string::{String, ToString},
-};
-
 use crate::{
     c_api::{self, nccell_load, NcChannels_u64, NCRESULT_ERR},
     cstring, error, rstring, NcAlpha, NcCell, NcChannel, NcChannels, NcError, NcPaletteIndex,
     NcPlane, NcResult, NcRgb, NcStyle,
 };
+
+#[cfg(not(feature = "std"))]
+use alloc::{format, string::ToString};
+
+#[cfg(all(not(feature = "std"), feature = "libc"))]
+use alloc::string::String;
 
 /// # NcCell constructors
 impl NcCell {
@@ -328,6 +328,8 @@ impl NcCell {
     /// needn't even be the same. Only the expanded `EGC` must be bit-equal.
     ///
     /// *C style function: [nccellcmp()][c_api::nccellcmp].*
+    #[cfg(feature = "libc")]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "libc")))]
     pub fn compare(plane1: &NcPlane, cell1: &NcCell, plane2: &NcPlane, cell2: &NcCell) -> bool {
         c_api::nccellcmp(plane1, cell1, plane2, cell2)
     }
@@ -335,6 +337,8 @@ impl NcCell {
     /// Saves the [`NcStyle`] and the [`NcChannels`], and returns the duplicatd `EGC`.
     ///
     /// *C style function: [nccell_fg_alpha()][c_api::nccell_fg_alpha].*
+    #[cfg(feature = "libc")]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "libc")))]
     pub fn extract(
         &self,
         plane: &mut NcPlane,
@@ -404,6 +408,8 @@ impl NcCell {
     /// and persists across erases and destruction.
     ///
     /// *C style function: [nccell_strdup()][c_api::nccell_strdup].*
+    #[cfg(feature = "libc")]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "libc")))]
     pub fn strdup(&self, plane: &NcPlane) -> String {
         c_api::nccell_strdup(plane, self)
     }

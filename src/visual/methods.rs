@@ -5,7 +5,7 @@ use core::ptr::{null, null_mut};
 #[cfg(not(feature = "std"))]
 use alloc::format;
 
-use libc::c_void;
+use core::ffi::c_void;
 
 use crate::{
     c_api::{self, NcResult_i32, NCRESULT_ERR},
@@ -540,7 +540,7 @@ impl NcVisual {
                         self,
                         options,
                         time,
-                        plane as *mut _ as *mut libc::c_void,
+                        plane as *mut _ as *mut c_void,
                     )
                 },
                 &format![

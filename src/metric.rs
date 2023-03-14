@@ -3,6 +3,8 @@
 pub(crate) mod reimplemented {
     use crate::{c_api::ffi, cstring, rstring, NcError, NcResult};
 
+    use core::ffi::c_ulong;
+
     #[cfg(not(feature = "std"))]
     use alloc::format;
 
@@ -39,12 +41,12 @@ pub(crate) mod reimplemented {
     ///
     // FIXME, remove buf, return String, check mem leaks.
     pub fn ncmetric(
-        val: u64,
+        val: c_ulong,
         s: usize,
-        decimal: u64,
+        decimal: c_ulong,
         buf: &str,
         omitdec: i32,
-        mult: u64,
+        mult: c_ulong,
         uprefix: i32,
     ) -> NcResult<&str> {
         let cbuf = cstring![buf];

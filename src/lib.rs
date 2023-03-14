@@ -155,6 +155,8 @@ pub mod c_api {
     //! manually wrapped and reimplemented global functions.
 
     // public re-export of external crates:
+    #[cfg(feature = "libc")]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "libc")))]
     pub use libc;
 
     pub mod ffi {

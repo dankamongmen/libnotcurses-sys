@@ -2,18 +2,19 @@
 
 #![allow(dead_code)]
 
-#[cfg(not(feature = "std"))]
-use alloc::string::String;
-
-use libc::strcmp;
-
 use crate::{
     c_api::{
         self, nccell_release, NcAlpha_u32, NcChannel_u32, NcChannels_u64, NcResult_i32, NcRgb_u32,
         NcStyle_u16,
     },
-    cstring, rstring, NcCell, NcPaletteIndex, NcPlane,
+    cstring, NcCell, NcPaletteIndex, NcPlane,
 };
+
+#[cfg(feature = "libc")]
+use crate::rstring;
+
+#[cfg(all(not(feature = "std"), feature = "libc"))]
+use alloc::string::String;
 
 const NCBOXLIGHT: &str = "┌┐└┘─│";
 const NCBOXHEAVY: &str = "┏┓┗┛━┃";
@@ -388,6 +389,8 @@ pub const fn nccell_wide_left_p(cell: &NcCell) -> bool {
 ///
 /// *Method: NcCell.[strdup()][NcCell#method.strdup].*
 #[inline]
+#[cfg(feature = "libc")]
+#[cfg_attr(feature = "nightly", doc(cfg(feature = "libc")))]
 pub fn nccell_strdup(plane: &NcPlane, cell: &NcCell) -> String {
     rstring![libc::strdup(c_api::nccell_extended_gcluster(plane, cell))].into()
 }
@@ -399,6 +402,8 @@ pub fn nccell_strdup(plane: &NcPlane, cell: &NcCell) -> String {
 ///
 /// *Method: NcCell.[extract()][NcCell#method.extract].*
 #[inline]
+#[cfg(feature = "libc")]
+#[cfg_attr(feature = "nightly", doc(cfg(feature = "libc")))]
 pub fn nccell_extract(
     plane: &NcPlane,
     cell: &NcCell,
@@ -419,6 +424,8 @@ pub fn nccell_extract(
 //
 // NOTE: FIXME: it would probably be better to test whether they're Unicode-equal
 #[inline]
+#[cfg(feature = "libc")]
+#[cfg_attr(feature = "nightly", doc(cfg(feature = "libc")))]
 pub fn nccellcmp(plane1: &NcPlane, cell1: &NcCell, plane2: &NcPlane, cell2: &NcCell) -> bool {
     if cell1.stylemask != cell2.stylemask {
         return true;
@@ -427,7 +434,7 @@ pub fn nccellcmp(plane1: &NcPlane, cell1: &NcCell, plane2: &NcPlane, cell2: &NcC
         return true;
     }
     unsafe {
-        strcmp(
+        libc::strcmp(
             c_api::nccell_extended_gcluster(plane1, cell1),
             c_api::nccell_extended_gcluster(plane2, cell2),
         ) != 0

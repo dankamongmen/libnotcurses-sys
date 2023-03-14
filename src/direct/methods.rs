@@ -2,16 +2,22 @@
 
 use core::ptr::{null, null_mut};
 
-#[cfg(not(feature = "std"))]
-use alloc::{format, string::String};
+use crate::{
+    c_api, cstring, error, error_ref_mut, NcAlign, NcBlitter, NcCapabilities, NcChannels, NcDirect,
+    NcDirectFlag, NcError, NcFd, NcInput, NcPaletteIndex, NcPlane, NcResult, NcRgb, NcScale,
+    NcStyle, NcTime,
+};
 
+#[cfg(feature = "libc")]
+use crate::rstring_free;
+#[cfg(feature = "libc")]
 use libc::wchar_t;
 
-use crate::{
-    c_api, cstring, error, error_ref_mut, rstring_free, NcAlign, NcBlitter, NcCapabilities,
-    NcChannels, NcDirect, NcDirectFlag, NcError, NcFd, NcInput, NcPaletteIndex, NcPlane, NcResult,
-    NcRgb, NcScale, NcStyle, NcTime,
-};
+#[cfg(not(feature = "std"))]
+use alloc::format;
+
+#[cfg(all(not(feature = "std"), feature = "libc"))]
+use alloc::string::String;
 
 /// # `NcDirect` constructors and destructors
 impl NcDirect {
@@ -557,6 +563,8 @@ impl NcDirect {
     /// Returns the name of the detected terminal.
     ///
     /// *C style function: [ncdirect_detected_terminal()][c_api::ncdirect_detected_terminal].*
+    #[cfg(feature = "libc")]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "libc")))]
     pub fn detected_terminal(&self) -> String {
         rstring_free![c_api::ncdirect_detected_terminal(self)]
     }
@@ -654,6 +662,8 @@ impl NcDirect {
     /// *C style function: [ncdirect_readline()][c_api::ncdirect_readline].*
     //
     // CHECK if memory leak still reported by valgrind
+    #[cfg(feature = "libc")]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "libc")))]
     pub fn readline(&mut self, prompt: &str) -> NcResult<String> {
         let cs = cstring![prompt];
         let res = unsafe { c_api::ncdirect_readline(self, cs.as_ptr()) };
@@ -679,6 +689,8 @@ impl NcDirect {
     /// *C style function: [ncdirect_box()][c_api::ncdirect_box].*
     //
     // CHECK, specially wchars.
+    #[cfg(feature = "libc")]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "libc")))]
     pub fn r#box(
         &mut self,
         ul: impl Into<NcChannels>,

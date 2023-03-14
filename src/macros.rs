@@ -139,7 +139,7 @@ macro_rules! rstring {
 /// Converts a `*const c_char` into a `String`, freeing the original alloc.
 #[macro_export]
 #[doc(hidden)]
-#[cfg(feature = "std")]
+#[cfg(all(feature = "std", feature = "libc"))]
 macro_rules! rstring_free {
     ($s:expr) => {{
         #[allow(unused_unsafe)]
@@ -153,7 +153,7 @@ macro_rules! rstring_free {
 /// Converts a `*const c_char` into a `String`, freeing the original alloc.
 #[macro_export]
 #[doc(hidden)]
-#[cfg(not(feature = "std"))]
+#[cfg(all(not(feature = "std"), feature = "libc"))]
 macro_rules! rstring_free {
     ($s:expr) => {{
         #[allow(unused_unsafe)]

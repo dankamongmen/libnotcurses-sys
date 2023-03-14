@@ -1,7 +1,6 @@
 //! `NcVisual*` methods and associated functions.
 
-// use core::ptr::null_mut;
-use libc::c_void;
+use core::ffi::c_void;
 
 use crate::{NcSubproc, NcSubprocOptions};
 

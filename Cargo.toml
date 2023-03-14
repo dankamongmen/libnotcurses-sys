@@ -35,7 +35,7 @@ include = [
 # A dependency's version number must be the minimum available in all of:
 # - [Debian Sid](https://tracker.debian.org/pkg/rust-libc)
 # - [Fedora Rawhide](https://pkgs.org/search/?q=rust-libc-devel)
-libc = { version = "0.2.132", default-features = false }
+libc = { version = "0.2.132", default-features = false, optional = true }
 
 [dev-dependencies]
 serial_test = "0.10"
@@ -55,7 +55,7 @@ cc = { version = "1.0", optional = true }
 
 [features]
 default = ["keep_vendored"]
-std = []
+std = ["libc"]
 nightly = []
 
 # enable this feature to keep the vendored files, instead of deleting them.
