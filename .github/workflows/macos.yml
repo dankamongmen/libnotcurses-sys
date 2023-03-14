@@ -1,0 +1,34 @@
+permissions:
+  contents: read
+
+# runs on push to the main branch, and PRs
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+name: macos build
+
+jobs:
+  #
+  build:
+    name: "🍎 stable build"
+    runs-on: macos-latest
+    env:
+      COLORTERM: truecolor
+      NPROC: 2
+      TERM: xterm
+
+    steps:
+      - name: "🦀 libnotcurses-sys checkout"
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          # submodules: true
+
+      - name: "install rust stable"
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: "cargo build"
+        run: cargo build
+
