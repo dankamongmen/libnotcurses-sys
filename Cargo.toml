@@ -7,8 +7,7 @@ authors = [
 ]
 license = "MIT OR Apache-2.0"
 edition = "2021"
-rust-version = "1.64.0" # in sync with .github/workflows/*.yml
-resolver = "2"
+rust-version = "1.64.0" # in sync with .github/workflows/check.yml
 description = "Low-level Rust bindings for the notcurses C library."
 documentation = "https://docs.rs/libnotcurses-sys/"
 repository = "https://github.com/dankamongmen/libnotcurses-sys"
@@ -78,12 +77,3 @@ features = ["std", "nightly", "use_vendored_bindings"]
 
 [badges]
 maintenance = { status = "actively-developed" }
-
-# https://doc.rust-lang.org/cargo/reference/profiles.html
-[profile.dev]
-#
-[profile.release]
-# opt-level = 0            # [0-*3 | s | z]
-# lto = "fat"              # [*fat | thin]
-# debug = 1                # [*0/false | 1 | 2/true]
-# debug-assertions = true  # [*false | true]

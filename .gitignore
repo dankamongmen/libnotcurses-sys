@@ -1,4 +1,6 @@
 examples/wip*
+examples/*/examples/bin
+examples/*/examples/gcc.sh
 tools/
 target
 Cargo.lock
