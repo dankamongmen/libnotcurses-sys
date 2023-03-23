@@ -144,17 +144,20 @@ impl NcStyle {
     }
 
     /// Returns true if the current style has included the `other_style`.
+    #[inline]
     pub fn has(&self, other: impl Into<NcStyle>) -> bool {
         let other = other.into();
         (self.0 & other.0) == other.0
     }
 
     /// Sets the `other` style in the current style.
+    #[inline]
     pub fn set(&mut self, other: impl Into<NcStyle>) {
         self.0 |= other.into().0
     }
 
     /// Unsets the `other` style in the current style.
+    #[inline]
     pub fn unset(&mut self, other: impl Into<NcStyle>) {
         self.0 &= !other.into().0
     }
