@@ -341,6 +341,11 @@ pub type __socklen_t = core::ffi::c_uint;
 #[doc = "even in the presence of asynchronous interrupts."]
 #[doc = "It is not currently necessary for this to be machine-specific."]
 pub type __sig_atomic_t = core::ffi::c_int;
+extern "C" {
+    #[doc = " Even though CLOCKS_PER_SEC has such a strange value CLK_TCK"]
+    #[doc = "presents the real value for clock ticks per second for the system."]
+    pub fn __sysconf(arg1: core::ffi::c_int) -> core::ffi::c_long;
+}
 #[doc = " Returned by `clock'."]
 pub type clock_t = __clock_t;
 pub type time_t = __time_t;
@@ -391,6 +396,56 @@ pub struct timespec {
     pub tv_nsec: __syscall_slong_t,
 }
 extern "C" {
+    #[doc = " Time used by the program so far (user time + system time)."]
+    #[doc = "The result / CLOCKS_PER_SEC is program time in seconds."]
+    pub fn clock() -> clock_t;
+}
+extern "C" {
+    #[doc = " Return the current time and put it in *TIMER if TIMER is not NULL."]
+    pub fn time(__timer: *mut time_t) -> time_t;
+}
+extern "C" {
+    #[doc = " Return the difference between TIME1 and TIME0."]
+    pub fn difftime(__time1: time_t, __time0: time_t) -> f64;
+}
+extern "C" {
+    #[doc = " Return the `struct tm' representation of *TIMER"]
+    #[doc = "in Universal Coordinated Time (aka Greenwich Mean Time)."]
+    pub fn gmtime(__timer: *const time_t) -> *mut tm;
+}
+extern "C" {
+    #[doc = " Return the `struct tm' representation"]
+    #[doc = "of *TIMER in the local timezone."]
+    pub fn localtime(__timer: *const time_t) -> *mut tm;
+}
+extern "C" {
+    #[doc = " Return the `struct tm' representation of *TIMER in UTC,"]
+    #[doc = "using *TP to store the result."]
+    pub fn gmtime_r(__timer: *const time_t, __tp: *mut tm) -> *mut tm;
+}
+extern "C" {
+    #[doc = " Return the `struct tm' representation of *TIMER in local time,"]
+    #[doc = "using *TP to store the result."]
+    pub fn localtime_r(__timer: *const time_t, __tp: *mut tm) -> *mut tm;
+}
+extern "C" {
+    #[doc = " Return a string of the form \"Day Mon dd hh:mm:ss yyyy\\n\""]
+    #[doc = "that is the representation of TP in this format."]
+    pub fn asctime(__tp: *const tm) -> *mut core::ffi::c_char;
+}
+extern "C" {
+    pub fn ctime(__timer: *const time_t) -> *mut core::ffi::c_char;
+}
+extern "C" {
+    #[doc = " Return in BUF a string of the form \"Day Mon dd hh:mm:ss yyyy\\n\""]
+    #[doc = "that is the representation of TP in this format."]
+    pub fn asctime_r(__tp: *const tm, __buf: *mut core::ffi::c_char) -> *mut core::ffi::c_char;
+}
+extern "C" {
+    pub fn ctime_r(__timer: *const time_t, __buf: *mut core::ffi::c_char)
+        -> *mut core::ffi::c_char;
+}
+extern "C" {
     #[doc = " Current timezone names."]
     pub static mut __tzname: [*mut core::ffi::c_char; 2usize];
 }
@@ -407,10 +462,104 @@ extern "C" {
     pub static mut tzname: [*mut core::ffi::c_char; 2usize];
 }
 extern "C" {
+    #[doc = " Set time conversion information from the TZ environment variable."]
+    #[doc = "If TZ is not defined, a locale-dependent default is used."]
+    pub fn tzset();
+}
+extern "C" {
     pub static mut daylight: core::ffi::c_int;
 }
 extern "C" {
     pub static mut timezone: core::ffi::c_long;
+}
+extern "C" {
+    #[doc = " Set TS to calendar time based in time base BASE."]
+    pub fn timespec_get(__ts: *mut timespec, __base: core::ffi::c_int) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " These are defined in ctype-info.c."]
+    #[doc = "The declarations here must match those in localeinfo.h."]
+    #[doc = ""]
+    #[doc = "In the thread-specific locale model (see `uselocale' in <locale.h>)"]
+    #[doc = "we cannot use global variables for these as was done in the past."]
+    #[doc = "Instead, the following accessor functions return the address of"]
+    #[doc = "each variable, which is local to the current thread if multithreaded."]
+    #[doc = ""]
+    #[doc = "These point into arrays of 384, so they can be indexed by any `unsigned"]
+    #[doc = "char' value [0,255]; by EOF (-1); or by any `signed char' value"]
+    #[doc = "[-128,-1).  ISO C requires that the ctype functions work for `unsigned"]
+    #[doc = "char' values and for EOF; we also support negative `signed char' values"]
+    #[doc = "for broken old programs.  The case conversion arrays are of `int's"]
+    #[doc = "rather than `unsigned char's because tolower (EOF) must be EOF, which"]
+    #[doc = "doesn't fit into an `unsigned char'.  But today more important is that"]
+    #[doc = "the arrays are also used for multi-byte character sets."]
+    pub fn __ctype_b_loc() -> *mut *const core::ffi::c_ushort;
+}
+extern "C" {
+    pub fn __ctype_tolower_loc() -> *mut *const __int32_t;
+}
+extern "C" {
+    pub fn __ctype_toupper_loc() -> *mut *const __int32_t;
+}
+extern "C" {
+    pub fn isalnum(arg1: core::ffi::c_int) -> core::ffi::c_int;
+}
+extern "C" {
+    pub fn isalpha(arg1: core::ffi::c_int) -> core::ffi::c_int;
+}
+extern "C" {
+    pub fn iscntrl(arg1: core::ffi::c_int) -> core::ffi::c_int;
+}
+extern "C" {
+    pub fn isdigit(arg1: core::ffi::c_int) -> core::ffi::c_int;
+}
+extern "C" {
+    pub fn islower(arg1: core::ffi::c_int) -> core::ffi::c_int;
+}
+extern "C" {
+    pub fn isgraph(arg1: core::ffi::c_int) -> core::ffi::c_int;
+}
+extern "C" {
+    pub fn isprint(arg1: core::ffi::c_int) -> core::ffi::c_int;
+}
+extern "C" {
+    pub fn ispunct(arg1: core::ffi::c_int) -> core::ffi::c_int;
+}
+extern "C" {
+    pub fn isspace(arg1: core::ffi::c_int) -> core::ffi::c_int;
+}
+extern "C" {
+    pub fn isupper(arg1: core::ffi::c_int) -> core::ffi::c_int;
+}
+extern "C" {
+    pub fn isxdigit(arg1: core::ffi::c_int) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Return the lowercase version of C."]
+    pub fn tolower(__c: core::ffi::c_int) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Return the uppercase version of C."]
+    pub fn toupper(__c: core::ffi::c_int) -> core::ffi::c_int;
+}
+extern "C" {
+    pub fn isblank(arg1: core::ffi::c_int) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Return nonzero iff C is in the ASCII set"]
+    #[doc = "(i.e., is no more than 7 bits wide)."]
+    pub fn isascii(__c: core::ffi::c_int) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Return the part of C that is in the ASCII set"]
+    #[doc = "(i.e., the low-order 7 bits of C)."]
+    pub fn toascii(__c: core::ffi::c_int) -> core::ffi::c_int;
+}
+extern "C" {
+    pub fn _toupper(arg1: core::ffi::c_int) -> core::ffi::c_int;
+}
+extern "C" {
+    pub fn _tolower(arg1: core::ffi::c_int) -> core::ffi::c_int;
 }
 pub type _Float32 = f32;
 pub type _Float64 = f64;
@@ -455,6 +604,343 @@ impl Default for __mbstate_t {
 #[doc = " Scalar type that can hold values which represent locale-specific"]
 #[doc = "character classifications."]
 pub type wctype_t = core::ffi::c_ulong;
+extern "C" {
+    #[doc = " Test for any wide character for which `iswalpha' or `iswdigit' is"]
+    #[doc = "true."]
+    pub fn iswalnum(__wc: wint_t) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Test for any wide character for which `iswupper' or 'iswlower' is"]
+    #[doc = "true, or any wide character that is one of a locale-specific set of"]
+    #[doc = "wide-characters for which none of `iswcntrl', `iswdigit',"]
+    #[doc = "`iswpunct', or `iswspace' is true."]
+    pub fn iswalpha(__wc: wint_t) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Test for any control wide character."]
+    pub fn iswcntrl(__wc: wint_t) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Test for any wide character that corresponds to a decimal-digit"]
+    #[doc = "character."]
+    pub fn iswdigit(__wc: wint_t) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Test for any wide character for which `iswprint' is true and"]
+    #[doc = "`iswspace' is false."]
+    pub fn iswgraph(__wc: wint_t) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Test for any wide character that corresponds to a lowercase letter"]
+    #[doc = "or is one of a locale-specific set of wide characters for which"]
+    #[doc = "none of `iswcntrl', `iswdigit', `iswpunct', or `iswspace' is true."]
+    pub fn iswlower(__wc: wint_t) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Test for any printing wide character."]
+    pub fn iswprint(__wc: wint_t) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Test for any printing wide character that is one of a"]
+    #[doc = "locale-specific et of wide characters for which neither `iswspace'"]
+    #[doc = "nor `iswalnum' is true."]
+    pub fn iswpunct(__wc: wint_t) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Test for any wide character that corresponds to a locale-specific"]
+    #[doc = "set of wide characters for which none of `iswalnum', `iswgraph', or"]
+    #[doc = "`iswpunct' is true."]
+    pub fn iswspace(__wc: wint_t) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Test for any wide character that corresponds to an uppercase letter"]
+    #[doc = "or is one of a locale-specific set of wide character for which none"]
+    #[doc = "of `iswcntrl', `iswdigit', `iswpunct', or `iswspace' is true."]
+    pub fn iswupper(__wc: wint_t) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Test for any wide character that corresponds to a hexadecimal-digit"]
+    #[doc = "character equivalent to that performed be the functions described"]
+    #[doc = "in the previous subclause."]
+    pub fn iswxdigit(__wc: wint_t) -> core::ffi::c_int;
+}
+extern "C" {
+    pub fn iswblank(__wc: wint_t) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Construct value that describes a class of wide characters identified"]
+    #[doc = "by the string argument PROPERTY."]
+    pub fn wctype(__property: *const core::ffi::c_char) -> wctype_t;
+}
+extern "C" {
+    #[doc = " Determine whether the wide-character WC has the property described by"]
+    #[doc = "DESC."]
+    pub fn iswctype(__wc: wint_t, __desc: wctype_t) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Converts an uppercase letter to the corresponding lowercase letter."]
+    pub fn towlower(__wc: wint_t) -> wint_t;
+}
+extern "C" {
+    #[doc = " Converts an lowercase letter to the corresponding uppercase letter."]
+    pub fn towupper(__wc: wint_t) -> wint_t;
+}
+extern "C" {
+    #[doc = " Copy SRC to DEST."]
+    pub fn wcscpy(__dest: *mut wchar_t, __src: *const wchar_t) -> *mut wchar_t;
+}
+extern "C" {
+    #[doc = " Copy no more than N wide-characters of SRC to DEST."]
+    pub fn wcsncpy(__dest: *mut wchar_t, __src: *const wchar_t, __n: usize) -> *mut wchar_t;
+}
+extern "C" {
+    #[doc = " Append SRC onto DEST."]
+    pub fn wcscat(__dest: *mut wchar_t, __src: *const wchar_t) -> *mut wchar_t;
+}
+extern "C" {
+    #[doc = " Append no more than N wide-characters of SRC onto DEST."]
+    pub fn wcsncat(__dest: *mut wchar_t, __src: *const wchar_t, __n: usize) -> *mut wchar_t;
+}
+extern "C" {
+    #[doc = " Compare S1 and S2."]
+    pub fn wcscmp(__s1: *const core::ffi::c_int, __s2: *const core::ffi::c_int)
+        -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Compare N wide-characters of S1 and S2."]
+    pub fn wcsncmp(
+        __s1: *const core::ffi::c_int,
+        __s2: *const core::ffi::c_int,
+        __n: core::ffi::c_ulong,
+    ) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Compare S1 and S2, both interpreted as appropriate to the"]
+    #[doc = "LC_COLLATE category of the current locale."]
+    pub fn wcscoll(__s1: *const wchar_t, __s2: *const wchar_t) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Transform S2 into array pointed to by S1 such that if wcscmp is"]
+    #[doc = "applied to two transformed strings the result is the as applying"]
+    #[doc = "`wcscoll' to the original strings."]
+    pub fn wcsxfrm(__s1: *mut wchar_t, __s2: *const wchar_t, __n: usize) -> usize;
+}
+extern "C" {
+    pub fn wcschr(__wcs: *const core::ffi::c_int, __wc: core::ffi::c_int) -> *mut core::ffi::c_int;
+}
+extern "C" {
+    pub fn wcsrchr(__wcs: *const wchar_t, __wc: wchar_t) -> *mut wchar_t;
+}
+extern "C" {
+    #[doc = " Return the length of the initial segmet of WCS which"]
+    #[doc = "consists entirely of wide characters not in REJECT."]
+    pub fn wcscspn(__wcs: *const wchar_t, __reject: *const wchar_t) -> usize;
+}
+extern "C" {
+    #[doc = " Return the length of the initial segmet of WCS which"]
+    #[doc = "consists entirely of wide characters in  ACCEPT."]
+    pub fn wcsspn(__wcs: *const wchar_t, __accept: *const wchar_t) -> usize;
+}
+extern "C" {
+    pub fn wcspbrk(__wcs: *const wchar_t, __accept: *const wchar_t) -> *mut wchar_t;
+}
+extern "C" {
+    pub fn wcsstr(__haystack: *const wchar_t, __needle: *const wchar_t) -> *mut wchar_t;
+}
+extern "C" {
+    #[doc = " Divide WCS into tokens separated by characters in DELIM."]
+    pub fn wcstok(
+        __s: *mut wchar_t,
+        __delim: *const wchar_t,
+        __ptr: *mut *mut wchar_t,
+    ) -> *mut wchar_t;
+}
+extern "C" {
+    #[doc = " Return the number of wide characters in S."]
+    pub fn wcslen(__s: *const core::ffi::c_int) -> core::ffi::c_ulong;
+}
+extern "C" {
+    pub fn wcswcs(__haystack: *const wchar_t, __needle: *const wchar_t) -> *mut wchar_t;
+}
+extern "C" {
+    pub fn wmemchr(
+        __s: *const core::ffi::c_int,
+        __c: core::ffi::c_int,
+        __n: core::ffi::c_ulong,
+    ) -> *mut core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Compare N wide characters of S1 and S2."]
+    pub fn wmemcmp(
+        __s1: *const core::ffi::c_int,
+        __s2: *const core::ffi::c_int,
+        __n: core::ffi::c_ulong,
+    ) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Copy N wide characters of SRC to DEST."]
+    pub fn wmemcpy(
+        __s1: *mut core::ffi::c_int,
+        __s2: *const core::ffi::c_int,
+        __n: core::ffi::c_ulong,
+    ) -> *mut core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Copy N wide characters of SRC to DEST, guaranteeing"]
+    #[doc = "correct behavior for overlapping strings."]
+    pub fn wmemmove(
+        __s1: *mut core::ffi::c_int,
+        __s2: *const core::ffi::c_int,
+        __n: core::ffi::c_ulong,
+    ) -> *mut core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Set N wide characters of S to C."]
+    pub fn wmemset(__s: *mut wchar_t, __c: wchar_t, __n: usize) -> *mut wchar_t;
+}
+extern "C" {
+    #[doc = " Determine whether C constitutes a valid (one-byte) multibyte"]
+    #[doc = "character."]
+    pub fn btowc(__c: core::ffi::c_int) -> wint_t;
+}
+extern "C" {
+    #[doc = " Determine whether C corresponds to a member of the extended"]
+    #[doc = "character set whose multibyte representation is a single byte."]
+    pub fn wctob(__c: wint_t) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Determine number of column positions required for C."]
+    pub fn wcwidth(__c: wchar_t) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Determine number of column positions required for first N wide"]
+    #[doc = "characters (or fewer if S ends before this) in S."]
+    pub fn wcswidth(__s: *const wchar_t, __n: usize) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Convert initial portion of the wide string NPTR to `double'"]
+    #[doc = "representation."]
+    pub fn wcstod(__nptr: *const wchar_t, __endptr: *mut *mut wchar_t) -> f64;
+}
+extern "C" {
+    #[doc = " Likewise for `float' and `long double' sizes of floating-point numbers."]
+    pub fn wcstof(__nptr: *const wchar_t, __endptr: *mut *mut wchar_t) -> f32;
+}
+extern "C" {
+    #[doc = " Convert initial portion of wide string NPTR to `long int'"]
+    #[doc = "representation."]
+    pub fn wcstol(
+        __nptr: *const wchar_t,
+        __endptr: *mut *mut wchar_t,
+        __base: core::ffi::c_int,
+    ) -> core::ffi::c_long;
+}
+extern "C" {
+    #[doc = " Convert initial portion of wide string NPTR to `unsigned long int'"]
+    #[doc = "representation."]
+    pub fn wcstoul(
+        __nptr: *const wchar_t,
+        __endptr: *mut *mut wchar_t,
+        __base: core::ffi::c_int,
+    ) -> core::ffi::c_ulong;
+}
+extern "C" {
+    #[doc = " Convert initial portion of wide string NPTR to `long long int'"]
+    #[doc = "representation."]
+    pub fn wcstoll(
+        __nptr: *const wchar_t,
+        __endptr: *mut *mut wchar_t,
+        __base: core::ffi::c_int,
+    ) -> core::ffi::c_longlong;
+}
+extern "C" {
+    #[doc = " Convert initial portion of wide string NPTR to `unsigned long long int'"]
+    #[doc = "representation."]
+    pub fn wcstoull(
+        __nptr: *const wchar_t,
+        __endptr: *mut *mut wchar_t,
+        __base: core::ffi::c_int,
+    ) -> core::ffi::c_ulonglong;
+}
+extern "C" {
+    #[doc = " Write formatted output to stdout."]
+    #[doc = ""]
+    #[doc = "This function is a possible cancellation point and therefore not"]
+    #[doc = "marked with __THROW."]
+    pub fn wprintf(__format: *const wchar_t, ...) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Write formatted output to stdout from argument list ARG."]
+    #[doc = ""]
+    #[doc = "This function is a possible cancellation point and therefore not"]
+    #[doc = "marked with __THROW."]
+    pub fn vwprintf(__format: *const wchar_t, __arg: *mut __va_list_tag) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Write formatted output of at most N character to S from argument"]
+    #[doc = "list ARG."]
+    pub fn vswprintf(
+        __s: *mut wchar_t,
+        __n: usize,
+        __format: *const wchar_t,
+        __arg: *mut __va_list_tag,
+    ) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Read formatted input from stdin."]
+    #[doc = ""]
+    #[doc = "This function is a possible cancellation point and therefore not"]
+    #[doc = "marked with __THROW."]
+    pub fn wscanf(__format: *const wchar_t, ...) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Read formatted input from stdin."]
+    #[doc = ""]
+    #[doc = "This function is a possible cancellation point and therefore not"]
+    #[doc = "marked with __THROW."]
+    #[link_name = "\u{1}__isoc99_wscanf"]
+    pub fn wscanf1(__format: *const wchar_t, ...) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Read formatted input from stdin into argument list ARG."]
+    #[doc = ""]
+    #[doc = "This function is a possible cancellation point and therefore not"]
+    #[doc = "marked with __THROW."]
+    pub fn vwscanf(__format: *const wchar_t, __arg: *mut __va_list_tag) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Read formatted input from S into argument list ARG."]
+    pub fn vswscanf(
+        __s: *const wchar_t,
+        __format: *const wchar_t,
+        __arg: *mut __va_list_tag,
+    ) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Read a character from stdin."]
+    #[doc = ""]
+    #[doc = "This function is a possible cancellation point and therefore not"]
+    #[doc = "marked with __THROW."]
+    pub fn getwchar() -> wint_t;
+}
+extern "C" {
+    #[doc = " Write a character to stdout."]
+    #[doc = ""]
+    #[doc = "This function is a possible cancellation point and therefore not"]
+    #[doc = "marked with __THROW."]
+    pub fn putwchar(__wc: wchar_t) -> wint_t;
+}
+extern "C" {
+    #[doc = " Format TP into S according to FORMAT."]
+    #[doc = "Write no more than MAXSIZE wide characters and return the number"]
+    #[doc = "of wide characters written, or 0 if it would exceed MAXSIZE."]
+    pub fn wcsftime(
+        __s: *mut wchar_t,
+        __maxsize: usize,
+        __format: *const wchar_t,
+        __tp: *const tm,
+    ) -> usize;
+}
 #[doc = " The tag name of this struct is _G_fpos_t to preserve historic"]
 #[doc = "C++ mangled names for functions taking fpos_t arguments."]
 #[doc = "That name should not be used in new code."]
@@ -597,6 +1083,400 @@ extern "C" {
     pub static mut stderr: *mut FILE;
 }
 extern "C" {
+    #[doc = " Remove file FILENAME."]
+    pub fn remove(__filename: *const core::ffi::c_char) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Rename file OLD to NEW."]
+    pub fn rename(
+        __old: *const core::ffi::c_char,
+        __new: *const core::ffi::c_char,
+    ) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Close STREAM."]
+    #[doc = ""]
+    #[doc = "This function is a possible cancellation point and therefore not"]
+    #[doc = "marked with __THROW."]
+    pub fn fclose(__stream: *mut FILE) -> core::ffi::c_int;
+}
+extern "C" {
+    pub fn tmpfile() -> *mut FILE;
+}
+extern "C" {
+    #[doc = " Generate a temporary filename."]
+    pub fn tmpnam(arg1: *mut core::ffi::c_char) -> *mut core::ffi::c_char;
+}
+extern "C" {
+    #[doc = " Generate a unique temporary filename using up to five characters of PFX"]
+    #[doc = "if it is not NULL.  The directory to put this file in is searched for"]
+    #[doc = "as follows: First the environment variable \"TMPDIR\" is checked."]
+    #[doc = "If it contains the name of a writable directory, that directory is used."]
+    #[doc = "If not and if DIR is not NULL, that value is checked.  If that fails,"]
+    #[doc = "P_tmpdir is tried and finally \"/tmp\".  The storage for the filename"]
+    #[doc = "is allocated by `malloc'."]
+    pub fn tempnam(
+        __dir: *const core::ffi::c_char,
+        __pfx: *const core::ffi::c_char,
+    ) -> *mut core::ffi::c_char;
+}
+extern "C" {
+    #[doc = " Flush STREAM, or all streams if STREAM is NULL."]
+    #[doc = ""]
+    #[doc = "This function is a possible cancellation point and therefore not"]
+    #[doc = "marked with __THROW."]
+    pub fn fflush(__stream: *mut FILE) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Open a file and create a new stream for it."]
+    #[doc = ""]
+    #[doc = "This function is a possible cancellation point and therefore not"]
+    #[doc = "marked with __THROW."]
+    pub fn fopen(
+        __filename: *const core::ffi::c_char,
+        __modes: *const core::ffi::c_char,
+    ) -> *mut FILE;
+}
+extern "C" {
+    #[doc = " Open a file, replacing an existing stream with it."]
+    #[doc = ""]
+    #[doc = "This function is a possible cancellation point and therefore not"]
+    #[doc = "marked with __THROW."]
+    pub fn freopen(
+        __filename: *const core::ffi::c_char,
+        __modes: *const core::ffi::c_char,
+        __stream: *mut FILE,
+    ) -> *mut FILE;
+}
+extern "C" {
+    #[doc = " Create a new stream that refers to an existing system file descriptor."]
+    pub fn fdopen(__fd: core::ffi::c_int, __modes: *const core::ffi::c_char) -> *mut FILE;
+}
+extern "C" {
+    #[doc = " Write formatted output to STREAM."]
+    #[doc = ""]
+    #[doc = "This function is a possible cancellation point and therefore not"]
+    #[doc = "marked with __THROW."]
+    pub fn fprintf(
+        __stream: *mut FILE,
+        __format: *const core::ffi::c_char,
+        ...
+    ) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Write formatted output to stdout."]
+    #[doc = ""]
+    #[doc = "This function is a possible cancellation point and therefore not"]
+    #[doc = "marked with __THROW."]
+    pub fn printf(__format: *const core::ffi::c_char, ...) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Write formatted output to S from argument list ARG."]
+    #[doc = ""]
+    #[doc = "This function is a possible cancellation point and therefore not"]
+    #[doc = "marked with __THROW."]
+    pub fn vfprintf(
+        __s: *mut FILE,
+        __format: *const core::ffi::c_char,
+        __arg: *mut __va_list_tag,
+    ) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Write formatted output to stdout from argument list ARG."]
+    #[doc = ""]
+    #[doc = "This function is a possible cancellation point and therefore not"]
+    #[doc = "marked with __THROW."]
+    pub fn vprintf(
+        __format: *const core::ffi::c_char,
+        __arg: *mut __va_list_tag,
+    ) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Write formatted output to S from argument list ARG."]
+    pub fn vsprintf(
+        __s: *mut core::ffi::c_char,
+        __format: *const core::ffi::c_char,
+        __arg: *mut __va_list_tag,
+    ) -> core::ffi::c_int;
+}
+extern "C" {
+    pub fn vsnprintf(
+        __s: *mut core::ffi::c_char,
+        __maxlen: core::ffi::c_ulong,
+        __format: *const core::ffi::c_char,
+        __arg: *mut __va_list_tag,
+    ) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Read formatted input from STREAM."]
+    #[doc = ""]
+    #[doc = "This function is a possible cancellation point and therefore not"]
+    #[doc = "marked with __THROW."]
+    pub fn fscanf(__stream: *mut FILE, __format: *const core::ffi::c_char, ...)
+        -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Read formatted input from STREAM."]
+    #[doc = ""]
+    #[doc = "This function is a possible cancellation point and therefore not"]
+    #[doc = "marked with __THROW."]
+    #[link_name = "\u{1}__isoc99_fscanf"]
+    pub fn fscanf1(
+        __stream: *mut FILE,
+        __format: *const core::ffi::c_char,
+        ...
+    ) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Read formatted input from S into argument list ARG."]
+    #[doc = ""]
+    #[doc = "This function is a possible cancellation point and therefore not"]
+    #[doc = "marked with __THROW."]
+    pub fn vfscanf(
+        __s: *mut FILE,
+        __format: *const core::ffi::c_char,
+        __arg: *mut __va_list_tag,
+    ) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Read formatted input from stdin into argument list ARG."]
+    #[doc = ""]
+    #[doc = "This function is a possible cancellation point and therefore not"]
+    #[doc = "marked with __THROW."]
+    pub fn vscanf(
+        __format: *const core::ffi::c_char,
+        __arg: *mut __va_list_tag,
+    ) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Read formatted input from S into argument list ARG."]
+    pub fn vsscanf(
+        __s: *const core::ffi::c_char,
+        __format: *const core::ffi::c_char,
+        __arg: *mut __va_list_tag,
+    ) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Read formatted input from S into argument list ARG."]
+    #[doc = ""]
+    #[doc = "This function is a possible cancellation point and therefore not"]
+    #[doc = "marked with __THROW."]
+    #[link_name = "\u{1}__isoc99_vfscanf"]
+    pub fn vfscanf1(
+        __s: *mut FILE,
+        __format: *const core::ffi::c_char,
+        __arg: *mut __va_list_tag,
+    ) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Read formatted input from stdin into argument list ARG."]
+    #[doc = ""]
+    #[doc = "This function is a possible cancellation point and therefore not"]
+    #[doc = "marked with __THROW."]
+    #[link_name = "\u{1}__isoc99_vscanf"]
+    pub fn vscanf1(
+        __format: *const core::ffi::c_char,
+        __arg: *mut __va_list_tag,
+    ) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Read formatted input from S into argument list ARG."]
+    #[link_name = "\u{1}__isoc99_vsscanf"]
+    pub fn vsscanf1(
+        __s: *const core::ffi::c_char,
+        __format: *const core::ffi::c_char,
+        __arg: *mut __va_list_tag,
+    ) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Read a character from STREAM."]
+    #[doc = ""]
+    #[doc = "These functions are possible cancellation points and therefore not"]
+    #[doc = "marked with __THROW."]
+    pub fn fgetc(__stream: *mut FILE) -> core::ffi::c_int;
+}
+extern "C" {
+    pub fn getc(__stream: *mut FILE) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Read a character from stdin."]
+    #[doc = ""]
+    #[doc = "This function is a possible cancellation point and therefore not"]
+    #[doc = "marked with __THROW."]
+    pub fn getchar() -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Write a character to STREAM."]
+    #[doc = ""]
+    #[doc = "These functions are possible cancellation points and therefore not"]
+    #[doc = "marked with __THROW."]
+    #[doc = ""]
+    #[doc = "These functions is a possible cancellation point and therefore not"]
+    #[doc = "marked with __THROW."]
+    pub fn fputc(__c: core::ffi::c_int, __stream: *mut FILE) -> core::ffi::c_int;
+}
+extern "C" {
+    pub fn putc(__c: core::ffi::c_int, __stream: *mut FILE) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Write a character to stdout."]
+    #[doc = ""]
+    #[doc = "This function is a possible cancellation point and therefore not"]
+    #[doc = "marked with __THROW."]
+    pub fn putchar(__c: core::ffi::c_int) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Get a word (int) from STREAM."]
+    pub fn getw(__stream: *mut FILE) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Write a word (int) to STREAM."]
+    pub fn putw(__w: core::ffi::c_int, __stream: *mut FILE) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Get a newline-terminated string of finite length from STREAM."]
+    #[doc = ""]
+    #[doc = "This function is a possible cancellation point and therefore not"]
+    #[doc = "marked with __THROW."]
+    pub fn fgets(
+        __s: *mut core::ffi::c_char,
+        __n: core::ffi::c_int,
+        __stream: *mut FILE,
+    ) -> *mut core::ffi::c_char;
+}
+extern "C" {
+    #[doc = " Write a string to STREAM."]
+    #[doc = ""]
+    #[doc = "This function is a possible cancellation point and therefore not"]
+    #[doc = "marked with __THROW."]
+    pub fn fputs(__s: *const core::ffi::c_char, __stream: *mut FILE) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Write a string, followed by a newline, to stdout."]
+    #[doc = ""]
+    #[doc = "This function is a possible cancellation point and therefore not"]
+    #[doc = "marked with __THROW."]
+    pub fn puts(__s: *const core::ffi::c_char) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Push a character back onto the input buffer of STREAM."]
+    #[doc = ""]
+    #[doc = "This function is a possible cancellation point and therefore not"]
+    #[doc = "marked with __THROW."]
+    pub fn ungetc(__c: core::ffi::c_int, __stream: *mut FILE) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Read chunks of generic data from STREAM."]
+    #[doc = ""]
+    #[doc = "This function is a possible cancellation point and therefore not"]
+    #[doc = "marked with __THROW."]
+    pub fn fread(
+        __ptr: *mut core::ffi::c_void,
+        __size: core::ffi::c_ulong,
+        __n: core::ffi::c_ulong,
+        __stream: *mut FILE,
+    ) -> core::ffi::c_ulong;
+}
+extern "C" {
+    #[doc = " Write chunks of generic data to STREAM."]
+    #[doc = ""]
+    #[doc = "This function is a possible cancellation point and therefore not"]
+    #[doc = "marked with __THROW."]
+    pub fn fwrite(
+        __ptr: *const core::ffi::c_void,
+        __size: core::ffi::c_ulong,
+        __n: core::ffi::c_ulong,
+        __s: *mut FILE,
+    ) -> core::ffi::c_ulong;
+}
+extern "C" {
+    #[doc = " Seek to a certain position on STREAM."]
+    #[doc = ""]
+    #[doc = "This function is a possible cancellation point and therefore not"]
+    #[doc = "marked with __THROW."]
+    pub fn fseek(
+        __stream: *mut FILE,
+        __off: core::ffi::c_long,
+        __whence: core::ffi::c_int,
+    ) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Return the current position of STREAM."]
+    #[doc = ""]
+    #[doc = "This function is a possible cancellation point and therefore not"]
+    #[doc = "marked with __THROW."]
+    pub fn ftell(__stream: *mut FILE) -> core::ffi::c_long;
+}
+extern "C" {
+    #[doc = " Rewind to the beginning of STREAM."]
+    #[doc = ""]
+    #[doc = "This function is a possible cancellation point and therefore not"]
+    #[doc = "marked with __THROW."]
+    pub fn rewind(__stream: *mut FILE);
+}
+extern "C" {
+    #[doc = " Get STREAM's position."]
+    #[doc = ""]
+    #[doc = "This function is a possible cancellation point and therefore not"]
+    #[doc = "marked with __THROW."]
+    pub fn fgetpos(__stream: *mut FILE, __pos: *mut fpos_t) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Set STREAM's position."]
+    #[doc = ""]
+    #[doc = "This function is a possible cancellation point and therefore not"]
+    #[doc = "marked with __THROW."]
+    pub fn fsetpos(__stream: *mut FILE, __pos: *const fpos_t) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Clear the error and EOF indicators for STREAM."]
+    pub fn clearerr(__stream: *mut FILE);
+}
+extern "C" {
+    #[doc = " Return the EOF indicator for STREAM."]
+    pub fn feof(__stream: *mut FILE) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Return the error indicator for STREAM."]
+    pub fn ferror(__stream: *mut FILE) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Print a message describing the meaning of the value of errno."]
+    #[doc = ""]
+    #[doc = "This function is a possible cancellation point and therefore not"]
+    #[doc = "marked with __THROW."]
+    pub fn perror(__s: *const core::ffi::c_char);
+}
+extern "C" {
+    #[doc = " Return the system file descriptor for STREAM."]
+    pub fn fileno(__stream: *mut FILE) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Close a stream opened by popen and return the status of its child."]
+    #[doc = ""]
+    #[doc = "This function is a possible cancellation point and therefore not"]
+    #[doc = "marked with __THROW."]
+    pub fn pclose(__stream: *mut FILE) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Create a new stream connected to a pipe running the given command."]
+    #[doc = ""]
+    #[doc = "This function is a possible cancellation point and therefore not"]
+    #[doc = "marked with __THROW."]
+    pub fn popen(
+        __command: *const core::ffi::c_char,
+        __modes: *const core::ffi::c_char,
+    ) -> *mut FILE;
+}
+extern "C" {
+    #[doc = " Return the name of the controlling terminal."]
+    pub fn ctermid(__s: *mut core::ffi::c_char) -> *mut core::ffi::c_char;
+}
+extern "C" {
+    #[doc = " Return the name of the current user."]
+    pub fn cuserid(__s: *mut core::ffi::c_char) -> *mut core::ffi::c_char;
+}
+extern "C" {
     #[doc = " For communication from 'getopt' to the caller."]
     #[doc = "When 'getopt' finds an option that takes an argument,"]
     #[doc = "the argument value is returned here."]
@@ -626,6 +1506,50 @@ extern "C" {
 extern "C" {
     #[doc = " Set to an option character which was unrecognized."]
     pub static mut optopt: core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Get definitions and prototypes for functions to process the"]
+    #[doc = "arguments in ARGV (ARGC of them, minus the program name) for"]
+    #[doc = "options given in OPTS."]
+    #[doc = ""]
+    #[doc = "Return the option character from OPTS just read.  Return -1 when"]
+    #[doc = "there are no more options.  For unrecognized options, or options"]
+    #[doc = "missing arguments, 'optopt' is set to the option letter, and '?' is"]
+    #[doc = "returned."]
+    #[doc = ""]
+    #[doc = "The OPTS string is a list of characters which are recognized option"]
+    #[doc = "letters, optionally followed by colons, specifying that that letter"]
+    #[doc = "takes an argument, to be placed in 'optarg'."]
+    #[doc = ""]
+    #[doc = "If a letter in OPTS is followed by two colons, its argument is"]
+    #[doc = "optional.  This behavior is specific to the GNU 'getopt'."]
+    #[doc = ""]
+    #[doc = "The argument '--' causes premature termination of argument"]
+    #[doc = "scanning, explicitly telling 'getopt' that there are no more"]
+    #[doc = "options."]
+    #[doc = ""]
+    #[doc = "If OPTS begins with '-', then non-option arguments are treated as"]
+    #[doc = "arguments to the option '\\1'.  This behavior is specific to the GNU"]
+    #[doc = "'getopt'.  If OPTS begins with '+', or POSIXLY_CORRECT is set in"]
+    #[doc = "the environment, then do not permute arguments."]
+    #[doc = ""]
+    #[doc = "For standards compliance, the 'argv' argument has the type"]
+    #[doc = "char *const *, but this is inaccurate; if argument permutation is"]
+    #[doc = "enabled, the argv array (not the strings it points to) must be"]
+    #[doc = "writable."]
+    pub fn getopt(
+        ___argc: core::ffi::c_int,
+        ___argv: *const *mut core::ffi::c_char,
+        __shortopts: *const core::ffi::c_char,
+    ) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Slow-path routines used by the optimized inline functions in"]
+    #[doc = "bits/stdio.h."]
+    pub fn __uflow(arg1: *mut FILE) -> core::ffi::c_int;
+}
+extern "C" {
+    pub fn __overflow(arg1: *mut FILE, arg2: core::ffi::c_int) -> core::ffi::c_int;
 }
 #[doc = " Signed."]
 pub type int_least8_t = __int_least8_t;
@@ -676,12 +1600,199 @@ pub struct lldiv_t {
     #[doc = " Remainder."]
     pub rem: core::ffi::c_longlong,
 }
+extern "C" {
+    pub fn __ctype_get_mb_cur_max() -> usize;
+}
+extern "C" {
+    #[doc = " Convert a string to a floating-point number."]
+    pub fn atof(__nptr: *const core::ffi::c_char) -> f64;
+}
+extern "C" {
+    #[doc = " Convert a string to an integer."]
+    pub fn atoi(__nptr: *const core::ffi::c_char) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Convert a string to a long integer."]
+    pub fn atol(__nptr: *const core::ffi::c_char) -> core::ffi::c_long;
+}
+extern "C" {
+    #[doc = " Convert a string to a long long integer."]
+    pub fn atoll(__nptr: *const core::ffi::c_char) -> core::ffi::c_longlong;
+}
+extern "C" {
+    #[doc = " Return a random integer between 0 and RAND_MAX inclusive."]
+    pub fn rand() -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Return non-negative, double-precision floating-point value in [0.0,1.0)."]
+    pub fn drand48() -> f64;
+}
+extern "C" {
+    pub fn erand48(__xsubi: *mut core::ffi::c_ushort) -> f64;
+}
+extern "C" {
+    #[doc = " Return non-negative, long integer in [0,2^31)."]
+    pub fn lrand48() -> core::ffi::c_long;
+}
+extern "C" {
+    pub fn jrand48(__xsubi: *mut core::ffi::c_ushort) -> core::ffi::c_long;
+}
+extern "C" {
+    pub fn lcong48(__param: *mut core::ffi::c_ushort);
+}
+extern "C" {
+    #[doc = " Allocate NMEMB elements of SIZE bytes each, all initialized to 0."]
+    pub fn calloc(
+        __nmemb: core::ffi::c_ulong,
+        __size: core::ffi::c_ulong,
+    ) -> *mut core::ffi::c_void;
+}
+extern "C" {
+    #[doc = " Re-allocate the previously allocated block"]
+    #[doc = "in PTR, making the new block SIZE bytes long.  */"]
+    #[doc = "the same pointer that was passed to it, aliasing needs to be allowed"]
+    #[doc = "between objects pointed by the old and new pointers."]
+    pub fn realloc(
+        __ptr: *mut core::ffi::c_void,
+        __size: core::ffi::c_ulong,
+    ) -> *mut core::ffi::c_void;
+}
+extern "C" {
+    #[doc = " Free a block allocated by `malloc', `realloc' or `calloc'."]
+    pub fn free(__ptr: *mut core::ffi::c_void);
+}
+extern "C" {
+    #[doc = " ISO C variant of aligned allocation."]
+    pub fn aligned_alloc(
+        __alignment: core::ffi::c_ulong,
+        __size: core::ffi::c_ulong,
+    ) -> *mut core::ffi::c_void;
+}
+extern "C" {
+    #[doc = " Abort execution and generate a core-dump."]
+    pub fn abort();
+}
+extern "C" {
+    #[doc = " Register a function to be called when `exit' is called."]
+    pub fn atexit(__func: ::core::option::Option<unsafe extern "C" fn()>) -> core::ffi::c_int;
+}
+extern "C" {
+    pub fn at_quick_exit(
+        __func: ::core::option::Option<unsafe extern "C" fn()>,
+    ) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Call all functions registered with `atexit' and `on_exit',"]
+    #[doc = "in the reverse of the order in which they were registered,"]
+    #[doc = "perform stdio cleanup, and terminate program execution with STATUS."]
+    pub fn exit(__status: core::ffi::c_int);
+}
+extern "C" {
+    #[doc = " Call all functions registered with `at_quick_exit' in the reverse"]
+    #[doc = "of the order in which they were registered and terminate program"]
+    #[doc = "execution with STATUS."]
+    pub fn quick_exit(__status: core::ffi::c_int);
+}
+extern "C" {
+    #[doc = " Terminate the program with STATUS without calling any of the"]
+    #[doc = "functions registered with `atexit' or `on_exit'."]
+    pub fn _Exit(__status: core::ffi::c_int);
+}
+extern "C" {
+    #[doc = " Return the value of envariable NAME, or NULL if it doesn't exist."]
+    pub fn getenv(__name: *const core::ffi::c_char) -> *mut core::ffi::c_char;
+}
+extern "C" {
+    #[doc = " The SVID says this is in <stdio.h>, but this seems a better place.\t*/"]
+    #[doc = "If there is no `=', remove NAME from the environment."]
+    pub fn putenv(__string: *mut core::ffi::c_char) -> core::ffi::c_int;
+}
 pub type __compar_fn_t = ::core::option::Option<
     unsafe extern "C" fn(
         arg1: *const core::ffi::c_void,
         arg2: *const core::ffi::c_void,
     ) -> core::ffi::c_int,
 >;
+extern "C" {
+    #[doc = " Do a binary search for KEY in BASE, which consists of NMEMB elements"]
+    #[doc = "of SIZE bytes each, using COMPAR to perform the comparisons."]
+    pub fn bsearch(
+        __key: *const core::ffi::c_void,
+        __base: *const core::ffi::c_void,
+        __nmemb: usize,
+        __size: usize,
+        __compar: __compar_fn_t,
+    ) -> *mut core::ffi::c_void;
+}
+extern "C" {
+    #[doc = " Sort NMEMB elements of BASE, of SIZE bytes each,"]
+    #[doc = "using COMPAR to perform the comparisons."]
+    pub fn qsort(
+        __base: *mut core::ffi::c_void,
+        __nmemb: usize,
+        __size: usize,
+        __compar: __compar_fn_t,
+    );
+}
+extern "C" {
+    #[doc = " Return the absolute value of X."]
+    pub fn abs(__x: core::ffi::c_int) -> core::ffi::c_int;
+}
+extern "C" {
+    pub fn labs(__x: core::ffi::c_long) -> core::ffi::c_long;
+}
+extern "C" {
+    pub fn llabs(__x: core::ffi::c_longlong) -> core::ffi::c_longlong;
+}
+extern "C" {
+    #[doc = " Return the `div_t', `ldiv_t' or `lldiv_t' representation"]
+    #[doc = "of the value of NUMER over DENOM. */"]
+    pub fn div(__numer: core::ffi::c_int, __denom: core::ffi::c_int) -> div_t;
+}
+extern "C" {
+    pub fn ldiv(__numer: core::ffi::c_long, __denom: core::ffi::c_long) -> ldiv_t;
+}
+extern "C" {
+    pub fn lldiv(__numer: core::ffi::c_longlong, __denom: core::ffi::c_longlong) -> lldiv_t;
+}
+extern "C" {
+    #[doc = " Put the multibyte character represented"]
+    #[doc = "by WCHAR in S, returning its length."]
+    pub fn wctomb(__s: *mut core::ffi::c_char, __wchar: wchar_t) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Convert a wide char string to multibyte string."]
+    pub fn wcstombs(__s: *mut core::ffi::c_char, __pwcs: *const wchar_t, __n: usize) -> usize;
+}
+extern "C" {
+    #[doc = " Compare N bytes of S1 and S2.  Return zero if S1 and S2 are equal."]
+    #[doc = "Return some non-zero value otherwise."]
+    #[doc = ""]
+    #[doc = "Essentially __memcmpeq has the exact same semantics as memcmp"]
+    #[doc = "except the return value is less constrained.  memcmp is always a"]
+    #[doc = "correct implementation of __memcmpeq.  As well !!memcmp, -memcmp,"]
+    #[doc = "or bcmp are correct implementations."]
+    #[doc = ""]
+    #[doc = "__memcmpeq is meant to be used by compilers when memcmp return is"]
+    #[doc = "only used for its bolean value."]
+    #[doc = ""]
+    #[doc = "__memcmpeq is declared only for use by compilers.  Programs should"]
+    #[doc = "continue to use memcmp."]
+    pub fn __memcmpeq(
+        __s1: *const core::ffi::c_void,
+        __s2: *const core::ffi::c_void,
+        __n: usize,
+    ) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Divide S into tokens separated by characters in DELIM.  Information"]
+    #[doc = "passed between calls are stored in SAVE_PTR."]
+    pub fn __strtok_r(
+        __s: *mut core::ffi::c_char,
+        __delim: *const core::ffi::c_char,
+        __save_ptr: *mut *mut core::ffi::c_char,
+    ) -> *mut core::ffi::c_char;
+}
 #[doc = " An integral type that can be modified atomically, without the"]
 #[doc = "possibility of a signal arriving in the middle of the operation."]
 pub type sig_atomic_t = __sig_atomic_t;
@@ -697,8 +1808,17 @@ pub type uid_t = __uid_t;
 #[doc = " Type of a signal handler."]
 pub type __sighandler_t = ::core::option::Option<unsafe extern "C" fn(arg1: core::ffi::c_int)>;
 extern "C" {
-    #[link_name = "\u{1}__sysv_signal"]
-    pub fn signal(__sig: core::ffi::c_int, __handler: __sighandler_t) -> __sighandler_t;
+    #[doc = " The X/Open definition of `signal' specifies the SVID semantic.  Use"]
+    #[doc = "the additional function `sysv_signal' when X/Open compatibility is"]
+    #[doc = "requested."]
+    pub fn __sysv_signal(__sig: core::ffi::c_int, __handler: __sighandler_t) -> __sighandler_t;
+}
+extern "C" {
+    pub fn kill(__pid: __pid_t, __sig: core::ffi::c_int) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Raise signal SIG, i.e., send SIG to yourself."]
+    pub fn raise(__sig: core::ffi::c_int) -> core::ffi::c_int;
 }
 extern "C" {
     #[doc = " Clear all signals from SET."]
@@ -767,6 +1887,14 @@ extern "C" {
 extern "C" {
     #[doc = " Put in SET all signals that are blocked and waiting to be delivered."]
     pub fn sigpending(__set: *mut sigset_t) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Return number of available real-time signal with highest priority."]
+    pub fn __libc_current_sigrtmin() -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Return number of available real-time signal with lowest priority."]
+    pub fn __libc_current_sigrtmax() -> core::ffi::c_int;
 }
 #[doc = " Structure for scatter/gather I/O."]
 #[repr(C)]
@@ -889,6 +2017,105 @@ pub struct linger {
     #[doc = " Time to linger."]
     pub l_linger: core::ffi::c_int,
 }
+extern "C" {
+    #[doc = " Give the socket FD the local address ADDR (which is LEN bytes long)."]
+    pub fn bind(
+        __fd: core::ffi::c_int,
+        __addr: *const sockaddr,
+        __len: socklen_t,
+    ) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Put the local address of FD into *ADDR and its length in *LEN."]
+    pub fn getsockname(
+        __fd: core::ffi::c_int,
+        __addr: *mut sockaddr,
+        __len: *mut socklen_t,
+    ) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Open a connection on socket FD to peer at ADDR (which LEN bytes long)."]
+    #[doc = "For connectionless socket types, just set the default address to send to"]
+    #[doc = "and the only address from which to accept transmissions."]
+    #[doc = "Return 0 on success, -1 for errors."]
+    #[doc = ""]
+    #[doc = "This function is a cancellation point and therefore not marked with"]
+    #[doc = "__THROW."]
+    pub fn connect(
+        __fd: core::ffi::c_int,
+        __addr: *const sockaddr,
+        __len: socklen_t,
+    ) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Put the address of the peer connected to socket FD into *ADDR"]
+    #[doc = "(which is *LEN bytes long), and its actual length into *LEN."]
+    pub fn getpeername(
+        __fd: core::ffi::c_int,
+        __addr: *mut sockaddr,
+        __len: *mut socklen_t,
+    ) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Read N bytes into BUF from socket FD."]
+    #[doc = "Returns the number read or -1 for errors."]
+    #[doc = ""]
+    #[doc = "This function is a cancellation point and therefore not marked with"]
+    #[doc = "__THROW."]
+    pub fn recv(
+        __fd: core::ffi::c_int,
+        __buf: *mut core::ffi::c_void,
+        __n: usize,
+        __flags: core::ffi::c_int,
+    ) -> isize;
+}
+extern "C" {
+    #[doc = " Read N bytes into BUF through socket FD."]
+    #[doc = "If ADDR is not NULL, fill in *ADDR_LEN bytes of it with tha address of"]
+    #[doc = "the sender, and store the actual size of the address in *ADDR_LEN."]
+    #[doc = "Returns the number of bytes read or -1 for errors."]
+    #[doc = ""]
+    #[doc = "This function is a cancellation point and therefore not marked with"]
+    #[doc = "__THROW."]
+    pub fn recvfrom(
+        __fd: core::ffi::c_int,
+        __buf: *mut core::ffi::c_void,
+        __n: usize,
+        __flags: core::ffi::c_int,
+        __addr: *mut sockaddr,
+        __addr_len: *mut socklen_t,
+    ) -> isize;
+}
+extern "C" {
+    pub fn getsockopt(
+        __fd: core::ffi::c_int,
+        __level: core::ffi::c_int,
+        __optname: core::ffi::c_int,
+        __optval: *mut core::ffi::c_void,
+        __optlen: *mut socklen_t,
+    ) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Prepare to accept connections on socket FD."]
+    #[doc = "N connection requests will be queued before further requests are refused."]
+    #[doc = "Returns 0 on success, -1 for errors."]
+    pub fn listen(__fd: core::ffi::c_int, __n: core::ffi::c_int) -> core::ffi::c_int;
+}
+extern "C" {
+    #[doc = " Await a connection on socket FD."]
+    #[doc = "When a connection arrives, open a new socket to communicate with it,"]
+    #[doc = "set *ADDR (which is *ADDR_LEN bytes long) to the address of the connecting"]
+    #[doc = "peer and *ADDR_LEN to the address's actual length, and return the"]
+    #[doc = "new socket's descriptor, or -1 for errors."]
+    #[doc = ""]
+    #[doc = "This function is a cancellation point and therefore not marked with"]
+    #[doc = "__THROW."]
+    pub fn accept(
+        __fd: core::ffi::c_int,
+        __addr: *mut sockaddr,
+        __addr_len: *mut socklen_t,
+    ) -> core::ffi::c_int;
+}
 #[doc = " Internet address."]
 pub type in_addr_t = u32;
 #[repr(C)]
@@ -971,6 +2198,12 @@ impl Default for sockaddr_in6 {
             s.assume_init()
         }
     }
+}
+extern "C" {
+    pub fn htonl(__hostlong: u32) -> u32;
+}
+extern "C" {
+    pub fn htons(__hostshort: u16) -> u16;
 }
 extern "C" {
     #[doc = " Get a human-readable string describing the running Notcurses version."]

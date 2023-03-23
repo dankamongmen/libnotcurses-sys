@@ -62,7 +62,28 @@ fn main() {
             .blocklist_function("wcstold")
             .blocklist_function("socketpair")
             // only import functions from notcurses public API
-            .blocklist_function("[^ns].*")
+            // .blocklist_function("[^ns].*")
+            // alternatively, import all the functions except:
+            .blocklist_function("wcrtomb")
+            .blocklist_function("__mbrlen")
+            .blocklist_function("__ps")
+            .blocklist_function("fwide")
+            .blocklist_function("fwprintf")
+            .blocklist_function("fwscanf")
+            .blocklist_function("fwscanf1")
+            .blocklist_function("fgetwc")
+            .blocklist_function("getwc")
+            .blocklist_function("fputwc")
+            .blocklist_function("putwc")
+            .blocklist_function("fgetws")
+            .blocklist_function("fputws")
+            .blocklist_function("ungetwc")
+            .blocklist_function("__cmsg_nxthdr")
+            .blocklist_function("recvmsg")
+            .blocklist_function("wcsrtombs")
+            .blocklist_function("vfwprintf")
+            .blocklist_function("vfwscanf")
+            //
             .blocklist_function("n[^co].*")
             .blocklist_function("s[^i].*") // allow sig*
             // clean more unneeded types
