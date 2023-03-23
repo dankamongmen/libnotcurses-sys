@@ -30,6 +30,28 @@ include = [
 	"/README.md"
 ]
 
+[features]
+default = ["keep_vendored"]
+#
+std = ["libc"]
+#
+nightly = []
+
+# enable this feature to keep the vendored files, instead of deleting them.
+keep_vendored = []
+# enable this feature to use the already vendored bindings to compile the crate.
+# This eliminates the need to embed the C source in the crate just for docs.rs.
+use_vendored_bindings = ["keep_vendored"]
+# enable this feature to vendor the bindgen generated bindings into the crate.
+# It needs to have https://github.com/dankamongmen/notcurses installed on path.
+vendor_bindings = []
+
+# enable this feature to vendor the C source code into the crate.
+# It needs to have https://github.com/dankamongmen/notcurses installed on path.
+vendor_csource = []
+# enable this feature to compile the notcurses C source code.
+compile_csource = ["cc", "keep_vendored"]
+
 [dependencies]
 # A dependency's version number must be the minimum available in all of:
 # - [Debian Sid](https://tracker.debian.org/pkg/rust-libc)
@@ -51,26 +73,6 @@ bindgen = "0.60"
 pkg-config = "0.3.25"
 
 cc = { version = "1.0", optional = true }
-
-[features]
-default = ["keep_vendored"]
-std = ["libc"]
-nightly = []
-
-# enable this feature to keep the vendored files, instead of deleting them.
-keep_vendored = []
-# enable this feature to use the already vendored bindings to compile the crate.
-# This eliminates the need to embed the C source in the crate just for docs.rs.
-use_vendored_bindings = ["keep_vendored"]
-# enable this feature to vendor the bindgen generated bindings into the crate.
-# It needs to have https://github.com/dankamongmen/notcurses installed on path.
-vendor_bindings = []
-
-# enable this feature to vendor the C source code into the crate.
-# It needs to have https://github.com/dankamongmen/notcurses installed on path.
-vendor_csource = []
-# enable this feature to compile the notcurses C source code.
-compile_csource = ["cc", "keep_vendored"]
 
 [package.metadata.docs.rs]
 features = ["std", "nightly", "use_vendored_bindings"]
