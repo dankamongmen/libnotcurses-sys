@@ -25,6 +25,7 @@ categories = [
 keywords = ["tui", "cli", "terminal", "ncurses", "ffi"]
 include = [
 	"/build/",
+	"/examples/hello-world-*.rs",
 	"/src/**/*.rs",
 	"/LICENSE-*",
 	"/README.md"
