@@ -3,6 +3,7 @@
 // https://github.com/dankamongmen/notcurses/issues/2195
 
 use libnotcurses_sys::*;
+use std::{thread::sleep, time::Duration};
 
 // height and width of the visual, in cells
 const H_CELLS: u32 = 10;
@@ -20,9 +21,10 @@ fn main() -> NcResult<()> {
 
     for _ in 0..CELLS_MOVEMENT {
         plane1.move_rel(1, 1)?;
-        nc_render_sleep![&mut nc, 0, 50];
+        nc.render()?;
+        sleep(Duration::from_millis(50));
     }
-    sleep![1];
+    sleep(Duration::from_millis(1000));
 
     // secondly we move a visual plane and compare
     let geo = stp.pixel_geom();
@@ -39,9 +41,10 @@ fn main() -> NcResult<()> {
 
     for _ in 0..CELLS_MOVEMENT {
         visual1plane.move_rel(1, 1)?;
-        nc_render_sleep![&mut nc, 0, 50];
+        nc.render()?;
+        sleep(Duration::from_millis(50));
     }
-    sleep![1];
+    sleep(Duration::from_millis(1000));
 
     visual1plane.destroy()?;
     visual1.destroy();

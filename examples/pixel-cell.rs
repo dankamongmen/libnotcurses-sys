@@ -3,6 +3,7 @@
 
 use libnotcurses_sys::*;
 use rand::{distributions::Uniform, Rng};
+use std::{thread::sleep, time::Duration};
 
 fn main() -> NcResult<()> {
     let mut nc = unsafe { Nc::new()? };
@@ -28,7 +29,9 @@ fn main() -> NcResult<()> {
         splane,
         "   SCALE          SCALE               RESIZE          RESIZE"
     )?;
-    nc_render_sleep![nc, 1];
+
+    nc.render()?;
+    sleep(Duration::from_millis(1000));
 
     // fill the buffer with random color pixels
     let mut rng = rand::thread_rng();
@@ -48,7 +51,8 @@ fn main() -> NcResult<()> {
     let p1 = unsafe { v1.blit(&mut nc, Some(&voptions))? };
     p1.reparent(splane)?;
 
-    nc_render_sleep![&mut nc, 1];
+    nc.render()?;
+    sleep(Duration::from_millis(1000));
 
     // show the ncvisual, scaled with interpolated values
     // let vplane2 = NcPlane::new_child(&mut splane, 7, 4, 5, 4)?; // TEMP WIP:
@@ -60,7 +64,9 @@ fn main() -> NcResult<()> {
         .pixel()
         .build();
     unsafe { v1.blit(&mut nc, Some(&voptions2))? };
-    nc_render_sleep![&mut nc, 0, 250];
+
+    nc.render()?;
+    sleep(Duration::from_millis(250));
 
     // show the ncvisual, scaled without using interpolation
     //let vplane3opts = NcPlaneOptions::builder().yx(7, 19).rows_cols(5, 4).build();
@@ -75,14 +81,18 @@ fn main() -> NcResult<()> {
         .interpolate(false)
         .build();
     unsafe { v1.blit(&mut nc, Some(&voptions3))? };
-    nc_render_sleep![&mut nc, 0, 250];
+
+    nc.render()?;
+    sleep(Duration::from_millis(250));
 
     // resize the ncvisual (doesn't use interpolation)
     let voptions4 = NcVisualOptions::builder().yx(7, 39).pixel().build();
     v1.resize_noninterpolative(pg.cell_y * 4, pg.cell_x * 4)?;
     let p4 = unsafe { v1.blit(&mut nc, Some(&voptions4))? };
     p4.reparent(splane)?;
-    nc_render_sleep![&mut nc, 0, 250];
+
+    nc.render()?;
+    sleep(Duration::from_millis(250));
 
     // resize the ncvisual (uses interpolation)
     let v5 = NcVisual::from_rgba(buffer.as_slice(), pg.cell_y, pg.cell_x * 4, pg.cell_x)?;
@@ -90,14 +100,13 @@ fn main() -> NcResult<()> {
     v5.resize(pg.cell_y * 4, pg.cell_x * 4)?;
     let p5 = unsafe { v5.blit(&mut nc, Some(&voptions5))? };
     p5.reparent(splane)?;
-    nc_render_sleep![&mut nc, 0, 250];
 
-    sleep![2];
+    nc.render()?;
+    sleep(Duration::from_millis(2000));
 
     vplane3.destroy()?;
     p4.destroy()?;
     p5.destroy()?;
-
     v1.destroy();
     v5.destroy();
     unsafe { nc.stop()? };

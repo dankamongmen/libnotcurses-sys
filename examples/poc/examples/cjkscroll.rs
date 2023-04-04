@@ -1,6 +1,7 @@
 //! based on the proof of concept at ../../src/poc/cjkscroll.c
 
 use libnotcurses_sys::*;
+use std::{thread::sleep, time::Duration};
 
 fn main() -> NcResult<()> {
     let mut nc = unsafe { Nc::new()? };
@@ -18,7 +19,8 @@ fn main() -> NcResult<()> {
         if wc == '\u{9fa5}' {
             wc = '\u{4e00}';
         }
-        nc_render_sleep![&mut nc, 0, 0, 30];
+        nc.render()?;
+        sleep(Duration::from_micros(30));
     }
 
     // unsafe { nc.stop()? };
