@@ -7,22 +7,16 @@ use core::{
 };
 
 use crate::{
-    c_api, cstring, error, error_ref, error_ref_mut, Nc, NcAlign, NcAlpha, NcBlitter, NcBoxMask,
-    NcCell, NcChannel, NcChannels, NcFadeCb, NcPaletteIndex, NcPixelGeometry, NcPlane,
-    NcPlaneOptions, NcResizeCb, NcResult, NcRgb, NcRgba, NcStyle, NcTime,
+    c_api, cstring, error, error_ref, error_ref_mut, rstring_free, Nc, NcAlign, NcAlpha, NcBlitter,
+    NcBoxMask, NcCell, NcChannel, NcChannels, NcError, NcFadeCb, NcPaletteIndex, NcPixelGeometry,
+    NcPlane, NcPlaneOptions, NcResizeCb, NcResult, NcRgb, NcRgba, NcStyle, NcTime,
 };
 
 #[cfg(feature = "std")]
 use crate::NcFile;
 
-#[cfg(feature = "libc")]
-use crate::{rstring_free, NcError};
-
 #[cfg(not(feature = "std"))]
-use alloc::{format, vec::Vec};
-
-#[cfg(all(not(feature = "std"), feature = "libc"))]
-use alloc::string::String;
+use alloc::{format, string::String, vec::Vec};
 
 /// # NcPlane constructors & destructors
 impl NcPlane {
@@ -655,8 +649,6 @@ impl NcPlane {
     /// If either `len_y` or `len_x` fall outside the plane's boundaries.
     ///
     /// *C style function: [ncplane_contents()][c_api::ncplane_contents].*
-    #[cfg(feature = "libc")]
-    #[cfg_attr(feature = "nightly", doc(cfg(feature = "libc")))]
     pub fn contents(
         &mut self,
         beg_y: Option<u32>,

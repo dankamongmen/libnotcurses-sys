@@ -49,13 +49,13 @@ macro_rules! rstring {
 /// Converts a `*const c_char` into a `String`, freeing the original alloc.
 #[macro_export]
 #[doc(hidden)]
-#[cfg(all(feature = "std", feature = "libc"))]
+#[cfg(feature = "std")]
 macro_rules! rstring_free {
     ($s:expr) => {{
         #[allow(unused_unsafe)]
         let nc_string = unsafe { $s };
         let string = $crate::rstring![nc_string].to_string();
-        unsafe { $crate::c_api::libc::free(nc_string as *mut core::ffi::c_void) };
+        unsafe { $crate::c_api::ffi::free(nc_string as *mut core::ffi::c_void) };
         string
     }};
 }
@@ -63,13 +63,13 @@ macro_rules! rstring_free {
 /// Converts a `*const c_char` into a `String`, freeing the original alloc.
 #[macro_export]
 #[doc(hidden)]
-#[cfg(all(not(feature = "std"), feature = "libc"))]
+#[cfg(not(feature = "std"))]
 macro_rules! rstring_free {
     ($s:expr) => {{
         #[allow(unused_unsafe)]
         let nc_string = unsafe { $s };
         let string = alloc::string::ToString::to_string($crate::rstring![nc_string]);
-        unsafe { $crate::c_api::libc::free(nc_string as *mut core::ffi::c_void) };
+        unsafe { $crate::c_api::ffi::free(nc_string as *mut core::ffi::c_void) };
         string
     }};
 }
