@@ -651,6 +651,9 @@ impl NcPlane {
     /// Use `None` for either or both of `len_y` and `len_x` in order to
     /// go through the boundary of the plane in that axis (same as `0`).
     ///
+    /// # Errors
+    /// If either `len_y` or `len_x` fall outside the plane's boundaries.
+    ///
     /// *C style function: [ncplane_contents()][c_api::ncplane_contents].*
     #[cfg(feature = "libc")]
     #[cfg_attr(feature = "nightly", doc(cfg(feature = "libc")))]
@@ -660,14 +663,24 @@ impl NcPlane {
         beg_x: Option<u32>,
         len_y: Option<u32>,
         len_x: Option<u32>,
-    ) -> String {
-        rstring_free![c_api::ncplane_contents(
-            self,
-            beg_y.unwrap_or(u32::MAX) as i32, // -1_i32
-            beg_x.unwrap_or(u32::MAX) as i32, // "
-            len_y.unwrap_or(0),
-            len_x.unwrap_or(0)
-        )]
+    ) -> NcResult<String> {
+        let ptr = unsafe {
+            c_api::ncplane_contents(
+                self,
+                beg_y.unwrap_or(u32::MAX) as i32, // -1_i32
+                beg_x.unwrap_or(u32::MAX) as i32, // "
+                len_y.unwrap_or(0),
+                len_x.unwrap_or(0),
+            )
+        };
+        if ptr.is_null() {
+            Err(NcError::with_msg(
+                c_api::NCRESULT_ERR,
+                "NcPlane.contents error",
+            ))
+        } else {
+            Ok(rstring_free![ptr])
+        }
     }
 
     /// Erases every [`NcCell`] in this `NcPlane`, resetting all attributes to
@@ -689,12 +702,13 @@ impl NcPlane {
     /// If `beg_y` and/or `beg_x` are `None`, the current cursor position
     /// along that axis is used.
     ///
-    /// A negative `len_` means to move up from the origin, and a negative
+    /// A negative `len_y` means to move up from the origin, and a negative
     /// `len_x` means to move left from the origin. A positive `len_y` moves down,
     /// and a positive `len_x` moves right.
     ///
     /// A value of `0` for the length erases everything along that dimension.
     ///
+    /// # Errors
     /// It is an error if the starting coordinate is not in the plane,
     /// but the ending coordinate may be outside the plane.
     ///
