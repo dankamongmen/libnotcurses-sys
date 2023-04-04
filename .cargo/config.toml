@@ -2,8 +2,8 @@
 
 # CHECK
 cl = "clippy"
-clq = "clippy --quiet"
 #
+cl_no-std = "clippy --no-default-features --features=keep_vendored"
 cl_std = "clippy --features=std"
 
 # CLEAN PACKAGE
@@ -25,14 +25,15 @@ nddo = "doc --open --features=nightly,std"
 b = "build"
 bb = "build --bin"
 be = "build --example"
-bq = "build --quiet"
 br = "build --release"
-bqb = "build --quiet --bin"
-bqe = "build --quiet --example"
 brb = "build --release --bin"
 bre = "build --release --example"
-brqb = "build --release --quiet --bin"
-brqe = "build --release --quiet --example"
+#
+b_no-std = "build --no-default-features --features=keep_vendored"
+bb_no-std = "build --no-default-features --features=keep_vendored --bin"
+be_no-std = "build --no-default-features --features=keep_vendored --example"
+br_no-std = "build --release --no-default-features --features=keep_vendored"
+bre_no-std = "build --release --no-default-features --features=keep_vendored --example"
 #
 b_std = "build --features=std"
 bb_std = "build --features=std --bin"
@@ -44,14 +45,15 @@ bre_std = "build --release --features=std --example"
 r = "run"
 rb = "run --bin"
 re = "run --example"
-rq = "run --quiet"
 rr = "run --release"
-rqb = "run --quiet --bin"
-rqe = "run --quiet --example"
 rrb = "run --release --bin"
 rre = "run --release --example"
-rrqb = "run --release --quiet --bin"
-rrqe = "run --release --quiet --example"
+#
+r_no-std = "run --no-default-features --features=keep_vendored"
+rb_no-std = "run --no-default-features --features=keep_vendored --bin"
+re_no-std = "run --no-default-features --features=keep_vendored --example"
+rr_no-std = "run --release --no-default-features --features=keep_vendored"
+rre_no-std = "run --release --no-default-features --features=keep_vendored --example"
 #
 r_std = "run --features=std"
 rb_std = "run --features=std --bin"
@@ -64,6 +66,7 @@ rre_std = "run --release --features=std --example"
 t = "test -- --test-threads 1 --nocapture"
 t_all = "test --no-fail-fast -- --test-threads 1 --nocapture"
 #
+t_no-std = "test --no-default-features --features=keep_vendored -- --test-threads 1 --nocapture"
 t_std = "test --features=std -- --test-threads 1 --nocapture"
 
 # TREE
