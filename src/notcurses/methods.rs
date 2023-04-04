@@ -4,10 +4,10 @@ use core::ptr::{null, null_mut};
 
 use crate::{
     c_api::{self, notcurses_init},
-    cstring, error, error_ref_mut, rstring, Nc, NcAlign, NcBlitter, NcCapabilities, NcError, NcFd,
-    NcFlag, NcInput, NcLogLevel, NcMiceEvents, NcOptions, NcPixelImpl, NcPlane, NcReceived,
-    NcResult, NcRgb, NcScale, NcStats, NcStyle, NcTime, NcVisual, NcVisualGeometry,
-    NcVisualOptions,
+    cstring, error, error_ref_mut, rstring, rstring_free, Nc, NcAlign, NcBlitter, NcCapabilities,
+    NcChannels, NcError, NcFd, NcFlag, NcInput, NcLogLevel, NcMiceEvents, NcOptions, NcPixelImpl,
+    NcPlane, NcReceived, NcResult, NcRgb, NcScale, NcStats, NcStyle, NcTime, NcVisual,
+    NcVisualGeometry, NcVisualOptions,
 };
 
 #[cfg(not(feature = "std"))]
@@ -16,9 +16,6 @@ use alloc::{
     string::{String, ToString},
     vec::Vec,
 };
-
-#[cfg(feature = "libc")]
-use crate::{rstring_free, NcChannels};
 
 #[cfg(feature = "std")]
 use crate::NcFile;
@@ -149,8 +146,6 @@ impl Nc {
     /// out the [`NcStyle`] and the [`NcChannels`].
     ///
     /// *C style function: [notcurses_at_yx()][c_api::notcurses_at_yx].*
-    #[cfg(feature = "libc")]
-    #[cfg_attr(feature = "nightly", doc(cfg(feature = "libc")))]
     pub fn at_yx(
         &mut self,
         y: u32,
@@ -364,8 +359,6 @@ impl Nc {
     /// Returns the name of the user under which we are running.
     ///
     /// *C style function: [notcurses_accountname()][c_api::notcurses_accountname].*
-    #[cfg(feature = "libc")]
-    #[cfg_attr(feature = "nightly", doc(cfg(feature = "libc")))]
     pub fn accountname() -> String {
         rstring_free![c_api::notcurses_accountname()]
     }
@@ -373,8 +366,6 @@ impl Nc {
     /// Returns the name of the local hostname.
     ///
     /// *C style function: [notcurses_hostname()][c_api::notcurses_hostname].*
-    #[cfg(feature = "libc")]
-    #[cfg_attr(feature = "nightly", doc(cfg(feature = "libc")))]
     pub fn hostname() -> String {
         rstring_free![c_api::notcurses_hostname()]
     }
@@ -382,8 +373,6 @@ impl Nc {
     /// Returns the name of the detected OS version.
     ///
     /// *C style function: [notcurses_osversion()][c_api::notcurses_osversion].*
-    #[cfg(feature = "libc")]
-    #[cfg_attr(feature = "nightly", doc(cfg(feature = "libc")))]
     pub fn osversion() -> String {
         rstring_free![c_api::notcurses_osversion()]
     }
@@ -391,8 +380,6 @@ impl Nc {
     /// Returns the name of the detected terminal.
     ///
     /// *C style function: [notcurses_detected_terminal()][c_api::notcurses_detected_terminal].*
-    #[cfg(feature = "libc")]
-    #[cfg_attr(feature = "nightly", doc(cfg(feature = "libc")))]
     pub fn detected_terminal(&self) -> String {
         rstring_free![c_api::notcurses_detected_terminal(self)]
     }
