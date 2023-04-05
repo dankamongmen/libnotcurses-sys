@@ -1229,32 +1229,6 @@ impl NcPlane {
 // -----------------------------------------------------------------------------
 /// ## NcPlane methods: `NcPlane` & `Nc`
 impl NcPlane {
-    /// Gets the origin of this plane relative to its pile.
-    ///
-    /// *C style function: [ncplane_abs_yx()][c_api::ncplane_abs_yx].*
-    pub fn abs_yx(&self) -> (i32, i32) {
-        let mut y = 0;
-        let mut x = 0;
-        unsafe {
-            c_api::ncplane_abs_yx(self, &mut y, &mut x);
-        }
-        (y, x)
-    }
-
-    /// Gets the origin of this plane relative to its pile, in the y axis.
-    ///
-    /// *C style function: [ncplane_abs_y()][c_api::ncplane_abs_y].*
-    pub fn abs_y(&self) -> i32 {
-        unsafe { c_api::ncplane_abs_y(self) }
-    }
-
-    /// Gets the origin of this plane relative to its pile, in the x axis.
-    ///
-    /// *C style function: [ncplane_abs_x()][c_api::ncplane_abs_x].*
-    pub fn abs_x(&self) -> i32 {
-        unsafe { c_api::ncplane_abs_x(self) }
-    }
-
     /// Duplicates this `NcPlane`.
     ///
     /// The new NcPlane will have the same geometry, the same rendering state,
@@ -2139,6 +2113,14 @@ impl NcPlane {
         (y, x)
     }
 
+    /// Gets the `y` origin of this `NcPlane` relative to its parent,
+    /// or its pile, if it's a root plane.
+    ///
+    /// *C style function: [ncplane_y()][c_api::ncplane_y].*
+    pub fn y(&self) -> i32 {
+        unsafe { c_api::ncplane_y(self) }
+    }
+
     /// Gets the `x` origin of this `NcPlane` relative to its parent,
     /// or its pile, if it's a root plane.
     ///
@@ -2147,12 +2129,30 @@ impl NcPlane {
         unsafe { c_api::ncplane_x(self) }
     }
 
-    /// Gets the `y` origin of this `NcPlane` relative to its parent,
-    /// or its pile, if it's a root plane.
+    /// Gets the origin of this plane relative to its pile.
     ///
-    /// *C style function: [ncplane_y()][c_api::ncplane_y].*
-    pub fn y(&self) -> i32 {
-        unsafe { c_api::ncplane_y(self) }
+    /// *C style function: [ncplane_abs_yx()][c_api::ncplane_abs_yx].*
+    pub fn abs_yx(&self) -> (i32, i32) {
+        let mut y = 0;
+        let mut x = 0;
+        unsafe {
+            c_api::ncplane_abs_yx(self, &mut y, &mut x);
+        }
+        (y, x)
+    }
+
+    /// Gets the origin of this plane relative to its pile, in the y axis.
+    ///
+    /// *C style function: [ncplane_abs_y()][c_api::ncplane_abs_y].*
+    pub fn abs_y(&self) -> i32 {
+        unsafe { c_api::ncplane_abs_y(self) }
+    }
+
+    /// Gets the origin of this plane relative to its pile, in the x axis.
+    ///
+    /// *C style function: [ncplane_abs_x()][c_api::ncplane_abs_x].*
+    pub fn abs_x(&self) -> i32 {
+        unsafe { c_api::ncplane_abs_x(self) }
     }
 
     /// Returns `true` if this `NcPlane` has scrolling enabled, or `false` otherwise.
