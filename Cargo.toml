@@ -32,7 +32,7 @@ include = [
 ]
 
 [features]
-default = ["keep_vendored"]
+default = ["libc", "keep_vendored"]
 #
 std = ["libc"]
 #
