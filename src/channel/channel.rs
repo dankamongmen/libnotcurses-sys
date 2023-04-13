@@ -36,7 +36,7 @@ use crate::{
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct NcChannel(pub NcChannel_u32);
 
-mod std_impls {
+mod core_impls {
     use super::{NcChannel, NcChannel_u32};
 
     impl Default for NcChannel {

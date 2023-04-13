@@ -55,7 +55,7 @@ impl NcMiceEvents {
     }
 }
 
-mod std_impl {
+mod core_impls {
     use super::{c_api::NcMiceEvents_u32, NcMiceEvents};
 
     impl Default for NcMiceEvents {

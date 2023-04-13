@@ -54,7 +54,7 @@ impl NcRgba {
         )
     }
 }
-mod std_impls {
+mod core_impls {
     use super::{
         c_api::{NcRgb_u32, NcRgba_u32},
         NcRgb, NcRgba,

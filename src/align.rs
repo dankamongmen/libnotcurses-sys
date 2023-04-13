@@ -22,7 +22,7 @@ pub enum NcAlign {
     Right = c_api::NCALIGN_RIGHT,
 }
 
-mod std_impls {
+mod core_impls {
     use super::{c_api, NcAlign};
     use core::fmt;
 

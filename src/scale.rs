@@ -47,7 +47,7 @@ pub enum NcScale {
     Stretch = c_api::NCSCALE_STRETCH,
 }
 
-mod std_impls {
+mod core_impls {
     use super::{c_api, NcScale};
     use core::fmt;
 

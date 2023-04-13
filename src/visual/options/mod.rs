@@ -313,7 +313,7 @@ impl NcVisualFlag {
     pub const NoInterpolate: Self = Self(c_api::NCVISUAL_OPTION_NOINTERPOLATE);
 }
 
-mod std_impls {
+mod core_impls {
     use super::{c_api::NcVisualFlag_u64, NcVisualFlag};
 
     impl Default for NcVisualFlag {

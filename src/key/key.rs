@@ -11,7 +11,7 @@
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub struct NcKey(pub u32);
 
-mod std_impls {
+mod core_impls {
     use super::NcKey;
     use core::fmt;
 

@@ -61,7 +61,7 @@ impl NcPlaneFlag {
     pub const VScroll: Self = Self(c_api::NCPLANE_OPTION_VSCROLL);
 }
 
-mod std_impls {
+mod core_impls {
     use super::{c_api::NcPlaneFlag_u64, NcPlaneFlag};
 
     impl Default for NcPlaneFlag {

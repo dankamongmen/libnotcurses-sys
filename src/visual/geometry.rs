@@ -194,7 +194,7 @@ impl NcVisualGeometry {
     }
 }
 
-mod std_impls {
+mod core_impls {
     use super::{c_api::NcVGeom, NcBlitter, NcVisualGeometry};
 
     impl From<NcVGeom> for NcVisualGeometry {

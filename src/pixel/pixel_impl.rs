@@ -31,7 +31,7 @@ pub enum NcPixelImpl {
     KittySelfRef = c_api::NCPIXEL_KITTY_SELFREF,
 }
 
-mod std_impls {
+mod core_impls {
     use super::{c_api::*, NcPixelImpl};
     use core::fmt;
 

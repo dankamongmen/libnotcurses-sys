@@ -20,7 +20,7 @@ pub enum NcReceived {
     Char(char),
 }
 
-mod std_impls {
+mod core_impls {
     use core::fmt;
 
     #[cfg(not(feature = "std"))]

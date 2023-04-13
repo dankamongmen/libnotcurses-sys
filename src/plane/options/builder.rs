@@ -32,7 +32,7 @@ pub struct NcPlaneOptionsBuilder {
     pub(crate) margin_r: u32,
 }
 
-mod std_impls {
+mod core_impls {
     use core::fmt;
 
     #[cfg(not(feature = "std"))]

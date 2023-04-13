@@ -45,7 +45,7 @@ pub enum NcLogLevel {
     Trace = c_api::NCLOGLEVEL_TRACE,
 }
 
-mod std_impls {
+mod core_impls {
     use super::{c_api, NcLogLevel};
     use core::fmt;
 

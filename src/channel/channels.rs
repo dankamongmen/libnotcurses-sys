@@ -92,7 +92,7 @@ use crate::{
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct NcChannels(pub NcChannels_u64);
 
-mod std_impls {
+mod core_impls {
     use super::{NcChannels, NcChannels_u64};
 
     impl Default for NcChannels {

@@ -80,7 +80,7 @@ impl NcBoxMask {
     }
 }
 
-mod std_impls {
+mod core_impls {
     use super::{c_api::NcBoxMask_u32, NcBoxMask};
 
     impl Default for NcBoxMask {

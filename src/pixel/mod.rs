@@ -64,7 +64,7 @@ pub use pixel_impl::NcPixelImpl;
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Default)]
 pub struct NcPixel(pub c_api::NcPixel_u32);
 
-mod std_impls {
+mod core_impls {
     use super::{c_api::NcPixel_u32, NcPixel};
     use crate::{NcRgb, NcRgba};
 

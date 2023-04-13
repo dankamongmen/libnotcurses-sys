@@ -115,7 +115,7 @@ impl NcFlag {
     pub const SuppressBanners: Self = Self(c_api::NCOPTION_SUPPRESS_BANNERS);
 }
 
-mod std_impls {
+mod core_impls {
     use super::{c_api::NcFlag_u64, NcFlag};
 
     impl Default for NcFlag {

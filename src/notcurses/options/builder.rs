@@ -15,7 +15,7 @@ pub struct NcOptionsBuilder {
     pub(crate) flags: u64,
 }
 
-mod std_impls {
+mod core_impls {
     use super::{NcOptions, NcOptionsBuilder};
 
     impl From<NcOptionsBuilder> for NcOptions {

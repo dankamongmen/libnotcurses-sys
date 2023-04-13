@@ -88,7 +88,7 @@ impl NcBlitter {
     pub const _3x2: NcBlitter = NcBlitter::Sextant;
 }
 
-mod std_impls {
+mod core_impls {
     use super::{c_api, NcBlitter};
     use core::fmt;
 

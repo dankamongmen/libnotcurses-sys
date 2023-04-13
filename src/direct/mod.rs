@@ -152,7 +152,7 @@ impl NcDirectFlag {
         Self(c_api::NCDIRECT_OPTION_VERY_VERBOSE as NcDirectFlag_u64);
 }
 
-mod std_impls {
+mod core_impls {
     use super::{c_api::NcDirectFlag_u64, NcDirectFlag};
 
     impl Default for NcDirectFlag {

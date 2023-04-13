@@ -40,7 +40,7 @@ pub enum NcAlpha {
     Transparent = c_api::NCALPHA_TRANSPARENT,
 }
 
-mod std_impls {
+mod core_impls {
     use super::{c_api, NcAlpha};
     use core::fmt;
 

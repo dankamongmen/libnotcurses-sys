@@ -20,7 +20,7 @@ pub struct NcVisualOptionsBuilder<'ncplane> {
     transcolor: NcRgba,
 }
 
-mod std_impls {
+mod core_impls {
     use super::{NcVisualOptions, NcVisualOptionsBuilder};
 
     impl<'a> From<NcVisualOptionsBuilder<'a>> for NcVisualOptions {

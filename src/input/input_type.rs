@@ -19,7 +19,7 @@ pub enum NcInputType {
     Release,
 }
 
-mod std_impls {
+mod core_impls {
     use super::{c_api::*, NcInputType};
     use core::fmt;
 
