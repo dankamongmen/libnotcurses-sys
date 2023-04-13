@@ -68,6 +68,7 @@ fn main() {
             .blocklist_function("__mbrlen")
             .blocklist_function("__ps")
             .blocklist_function("fwide")
+            .blocklist_function("devname.*")
             .blocklist_function("fwprintf")
             .blocklist_function("fwscanf")
             .blocklist_function("fwscanf1")
@@ -81,6 +82,7 @@ fn main() {
             .blocklist_function("__cmsg_nxthdr")
             .blocklist_function("recvmsg")
             .blocklist_function("wcsrtombs")
+            .blocklist_function("wcsnrtombs")
             .blocklist_function("vfwprintf")
             .blocklist_function("vfwscanf")
             //
