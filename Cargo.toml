@@ -7,7 +7,8 @@ authors = [
 ]
 license = "MIT OR Apache-2.0"
 edition = "2021"
-rust-version = "1.64.0" # in sync with .github/workflows/check.yml
+# https://packages.debian.org/trixie/libstd-rust-dev
+rust-version = "1.65.0" # in sync with .github/workflows/check.yml
 description = "Low-level Rust bindings for the notcurses C library."
 documentation = "https://docs.rs/libnotcurses-sys/"
 repository = "https://github.com/dankamongmen/libnotcurses-sys"
@@ -53,14 +54,15 @@ vendor_csource = []
 # enable this feature to compile the notcurses C source code.
 compile_csource = ["cc", "keep_vendored"]
 
+
 [dependencies]
 # A dependency's version number must be the minimum available in all of:
 # - [Debian Sid](https://tracker.debian.org/pkg/rust-libc)
 # - [Fedora Rawhide](https://pkgs.org/search/?q=rust-libc-devel)
-libc = { version = "0.2.132", default-features = false, optional = true }
+libc = { version = "0.2.147", default-features = false, optional = true }
 
 [dev-dependencies]
-serial_test = "0.10"
+serial_test = "1.0.0"
 
 # for the examples
 rand = "0.8"

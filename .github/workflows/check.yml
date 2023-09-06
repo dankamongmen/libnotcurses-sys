@@ -71,7 +71,7 @@ jobs:
     strategy:
       matrix:
         # NOTE: custom
-        msrv: [1.64.0]
+        msrv: [1.65.0]
     steps:
       - name: "checkout"
         uses: actions/checkout@v3
