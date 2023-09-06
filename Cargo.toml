@@ -38,6 +38,7 @@ default = ["libc", "keep_vendored"]
 std = ["libc"]
 #
 nightly = []
+nightly_docs = ["nightly", "std", "use_vendored_bindings"]
 
 # enable this feature to keep the vendored files, instead of deleting them.
 keep_vendored = []
@@ -70,15 +71,16 @@ rand = "0.8"
 [build-dependencies]
 # https://tracker.debian.org/pkg/rust-bindgen
 # https://pkgs.org/search/?q=rust-bindgen
-bindgen = "0.60"
+bindgen = { version = "0.60", default-features = false, features = ["runtime"] }
 # https://tracker.debian.org/pkg/rust-pkg-config
 # https://pkgs.org/search/?q=rust-pkg-config
 pkg-config = "0.3.25"
 
 cc = { version = "1.0", optional = true }
 
+
 [package.metadata.docs.rs]
-features = ["std", "nightly", "use_vendored_bindings"]
+features = ["nightly_docs"]
 
 [badges]
 maintenance = { status = "actively-developed" }

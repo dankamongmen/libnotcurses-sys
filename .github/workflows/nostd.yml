@@ -1,27 +1,32 @@
 permissions:
   contents: read
+
 on:
   push:
     branches: [main]
   pull_request:
+
 name: "no-std"
 jobs:
-
   # 1. without libc
   nostd:
     name: "${{ matrix.target }}"
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        # IMPROVE
         target: [thumbv7m-none-eabi, aarch64-unknown-none]
     steps:
       - name: "checkout"
         uses: actions/checkout@v3
+        with:
+            submodules: true
+
       - name: "Install stable"
         uses: dtolnay/rust-toolchain@stable
+
       - name: "rustup target add ${{ matrix.target }}"
         run: rustup target add ${{ matrix.target }}
+
       - name: "cargo check"
         # NOTE: custom
         run: cargo check --target ${{ matrix.target }} --no-default-features --features=use_vendored_bindings
