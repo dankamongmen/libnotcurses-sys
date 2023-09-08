@@ -83,4 +83,4 @@ cc = { version = "1.0", optional = true }
 features = ["nightly_docs"]
 
 [badges]
-maintenance = { status = "actively-developed" }
+maintenance = { status = "passively-maintained" }
