@@ -71,7 +71,7 @@ rand = "0.8"
 [build-dependencies]
 # https://tracker.debian.org/pkg/rust-bindgen
 # https://pkgs.org/search/?q=rust-bindgen
-bindgen = { version = "0.60", default-features = false, features = ["runtime"] }
+bindgen = { version = "0.62", default-features = false, features = ["runtime"] }
 # https://tracker.debian.org/pkg/rust-pkg-config
 # https://pkgs.org/search/?q=rust-pkg-config
 pkg-config = "0.3.25"
