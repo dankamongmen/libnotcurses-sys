@@ -60,10 +60,10 @@ compile_csource = ["cc", "keep_vendored"]
 # A dependency's version number must be the minimum available in all of:
 # - [Debian Sid](https://tracker.debian.org/pkg/rust-libc)
 # - [Fedora Rawhide](https://pkgs.org/search/?q=rust-libc-devel)
-libc = { version = "0.2.147", default-features = false, optional = true }
+libc = { version = "0.2.152", default-features = false, optional = true }
 
 [dev-dependencies]
-serial_test = "1.0.0"
+serial_test = { version = "1.0.0" } # upgrade to 2.0 or 3.0 needs MSRV 1.68.2
 
 # for the examples
 rand = "0.8"
@@ -71,7 +71,7 @@ rand = "0.8"
 [build-dependencies]
 # https://tracker.debian.org/pkg/rust-bindgen
 # https://pkgs.org/search/?q=rust-bindgen
-bindgen = { version = "0.62", default-features = false, features = ["runtime"] }
+bindgen = { version = "0.66.1", default-features = false, features = ["runtime"] }
 # https://tracker.debian.org/pkg/rust-pkg-config
 # https://pkgs.org/search/?q=rust-pkg-config
 pkg-config = "0.3.25"
