@@ -68,6 +68,7 @@ impl NcInput {
             y: 0,
             x: 0,
             utf8: [0; 5],
+            eff_text : [0; 4],
             // TODO: DEPRECATED: do not use! going away in nc-4.0
             alt: false,
             shift: false,
@@ -124,6 +125,7 @@ impl NcInput {
             id: id as u32,
             y: ix,
             x: iy,
+            eff_text : [0; 4],
             utf8: [0; 5],
             alt: false,
             shift: false,
