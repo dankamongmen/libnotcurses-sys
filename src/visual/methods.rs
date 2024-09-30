@@ -103,7 +103,7 @@ impl NcVisual {
     pub fn from_sixel<'a>(sequence: &str, len_y: u32, len_x: u32) -> NcResult<&'a mut NcVisual> {
         let cs = cstring![sequence];
         error_ref_mut![
-            unsafe { c_api::ncvisual_from_file(cs.as_ptr()) },
+            unsafe { c_api::ncvisual_from_sixel(cs.as_ptr(), len_y, len_x) },
             &format!("NcVisual::from_sixel({}, {}, {})", sequence, len_y, len_x)
         ]
     }
