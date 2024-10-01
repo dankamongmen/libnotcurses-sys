@@ -80,7 +80,7 @@ impl NcFile {
 /// # Constructors
 impl NcFile {
     /// `NcFile` constructor from a file produced by notcurses.
-    pub fn from_nc(file: *mut NcFile_nc) -> Self {
+    pub unsafe fn from_nc(file: *mut NcFile_nc) -> Self {
         NcFile { file_ptr: unsafe { NonNull::new_unchecked(NcFile::nc2libc(file)) } }
     }
 
