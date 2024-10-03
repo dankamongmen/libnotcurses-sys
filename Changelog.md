@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog], and this project adheres to
 [Semantic Versioning].
 
 ## [Unreleased]
+
+## [3.11.0] - 2024-10-03
+- support notcurses v3.0.11.
 - update vendored bindings.
 - fix `NcVisual::from_sixel`.
 - make `NcFile::from_nc` unsafe.
@@ -59,7 +62,8 @@ The format is based on [Keep a Changelog], and this project adheres to
 ## [2.4.7] - 2021-10-18
 ## [2.4.5] - 2021-10-08
 
-[unreleased]: https://github.com/dankamongmen/libnotcurses-sys/compare/v3.10.1...HEAD
+[unreleased]: https://github.com/dankamongmen/libnotcurses-sys/compare/v3.11.0...HEAD
+[3.11.0]: https://github.com/dankamongmen/libnotcurses-sys/releases/tag/v3.11.0
 [3.10.1]: https://github.com/dankamongmen/libnotcurses-sys/releases/tag/v3.10.1
 [3.10.0]: https://github.com/dankamongmen/libnotcurses-sys/releases/tag/v3.10.0
 [3.9.1]: https://github.com/dankamongmen/libnotcurses-sys/releases/tag/v3.9.1
