@@ -47,7 +47,7 @@ if [[ $GCC_RES == 0 ]]; then
 		valgrind --leak-check=full -s ${BINS_DIR}${BINFILENAME}
 	fi
 	RES="$?";
-	echo -e ">> Done!\n>> Return value: $RES"
+	echo -e "\n>> Done!\n>> Return value: $RES"
 else
 	echo -e "\n>>Compilation failed with error: $GCC_RES"
 fi
